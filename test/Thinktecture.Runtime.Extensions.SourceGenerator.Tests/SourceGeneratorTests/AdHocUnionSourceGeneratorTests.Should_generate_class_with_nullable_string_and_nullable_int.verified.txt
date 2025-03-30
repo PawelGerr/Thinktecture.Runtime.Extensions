@@ -12,7 +12,7 @@ namespace Thinktecture.Tests
       private readonly int _valueIndex;
 
       private readonly string? _string;
-      private readonly int? _nullableInt32;
+      private readonly int? _nullableOfInt32;
 
       /// <summary>
       /// Indication whether the current value is of type <c>string?</c>.
@@ -22,7 +22,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Indication whether the current value is of type <c>int?</c>.
       /// </summary>
-      public bool IsNullableInt32 => this._valueIndex == 2;
+      public bool IsNullableOfInt32 => this._valueIndex == 2;
 
       /// <summary>
       /// Gets the current value as <c>string?</c>.
@@ -34,7 +34,7 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>int?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int?</c>.</exception>
-      public int? AsNullableInt32 => IsNullableInt32 ? this._nullableInt32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?'.");
+      public int? AsNullableOfInt32 => IsNullableOfInt32 ? this._nullableOfInt32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?'.");
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.
@@ -42,7 +42,7 @@ namespace Thinktecture.Tests
       public object? Value => this._valueIndex switch
       {
          1 => this._string,
-         2 => this._nullableInt32,
+         2 => this._nullableOfInt32,
          _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
       };
 
@@ -57,12 +57,12 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Initializes new instance with <paramref name="nullableInt32"/>.
+      /// Initializes new instance with <paramref name="nullableOfInt32"/>.
       /// </summary>
-      /// <param name="nullableInt32">Value to create a new instance for.</param>
-      public TestUnion(int? @nullableInt32)
+      /// <param name="nullableOfInt32">Value to create a new instance for.</param>
+      public TestUnion(int? @nullableOfInt32)
       {
-         this._nullableInt32 = @nullableInt32;
+         this._nullableOfInt32 = @nullableOfInt32;
          this._valueIndex = 2;
       }
 
@@ -70,10 +70,10 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current value.
       /// </summary>
       /// <param name="string">The action to execute if the current value is of type <c>string?</c>.</param>
-      /// <param name="nullableInt32">The action to execute if the current value is of type <c>int?</c>.</param>
+      /// <param name="nullableOfInt32">The action to execute if the current value is of type <c>int?</c>.</param>
       public void Switch(
          global::System.Action<string?> @string,
-         global::System.Action<int?> @nullableInt32)
+         global::System.Action<int?> @nullableOfInt32)
       {
          switch (this._valueIndex)
          {
@@ -81,7 +81,7 @@ namespace Thinktecture.Tests
                @string(this._string);
                return;
             case 2:
-               @nullableInt32(this._nullableInt32);
+               @nullableOfInt32(this._nullableOfInt32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -93,11 +93,11 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The action to execute if the current value is of type <c>string?</c>.</param>
-      /// <param name="nullableInt32">The action to execute if the current value is of type <c>int?</c>.</param>
+      /// <param name="nullableOfInt32">The action to execute if the current value is of type <c>int?</c>.</param>
       public void Switch<TState>(
          TState state,
          global::System.Action<TState, string?> @string,
-         global::System.Action<TState, int?> @nullableInt32)
+         global::System.Action<TState, int?> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -108,7 +108,7 @@ namespace Thinktecture.Tests
                @string(state, this._string);
                return;
             case 2:
-               @nullableInt32(state, this._nullableInt32);
+               @nullableOfInt32(state, this._nullableOfInt32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -119,10 +119,10 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current value.
       /// </summary>
       /// <param name="string">The function to execute if the current value is of type <c>string?</c>.</param>
-      /// <param name="nullableInt32">The function to execute if the current value is of type <c>int?</c>.</param>
+      /// <param name="nullableOfInt32">The function to execute if the current value is of type <c>int?</c>.</param>
       public TResult Switch<TResult>(
          global::System.Func<string?, TResult> @string,
-         global::System.Func<int?, TResult> @nullableInt32)
+         global::System.Func<int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -132,7 +132,7 @@ namespace Thinktecture.Tests
             case 1:
                return @string(this._string);
             case 2:
-               return @nullableInt32(this._nullableInt32);
+               return @nullableOfInt32(this._nullableOfInt32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -143,11 +143,11 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The function to execute if the current value is of type <c>string?</c>.</param>
-      /// <param name="nullableInt32">The function to execute if the current value is of type <c>int?</c>.</param>
+      /// <param name="nullableOfInt32">The function to execute if the current value is of type <c>int?</c>.</param>
       public TResult Switch<TState, TResult>(
          TState state,
          global::System.Func<TState, string?, TResult> @string,
-         global::System.Func<TState, int?, TResult> @nullableInt32)
+         global::System.Func<TState, int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -158,7 +158,7 @@ namespace Thinktecture.Tests
             case 1:
                return @string(state, this._string);
             case 2:
-               return @nullableInt32(state, this._nullableInt32);
+               return @nullableOfInt32(state, this._nullableOfInt32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -168,10 +168,10 @@ namespace Thinktecture.Tests
       /// Maps current value to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
       /// <param name="string">The instance to return if the current value is of type <c>string?</c>.</param>
-      /// <param name="nullableInt32">The instance to return if the current value is of type <c>int?</c>.</param>
+      /// <param name="nullableOfInt32">The instance to return if the current value is of type <c>int?</c>.</param>
       public TResult Map<TResult>(
          TResult @string,
-         TResult @nullableInt32)
+         TResult @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -181,7 +181,7 @@ namespace Thinktecture.Tests
             case 1:
                return @string;
             case 2:
-               return @nullableInt32;
+               return @nullableOfInt32;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -200,11 +200,11 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <c>int?</c>.
       /// </summary>
-      /// <param name="nullableInt32">Value to covert from.</param>
-      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="nullableInt32"/>.</returns>
-      public static implicit operator global::Thinktecture.Tests.TestUnion(int? @nullableInt32)
+      /// <param name="nullableOfInt32">Value to covert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="nullableOfInt32"/>.</returns>
+      public static implicit operator global::Thinktecture.Tests.TestUnion(int? @nullableOfInt32)
       {
-         return new global::Thinktecture.Tests.TestUnion(@nullableInt32);
+         return new global::Thinktecture.Tests.TestUnion(@nullableOfInt32);
       }
 
       /// <summary>
@@ -226,7 +226,7 @@ namespace Thinktecture.Tests
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>int?</c>.</exception>
       public static explicit operator int?(global::Thinktecture.Tests.TestUnion obj)
       {
-         return obj.AsNullableInt32;
+         return obj.AsNullableOfInt32;
       }
 
       /// <summary>
@@ -275,7 +275,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
-            2 => this._nullableInt32.Equals(other._nullableInt32),
+            2 => this._nullableOfInt32.Equals(other._nullableOfInt32),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -286,7 +286,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._nullableInt32.GetHashCode()),
+            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._nullableOfInt32.GetHashCode()),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -297,7 +297,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => this._string,
-            2 => this._nullableInt32.ToString(),
+            2 => this._nullableOfInt32.ToString(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

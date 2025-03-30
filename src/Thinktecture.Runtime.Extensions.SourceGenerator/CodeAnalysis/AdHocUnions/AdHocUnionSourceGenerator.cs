@@ -158,14 +158,14 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
             var typeState = factory.Create(memberType);
 
-            var typeDuplicateIndex = 0;
+            var typeDuplicateCounter = 0;
 
             for (var j = 0; j < attributeType.TypeArguments.Length; j++)
             {
                if (j == i)
                {
-                  if (typeDuplicateIndex != 0)
-                     ++typeDuplicateIndex;
+                  if (typeDuplicateCounter != 0)
+                     ++typeDuplicateCounter;
 
                   continue;
                }
@@ -173,36 +173,24 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
                if (!SymbolEqualityComparer.Default.Equals(memberType, attributeType.TypeArguments[j]))
                   continue;
 
-               if (j > i && typeDuplicateIndex != 0)
+               if (j > i && typeDuplicateCounter != 0)
                   break;
 
-               ++typeDuplicateIndex;
+               ++typeDuplicateCounter;
             }
 
-            (string Name, string DefaultName) memberTypeName;
-            var duplicateIndex = typeDuplicateIndex == 0 ? (int?)null : typeDuplicateIndex;
-
-            switch (memberType)
+            if (!memberType.TryBuildMemberName(out var defaultName))
             {
-               case INamedTypeSymbol namedTypeSymbol:
-                  memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
-                                                                           duplicateIndex,
-                                                                           namedTypeSymbol,
-                                                                           typeState);
-                  break;
-               case IArrayTypeSymbol arrayTypeSymbol:
-                  memberTypeName = AdHocUnionMemberTypeState.GetMemberName(memberTypeSettings,
-                                                                           duplicateIndex,
-                                                                           arrayTypeSymbol);
-                  break;
-               default:
-                  Logger.LogError("Type of the member must be a named type or array type", tds);
-                  return null;
+               Logger.LogError("Type of the member must be a named type or array type", tds);
+               return null;
             }
 
-            memberTypeStates[i] = new AdHocUnionMemberTypeState(memberTypeName.Name,
-                                                                memberTypeName.DefaultName,
-                                                                duplicateIndex,
+            var name = memberTypeSettings.Name ??
+                       (typeDuplicateCounter == 0 ? defaultName : defaultName + typeDuplicateCounter);
+
+            memberTypeStates[i] = new AdHocUnionMemberTypeState(name,
+                                                                defaultName,
+                                                                typeDuplicateCounter,
                                                                 typeState,
                                                                 memberTypeSettings);
          }

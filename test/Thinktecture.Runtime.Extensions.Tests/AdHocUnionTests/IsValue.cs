@@ -22,13 +22,13 @@ public class IsValue
       new TestUnion_class_nullable_string_int(1).IsInt32.Should().BeTrue();
 
       new TestUnion_class_nullable_string_nullable_int(@string: null).IsString.Should().BeTrue();
-      new TestUnion_class_nullable_string_nullable_int(@string: null).IsNullableInt32.Should().BeFalse();
+      new TestUnion_class_nullable_string_nullable_int(@string: null).IsNullableOfInt32.Should().BeFalse();
       new TestUnion_class_nullable_string_nullable_int("text").IsString.Should().BeTrue();
-      new TestUnion_class_nullable_string_nullable_int("text").IsNullableInt32.Should().BeFalse();
+      new TestUnion_class_nullable_string_nullable_int("text").IsNullableOfInt32.Should().BeFalse();
       new TestUnion_class_nullable_string_nullable_int(1).IsString.Should().BeFalse();
-      new TestUnion_class_nullable_string_nullable_int(1).IsNullableInt32.Should().BeTrue();
-      new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).IsString.Should().BeFalse();
-      new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).IsNullableInt32.Should().BeTrue();
+      new TestUnion_class_nullable_string_nullable_int(1).IsNullableOfInt32.Should().BeTrue();
+      new TestUnion_class_nullable_string_nullable_int(nullableOfInt32: null).IsString.Should().BeFalse();
+      new TestUnion_class_nullable_string_nullable_int(nullableOfInt32: null).IsNullableOfInt32.Should().BeTrue();
 
       new TestUnion_struct_string_int("text").IsString.Should().BeTrue();
       new TestUnion_struct_string_int("text").IsInt32.Should().BeFalse();
@@ -122,30 +122,30 @@ public class IsValue
       TestUnion_class_with_same_types.CreateText("text").IsInt32.Should().BeFalse();
       TestUnion_class_with_same_types.CreateText("text").IsString2.Should().BeFalse();
       TestUnion_class_with_same_types.CreateText("text").IsString3.Should().BeFalse();
-      TestUnion_class_with_same_types.CreateText("text").IsNullableInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateText("text").IsNullableOfInt32.Should().BeFalse();
 
       new TestUnion_class_with_same_types(1).IsText.Should().BeFalse();
       new TestUnion_class_with_same_types(1).IsInt32.Should().BeTrue();
       new TestUnion_class_with_same_types(1).IsString2.Should().BeFalse();
       new TestUnion_class_with_same_types(1).IsString3.Should().BeFalse();
-      new TestUnion_class_with_same_types(1).IsNullableInt32.Should().BeFalse();
+      new TestUnion_class_with_same_types(1).IsNullableOfInt32.Should().BeFalse();
 
       TestUnion_class_with_same_types.CreateString2("text").IsText.Should().BeFalse();
       TestUnion_class_with_same_types.CreateString2("text").IsInt32.Should().BeFalse();
       TestUnion_class_with_same_types.CreateString2("text").IsString2.Should().BeTrue();
       TestUnion_class_with_same_types.CreateString2("text").IsString3.Should().BeFalse();
-      TestUnion_class_with_same_types.CreateString2("text").IsNullableInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString2("text").IsNullableOfInt32.Should().BeFalse();
 
       TestUnion_class_with_same_types.CreateString3("text").IsText.Should().BeFalse();
       TestUnion_class_with_same_types.CreateString3("text").IsInt32.Should().BeFalse();
       TestUnion_class_with_same_types.CreateString3("text").IsString2.Should().BeFalse();
       TestUnion_class_with_same_types.CreateString3("text").IsString3.Should().BeTrue();
-      TestUnion_class_with_same_types.CreateString3("text").IsNullableInt32.Should().BeFalse();
+      TestUnion_class_with_same_types.CreateString3("text").IsNullableOfInt32.Should().BeFalse();
 
       new TestUnion_class_with_same_types((int?)1).IsText.Should().BeFalse();
       new TestUnion_class_with_same_types((int?)1).IsInt32.Should().BeFalse();
       new TestUnion_class_with_same_types((int?)1).IsString2.Should().BeFalse();
       new TestUnion_class_with_same_types((int?)1).IsString3.Should().BeFalse();
-      new TestUnion_class_with_same_types((int?)1).IsNullableInt32.Should().BeTrue();
+      new TestUnion_class_with_same_types((int?)1).IsNullableOfInt32.Should().BeTrue();
    }
 }

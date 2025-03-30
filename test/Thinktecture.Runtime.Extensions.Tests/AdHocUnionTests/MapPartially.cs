@@ -236,7 +236,7 @@ public class MapPartially
                                                  int32: 42,
                                                  string2: "text2",
                                                  string3: "text3",
-                                                 nullableInt32: 43);
+                                                 nullableOfInt32: 43);
 
          calledActionOn.Should().Be(expected);
       }
@@ -263,7 +263,7 @@ public class MapPartially
                                                  int32: 42,
                                                  string2: "text2",
                                                  string3: "text3",
-                                                 nullableInt32: 43);
+                                                 nullableOfInt32: 43);
 
          calledActionOn.Should().Be(expected);
       }

@@ -181,7 +181,7 @@ public class SwitchPartially
                                   {
                                      calledActionOn = v;
                                   },
-                                  nullableInt32: v =>
+                                  nullableOfInt32: v =>
                                   {
                                      calledActionOn = v;
                                   });
@@ -360,7 +360,7 @@ public class SwitchPartially
                                   {
                                      calledActionOn = v;
                                   },
-                                  nullableInt32: v =>
+                                  nullableOfInt32: v =>
                                   {
                                      calledActionOn = v;
                                   });

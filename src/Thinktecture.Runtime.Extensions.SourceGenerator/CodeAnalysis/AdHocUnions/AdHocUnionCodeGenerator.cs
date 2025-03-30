@@ -127,7 +127,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface || memberType.TypeDuplicateIndex is not null)
+         if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
             continue;
 
          _sb.Append(@"
@@ -148,7 +148,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface || memberType.TypeDuplicateIndex is not null)
+         if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
             continue;
 
          _sb.Append(@"
@@ -811,10 +811,10 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
 
-         if (memberType.TypeDuplicateIndex > 1)
+         if (memberType.TypeDuplicateCounter > 1)
             continue;
 
-         var hasDuplicates = memberType.TypeDuplicateIndex is not null;
+         var hasDuplicates = memberType.TypeDuplicateCounter != 0;
          var argName = hasDuplicates ? "value" : memberType.ArgumentName;
 
          _sb.Append(@"
@@ -867,7 +867,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
 
-         if (memberType.TypeDuplicateIndex is null)
+         if (memberType.TypeDuplicateCounter == 0)
             continue;
 
          _sb.Append(@"
@@ -892,7 +892,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
 
-         if (memberType.TypeDuplicateIndex > 1)
+         if (memberType.TypeDuplicateCounter > 1)
             continue;
 
          _sb.Append(@"

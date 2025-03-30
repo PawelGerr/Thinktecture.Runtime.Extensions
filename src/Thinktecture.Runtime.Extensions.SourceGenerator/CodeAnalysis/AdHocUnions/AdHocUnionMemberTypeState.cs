@@ -10,7 +10,7 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
    public bool IsNullableStruct { get; }
    public SpecialType SpecialType { get; }
    public bool IsInterface { get; }
-   public int? TypeDuplicateIndex { get; }
+   public int TypeDuplicateCounter { get; }
 
    public string ArgumentName { get; }
    public string BackingFieldName { get; }
@@ -19,14 +19,14 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
    public AdHocUnionMemberTypeState(
       string name,
       string defaultName,
-      int? typeDuplicateIndex,
+      int typeDuplicateCounter,
       ITypedMemberState typeState,
       AdHocUnionMemberTypeSetting setting)
    {
       Name = name;
       ArgumentName = Name.MakeArgumentName();
-      BackingFieldName = typeDuplicateIndex is null ? ArgumentName : defaultName.MakeArgumentName();
-      TypeDuplicateIndex = typeDuplicateIndex;
+      BackingFieldName = typeDuplicateCounter == 0 ? ArgumentName : defaultName.MakeArgumentName();
+      TypeDuplicateCounter = typeDuplicateCounter;
       TypeFullyQualified = typeState.TypeFullyQualified;
       TypeMinimallyQualified = typeState.TypeMinimallyQualified;
       IsReferenceType = typeState.IsReferenceType;
@@ -35,32 +35,6 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
       SpecialType = typeState.SpecialType;
       IsInterface = typeState.TypeKind == TypeKind.Interface;
       Setting = setting;
-   }
-
-   public static (string Name, string DefaultName) GetMemberName(
-      AdHocUnionMemberTypeSetting setting,
-      int? duplicateIndex,
-      INamedTypeSymbol type,
-      ITypedMemberState typeState)
-   {
-      var defaultName = typeState.IsNullableStruct
-                           ? $"Nullable{type.TypeArguments[0].Name}"
-                           : type.Name;
-
-      var name = setting.Name ?? defaultName + duplicateIndex;
-
-      return (name, defaultName);
-   }
-
-   public static (string Name, string DefaultName) GetMemberName(
-      AdHocUnionMemberTypeSetting setting,
-      int? duplicateIndex,
-      IArrayTypeSymbol type)
-   {
-      var defaultName = $"{type.ElementType.Name}Array";
-      var name = setting.Name ?? defaultName + duplicateIndex;
-
-      return (name, defaultName);
    }
 
    public override bool Equals(object? obj)
@@ -79,7 +53,7 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
              && IsReferenceType == other.IsReferenceType
              && SpecialType == other.SpecialType
              && IsInterface == other.IsInterface
-             && TypeDuplicateIndex == other.TypeDuplicateIndex
+             && TypeDuplicateCounter == other.TypeDuplicateCounter
              && Setting.Equals(other.Setting);
    }
 
@@ -91,7 +65,7 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
-         hashCode = (hashCode * 397) ^ TypeDuplicateIndex.GetHashCode();
+         hashCode = (hashCode * 397) ^ TypeDuplicateCounter;
          hashCode = (hashCode * 397) ^ Setting.GetHashCode();
 
          return hashCode;

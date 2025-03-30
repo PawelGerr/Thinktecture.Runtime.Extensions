@@ -19,7 +19,7 @@ public class Value
       new TestUnion_class_nullable_string_nullable_int(@string: null).Value.Should().BeNull();
       new TestUnion_class_nullable_string_nullable_int("text").Value.Should().Be("text");
       new TestUnion_class_nullable_string_nullable_int(1).Value.Should().Be(1);
-      new TestUnion_class_nullable_string_nullable_int(nullableInt32: null).Value.Should().BeNull();
+      new TestUnion_class_nullable_string_nullable_int(nullableOfInt32: null).Value.Should().BeNull();
 
       new TestUnion_struct_string_int("text").Value.Should().Be("text");
       new TestUnion_struct_string_int(1).Value.Should().Be(1);

@@ -181,7 +181,7 @@ public class Switch
                          {
                             calledActionOn = v;
                          },
-                         nullableInt32: v =>
+                         nullableOfInt32: v =>
                          {
                             calledActionOn = v;
                          });

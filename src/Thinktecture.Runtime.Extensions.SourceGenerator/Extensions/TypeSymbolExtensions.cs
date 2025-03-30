@@ -759,4 +759,76 @@ public static class TypeSymbolExtensions
 
       return false;
    }
+
+   public static bool TryBuildMemberName(
+      this INamedTypeSymbol type,
+      [MaybeNullWhen(false)] out string name)
+   {
+      if (!type.IsGenericType)
+      {
+         name = type.Name;
+         return true;
+      }
+
+      var typeArguments = type.TypeArguments;
+
+      // Perf optimization
+      if (typeArguments.Length == 1)
+      {
+         if (!typeArguments[0].TryBuildMemberName(out var typeArgumentName))
+         {
+            name = null;
+            return false;
+         }
+
+         name = $"{type.Name}Of{typeArgumentName}";
+         return true;
+      }
+
+      var typeArgumentNames = new string[typeArguments.Length];
+
+      for (var i = 0; i < typeArguments.Length; i++)
+      {
+         var typeArgument = typeArguments[i];
+
+         if (!typeArgument.TryBuildMemberName(out var typeArgumentName))
+         {
+            name = null;
+            return false;
+         }
+
+         typeArgumentNames[i] = typeArgumentName;
+      }
+
+      name = $"{type.Name}Of{String.Join(String.Empty, typeArgumentNames)}";
+      return true;
+   }
+
+   public static bool TryBuildMemberName(
+      this IArrayTypeSymbol type,
+      [MaybeNullWhen(false)] out string name)
+   {
+      if (!type.ElementType.TryBuildMemberName(out var elementName))
+      {
+         name = null;
+         return false;
+      }
+
+      name = $"{elementName}Array";
+      return true;
+   }
+
+   public static bool TryBuildMemberName(
+      this ITypeSymbol type,
+      [MaybeNullWhen(false)] out string name)
+   {
+      name = null;
+
+      return type switch
+      {
+         IArrayTypeSymbol arrayTypeSymbol => TryBuildMemberName(arrayTypeSymbol, out name),
+         INamedTypeSymbol namedTypeSymbol => TryBuildMemberName(namedTypeSymbol, out name),
+         _ => false
+      };
+   }
 }
