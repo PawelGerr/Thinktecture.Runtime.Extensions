@@ -7,6 +7,7 @@ public class UnionTypeMemberState : IEquatable<UnionTypeMemberState>, ITypeFully
    public string Name { get; }
    public bool IsAbstract { get; }
    public bool IsInterface { get; }
+   public bool HasRequiredMembers { get; }
    public string BaseTypeFullyQualified { get; }
    public string BaseTypeDefinitionFullyQualified { get; }
    public IReadOnlyList<DefaultMemberState> UniqueSingleArgumentConstructors { get; }
@@ -28,6 +29,7 @@ public class UnionTypeMemberState : IEquatable<UnionTypeMemberState>, ITypeFully
       IsAbstract = type.IsAbstract;
       IsInterface = type.TypeKind == TypeKind.Interface;
       UniqueSingleArgumentConstructors = uniqueSingleArgumentConstructors;
+      HasRequiredMembers = type.HasRequiredMembers();
 
       ContainingTypes = type.GetContainingTypes();
    }
@@ -43,6 +45,7 @@ public class UnionTypeMemberState : IEquatable<UnionTypeMemberState>, ITypeFully
              && BaseTypeFullyQualified == other.BaseTypeFullyQualified
              && IsAbstract == other.IsAbstract
              && IsInterface == other.IsInterface
+             && HasRequiredMembers == other.HasRequiredMembers
              && UniqueSingleArgumentConstructors.SequenceEqual(other.UniqueSingleArgumentConstructors)
              && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
@@ -55,6 +58,7 @@ public class UnionTypeMemberState : IEquatable<UnionTypeMemberState>, ITypeFully
          hashCode = (hashCode * 397) ^ BaseTypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasRequiredMembers.GetHashCode();
          hashCode = (hashCode * 397) ^ UniqueSingleArgumentConstructors.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 

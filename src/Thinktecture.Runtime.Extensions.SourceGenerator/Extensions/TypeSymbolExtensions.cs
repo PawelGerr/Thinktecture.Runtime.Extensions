@@ -387,10 +387,10 @@ public static class TypeSymbolExtensions
                 : type;
    }
 
-   public static IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> FindDerivedInnerTypes(
+   public static IReadOnlyList<DerivedTypeInfo> FindDerivedInnerTypes(
       this INamedTypeSymbol baseType)
    {
-      List<(INamedTypeSymbol, INamedTypeSymbol, int Level)>? derivedTypes = null;
+      List<DerivedTypeInfo>? derivedTypes = null;
 
       FindDerivedInnerTypes(
          baseType,
@@ -398,14 +398,14 @@ public static class TypeSymbolExtensions
          (baseType, baseType.GetGenericTypeDefinition()),
          ref derivedTypes);
 
-      return derivedTypes ?? (IReadOnlyList<(INamedTypeSymbol, INamedTypeSymbol, int)>)Array.Empty<(INamedTypeSymbol, INamedTypeSymbol, int)>();
+      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)Array.Empty<DerivedTypeInfo>();
    }
 
    private static void FindDerivedInnerTypes(
       INamedTypeSymbol typeToCheck,
       int currentLevel,
       (INamedTypeSymbol Type, INamedTypeSymbol TypeDef) baseType,
-      ref List<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)>? derivedTypes)
+      ref List<DerivedTypeInfo>? derivedTypes)
    {
       currentLevel++;
 
@@ -424,7 +424,7 @@ public static class TypeSymbolExtensions
 
          if (IsDerivedFrom(innerType, baseType))
          {
-            (derivedTypes ??= []).Add((innerType, innerType.GetGenericTypeDefinition(), currentLevel));
+            (derivedTypes ??= []).Add(new(innerType, innerType.GetGenericTypeDefinition(), currentLevel));
          }
 
          FindDerivedInnerTypes(innerType, currentLevel, baseType, ref derivedTypes);
@@ -734,5 +734,29 @@ public static class TypeSymbolExtensions
       }
 
       return methodStates ?? (IReadOnlyList<DelegateMethodState>) [];
+   }
+
+   public static bool HasRequiredMembers(this INamedTypeSymbol type)
+   {
+      var typeToCheck = type;
+
+      while (typeToCheck is not null)
+      {
+         var members = typeToCheck.GetMembers();
+
+         for (var i = 0; i < members.Length; i++)
+         {
+            switch (members[i])
+            {
+               case IPropertySymbol { IsRequired: true }:
+               case IFieldSymbol { IsRequired: true }:
+                  return true;
+            }
+         }
+
+         typeToCheck = typeToCheck.BaseType;
+      }
+
+      return false;
    }
 }

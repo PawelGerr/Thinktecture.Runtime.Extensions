@@ -170,6 +170,112 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_base_union_has_required_property()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial record Result<T>
+            {
+               public required string Property { get; set; }
+
+               public partial record Success(T Value) : Result<T>;
+
+               public partial record Failure(string Error) : Result<T>;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_base_union_has_required_field()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial record Result<T>
+            {
+               public required string Field;
+
+               public partial record Success(T Value) : Result<T>;
+
+               public partial record Failure(string Error) : Result<T>;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_union_has_required_property()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial record Result<T>
+            {
+               public partial record Success(T Value) : Result<T>
+               {
+                  public required string Property { get; set; }
+               }
+
+               public partial record Failure(string Error) : Result<T>;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_has_required_field()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial record Result<T>
+            {
+               public partial record Success(T Value) : Result<T>
+               {
+                  public required string Field;
+               }
+
+               public partial record Failure(string Error) : Result<T>;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_record_with_multiple_implicit_conversions()
    {
       var source = """

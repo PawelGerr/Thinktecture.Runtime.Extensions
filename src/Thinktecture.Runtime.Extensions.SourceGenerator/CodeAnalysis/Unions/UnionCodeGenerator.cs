@@ -181,7 +181,7 @@ abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").App
       {
          var memberType = _state.TypeMembers[i];
 
-         if (memberType.IsInterface || memberType.IsAbstract)
+         if (memberType.IsInterface || memberType.IsAbstract || memberType.HasRequiredMembers)
             continue;
 
          for (var j = 0; j < memberType.UniqueSingleArgumentConstructors.Count; j++)

@@ -148,7 +148,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
 
    private static IReadOnlyList<IReadOnlyList<DefaultMemberState>> GetSingleArgumentConstructors(
       TypedMemberStateFactory factory,
-      IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> derivedTypeInfos)
+      IReadOnlyList<DerivedTypeInfo> derivedTypeInfos)
    {
       var (typeInfoCtors, foundArgTypes) = GetTypeInfoCtors(derivedTypeInfos);
 
@@ -181,7 +181,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
    }
 
    private static (IReadOnlyList<IReadOnlyList<IParameterSymbol>> TypeInfoCtors, IReadOnlyList<(ITypeSymbol Type, int Counter)> ArgTypes) GetTypeInfoCtors(
-      IReadOnlyList<(INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level)> derivedTypeInfos)
+      IReadOnlyList<DerivedTypeInfo> derivedTypeInfos)
    {
       var typeInfoCtors = new List<IReadOnlyList<IParameterSymbol>>(derivedTypeInfos.Count);
       var argTypes = new List<(ITypeSymbol Type, int Counter)>();
@@ -212,7 +212,7 @@ public class UnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementa
    }
 
    private static IReadOnlyList<IParameterSymbol> GetSingleArgumentConstructors(
-      (INamedTypeSymbol Type, INamedTypeSymbol TypeDef, int Level) derivedTypeInfo)
+      DerivedTypeInfo derivedTypeInfo)
    {
       if (derivedTypeInfo.Type.Constructors.IsDefaultOrEmpty)
          return [];
