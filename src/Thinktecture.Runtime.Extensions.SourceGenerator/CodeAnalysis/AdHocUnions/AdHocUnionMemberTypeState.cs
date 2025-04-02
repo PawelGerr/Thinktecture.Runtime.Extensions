@@ -25,7 +25,10 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
    {
       Name = name;
       ArgumentName = Name.MakeArgumentName();
-      BackingFieldName = typeDuplicateCounter == 0 ? ArgumentName : defaultName.MakeArgumentName();
+
+      var backingFieldName = (typeDuplicateCounter == 0 ? Name : defaultName).MakeBackingFieldName();
+      BackingFieldName = backingFieldName == Name ? $"_{backingFieldName}" : backingFieldName;
+
       TypeDuplicateCounter = typeDuplicateCounter;
       TypeFullyQualified = typeState.TypeFullyQualified;
       TypeMinimallyQualified = typeState.TypeMinimallyQualified;

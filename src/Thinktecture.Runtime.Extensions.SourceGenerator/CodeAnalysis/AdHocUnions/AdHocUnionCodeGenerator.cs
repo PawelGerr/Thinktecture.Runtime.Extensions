@@ -224,7 +224,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => this._").Append(memberType.BackingFieldName);
+            ").Append(i + 1).Append(" => this.").Append(memberType.BackingFieldName);
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
@@ -266,7 +266,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this._").Append(memberType.BackingFieldName);
+         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this.").Append(memberType.BackingFieldName);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -348,9 +348,9 @@ namespace ").Append(_state.Namespace).Append(@"
             ").Append(i + 1).Append(" => ");
 
          if (memberType.IsReferenceType)
-            _sb.Append("this._").Append(memberType.BackingFieldName).Append(" is null ? other._").Append(memberType.BackingFieldName).Append(" is null : ");
+            _sb.Append("this.").Append(memberType.BackingFieldName).Append(" is null ? other.").Append(memberType.BackingFieldName).Append(" is null : ");
 
-         _sb.Append("this._").Append(memberType.BackingFieldName).Append(".Equals(other._").Append(memberType.BackingFieldName);
+         _sb.Append("this.").Append(memberType.BackingFieldName).Append(".Equals(other.").Append(memberType.BackingFieldName);
 
          if (memberType.SpecialType == SpecialType.System_String)
             _sb.Append(", global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
@@ -500,7 +500,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("state, ");
 
-         _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
+         _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
       }
 
@@ -661,7 +661,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("state, ");
 
-         _sb.Append("this._").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
+         _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
 
       _sb.Append(@"
@@ -844,7 +844,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@")
       {
-         this._").Append(memberType.BackingFieldName).Append(" = ").AppendEscaped(argName).Append(@";
+         this.").Append(memberType.BackingFieldName).Append(" = ").AppendEscaped(argName).Append(@";
          this._valueIndex = ");
 
          if (hasDuplicates)
@@ -896,7 +896,7 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" _").Append(memberType.BackingFieldName).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append(memberType.BackingFieldName).Append(";");
       }
 
       for (var i = 0; i < _state.MemberTypes.Count; i++)
@@ -920,7 +920,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
-            .Append(" ? this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
+            .Append(" ? this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
       }
    }
@@ -956,7 +956,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => this._").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
+         ").Append(i + 1).Append(" => this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
       }
 
       _sb.Append(@"

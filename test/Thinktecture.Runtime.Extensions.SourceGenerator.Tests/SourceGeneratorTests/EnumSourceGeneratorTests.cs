@@ -1138,4 +1138,30 @@ public class EnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_special_chars()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>(KeyMemberName = "_1Key")]
+            public partial class _1TestEnum
+            {
+               public static readonly _1TestEnum _1Item1 = null!;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests._1TestEnum.g.cs",
+                        "Thinktecture.Tests._1TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests._1TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests._1TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests._1TestEnum.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests._1TestEnum.Formattable.g.cs");
+   }
 }

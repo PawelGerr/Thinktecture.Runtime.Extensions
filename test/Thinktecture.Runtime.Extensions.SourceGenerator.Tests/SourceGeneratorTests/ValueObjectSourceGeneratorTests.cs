@@ -1027,4 +1027,36 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(stringComparison.ToString(), output);
    }
+
+   [Fact]
+   public async Task Should_handle_special_chars()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(KeyMemberName = "_1Key")]
+         	public partial class _1TestValueObject
+         	{
+           }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests._1TestValueObject.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.DivisionOperators.g.cs");
+   }
 }

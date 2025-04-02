@@ -23,9 +23,9 @@ public static class ContainingTypesExtensions
 
       var firstChar = sb[sbLength];
 
-      sb[sbLength] = firstChar == '_'
-                        ? Char.ToLowerInvariant(sb[sbLength + 1])
-                        : Char.ToLowerInvariant(firstChar);
+      sb[sbLength] = firstChar != '_' || (sb.Length > sbLength && Char.IsDigit(sb[sbLength + 1]))
+                        ? Char.ToLowerInvariant(firstChar)
+                        : Char.ToLowerInvariant(sb[sbLength + 1]);
 
       var argName = sb.ToString(sbLength, sb.Length - sbLength);
       sb.Length = sbLength;

@@ -418,4 +418,26 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_special_chars()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class _1TestUnionWithSpecialChars
+            {
+               public sealed class _1Test : _1TestUnionWithSpecialChars;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests._1TestUnionWithSpecialChars.g.cs");
+   }
 }
