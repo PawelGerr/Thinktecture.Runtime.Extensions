@@ -20,7 +20,10 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       private static readonly Type _converterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                             .Single(t => t.Name.StartsWith("ValueObjectValueConverter", StringComparison.Ordinal));
 
-      private readonly TestDbContext _ctx = new(new DbContextOptionsBuilder<TestDbContext>().UseSqlite("DataSource=:memory:").Options,
+      private readonly TestDbContext _ctx = new(new DbContextOptionsBuilder<TestDbContext>()
+                                                .UseSqlite("DataSource=:memory:")
+                                                .EnableServiceProviderCaching(false)
+                                                .Options,
                                                 ValueConverterRegistration.OnModelCreating);
 
       [Fact]

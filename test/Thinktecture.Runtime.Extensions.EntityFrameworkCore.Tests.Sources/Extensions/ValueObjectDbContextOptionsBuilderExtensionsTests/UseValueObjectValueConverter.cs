@@ -26,6 +26,7 @@ public class UseValueObjectValueConverter : IDisposable
    {
       var options = new DbContextOptionsBuilder<TestDbContext>()
                     .UseSqlite("DataSource=:memory:")
+                    .EnableServiceProviderCaching(false)
                     .UseValueObjectValueConverter()
                     .Options;
 

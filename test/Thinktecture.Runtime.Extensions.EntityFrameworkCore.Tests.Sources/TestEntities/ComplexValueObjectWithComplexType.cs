@@ -26,7 +26,10 @@ public partial class ComplexValueObjectWithComplexType
                                  b =>
                                  {
                                     b.IsRequired();
-                                    b.Property(t => t.TestEnum);
+                                    var propertyBuilder = b.Property(t => t.TestEnum);
+
+                                    if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
+                                       propertyBuilder.HasValueObjectConversion(true);
 
                                     if (valueConverterRegistration == ValueConverterRegistration.ComplexTypeConfiguration)
                                        b.AddValueObjectConverters(true);

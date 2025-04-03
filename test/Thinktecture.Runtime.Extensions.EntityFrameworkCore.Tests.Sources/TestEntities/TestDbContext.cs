@@ -35,10 +35,8 @@ public class TestDbContext : DbContext
    {
       base.OnModelCreating(modelBuilder);
 
-      var configureOnEntityTypeLevel = _valueConverterRegistration is ValueConverterRegistration.EntityConfiguration or ValueConverterRegistration.ComplexTypeConfiguration;
-
-      TestEntity_with_OwnedTypes.Configure(modelBuilder, configureOnEntityTypeLevel);
-      TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder, configureOnEntityTypeLevel);
+      TestEntity_with_OwnedTypes.Configure(modelBuilder, _valueConverterRegistration);
+      TestEntity_with_Enum_and_ValueObjects.Configure(modelBuilder, _valueConverterRegistration);
 
 #if COMPLEX_TYPES
       TestEntityWithComplexType.Configure(modelBuilder, _valueConverterRegistration);

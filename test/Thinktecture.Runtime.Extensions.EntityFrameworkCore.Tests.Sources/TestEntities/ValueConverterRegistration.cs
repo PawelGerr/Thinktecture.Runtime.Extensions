@@ -5,5 +5,6 @@ public enum ValueConverterRegistration
    None,
    OnModelCreating,
    EntityConfiguration,
-   ComplexTypeConfiguration
+   ComplexTypeConfiguration,
+   PropertyConfiguration
 }

@@ -3,14 +3,15 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Caching.Memory;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable InconsistentNaming
-namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
+namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
 {
-   public class AddValueObjectConverters : IDisposable
+   public class HasValueObjectConversion : IDisposable
    {
       private static readonly Type _validateableConverterType = typeof(ValueObjectValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                                         .Single(t => t.Name.StartsWith("ValidatableEnumValueConverter", StringComparison.Ordinal));
@@ -24,7 +25,7 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
                                                 .UseSqlite("DataSource=:memory:")
                                                 .EnableServiceProviderCaching(false)
                                                 .Options,
-                                                ValueConverterRegistration.EntityConfiguration);
+                                                ValueConverterRegistration.PropertyConfiguration);
 
       [Fact]
       public void Should_add_converters_for_structs_and_classes()
@@ -45,22 +46,6 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
       public void Should_add_converters_for_complex_types()
       {
          var entityType = _ctx.Model.FindEntityType(typeof(TestEntityWithComplexType)) ?? throw new Exception("Entity not found");
-         var complexProperty = entityType.FindComplexProperty(nameof(TestEntityWithComplexType.TestComplexType)) ?? throw new Exception("Complex type property not found");
-
-         ValidateConverter(complexProperty.ComplexType, nameof(TestComplexType.TestEnum));
-      }
-
-      [Fact]
-      public void Should_add_converters_for_complex_types_inside_complex_type_configuration()
-      {
-         using var ctx = new TestDbContext(
-            new DbContextOptionsBuilder<TestDbContext>()
-            .UseSqlite("DataSource=:memory:")
-            .EnableServiceProviderCaching(false)
-            .Options,
-            ValueConverterRegistration.ComplexTypeConfiguration);
-
-         var entityType = ctx.Model.FindEntityType(typeof(TestEntityWithComplexType)) ?? throw new Exception("Entity not found");
          var complexProperty = entityType.FindComplexProperty(nameof(TestEntityWithComplexType.TestComplexType)) ?? throw new Exception("Complex type property not found");
 
          ValidateConverter(complexProperty.ComplexType, nameof(TestComplexType.TestEnum));

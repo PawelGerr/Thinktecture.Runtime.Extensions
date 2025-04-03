@@ -14,7 +14,11 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
 
    public ValueObjectValueConverterFactoryTests()
    {
-      _ctx = new(new DbContextOptionsBuilder<TestDbContext>().Options, ValueConverterRegistration.OnModelCreating);
+      _ctx = new(
+         new DbContextOptionsBuilder<TestDbContext>()
+            .EnableServiceProviderCaching(false)
+            .Options,
+         ValueConverterRegistration.OnModelCreating);
       _ctx.Database.OpenConnection();
       _ctx.Database.EnsureCreated();
    }

@@ -34,15 +34,51 @@ public class TestEntity_with_Enum_and_ValueObjects
 
    public static void Configure(
       ModelBuilder modelBuilder,
-      bool registerValueConverters)
+      ValueConverterRegistration valueConverterRegistration)
    {
+      var configureOnEntityTypeLevel = valueConverterRegistration
+                                          is ValueConverterRegistration.EntityConfiguration
+                                          or ValueConverterRegistration.ComplexTypeConfiguration;
+
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
       {
-         builder.OwnsOne(e => e.Boundary, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
-         builder.OwnsOne(e => e.BoundaryWithCustomError, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
-         builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames, navigationBuilder => navigationBuilder.AddValueObjectConverters(true));
+         if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
+         {
+            builder.Property(e => e.TestEnum).HasValueObjectConversion(true);
 
-         if (registerValueConverters)
+            builder.Property(e => e.TestSmartEnum_Class_IntBased).HasValueObjectConversion(true);
+            builder.Property(e => e.TestSmartEnum_Class_StringBased).HasValueObjectConversion(true);
+            builder.Property(e => e.TestSmartEnum_Struct_IntBased).HasValueObjectConversion(true);
+            builder.Property(e => e.TestSmartEnum_Struct_StringBased).HasValueObjectConversion(true);
+            builder.Property(e => e.NullableTestSmartEnum_Struct_StringBased).HasValueObjectConversion(true);
+            builder.Property(e => e.TestEnumWithCustomError).HasValueObjectConversion(true);
+
+            builder.Property(e => e.IntBasedReferenceValueObject).HasValueObjectConversion(true);
+            builder.Property(e => e.IntBasedStructValueObject).HasValueObjectConversion(true);
+            builder.Property(e => e.StringBasedReferenceValueObject).HasValueObjectConversion(true);
+            builder.Property(e => e.StringBasedStructValueObject).HasValueObjectConversion(true);
+            builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasValueObjectConversion(true);
+
+            builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasValueObjectConversion(true);
+         }
+
+         builder.OwnsOne(e => e.Boundary, navigationBuilder =>
+         {
+            if (!configureOnEntityTypeLevel)
+               navigationBuilder.AddValueObjectConverters(true);
+         });
+         builder.OwnsOne(e => e.BoundaryWithCustomError, navigationBuilder =>
+         {
+            if (!configureOnEntityTypeLevel)
+               navigationBuilder.AddValueObjectConverters(true);
+         });
+         builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames, navigationBuilder =>
+         {
+            if (!configureOnEntityTypeLevel)
+               navigationBuilder.AddValueObjectConverters(true);
+         });
+
+         if (configureOnEntityTypeLevel)
             builder.AddValueObjectConverters(true);
       });
    }
