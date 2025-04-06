@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Thinktecture.SmartEnums;
+using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture.Controllers;
@@ -129,6 +130,17 @@ public class DemoController : Controller
       _logger.LogInformation("Round trip test with {Type}: {EndDate}", endDate.GetType().Name, endDate);
 
       return Json(endDate);
+   }
+
+   [HttpGet("textOrNumber/{textOrNumber}")]
+   public IActionResult RoundTrip(TextOrNumberSerializable textOrNumber)
+   {
+      if (!ModelState.IsValid)
+         return BadRequest(ModelState);
+
+      _logger.LogInformation("Round trip test with {Type}: {EndDate}", textOrNumber.GetType().Name, textOrNumber);
+
+      return Json(textOrNumber);
    }
 
    private IActionResult RoundTripValidatableEnum<T>(T value)

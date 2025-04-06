@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Serilog;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Unions;
 
@@ -10,6 +11,7 @@ public class DiscriminatedUnionsDemos
    public static void Demo(ILogger logger)
    {
       DemoForAdHocUnions(logger);
+      SerializationDemoForAdHocUnions(logger);
       DemoForUnions(logger);
       DemoForJurisdiction(logger);
       DemoForPartiallyKnownDate(logger);
@@ -80,6 +82,22 @@ public class DiscriminatedUnionsDemos
       var mapPartiallyResponse = textOrNumberFromString.MapPartially(@default: "[MapPartially] Mapped default",
                                                                      text: "[MapPartially] Mapped string");
       logger.Information("{Response}", mapPartiallyResponse);
+   }
+
+   private static void SerializationDemoForAdHocUnions(ILogger logger)
+   {
+      TextOrNumberSerializable textOrNumberFromString = "text";
+      TextOrNumberSerializable textOrNumberFromInt = 42;
+
+      var jsonOptions = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      var json = JsonSerializer.Serialize(textOrNumberFromString, jsonOptions);
+      var deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json, jsonOptions);
+      logger.Information("TextOrNumberSerializable (de)serialization: {Json} -> {TextOrNumber}", json, deserializedTextOrNumber);
+
+      json = JsonSerializer.Serialize(textOrNumberFromInt, jsonOptions);
+      deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json, jsonOptions);
+      logger.Information("TextOrNumberSerializable (de)serialization: {Json} -> {TextOrNumber}", json, deserializedTextOrNumber);
    }
 
    private static void DemoForUnions(ILogger logger)
@@ -253,7 +271,7 @@ public class DiscriminatedUnionsDemos
       var preciseDate = new PartiallyKnownDate.Date(2023, 12, 31);
 
       // Implicit conversion from DateOnly to PartiallyKnownDate
-      PartiallyKnownDate fullDate = new DateOnly(2024, 3, 15);  // Date(2024, 3, 15)
+      PartiallyKnownDate fullDate = new DateOnly(2024, 3, 15); // Date(2024, 3, 15)
 
       static string FormatDate(PartiallyKnownDate? date)
       {

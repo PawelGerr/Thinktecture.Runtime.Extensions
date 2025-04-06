@@ -17,6 +17,7 @@ using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.Helpers;
 using Thinktecture.SmartEnums;
 using Thinktecture.Text.Json.Serialization;
+using Thinktecture.Unions;
 using Thinktecture.Validation;
 using Thinktecture.ValueObjects;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -81,6 +82,8 @@ public class Program
 
       await DoRequestAsync(logger, client, $"enddate/{DateOnly.FromDateTime(DateTime.Now):O}");
       await DoRequestAsync(logger, client, "enddate", DateOnly.FromDateTime(DateTime.Now));
+
+      await DoRequestAsync(logger, client, "textOrNumber/Number|42");
 
       await DoRequestAsync(logger, client, "notification/channels");
       await DoRequestAsync(logger, client, "notification/channels/email", "Test email");
@@ -178,6 +181,8 @@ public class Program
 
       routeGroup.MapGet("enddate/{date}", (OpenEndDate date) => date);
       routeGroup.MapPost("enddate", ([FromBody] OpenEndDate date) => date);
+
+      routeGroup.MapGet("textOrNumber/{textOrNumber}", (TextOrNumberSerializable textOrNumber) => textOrNumber);
 
       routeGroup.MapGet("notification/channels", () =>
       {

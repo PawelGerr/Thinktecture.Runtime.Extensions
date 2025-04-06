@@ -4,6 +4,7 @@ using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture;
 using Thinktecture.SmartEnums;
+using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
 
 var groceries = DoRoundTripSerializationOfTypesWithoutFormatter(ProductType.Groceries);
@@ -22,6 +23,13 @@ Console.WriteLine(productNameWithFormatter);
 
 var boundaryWithFormatter = DoRoundTripSerialization(BoundaryWithMessagePackFormatter.Create(1, 2));
 Console.WriteLine(boundaryWithFormatter);
+
+// Ad hoc union
+var textOrNumber = DoRoundTripSerializationOfTypesWithoutFormatter((TextOrNumberSerializable)42);
+Console.WriteLine(textOrNumber);
+
+var textOrNumberWithFormatter = DoRoundTripSerialization((TextOrNumberSerializableWithFormatter)42);
+Console.WriteLine(textOrNumberWithFormatter);
 
 // Smart Enums and Value Objects without [MessagePackFormatterAttribute] need "ValueObjectMessageFormatterResolver".
 static T DoRoundTripSerializationOfTypesWithoutFormatter<T>(T obj)
