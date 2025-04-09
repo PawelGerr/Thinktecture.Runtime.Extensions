@@ -20,6 +20,7 @@ public static class Constants
       public const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
       public const string THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.dll";
       public const string THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK = "Thinktecture.Runtime.Extensions.MessagePack.dll";
+      public const string THINKTECTURE_RUNTIME_EXTENSIONS_PROTOBUF = "Thinktecture.Runtime.Extensions.ProtoBuf.dll";
    }
 
    public static class ComparerAccessor

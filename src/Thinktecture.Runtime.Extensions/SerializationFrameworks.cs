@@ -32,7 +32,12 @@ public enum SerializationFrameworks
    MessagePack = 1 << 2,
 
    /// <summary>
-   /// System.Text.Json, Newtonsoft.Json and MessagePack
+   /// ProtoBuf
    /// </summary>
-   All = Json | MessagePack
+   ProtoBuf = 1 << 3,
+
+   /// <summary>
+   /// System.Text.Json, Newtonsoft.Json, MessagePack and ProtoBuf
+   /// </summary>
+   All = Json | MessagePack | ProtoBuf
 }
