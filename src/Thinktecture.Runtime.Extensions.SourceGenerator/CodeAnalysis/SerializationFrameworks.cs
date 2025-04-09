@@ -8,5 +8,6 @@ public enum SerializationFrameworks
    NewtonsoftJson = 1 << 1,
    Json = SystemTextJson | NewtonsoftJson,
    MessagePack = 1 << 2,
-   All = Json | MessagePack
+   ProtoBuf = 1 << 3,
+   All = Json | MessagePack | ProtoBuf
 }

@@ -251,6 +251,11 @@ public static class TypeSymbolExtensions
       return type is { Name: "MessagePackFormatterAttribute", ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsProtoContractAttribute(this ITypeSymbol type)
+   {
+      return type is { Name: "ProtoContractAttribute", ContainingNamespace: { Name: "ProtoBuf", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsObjectFactoryAttribute(this INamedTypeSymbol type)
    {
       return type is { Name: Constants.Attributes.ObjectFactory.NAME or Constants.Attributes.ObjectFactory.NAME_OBSOLETE, TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };

@@ -15,17 +15,15 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/samples/">
-    <File Path="samples/Directory.Build.props" />
     <Project Path="samples/AspNetCore.Samples/AspNetCore.Samples.csproj" />
     <Project Path="samples/Basic.Samples/Basic.Samples.csproj" />
     <Project Path="samples/Benchmarking/Benchmarking.csproj" />
     <Project Path="samples/EntityFrameworkCore.Samples/EntityFrameworkCore.Samples.csproj" />
     <Project Path="samples/MessagePack.Samples/MessagePack.Samples.csproj" />
     <Project Path="samples/Newtonsoft.Json.AspNetCore.Samples/Newtonsoft.Samples.csproj" />
+    <File Path="samples/Directory.Build.props" />
   </Folder>
   <Folder Name="/src/">
-    <File Path="src/.editorconfig" />
-    <File Path="src/Directory.Build.props" />
     <Project Path="src/Thinktecture.Runtime.Extensions.AspNetCore/Thinktecture.Runtime.Extensions.AspNetCore.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore8/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj" />
@@ -36,9 +34,11 @@
     <Project Path="src/Thinktecture.Runtime.Extensions.SourceGenerator/Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.Swashbuckle/Thinktecture.Runtime.Extensions.Swashbuckle.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions/Thinktecture.Runtime.Extensions.csproj" />
+    <Project Path="src\Thinktecture.Runtime.Extensions.ProtoBuf\Thinktecture.Runtime.Extensions.ProtoBuf.csproj" Type="Classic C#" />
+    <File Path="src/.editorconfig" />
+    <File Path="src/Directory.Build.props" />
   </Folder>
   <Folder Name="/test/">
-    <File Path="test/Directory.Build.props" />
     <Project Path="test/Thinktecture.Runtime.Extensions.AspNetCore.Tests/Thinktecture.Runtime.Extensions.AspNetCore.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests.csproj" />
@@ -50,5 +50,7 @@
     <Project Path="test/Thinktecture.Runtime.Extensions.Swashbuckle.Tests/Thinktecture.Runtime.Extensions.Swashbuckle.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.Tests.Shared/Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.Tests/Thinktecture.Runtime.Extensions.Tests.csproj" />
+    <Project Path="test\Thinktecture.Runtime.Extensions.ProtoBuf.Tests\Thinktecture.Runtime.Extensions.ProtoBuf.Tests.csproj" Type="Classic C#" />
+    <File Path="test/Directory.Build.props" />
   </Folder>
 </Solution>

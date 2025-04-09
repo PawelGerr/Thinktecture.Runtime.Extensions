@@ -365,6 +365,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                   Logger.LogInformation("Code generator for MessagePack will participate in code generation");
                   factories = factories.Add(MessagePackValueObjectCodeGeneratorFactory.Instance);
                   break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_PROTOBUF:
+                  Logger.LogInformation("Code generator for ProtoBuf will participate in code generation");
+                  factories = factories.Add(ProtoBufValueObjectCodeGeneratorFactory.Instance);
+                  break;
             }
          }
       }
