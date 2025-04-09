@@ -262,6 +262,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                   Logger.LogInformation("Code generator for MessagePack will participate in code generation");
                   factories = factories.Add(MessagePackSmartEnumCodeGeneratorFactory.Instance);
                   break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_PROTOBUF:
+                  Logger.LogInformation("Code generator for ProtoBuf will participate in code generation");
+                  factories = factories.Add(ProtoBufSmartEnumCodeGeneratorFactory.Instance);
+                  break;
             }
          }
       }
