@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Adds better JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
+    <Description>Adds JSON support to components from Thinktecture.Runtime.Extensions when using System.Text.Json.</Description>
     <PackageTags>smart-enum;value-object;discriminated-union;json</PackageTags>
   </PropertyGroup>
 
