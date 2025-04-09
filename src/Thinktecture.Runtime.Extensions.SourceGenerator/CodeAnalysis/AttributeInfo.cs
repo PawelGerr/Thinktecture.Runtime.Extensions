@@ -6,6 +6,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasJsonConverterAttribute { get; }
    public bool HasNewtonsoftJsonConverterAttribute { get; }
    public bool HasMessagePackFormatterAttribute { get; }
+   public bool HasProtoContractAttribute { get; }
    public ImmutableArray<DesiredFactory> DesiredFactories { get; }
    public ValidationErrorState ValidationError { get; }
    public string? KeyMemberComparerAccessor { get; }
@@ -16,6 +17,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       bool hasJsonConverterAttribute,
       bool hasNewtonsoftJsonConverterAttribute,
       bool hasMessagePackFormatterAttribute,
+      bool hasProtoContractAttribute,
       ImmutableArray<DesiredFactory> desiredFactories,
       ValidationErrorState validationError,
       string? keyMemberComparerAccessor,
@@ -25,6 +27,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       HasJsonConverterAttribute = hasJsonConverterAttribute;
       HasNewtonsoftJsonConverterAttribute = hasNewtonsoftJsonConverterAttribute;
       HasMessagePackFormatterAttribute = hasMessagePackFormatterAttribute;
+      HasProtoContractAttribute = hasProtoContractAttribute;
       DesiredFactories = desiredFactories;
       ValidationError = validationError;
       KeyMemberComparerAccessor = keyMemberComparerAccessor;
@@ -37,6 +40,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       var hasJsonConverterAttribute = false;
       var hasNewtonsoftJsonConverterAttribute = false;
       var hasMessagePackFormatterAttribute = false;
+      var hasProtoContractAttribute = false;
       var validationError = ValidationErrorState.Default;
       var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
       string? keyMemberComparerAccessor = null;
@@ -63,6 +67,10 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          else if (attribute.AttributeClass.IsMessagePackFormatterAttribute())
          {
             hasMessagePackFormatterAttribute = true;
+         }
+         else if (attribute.AttributeClass.IsProtoContractAttribute())
+         {
+            hasProtoContractAttribute = true;
          }
          else if (attribute.AttributeClass.IsValueObjectFactoryAttribute())
          {
@@ -102,6 +110,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
                                hasJsonConverterAttribute,
                                hasNewtonsoftJsonConverterAttribute,
                                hasMessagePackFormatterAttribute,
+                               hasProtoContractAttribute,
                                valueObjectFactories,
                                validationError,
                                keyMemberComparerAccessor,
@@ -120,6 +129,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
              && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
+             && HasProtoContractAttribute == other.HasProtoContractAttribute
              && DesiredFactories.SequenceEqual(other.DesiredFactories)
              && ValidationError.Equals(other.ValidationError)
              && KeyMemberComparerAccessor == other.KeyMemberComparerAccessor
@@ -134,6 +144,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          hashCode = (hashCode * 397) ^ HasJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasNewtonsoftJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasMessagePackFormatterAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasProtoContractAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberComparerAccessor?.GetHashCode() ?? 0);
