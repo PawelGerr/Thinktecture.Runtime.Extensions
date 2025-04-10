@@ -20,7 +20,8 @@ public sealed class ProtoBufValueObjectCodeGeneratorFactory : IValueObjectSerial
 
    public bool MustGenerateCode(ComplexSerializerGeneratorState state)
    {
-      return false;
+      return !state.AttributeInfo.HasProtoContractAttribute
+             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.ProtoBuf));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)
@@ -30,7 +31,7 @@ public sealed class ProtoBufValueObjectCodeGeneratorFactory : IValueObjectSerial
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState state, StringBuilder stringBuilder)
    {
-      throw new NotSupportedException();
+      return new ComplexValueObjectProtoBufCodeGenerator(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
    }
 
    public bool Equals(IValueObjectSerializerCodeGeneratorFactory? other) => ReferenceEquals(this, other);

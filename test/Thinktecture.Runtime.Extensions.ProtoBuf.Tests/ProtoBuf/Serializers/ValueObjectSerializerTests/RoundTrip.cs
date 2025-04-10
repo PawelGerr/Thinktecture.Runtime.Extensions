@@ -25,6 +25,24 @@ public class RoundTrip
       DoRoundTrip(TestSmartEnum_Class_StringBased.Value1);
    }
 
+   [Fact]
+   public void Should_round_trip_complex_value_objects()
+   {
+      DoRoundTrip(ComplexValueObjectWithReservedIdentifiers.Create(1, 2));
+      DoRoundTrip(ComplexValueObjectWithString.Create("Test"));
+      DoRoundTrip(ValueObjectWithInitProperties.Create(1, 2, 4, 5));
+      DoRoundTrip(Boundary.Create(1, 2));
+      DoRoundTrip(TestValueObject_Complex_Class.Create("Test 1", "Test 2"));;
+      DoRoundTrip(TestValueObject_Complex_Struct.Create("Test 1", "Test 2"));;
+      DoRoundTrip(StructValueObjectWithoutMembers.Create());
+      DoRoundTrip(NestedComplexValueObject.Create(
+                     ChildComplexValueObject.Create(
+                        (IntBasedStructValueObject)1,
+                        (StringBasedReferenceValueObject)"Test 1"),
+                     (IntBasedStructValueObject)2,
+                     (StringBasedReferenceValueObject)"Test 2"));
+   }
+
    private static void DoRoundTrip<T>(T value)
    {
       var memoryStream = new MemoryStream();
