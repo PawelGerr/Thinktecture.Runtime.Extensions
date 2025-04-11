@@ -9,6 +9,7 @@
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore9](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore9)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore9/)  
 [![Thinktecture.Runtime.Extensions.Json](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Json.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.Json)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Json/)  
 [![Thinktecture.Runtime.Extensions.Newtonsoft.Json](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Newtonsoft.Json.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.Newtonsoft.Json)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Newtonsoft.Json/)  
+[![Thinktecture.Runtime.Extensions.ProtoBuf](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.ProtoBuf.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.ProtoBuf)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.ProtoBuf/)  
 [![Thinktecture.Runtime.Extensions.MessagePack](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.MessagePack.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.MessagePack)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.MessagePack/)  
 [![Thinktecture.Runtime.Extensions.AspNetCore](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.AspNetCore.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.AspNetCore)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.AspNetCore/)
 
@@ -75,7 +76,7 @@ Unlike regular C# enums which are limited to numeric values and lack extensibili
 * Include additional fields, properties and behavior
 * Use polymorphism to define custom behavior for each value
 * Prevent creation of invalid values
-* Integrate seamlessly with JSON serializers, MessagePack, Entity Framework Core and ASP.NET Core
+* Integrate seamlessly with JSON serializers, Protobuf, MessagePack, Entity Framework Core and ASP.NET Core
 
 Install: `Install-Package Thinktecture.Runtime.Extensions`
 
@@ -97,6 +98,7 @@ Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums 
 
 Provides support for:
 * JSON (System.Text.Json and Newtonsoft)
+* Protobuf
 * Minimal Api Parameter Binding and ASP.NET Core Model Binding
 * Entity Framework Core
 * MessagePack
@@ -346,6 +348,7 @@ Key Features:
 * Comprehensive validation support with descriptive error messages
 * Framework integration:
     * JSON serialization (System.Text.Json and Newtonsoft.Json)
+    * Protobuf serialization
     * Entity Framework Core support
     * ASP.NET Core Model Binding
     * MessagePack serialization
