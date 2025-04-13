@@ -36,9 +36,9 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value 1"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
                       StringBasedReferenceValueObjectWithCustomError = StringBasedReferenceValueObjectWithCustomError.Create("value 3"),
-                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
-                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
-                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
+                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased_Validatable.Value1,
+                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased_Validatable.Value1,
+                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased_Validatable.Value1,
                       Boundary = Boundary.Create(10, 20),
                       BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21),
                       BoundaryWithCustomFactoryNames = BoundaryWithCustomFactoryNames.Get(11, 21),
@@ -60,9 +60,9 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       Id = new Guid("A53F60CD-B53E-40E3-B16F-05E9A223E238"),
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("other value"),
-                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased.Value1,
-                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
-                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased.Value1,
+                      TestSmartEnum_Struct_IntBased = TestSmartEnum_Struct_IntBased_Validatable.Value1,
+                      TestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased_Validatable.Value1,
+                      NullableTestSmartEnum_Struct_StringBased = TestSmartEnum_Struct_StringBased_Validatable.Value1,
                       Boundary = Boundary.Create(10, 20)
                    };
       _ctx.Add(entity);
@@ -87,8 +87,8 @@ SET
    [Fact]
    public async Task Should_not_roundtrip_convert_underlying_type_to_value_object_and_back_to_underlying_type()
    {
-      var item = TestSmartEnum_Struct_IntBased.Value1;
-      TestSmartEnum_Struct_IntBased? nullableItem = item;
+      var item = TestSmartEnum_Struct_IntBased_Validatable.Value1;
+      TestSmartEnum_Struct_IntBased_Validatable? nullableItem = item;
 
       var valueObj = IntBasedStructValueObject.Create(42);
       IntBasedStructValueObject? nullableValueObj = valueObj;

@@ -26,10 +26,17 @@ partial struct TestValueObject
 
          if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
                return null;
 
-            return default(global::Thinktecture.Tests.TestValueObject);
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonReaderException(
+               $"Cannot convert null to type \"TestValueObject\" because it doesn't allow default values.",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);
          }
 
          if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)

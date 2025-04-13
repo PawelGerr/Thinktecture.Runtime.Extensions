@@ -40,7 +40,7 @@ public static class TypeSymbolExtensions
       return valueObjectAttributeBase is not null;
    }
 
-   public static bool IsKeyedValueObjectAttribute(this ITypeSymbol? attributeType)
+   public static bool IsKeyedValueObjectAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
@@ -830,5 +830,10 @@ public static class TypeSymbolExtensions
          INamedTypeSymbol namedTypeSymbol => TryBuildMemberName(namedTypeSymbol, out name),
          _ => false
       };
+   }
+
+   public static bool IsIDisallowDefaultValue(this ITypeSymbol? type)
+   {
+      return type is { Name: Constants.Interfaces.DisallowDefaultStructs.NAME, ContainingNamespace: { Name: Constants.Interfaces.DisallowDefaultStructs.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 }

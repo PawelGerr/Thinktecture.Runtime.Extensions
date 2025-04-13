@@ -5,7 +5,8 @@ namespace Thinktecture.Tests
 {
    readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
-      global::Thinktecture.IComplexValueObject
+      global::Thinktecture.IComplexValueObject,
+      global::Thinktecture.IDisallowDefaultValue
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()

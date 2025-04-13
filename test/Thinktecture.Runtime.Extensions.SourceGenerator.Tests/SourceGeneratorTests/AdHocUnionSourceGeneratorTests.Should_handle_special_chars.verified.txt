@@ -5,7 +5,8 @@ namespace Thinktecture.Tests
 {
    sealed partial class _1TestUnionWithSpecialChars :
       global::System.IEquatable<global::Thinktecture.Tests._1TestUnionWithSpecialChars>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests._1TestUnionWithSpecialChars, global::Thinktecture.Tests._1TestUnionWithSpecialChars, bool>
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests._1TestUnionWithSpecialChars, global::Thinktecture.Tests._1TestUnionWithSpecialChars, bool>,
+      global::Thinktecture.IDisallowDefaultValue
    {
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests._1TestUnionWithSpecialChars).GetHashCode();
 

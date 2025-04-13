@@ -157,4 +157,56 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_value_object_with_non_nullable_property()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+         public partial struct ComplexValueObjectWithNonNullProperty
+         {
+            public string Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_value_object_with_property_without_Nullable_Annotations()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+         public partial struct ComplexValueObjectWithNonNullProperty
+         {
+            public string Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

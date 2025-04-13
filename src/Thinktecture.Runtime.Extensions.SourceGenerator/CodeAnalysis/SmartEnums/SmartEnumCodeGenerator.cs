@@ -5,13 +5,13 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class SmartEnumCodeGenerator : SmartEnumAndValueObjectCodeGeneratorBase
 {
-   private readonly EnumSourceGeneratorState _state;
+   private readonly SmartEnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "SmartEnum-CodeGenerator";
    public override string? FileNameSuffix => null;
 
-   public SmartEnumCodeGenerator(EnumSourceGeneratorState state, StringBuilder stringBuilder)
+   public SmartEnumCodeGenerator(SmartEnumSourceGeneratorState state, StringBuilder stringBuilder)
    {
       _state = state ?? throw new ArgumentNullException(nameof(state));
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
@@ -98,6 +98,12 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
       global::Thinktecture.IValidatableEnum,");
+      }
+
+      if (_state.DisallowsDefaultValue)
+      {
+         _sb.Append(@"
+      global::Thinktecture.IDisallowDefaultValue,");
       }
 
       _sb.Append(@"

@@ -1,12 +1,13 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<EnumSourceGeneratorState>
+public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable<SmartEnumSourceGeneratorState>
 {
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
+   public bool DisallowsDefaultValue => !IsReferenceType && KeyMember is { IsReferenceType: true }; // Only Validatable Smart Enums can be structs
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public IReadOnlyList<string> GenericsFullyQualified => [];
 
@@ -26,7 +27,7 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
    public IReadOnlyList<DelegateMethodState> DelegateMethods { get; }
 
-   public EnumSourceGeneratorState(
+   public SmartEnumSourceGeneratorState(
       TypedMemberStateFactory factory,
       INamedTypeSymbol type,
       KeyMemberState? keyMember,
@@ -60,10 +61,10 @@ public sealed class EnumSourceGeneratorState : ITypeInformation, IEquatable<Enum
 
    public override bool Equals(object? obj)
    {
-      return obj is EnumSourceGeneratorState other && Equals(other);
+      return obj is SmartEnumSourceGeneratorState other && Equals(other);
    }
 
-   public bool Equals(EnumSourceGeneratorState? other)
+   public bool Equals(SmartEnumSourceGeneratorState? other)
    {
       if (other is null)
          return false;

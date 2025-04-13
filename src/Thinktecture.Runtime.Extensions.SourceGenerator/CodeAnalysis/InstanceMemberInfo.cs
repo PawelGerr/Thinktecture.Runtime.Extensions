@@ -24,7 +24,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsReferenceTypeOrNullableStruct => _typedMemberState.IsReferenceTypeOrNullableStruct;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
-   public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
+   public NullableAnnotation NullableAnnotation { get; }
+   public bool DisallowsDefaultValue { get; }
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,
@@ -34,7 +35,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       bool isStatic,
       bool isErroneous,
       bool isAbstract,
-      SymbolKind kind)
+      bool disallowsDefaultValue,
+      SymbolKind kind,
+      NullableAnnotation nullableAnnotation)
    {
       _typedMemberState = typedMemberState;
       _symbol = symbol;
@@ -43,7 +46,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       IsStatic = isStatic;
       IsErroneous = isErroneous;
       IsAbstract = isAbstract;
+      DisallowsDefaultValue = disallowsDefaultValue;
       Kind = kind;
+      NullableAnnotation = nullableAnnotation;
       ValueObjectMemberSettings = settings;
    }
 
@@ -67,7 +72,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          field.IsStatic,
          field.Type.TypeKind == TypeKind.Error,
          field.IsAbstract,
-         field.Kind);
+         IsDisallowingDefaultValue(field.Type),
+         field.Kind,
+         field.NullableAnnotation);
    }
 
    public static InstanceMemberInfo? CreateOrNull(
@@ -90,7 +97,29 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          property.IsStatic,
          property.Type.TypeKind == TypeKind.Error,
          property.IsAbstract,
-         property.Kind);
+         IsDisallowingDefaultValue(property.Type),
+         property.Kind,
+         property.NullableAnnotation);
+   }
+
+   private static bool IsDisallowingDefaultValue(ITypeSymbol type)
+   {
+      if (type.AllInterfaces.Any(i => i.IsIDisallowDefaultValue()))
+         return true;
+
+      if (type.IsReferenceType
+          || type.TypeKind == TypeKind.Error
+          || type.SpecialType != SpecialType.None) // Non-value objects are allowed to have default values
+         return false;
+
+      if (!type.IsValueObjectType(out var attribute))
+         return false;
+
+      return !attribute.FindAllowDefaultStructs()
+             || (
+                   attribute.AttributeClass.IsKeyedValueObjectAttribute()
+                   && attribute.AttributeClass.TypeArguments[0].IsReferenceType
+                );
    }
 
    public Location? GetIdentifierLocation(CancellationToken cancellationToken)
@@ -131,7 +160,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && IsStatic == other.IsStatic
              && IsErroneous == other.IsErroneous
              && IsAbstract == other.IsAbstract
+             && DisallowsDefaultValue == other.DisallowsDefaultValue
              && Kind == other.Kind
+             && NullableAnnotation == other.NullableAnnotation
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -144,7 +175,9 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ IsStatic.GetHashCode();
          hashCode = (hashCode * 397) ^ IsErroneous.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
+         hashCode = (hashCode * 397) ^ DisallowsDefaultValue.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)Kind;
+         hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

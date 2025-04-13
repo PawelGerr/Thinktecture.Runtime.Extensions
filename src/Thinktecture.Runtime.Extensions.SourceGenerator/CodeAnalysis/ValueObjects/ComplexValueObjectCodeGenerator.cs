@@ -55,6 +55,12 @@ namespace ").Append(_state.Namespace).Append(@"
       global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(@", bool>,
       global::Thinktecture.IComplexValueObject");
 
+      if (_state.DisallowsDefaultValue)
+      {
+         _sb.Append(@",
+      global::Thinktecture.IDisallowDefaultValue");
+      }
+
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
          _sb.Append(@",

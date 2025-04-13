@@ -32,10 +32,10 @@ public class WriteJson : JsonTestsBase
    {
       SerializeWithConverter<TestSmartEnum_Class_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_IntBased, int, ValidationError>>(null).Should().Be("null");
       SerializeWithConverter<TestSmartEnum_Class_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Class_StringBased, string, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_StringBased?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased, int, ValidationError>>(default).Should().Be("0");
-      SerializeWithConverter<TestSmartEnum_Struct_StringBased, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased, string, ValidationError>>(default).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_IntBased_Validatable?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_StringBased_Validatable?, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased_Validatable, string, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<TestSmartEnum_Struct_IntBased_Validatable, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>(default).Should().Be("0");
+      SerializeWithConverter<TestSmartEnum_Struct_StringBased_Validatable, ValueObjectJsonConverterFactory<TestSmartEnum_Struct_StringBased_Validatable, string, ValidationError>>(default).Should().Be("null");
    }
 
    [Fact]
@@ -46,7 +46,6 @@ public class WriteJson : JsonTestsBase
       SerializeWithConverter<IntBasedStructValueObject?, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int, ValidationError>>(null).Should().Be("null");
       SerializeWithConverter<StringBasedStructValueObject?, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string, ValidationError>>(null).Should().Be("null");
       SerializeWithConverter<IntBasedStructValueObject, ValueObjectJsonConverterFactory<IntBasedStructValueObject, int, ValidationError>>(default).Should().Be("0");
-      SerializeWithConverter<StringBasedStructValueObject, ValueObjectJsonConverterFactory<StringBasedStructValueObject, string, ValidationError>>(default).Should().Be("null");
    }
 
    [Fact]

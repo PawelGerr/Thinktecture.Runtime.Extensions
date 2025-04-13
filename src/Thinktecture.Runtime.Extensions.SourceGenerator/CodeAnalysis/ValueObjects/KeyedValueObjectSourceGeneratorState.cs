@@ -5,6 +5,7 @@ public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEq
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
+   public bool DisallowsDefaultValue => !IsReferenceType && (!Settings.AllowDefaultStructs || KeyMember.IsReferenceType);
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public IReadOnlyList<string> GenericsFullyQualified => [];
 

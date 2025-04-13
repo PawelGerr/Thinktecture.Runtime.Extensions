@@ -77,12 +77,12 @@ public class MapPartially
    {
       var testItem = index switch
       {
-         -1 => TestSmartEnum_Struct_IntBased.Get(0),
-         1 => TestSmartEnum_Struct_IntBased.Value1,
-         2 => TestSmartEnum_Struct_IntBased.Value2,
-         3 => TestSmartEnum_Struct_IntBased.Value3,
-         4 => TestSmartEnum_Struct_IntBased.Value4,
-         5 => TestSmartEnum_Struct_IntBased.Value5,
+         -1 => TestSmartEnum_Struct_IntBased_Validatable.Get(0),
+         1 => TestSmartEnum_Struct_IntBased_Validatable.Value1,
+         2 => TestSmartEnum_Struct_IntBased_Validatable.Value2,
+         3 => TestSmartEnum_Struct_IntBased_Validatable.Value3,
+         4 => TestSmartEnum_Struct_IntBased_Validatable.Value4,
+         5 => TestSmartEnum_Struct_IntBased_Validatable.Value5,
          _ => throw new Exception("Unexpected index")
       };
 

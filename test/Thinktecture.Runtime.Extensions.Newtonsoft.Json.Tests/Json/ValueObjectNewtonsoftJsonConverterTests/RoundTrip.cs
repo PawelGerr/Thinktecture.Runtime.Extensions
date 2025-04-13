@@ -17,10 +17,23 @@ public class RoundTrip : JsonTestsBase
                           { TestSmartEnum_Class_StringBased.Value2, 2 }
                        };
 
-      var options = new JsonSerializerSettings { Converters = { new ValueObjectNewtonsoftJsonConverter() } };
+      var json = JsonConvert.SerializeObject(dictionary);
+      var deserializedDictionary = JsonConvert.DeserializeObject<Dictionary<TestSmartEnum_Class_StringBased, int>>(json);
 
-      var json = JsonConvert.SerializeObject(dictionary, options);
-      var deserializedDictionary = JsonConvert.DeserializeObject<Dictionary<TestSmartEnum_Class_StringBased, int>>(json, options);
+      dictionary.Should().BeEquivalentTo(deserializedDictionary);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_dictionary_with_string_based_value_objects()
+   {
+      var dictionary = new Dictionary<StringBasedStructValueObject, int>
+                       {
+                          { (StringBasedStructValueObject)"key 1", 1 },
+                          { (StringBasedStructValueObject)"key 2", 2 }
+                       };
+
+      var json = JsonConvert.SerializeObject(dictionary);
+      var deserializedDictionary = JsonConvert.DeserializeObject<Dictionary<StringBasedStructValueObject, int>>(json);
 
       dictionary.Should().BeEquivalentTo(deserializedDictionary);
    }

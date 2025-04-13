@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Thinktecture.Json;
 
@@ -15,8 +14,15 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly Type _type = typeof(T);
-   private static readonly Type _keyType = typeof(TKey);
+   private static readonly TKey? _keyDefaultValue = default;
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+   private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
+
+   /// <inheritdoc />
+   public override bool CanConvert(Type objectType)
+   {
+      return _type.IsAssignableFrom(objectType);
+   }
 
    /// <inheritdoc />
    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
@@ -42,24 +48,24 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError
 
       if (reader.TokenType == JsonToken.Null)
       {
-         if (objectType.IsClass || Nullable.GetUnderlyingType(objectType) == _type)
+         var isNullable = Nullable.GetUnderlyingType(objectType) == _type;
+
+         if (isNullable || (objectType.IsClass && !_disallowDefaultValues))
             return null;
-
-         if (_keyType.IsClass)
-            return default(T);
-
-         throw new JsonException($"Cannot convert 'Null' to a struct of type '{_keyType.Name}', which is the underlying type of '{typeof(T).FullName}'.");
       }
 
-      var token = serializer.Deserialize<JToken>(reader);
-
-      if (token is null || token.Type == JTokenType.Null)
-         return null;
-
-      var key = token.ToObject<TKey>(serializer);
+      var key = serializer.Deserialize<TKey>(reader);
 
       if (key is null)
+      {
+         if (_disallowDefaultValues)
+            throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+
          return null;
+      }
+
+      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
+         throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       var validationError = T.Validate(key, null, out var obj);
 
@@ -67,11 +73,5 @@ public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError
          throw new JsonSerializationException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;
-   }
-
-   /// <inheritdoc />
-   public override bool CanConvert(Type objectType)
-   {
-      return _type.IsAssignableFrom(objectType);
    }
 }

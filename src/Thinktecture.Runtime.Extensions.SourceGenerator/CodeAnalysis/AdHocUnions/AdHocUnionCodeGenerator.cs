@@ -61,6 +61,12 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@" :
       global::System.IEquatable<").AppendTypeFullyQualified(_state).Append(@">,
       global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(@", ").AppendTypeFullyQualified(_state).Append(", bool>");
+
+         if (_state.DisallowsDefaultValue)
+         {
+            _sb.Append(@",
+      global::Thinktecture.IDisallowDefaultValue");
+         }
       }
 
       _sb.Append(@"

@@ -202,7 +202,7 @@ public static class AttributeDataExtensions
 
    public static bool FindAllowDefaultStructs(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "AllowDefaultStructs") ?? false;
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS) ?? false;
    }
 
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)

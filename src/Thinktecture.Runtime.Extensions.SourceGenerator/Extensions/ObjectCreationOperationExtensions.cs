@@ -25,6 +25,11 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.SKIP_KEY_MEMBER);
    }
 
+   public static bool? FindAllowDefaultStructs(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS);
+   }
+
    public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
    {
       var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);

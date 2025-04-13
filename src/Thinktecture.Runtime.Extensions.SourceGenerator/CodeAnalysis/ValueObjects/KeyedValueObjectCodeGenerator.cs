@@ -71,6 +71,12 @@ namespace ").Append(_state.Namespace).Append(@"
       global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
       }
 
+      if (_state.DisallowsDefaultValue)
+      {
+         _sb.Append(@",
+      global::Thinktecture.IDisallowDefaultValue");
+      }
+
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
          if (_state is { Settings.SkipFactoryMethods: false } && desiredFactory.Equals(_state.KeyMember))

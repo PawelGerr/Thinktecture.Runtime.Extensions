@@ -15,6 +15,8 @@ public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonCo
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+   private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
+   private static readonly TKey? _keyDefaultValue = default;
 
    private readonly JsonConverter<TKey> _keyConverter;
 
@@ -35,7 +37,15 @@ public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonCo
       var key = _keyConverter.Read(ref reader, typeof(TKey), options);
 
       if (key is null)
+      {
+         if (_disallowDefaultValues)
+            throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+
          return default;
+      }
+
+      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
+         throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       var validationError = T.Validate(key, null, out var obj);
 
@@ -65,6 +75,7 @@ public sealed class ValueObjectJsonConverter<T, TValidationError> : JsonConverte
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+   private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
@@ -81,7 +92,12 @@ public sealed class ValueObjectJsonConverter<T, TValidationError> : JsonConverte
       var key = reader.GetString();
 
       if (key is null)
+      {
+         if (_disallowDefaultValues)
+            throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+
          return default;
+      }
 
       var validationError = T.Validate(key, null, out var obj);
 

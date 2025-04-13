@@ -55,6 +55,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly,
       DiagnosticsDescriptors.UnionRecordMustBeSealed,
       DiagnosticsDescriptors.NonAbstractDerivedUnionIsLessAccessibleThanBaseUnion,
+      DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass,
+      DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
    ];
 
    /// <inheritdoc />
@@ -346,7 +348,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ValidateKeyedValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration, factory);
 
          if (isComplex && assignableMembers is not null)
-            ValidateComplexValueObject(context, assignableMembers, attrCreation, locationOfFirstDeclaration);
+            ValidateComplexValueObject(context, assignableMembers, type, attrCreation, locationOfFirstDeclaration);
       }
       catch (Exception ex)
       {
@@ -461,6 +463,24 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ValidateValueObjectCustomKeyMemberImplementation(context, keyType, assignableMembers, attribute, locationOfFirstDeclaration);
 
       ValidateKeyMemberComparers(context, type, keyType, attribute, locationOfFirstDeclaration, factory, true);
+
+      var allowDefaultStructs = attribute.FindAllowDefaultStructs() ?? false;
+
+      if (allowDefaultStructs)
+      {
+         if (type.IsValueType && keyType.IsReferenceType)
+         {
+            ReportDiagnostic(context, DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass, attribute.Syntax.GetLocation(), type, keyType);
+         }
+         else if (keyType.AllInterfaces.Any(i => i.IsIDisallowDefaultValue()))
+         {
+            ReportDiagnostic(context,
+                             DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
+                             locationOfFirstDeclaration,
+                             type,
+                             keyType.Name);
+         }
+      }
    }
 
    private static void ValidateKeyMemberComparers(
@@ -609,23 +629,35 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ValidateComplexValueObject(
       OperationAnalysisContext context,
       IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      INamedTypeSymbol type,
       IObjectCreationOperation attribute,
       Location locationOfFirstDeclaration)
    {
-      CheckAssignableMembers(context, assignableMembers, attribute, locationOfFirstDeclaration);
+      CheckAssignableMembers(context, assignableMembers, type, attribute, locationOfFirstDeclaration);
    }
 
    private static void CheckAssignableMembers(
       OperationAnalysisContext context,
       IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      INamedTypeSymbol type,
       IObjectCreationOperation attribute,
       Location locationOfFirstDeclaration)
    {
+      var allowDefaultStructs = attribute.FindAllowDefaultStructs() ?? false;
+
+      List<string>? membersWithDisallowDefaultValue = null;
       var hasStringMembersWithoutComparer = false;
 
       for (var i = 0; i < assignableMembers.Count; i++)
       {
          var assignableMember = assignableMembers[i];
+
+         if (allowDefaultStructs && assignableMember.DisallowsDefaultValue)
+         {
+            membersWithDisallowDefaultValue ??= [];
+            membersWithDisallowDefaultValue.Add(assignableMember.Name);
+         }
+
          var isString = assignableMember.SpecialType == SpecialType.System_String;
 
          if (!assignableMember.ValueObjectMemberSettings.IsExplicitlyDeclared)
@@ -644,6 +676,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,
                           locationOfFirstDeclaration);
+      }
+
+      if (membersWithDisallowDefaultValue is not null)
+      {
+         ReportDiagnostic(context,
+                          DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
+                          locationOfFirstDeclaration,
+                          type,
+                          String.Join(", ", membersWithDisallowDefaultValue)
+         );
       }
    }
 

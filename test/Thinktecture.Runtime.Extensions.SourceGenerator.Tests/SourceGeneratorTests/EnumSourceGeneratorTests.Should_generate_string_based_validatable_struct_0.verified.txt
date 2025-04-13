@@ -10,6 +10,7 @@ namespace Thinktecture.Tests
       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
 #endif
       global::Thinktecture.IValidatableEnum,
+      global::Thinktecture.IDisallowDefaultValue,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]

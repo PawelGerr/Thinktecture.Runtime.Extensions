@@ -53,9 +53,9 @@ public class Switch
       [InlineData(false)]
       public void Should_use_correct_arg_having_struct(bool useInvalidItem)
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
 
-         var testItem = useInvalidItem ? (TestSmartEnum_Struct_IntBased)42 : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? (TestSmartEnum_Struct_IntBased_Validatable)42 : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.Switch(invalid: item =>
                          {
@@ -63,23 +63,23 @@ public class Switch
                          },
                          value1: () =>
                          {
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value1;
                          },
                          value2: () =>
                          {
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                          },
                          value3: () =>
                          {
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value3;
                          },
                          value4: () =>
                          {
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                          },
                          value5: () =>
                          {
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                          });
 
          calledActionOn.Should().Be(testItem);
@@ -193,10 +193,10 @@ public class Switch
       [InlineData(false)]
       public void Should_pass_state_having_struct(bool useInvalidItem)
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
          var obj = new object();
 
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
@@ -207,27 +207,27 @@ public class Switch
                          value1: o =>
                          {
                             o.Should().Be(obj);
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value1;
                          },
                          value2: o =>
                          {
                             o.Should().Be(obj);
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                          },
                          value3: o =>
                          {
                             o.Should().Be(obj);
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value3;
                          },
                          value4: o =>
                          {
                             o.Should().Be(obj);
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                          },
                          value5: o =>
                          {
                             o.Should().Be(obj);
-                            calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                            calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                          });
 
          calledActionOn.Should().Be(testItem);
@@ -296,14 +296,14 @@ public class Switch
       [InlineData(false)]
       public void Should_call_correct_arg_having_struct(bool useInvalidItem)
       {
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.Switch(invalid: item => item,
-                         value1: () => TestSmartEnum_Struct_IntBased.Value1,
-                         value2: () => TestSmartEnum_Struct_IntBased.Value2,
-                         value3: () => TestSmartEnum_Struct_IntBased.Value3,
-                         value4: () => TestSmartEnum_Struct_IntBased.Value4,
-                         value5: () => TestSmartEnum_Struct_IntBased.Value5)
+                         value1: () => TestSmartEnum_Struct_IntBased_Validatable.Value1,
+                         value2: () => TestSmartEnum_Struct_IntBased_Validatable.Value2,
+                         value3: () => TestSmartEnum_Struct_IntBased_Validatable.Value3,
+                         value4: () => TestSmartEnum_Struct_IntBased_Validatable.Value4,
+                         value5: () => TestSmartEnum_Struct_IntBased_Validatable.Value5)
                  .Should().Be(testItem);
       }
 
@@ -399,7 +399,7 @@ public class Switch
       {
          var obj = new object();
 
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.Switch(obj,
                          invalid: (o, item) =>
@@ -410,27 +410,27 @@ public class Switch
                          value1: o =>
                          {
                             o.Should().Be(obj);
-                            return TestSmartEnum_Struct_IntBased.Value1;
+                            return TestSmartEnum_Struct_IntBased_Validatable.Value1;
                          },
                          value2: o =>
                          {
                             o.Should().Be(obj);
-                            return TestSmartEnum_Struct_IntBased.Value2;
+                            return TestSmartEnum_Struct_IntBased_Validatable.Value2;
                          },
                          value3: o =>
                          {
                             o.Should().Be(obj);
-                            return TestSmartEnum_Struct_IntBased.Value3;
+                            return TestSmartEnum_Struct_IntBased_Validatable.Value3;
                          },
                          value4: o =>
                          {
                             o.Should().Be(obj);
-                            return TestSmartEnum_Struct_IntBased.Value4;
+                            return TestSmartEnum_Struct_IntBased_Validatable.Value4;
                          },
                          value5: o =>
                          {
                             o.Should().Be(obj);
-                            return TestSmartEnum_Struct_IntBased.Value5;
+                            return TestSmartEnum_Struct_IntBased_Validatable.Value5;
                          })
                  .Should().Be(testItem);
       }

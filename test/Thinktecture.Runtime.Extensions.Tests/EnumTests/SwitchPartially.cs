@@ -90,9 +90,9 @@ public class SwitchPartially
       [InlineData(false)]
       public void Should_use_correct_arg_having_struct(bool useInvalidItem)
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
 
-         var testItem = useInvalidItem ? (TestSmartEnum_Struct_IntBased)42 : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? (TestSmartEnum_Struct_IntBased_Validatable)42 : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.SwitchPartially(invalid: item =>
                                   {
@@ -100,23 +100,23 @@ public class SwitchPartially
                                   },
                                   value1: () =>
                                   {
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value1;
                                   },
                                   value2: () =>
                                   {
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                   },
                                   value3: () =>
                                   {
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value3;
                                   },
                                   value4: () =>
                                   {
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                   },
                                   value5: () =>
                                   {
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                   });
 
          calledActionOn.Should().Be(testItem);
@@ -125,9 +125,9 @@ public class SwitchPartially
       [Fact]
       public void Should_use_default_arg_having_struct()
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
 
-         TestSmartEnum_Struct_IntBased.Value1.SwitchPartially(@default: item =>
+         TestSmartEnum_Struct_IntBased_Validatable.Value1.SwitchPartially(@default: item =>
                                                               {
                                                                  calledActionOn = item;
                                                               },
@@ -137,22 +137,22 @@ public class SwitchPartially
                                                               },
                                                               value2: () =>
                                                               {
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                                               },
                                                               value3: () =>
                                                               {
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value3;
                                                               },
                                                               value4: () =>
                                                               {
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                                               },
                                                               value5: () =>
                                                               {
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                                               });
 
-         calledActionOn.Should().Be(TestSmartEnum_Struct_IntBased.Value1);
+         calledActionOn.Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Value1);
       }
 
       [Fact]
@@ -332,10 +332,10 @@ public class SwitchPartially
       [InlineData(false)]
       public void Should_pass_state_having_struct(bool useInvalidItem)
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
          var obj = new object();
 
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.SwitchPartially(obj,
                                   invalid: (o, item) =>
@@ -346,27 +346,27 @@ public class SwitchPartially
                                   value1: o =>
                                   {
                                      o.Should().Be(obj);
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value1;
                                   },
                                   value2: o =>
                                   {
                                      o.Should().Be(obj);
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                   },
                                   value3: o =>
                                   {
                                      o.Should().Be(obj);
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value3;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value3;
                                   },
                                   value4: o =>
                                   {
                                      o.Should().Be(obj);
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                   },
                                   value5: o =>
                                   {
                                      o.Should().Be(obj);
-                                     calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                                     calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                   });
 
          calledActionOn.Should().Be(testItem);
@@ -375,10 +375,10 @@ public class SwitchPartially
       [Fact]
       public void Should_pass_state_to_default_having_struct()
       {
-         TestSmartEnum_Struct_IntBased? calledActionOn = null;
+         TestSmartEnum_Struct_IntBased_Validatable? calledActionOn = null;
          var obj = new object();
 
-         TestSmartEnum_Struct_IntBased.Value3.SwitchPartially(obj,
+         TestSmartEnum_Struct_IntBased_Validatable.Value3.SwitchPartially(obj,
                                                               @default: (o, item) =>
                                                               {
                                                                  o.Should().Be(obj);
@@ -392,25 +392,25 @@ public class SwitchPartially
                                                               value1: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value1;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value1;
                                                               },
                                                               value2: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value2;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                                               },
                                                               value4: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value4;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                                               },
                                                               value5: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 calledActionOn = TestSmartEnum_Struct_IntBased.Value5;
+                                                                 calledActionOn = TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                                               });
 
-         calledActionOn.Should().Be(TestSmartEnum_Struct_IntBased.Value3);
+         calledActionOn.Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Value3);
       }
 
       [Fact]
@@ -513,28 +513,28 @@ public class SwitchPartially
       [InlineData(false)]
       public void Should_call_correct_arg_having_struct(bool useInvalidItem)
       {
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.SwitchPartially(@default: item => item,
                                   invalid: item => item,
-                                  value1: () => TestSmartEnum_Struct_IntBased.Value1,
-                                  value2: () => TestSmartEnum_Struct_IntBased.Value2,
-                                  value3: () => TestSmartEnum_Struct_IntBased.Value3,
-                                  value4: () => TestSmartEnum_Struct_IntBased.Value4,
-                                  value5: () => TestSmartEnum_Struct_IntBased.Value5)
+                                  value1: () => TestSmartEnum_Struct_IntBased_Validatable.Value1,
+                                  value2: () => TestSmartEnum_Struct_IntBased_Validatable.Value2,
+                                  value3: () => TestSmartEnum_Struct_IntBased_Validatable.Value3,
+                                  value4: () => TestSmartEnum_Struct_IntBased_Validatable.Value4,
+                                  value5: () => TestSmartEnum_Struct_IntBased_Validatable.Value5)
                  .Should().Be(testItem);
       }
 
       [Fact]
       public void Should_call_default_having_struct()
       {
-         TestSmartEnum_Struct_IntBased.Value3.SwitchPartially(@default: item => item,
+         TestSmartEnum_Struct_IntBased_Validatable.Value3.SwitchPartially(@default: item => item,
                                                               invalid: item => item,
-                                                              value1: () => TestSmartEnum_Struct_IntBased.Value1,
-                                                              value2: () => TestSmartEnum_Struct_IntBased.Value2,
-                                                              value4: () => TestSmartEnum_Struct_IntBased.Value4,
-                                                              value5: () => TestSmartEnum_Struct_IntBased.Value5)
-                                      .Should().Be(TestSmartEnum_Struct_IntBased.Value3);
+                                                              value1: () => TestSmartEnum_Struct_IntBased_Validatable.Value1,
+                                                              value2: () => TestSmartEnum_Struct_IntBased_Validatable.Value2,
+                                                              value4: () => TestSmartEnum_Struct_IntBased_Validatable.Value4,
+                                                              value5: () => TestSmartEnum_Struct_IntBased_Validatable.Value5)
+                                      .Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Value3);
       }
 
       [Fact]
@@ -708,7 +708,7 @@ public class SwitchPartially
       {
          var obj = new object();
 
-         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased.Get(42) : TestSmartEnum_Struct_IntBased.Value3;
+         var testItem = useInvalidItem ? TestSmartEnum_Struct_IntBased_Validatable.Get(42) : TestSmartEnum_Struct_IntBased_Validatable.Value3;
 
          testItem.SwitchPartially(obj,
                                   @default: (o, item) =>
@@ -724,27 +724,27 @@ public class SwitchPartially
                                   value1: o =>
                                   {
                                      o.Should().Be(obj);
-                                     return TestSmartEnum_Struct_IntBased.Value1;
+                                     return TestSmartEnum_Struct_IntBased_Validatable.Value1;
                                   },
                                   value2: o =>
                                   {
                                      o.Should().Be(obj);
-                                     return TestSmartEnum_Struct_IntBased.Value2;
+                                     return TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                   },
                                   value3: o =>
                                   {
                                      o.Should().Be(obj);
-                                     return TestSmartEnum_Struct_IntBased.Value3;
+                                     return TestSmartEnum_Struct_IntBased_Validatable.Value3;
                                   },
                                   value4: o =>
                                   {
                                      o.Should().Be(obj);
-                                     return TestSmartEnum_Struct_IntBased.Value4;
+                                     return TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                   },
                                   value5: o =>
                                   {
                                      o.Should().Be(obj);
-                                     return TestSmartEnum_Struct_IntBased.Value5;
+                                     return TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                   })
                  .Should().Be(testItem);
       }
@@ -754,7 +754,7 @@ public class SwitchPartially
       {
          var obj = new object();
 
-         TestSmartEnum_Struct_IntBased.Value3.SwitchPartially(obj,
+         TestSmartEnum_Struct_IntBased_Validatable.Value3.SwitchPartially(obj,
                                                               @default: (o, item) =>
                                                               {
                                                                  o.Should().Be(obj);
@@ -768,24 +768,24 @@ public class SwitchPartially
                                                               value1: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 return TestSmartEnum_Struct_IntBased.Value1;
+                                                                 return TestSmartEnum_Struct_IntBased_Validatable.Value1;
                                                               },
                                                               value2: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 return TestSmartEnum_Struct_IntBased.Value2;
+                                                                 return TestSmartEnum_Struct_IntBased_Validatable.Value2;
                                                               },
                                                               value4: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 return TestSmartEnum_Struct_IntBased.Value4;
+                                                                 return TestSmartEnum_Struct_IntBased_Validatable.Value4;
                                                               },
                                                               value5: o =>
                                                               {
                                                                  o.Should().Be(obj);
-                                                                 return TestSmartEnum_Struct_IntBased.Value5;
+                                                                 return TestSmartEnum_Struct_IntBased_Validatable.Value5;
                                                               })
-                                      .Should().Be(TestSmartEnum_Struct_IntBased.Value3);
+                                      .Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Value3);
       }
 
       [Fact]

@@ -59,10 +59,31 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
          if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
                return null;
+");
 
-            return default(").AppendTypeFullyQualified(_type).Append(@");
+      if (_type.DisallowsDefaultValue)
+      {
+         _sb.Append(@"
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonReaderException(
+               $""Cannot convert null to type \""").AppendTypeMinimallyQualified(_type).Append(@"\"" because it doesn't allow default values."",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);");
+      }
+      else
+      {
+         _sb.Append(@"
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            return default(").AppendTypeFullyQualified(_type).Append(");");
+      }
+
+      _sb.Append(@"
          }
 
          if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
@@ -162,7 +183,47 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       _sb.Append(@"
+         }");
+
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         if (memberInfo.DisallowsDefaultValue)
+         {
+            _sb.Append(@"
+
+         if (").AppendEscaped(memberInfo.ArgumentName).Append(" == default(").AppendTypeFullyQualified(memberInfo).Append(@"))
+         {
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonReaderException(
+               $""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" is missing and does not allow default values."",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);
+         }");
          }
+         else if (memberInfo is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.NotAnnotated })
+         {
+            _sb.Append(@"
+
+         if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
+         {
+            var (lineNumber, linePosition) = GetLineInfo(reader);
+
+            throw new global::Newtonsoft.Json.JsonReaderException(
+               $""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" must not be null."",
+               reader.Path,
+               lineNumber,
+               linePosition,
+               null);
+         }");
+         }
+      }
+
+      _sb.Append(@"
 
          var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 

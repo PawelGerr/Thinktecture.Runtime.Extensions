@@ -173,9 +173,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .Select((state, _) => state.State)
                       .Collect()
                       .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                       ? ImmutableArray<EnumSourceGeneratorState>.Empty
+                                                       ? ImmutableArray<SmartEnumSourceGeneratorState>.Empty
                                                        : states.Distinct(TypeOnlyComparer.Instance))
-                      .WithComparer(new SetComparer<EnumSourceGeneratorState>())
+                      .WithComparer(new SetComparer<SmartEnumSourceGeneratorState>())
                       .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(enumTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, SmartEnumCodeGeneratorFactory.Instance));
@@ -414,7 +414,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
 
          var derivedTypeDefinitionNames = FindDerivedTypes(type);
-         var enumState = new EnumSourceGeneratorState(factory,
+         var enumState = new SmartEnumSourceGeneratorState(factory,
                                                       type,
                                                       keyMember,
                                                       attributeInfo.ValidationError,
@@ -459,7 +459,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
    }
 
    private readonly record struct ValidSourceGenState(
-      EnumSourceGeneratorState State,
+      SmartEnumSourceGeneratorState State,
       SmartEnumDerivedTypes DerivedTypes,
       AllEnumSettings Settings,
       KeyMemberState? KeyMember,

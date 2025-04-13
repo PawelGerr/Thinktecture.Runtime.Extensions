@@ -28,10 +28,10 @@ public class WriteJson : JsonTestsBase
    {
       Serialize<TestSmartEnum_Class_IntBased, int>(null).Should().Be("null");
       Serialize<TestSmartEnum_Class_StringBased, string>(null).Should().Be("null");
-      SerializeNullableStruct<TestSmartEnum_Struct_IntBased, int>(null).Should().Be("null");
-      SerializeNullableStruct<TestSmartEnum_Struct_StringBased, string>(null).Should().Be("null");
-      SerializeStruct<TestSmartEnum_Struct_IntBased, int>(default).Should().Be("0");
-      SerializeStruct<TestSmartEnum_Struct_StringBased, string>(default).Should().Be("null");
+      SerializeNullableStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(null).Should().Be("null");
+      SerializeNullableStruct<TestSmartEnum_Struct_StringBased_Validatable, string>(null).Should().Be("null");
+      SerializeStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(default).Should().Be("0");
+      SerializeStruct<TestSmartEnum_Struct_StringBased_Validatable, string>(default).Should().Be("null");
    }
 
    [Fact]
@@ -42,7 +42,6 @@ public class WriteJson : JsonTestsBase
       SerializeNullableStruct<IntBasedStructValueObject, int>(null).Should().Be("null");
       SerializeNullableStruct<StringBasedStructValueObject, string>(null).Should().Be("null");
       SerializeStruct<IntBasedStructValueObject, int>(default).Should().Be("0");
-      SerializeStruct<StringBasedStructValueObject, string>(default).Should().Be("null");
    }
 
    [Fact]

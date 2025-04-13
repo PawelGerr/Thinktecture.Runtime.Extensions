@@ -79,7 +79,18 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       public override ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
       {
          if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
-            return default;
+            ");
+
+      if (_type.DisallowsDefaultValue)
+      {
+         _sb.Append("throw new global::System.Text.Json.JsonException($\"Cannot convert null to type \\\"").AppendTypeMinimallyQualified(_type).Append("\\\" because it doesn't allow default values.\");");
+      }
+      else
+      {
+         _sb.Append("return default;");
+      }
+
+      _sb.Append(@"
 
          if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
             throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
@@ -146,7 +157,29 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       _sb.Append(@"
+         }");
+
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         if (memberInfo.DisallowsDefaultValue)
+         {
+            _sb.Append(@"
+
+         if (").AppendEscaped(memberInfo.ArgumentName).Append(" == default(").AppendTypeFullyQualified(memberInfo).Append(@"))
+            throw new global::System.Text.Json.JsonException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append("\\\" is missing and does not allow default values.\");");
          }
+         else if (memberInfo is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.NotAnnotated })
+         {
+            _sb.Append(@"
+
+         if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
+            throw new global::System.Text.Json.JsonException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append("\\\" must not be null.\");");
+         }
+      }
+
+      _sb.Append(@"
 
          var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 

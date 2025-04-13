@@ -43,6 +43,15 @@ public static class Constants
       public const string LOG_INITIAL_BUFFER_SIZE = "build_property.ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize";
    }
 
+   public static class Interfaces
+   {
+      public static class DisallowDefaultStructs
+      {
+         public const string NAME = "IDisallowDefaultValue";
+         public const string NAMESPACE = "Thinktecture";
+      }
+   }
+
    public static class Attributes
    {
       public static class Properties
@@ -55,6 +64,7 @@ public static class Constants
          public const string DEFAULT_STRING_COMPARISON = "DefaultStringComparison";
          public const string SKIP_ICOMPARABLE = "SkipIComparable";
          public const string IS_VALIDATABLE = "IsValidatable";
+         public const string ALLOW_DEFAULT_STRUCTS = "AllowDefaultStructs";
       }
 
       public static class ValueObject

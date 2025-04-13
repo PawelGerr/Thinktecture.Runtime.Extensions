@@ -28,10 +28,10 @@ public class Serialize
    {
       RoundTripSerializeWithCustomOptions<TestSmartEnum_Class_IntBased>(null);
       RoundTripSerializeWithCustomOptions<TestSmartEnum_Class_StringBased>(null);
-      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased?>(null);
-      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased?>(null);
-      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased>(default);
-      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased>(default);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased_Validatable?>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased_Validatable?>(null);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_IntBased_Validatable>(default);
+      RoundTripSerializeWithCustomOptions<TestSmartEnum_Struct_StringBased_Validatable>(default);
    }
 
    [Fact]
@@ -42,7 +42,6 @@ public class Serialize
       RoundTripSerializeWithCustomOptions<IntBasedStructValueObject?>(null);
       RoundTripSerializeWithCustomOptions<StringBasedStructValueObject?>(null);
       RoundTripSerializeWithCustomOptions<IntBasedStructValueObject>(default);
-      RoundTripSerializeWithCustomOptions<StringBasedStructValueObject>(default);
    }
 
    [Fact]

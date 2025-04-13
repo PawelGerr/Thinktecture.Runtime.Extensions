@@ -13,6 +13,7 @@ public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHo
    public bool IsNullableStruct { get; }
    public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
+   public bool DisallowsDefaultValue => true;
 
    public IReadOnlyList<AdHocUnionMemberTypeState> MemberTypes { get; }
    public IReadOnlyList<string> GenericsFullyQualified => [];

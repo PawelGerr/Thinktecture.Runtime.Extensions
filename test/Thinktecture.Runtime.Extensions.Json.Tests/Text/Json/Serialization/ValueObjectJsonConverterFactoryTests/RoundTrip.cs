@@ -22,7 +22,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectByte, byte>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectByte, byte>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectByte, byte>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectByte>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -39,7 +39,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectSByte, sbyte>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectSByte, sbyte>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectSByte, sbyte>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectSByte>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -56,7 +56,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectShort, short>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectShort, short>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectShort, short>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectShort>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -71,7 +71,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectUShort, ushort>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectUShort, ushort>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectUShort, ushort>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectUShort>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -88,7 +88,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectInt, int>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectInt, int>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectInt, int>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectInt>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -103,7 +103,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectUInt, uint>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectUInt, uint>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectUInt, uint>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectUInt>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -120,7 +120,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectLong, long>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectLong, long>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectLong, long>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectLong>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -135,7 +135,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectULong, ulong>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectULong, ulong>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectULong, ulong>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectULong>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -152,7 +152,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectFloat, float>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectFloat, float>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectFloat, float>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectFloat>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -171,7 +171,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectDouble, double>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectDouble, double>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectDouble, double>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectDouble>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -193,7 +193,7 @@ public class RoundTrip : JsonTestsBase
 
       Serialize<TestValueObjectDecimal, decimal>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectDecimal, decimal>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectDecimal, decimal>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectDecimal>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Fact]
@@ -209,6 +209,23 @@ public class RoundTrip : JsonTestsBase
 
       var json = JsonSerializer.Serialize(dictionary, options);
       var deserializedDictionary = JsonSerializer.Deserialize<Dictionary<TestSmartEnum_Class_StringBased, int>>(json, options);
+
+      dictionary.Should().BeEquivalentTo(deserializedDictionary);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_dictionary_with_string_based_value_objects()
+   {
+      var dictionary = new Dictionary<StringBasedStructValueObject, int>
+                       {
+                          { (StringBasedStructValueObject)"key 1", 1 },
+                          { (StringBasedStructValueObject)"key 2", 2 }
+                       };
+
+      var options = new JsonSerializerOptions { Converters = { new ValueObjectJsonConverterFactory() } };
+
+      var json = JsonSerializer.Serialize(dictionary, options);
+      var deserializedDictionary = JsonSerializer.Deserialize<Dictionary<StringBasedStructValueObject, int>>(json, options);
 
       dictionary.Should().BeEquivalentTo(deserializedDictionary);
    }

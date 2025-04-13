@@ -8,7 +8,8 @@ namespace Thinktecture.Tests
    readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::Thinktecture.IKeyedValueObject<int>,
       global::Thinktecture.IValueObjectConvertable<int>,
-      global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>
+      global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>,
+      global::Thinktecture.IDisallowDefaultValue
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()

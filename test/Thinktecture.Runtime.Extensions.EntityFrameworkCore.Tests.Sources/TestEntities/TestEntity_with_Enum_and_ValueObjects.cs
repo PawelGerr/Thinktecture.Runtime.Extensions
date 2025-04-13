@@ -16,9 +16,9 @@ public class TestEntity_with_Enum_and_ValueObjects
 
    public TestSmartEnum_Class_IntBased? TestSmartEnum_Class_IntBased { get; set; }
    public TestSmartEnum_Class_StringBased? TestSmartEnum_Class_StringBased { get; set; }
-   public TestSmartEnum_Struct_IntBased TestSmartEnum_Struct_IntBased { get; set; }
-   public TestSmartEnum_Struct_StringBased TestSmartEnum_Struct_StringBased { get; set; }
-   public TestSmartEnum_Struct_StringBased? NullableTestSmartEnum_Struct_StringBased { get; set; }
+   public TestSmartEnum_Struct_IntBased_Validatable TestSmartEnum_Struct_IntBased { get; set; }
+   public TestSmartEnum_Struct_StringBased_Validatable TestSmartEnum_Struct_StringBased { get; set; }
+   public TestSmartEnum_Struct_StringBased_Validatable? NullableTestSmartEnum_Struct_StringBased { get; set; }
    public TestEnumWithCustomError? TestEnumWithCustomError { get; set; }
 
    public IntBasedReferenceValueObject? IntBasedReferenceValueObject { get; set; }

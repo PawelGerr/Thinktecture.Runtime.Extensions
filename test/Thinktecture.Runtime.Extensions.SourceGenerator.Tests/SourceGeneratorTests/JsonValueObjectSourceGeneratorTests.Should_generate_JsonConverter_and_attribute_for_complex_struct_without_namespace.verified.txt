@@ -32,7 +32,7 @@ partial struct TestValueObject
       public override global::TestValueObject Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
       {
          if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
-            return default;
+            throw new global::System.Text.Json.JsonException($"Cannot convert null to type \"TestValueObject\" because it doesn't allow default values.");
 
          if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
             throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");

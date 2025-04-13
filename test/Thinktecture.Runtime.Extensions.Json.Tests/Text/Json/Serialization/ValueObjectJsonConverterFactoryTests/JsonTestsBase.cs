@@ -91,36 +91,15 @@ public class JsonTestsBase
       return JsonSerializer.Serialize(value, options);
    }
 
-   protected static T Deserialize<T, TKey, TValidationError>(
-      string json,
-      JsonNamingPolicy namingPolicy = null)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
-      where TValidationError : class, IValidationError<TValidationError>
-   {
-      return DeserializeWithConverter<T, ValueObjectJsonConverterFactory>(json, namingPolicy);
-   }
-
-   protected static T Deserialize<T, TKey>(
-      string json,
-      JsonNamingPolicy namingPolicy = null,
-      JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
-   {
-      return DeserializeWithConverter<T, ValueObjectJsonConverterFactory>(json, namingPolicy, numberHandling: numberHandling);
-   }
-
-   protected static T DeserializeWithConverter<T, TConverterFactory>(
+   protected static T Deserialize<T>(
       string json,
       JsonNamingPolicy namingPolicy = null,
       bool propertyNameCaseInsensitive = false,
       bool ignoreNullValues = false,
       JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
-      where TConverterFactory : JsonConverterFactory, new()
    {
-      var factory = new TConverterFactory();
       var options = new JsonSerializerOptions
                     {
-                       Converters = { factory },
                        PropertyNamingPolicy = namingPolicy,
                        PropertyNameCaseInsensitive = propertyNameCaseInsensitive,
                        DefaultIgnoreCondition = ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never,

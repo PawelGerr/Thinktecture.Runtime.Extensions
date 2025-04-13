@@ -135,6 +135,33 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_JsonConverter_and_attribute_for_complex_struct_with_AllowDefaultStructs()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(AllowDefaultStructs = true)]
+         	public partial struct TestValueObject
+         	{
+               public readonly string ReferenceField;
+               public int StructProperty { get; }
+               public decimal? NullableStructProperty { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
    public async Task Should_generate_JsonConverter_complex_class_if_Attribute_is_missing()
    {
       var source = """
@@ -145,7 +172,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [ComplexValueObject]
-         	public partial struct TestValueObject
+         	public partial class TestValueObject
          	{
                public readonly string ReferenceField;
                public int StructProperty { get; }
@@ -181,6 +208,58 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
                                                                   typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_value_object_with_non_nullable_property()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+         public partial struct ComplexValueObjectWithNonNullProperty
+         {
+            public string Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_value_object_with_property_without_Nullable_Annotations()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+         public partial struct ComplexValueObjectWithNonNullProperty
+         {
+            public string Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }

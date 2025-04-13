@@ -24,8 +24,10 @@ partial class TestValueObject
 
          if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if (objectType.IsClass || global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
                return null;
+
+            var (lineNumber, linePosition) = GetLineInfo(reader);
 
             return default(global::TestValueObject);
          }
