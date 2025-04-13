@@ -6,6 +6,4 @@ namespace Thinktecture;
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 // ReSharper disable once UnusedTypeParameter
 public sealed class ValueObjectMemberEqualityComparerAttribute<T, TMember> : Attribute
-   where T : IEqualityComparerAccessor<TMember>
-{
-}
+   where T : IEqualityComparerAccessor<TMember>;

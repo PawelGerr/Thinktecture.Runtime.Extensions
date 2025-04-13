@@ -7,6 +7,4 @@ namespace Thinktecture;
 // ReSharper disable once UnusedTypeParameter
 public sealed class ValueObjectKeyMemberEqualityComparerAttribute<TAccessor, TKey> : Attribute
    where TAccessor : IEqualityComparerAccessor<TKey>
-   where TKey : notnull
-{
-}
+   where TKey : notnull;

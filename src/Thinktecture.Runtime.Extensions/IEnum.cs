@@ -7,9 +7,7 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 public interface IEnum<TKey> : IKeyedValueObject<TKey>
-   where TKey : notnull
-{
-}
+   where TKey : notnull;
 
 /// <summary>
 /// Interface of a Smart Enum.

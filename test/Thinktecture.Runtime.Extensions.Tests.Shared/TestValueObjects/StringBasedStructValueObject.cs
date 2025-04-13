@@ -6,6 +6,4 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                      AllowDefaultStructs = true)]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-public partial struct StringBasedStructValueObject
-{
-}
+public partial struct StringBasedStructValueObject;

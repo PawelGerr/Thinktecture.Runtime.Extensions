@@ -9,7 +9,5 @@ public partial class OperatorWithoutIdentifier
    public static readonly OperatorWithoutIdentifier Item4 = new GenericOperator<int>();
 
    // ReSharper disable once UnusedTypeParameter
-   private sealed class GenericOperator<T> : OperatorWithoutIdentifier
-   {
-   }
+   private sealed class GenericOperator<T> : OperatorWithoutIdentifier;
 }

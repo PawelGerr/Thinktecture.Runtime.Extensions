@@ -3,9 +3,7 @@
 namespace System.Diagnostics.CodeAnalysis;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property)]
-internal sealed class AllowNullAttribute : Attribute
-{
-}
+internal sealed class AllowNullAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class NotNullWhenAttribute : Attribute

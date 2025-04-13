@@ -1,6 +1,4 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ValueObject<int>]
-public partial struct StructValueObject
-{
-}
+public partial struct StructValueObject;

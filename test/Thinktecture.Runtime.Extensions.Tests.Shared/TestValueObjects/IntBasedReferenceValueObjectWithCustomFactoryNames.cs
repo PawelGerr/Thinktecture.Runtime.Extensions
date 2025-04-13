@@ -10,6 +10,4 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                   DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public partial class IntBasedReferenceValueObjectWithCustomFactoryNames
-{
-}
+public partial class IntBasedReferenceValueObjectWithCustomFactoryNames;

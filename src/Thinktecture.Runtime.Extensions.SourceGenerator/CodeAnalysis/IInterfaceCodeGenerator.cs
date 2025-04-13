@@ -2,9 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis;
 
-public interface IInterfaceCodeGenerator : IInterfaceCodeGenerator<InterfaceCodeGeneratorState>
-{
-}
+public interface IInterfaceCodeGenerator : IInterfaceCodeGenerator<InterfaceCodeGeneratorState>;
 
 public interface IInterfaceCodeGenerator<in TState>
 {

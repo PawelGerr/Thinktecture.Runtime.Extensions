@@ -6,6 +6,4 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                   AllowDefaultStructs = true,
                   EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
-public partial struct IntBasedStructValueObject
-{
-}
+public partial struct IntBasedStructValueObject;

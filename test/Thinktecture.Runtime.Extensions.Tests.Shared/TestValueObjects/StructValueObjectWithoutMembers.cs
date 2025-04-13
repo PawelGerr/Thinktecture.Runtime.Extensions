@@ -1,6 +1,4 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-public partial struct StructValueObjectWithoutMembers
-{
-}
+public partial struct StructValueObjectWithoutMembers;
