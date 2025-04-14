@@ -7,7 +7,7 @@ namespace Thinktecture.Tests
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.IComplexValueObject,
       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
-      global::Thinktecture.IValueObjectConvertable<string>
+      global::Thinktecture.IValueObjectConvertible<string>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
       internal static void ModuleInit()

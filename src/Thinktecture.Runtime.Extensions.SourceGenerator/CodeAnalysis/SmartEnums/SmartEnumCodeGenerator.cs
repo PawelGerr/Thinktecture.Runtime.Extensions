@@ -90,7 +90,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@"
-      global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(desiredFactory).Append(">,");
+      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">,");
          }
       }
 
@@ -1380,7 +1380,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
+      ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
       {
          return this.").Append(keyProperty.Name).Append(@";
       }");

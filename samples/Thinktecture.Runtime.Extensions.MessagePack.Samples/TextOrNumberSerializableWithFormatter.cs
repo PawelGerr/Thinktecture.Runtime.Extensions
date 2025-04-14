@@ -13,7 +13,7 @@ namespace Thinktecture;
 [MessagePackFormatter(typeof(Formatters.ValueObjectMessagePackFormatter<TextOrNumberSerializableWithFormatter, string, ValidationError>))] // Optional: otherwise ValueObjectMessageFormatterResolver is required
 public partial class TextOrNumberSerializableWithFormatter :
    IValueObjectFactory<TextOrNumberSerializableWithFormatter, string, ValidationError>, // For deserialization
-   IValueObjectConvertable<string>,                                                     // For serialization
+   IValueObjectConvertible<string>,                                                     // For serialization
    IParsable<TextOrNumberSerializableWithFormatter>                                     // For Minimal API and ASP.NET Core model binding validation
 {
    // For serialization

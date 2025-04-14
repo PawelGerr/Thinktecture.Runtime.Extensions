@@ -9,5 +9,5 @@ public interface IKeyedValueObject;
 /// Common interface of keyed value objects.
 /// </summary>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
-public interface IKeyedValueObject<TKey> : IKeyedValueObject, IValueObjectConvertable<TKey>
+public interface IKeyedValueObject<TKey> : IKeyedValueObject, IValueObjectConvertible<TKey>
    where TKey : notnull;

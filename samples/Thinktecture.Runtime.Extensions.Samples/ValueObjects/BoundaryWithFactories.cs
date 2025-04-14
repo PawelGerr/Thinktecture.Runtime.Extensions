@@ -41,7 +41,7 @@ public partial class BoundaryWithFactories
    }
 
    /// <summary>
-   /// Custom implementation of "IValueObjectConvertable&amp;lt;string&amp;gt;"
+   /// Custom implementation of "IValueObjectConvertible&amp;lt;string&amp;gt;"
    /// requested by "ValueObjectFactory&lt;string&gt;".
    /// </summary>
    public string ToValue()

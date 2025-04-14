@@ -6,7 +6,7 @@ namespace Thinktecture.Tests
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
    sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
-      global::Thinktecture.IValueObjectConvertable<global::Thinktecture.Tests.Foo>,
+      global::Thinktecture.IValueObjectConvertible<global::Thinktecture.Tests.Foo>,
       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -89,7 +89,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConvertable<global::Thinktecture.Tests.Foo>.ToValue()
+      global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConvertible<global::Thinktecture.Tests.Foo>.ToValue()
       {
          return this._value;
       }

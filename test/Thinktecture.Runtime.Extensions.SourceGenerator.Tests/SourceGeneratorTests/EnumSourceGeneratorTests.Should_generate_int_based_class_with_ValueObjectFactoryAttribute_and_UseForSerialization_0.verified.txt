@@ -6,7 +6,7 @@ namespace Thinktecture.Tests
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>))]
    sealed partial class TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-      global::Thinktecture.IValueObjectConvertable<string>,
+      global::Thinktecture.IValueObjectConvertible<string>,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
       [global::System.Runtime.CompilerServices.ModuleInitializer]
@@ -66,7 +66,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      int global::Thinktecture.IValueObjectConvertable<int>.ToValue()
+      int global::Thinktecture.IValueObjectConvertible<int>.ToValue()
       {
          return this.Key;
       }

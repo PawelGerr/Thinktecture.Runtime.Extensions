@@ -63,7 +63,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
    ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
       global::Thinktecture.IKeyedValueObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
-      global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(_state.KeyMember).Append(">");
+      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(">");
 
       if (!_state.Settings.SkipFactoryMethods)
       {
@@ -88,7 +88,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(desiredFactory).Append(">");
+      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
          }
       }
 
@@ -152,7 +152,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
+      ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
       {
          return this.").Append(_state.KeyMember.Name).Append(@";
       }");

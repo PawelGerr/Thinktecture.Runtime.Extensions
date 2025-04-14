@@ -46,7 +46,7 @@ public class JsonTestsBase
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false,
       JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
-      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertable<TKey>
+      where T : IValueObjectFactory<T, TKey, ValidationError>, IValueObjectConvertible<TKey>
    {
       return Serialize<T, TKey, ValidationError>(value, namingStrategy, ignoreNullValues, numberHandling);
    }
@@ -56,7 +56,7 @@ public class JsonTestsBase
       JsonNamingPolicy namingStrategy = null,
       bool ignoreNullValues = false,
       JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
-      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
+      where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertible<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
       return SerializeWithConverter<T, ValueObjectJsonConverterFactory>(value, namingStrategy, ignoreNullValues, numberHandling);

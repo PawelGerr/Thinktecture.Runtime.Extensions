@@ -26,6 +26,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation { get; }
    public bool DisallowsDefaultValue { get; }
+   public int? MessagePackKey { get; }
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,
@@ -37,7 +38,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       bool isAbstract,
       bool disallowsDefaultValue,
       SymbolKind kind,
-      NullableAnnotation nullableAnnotation)
+      NullableAnnotation nullableAnnotation,
+      int? messagePackKey)
    {
       _typedMemberState = typedMemberState;
       _symbol = symbol;
@@ -49,6 +51,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       DisallowsDefaultValue = disallowsDefaultValue;
       Kind = kind;
       NullableAnnotation = nullableAnnotation;
+      MessagePackKey = messagePackKey;
       ValueObjectMemberSettings = settings;
    }
 
@@ -74,7 +77,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          field.IsAbstract,
          IsDisallowingDefaultValue(field.Type),
          field.Kind,
-         field.NullableAnnotation);
+         field.NullableAnnotation,
+         GetMessagePackKey(field));
    }
 
    public static InstanceMemberInfo? CreateOrNull(
@@ -99,7 +103,26 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          property.IsAbstract,
          IsDisallowingDefaultValue(property.Type),
          property.Kind,
-         property.NullableAnnotation);
+         property.NullableAnnotation,
+         GetMessagePackKey(property));
+   }
+
+   private static int? GetMessagePackKey(ISymbol member)
+   {
+      var messagePackKeyAttribute = member.FindAttribute(a => a.IsMessagePackKeyAttribute());
+
+      if (messagePackKeyAttribute is null || messagePackKeyAttribute.ConstructorArguments.Length != 1)
+         return null;
+
+      var ctorArg = messagePackKeyAttribute.ConstructorArguments[0];
+
+      if (ctorArg.Type is null)
+         return null;
+
+      return ctorArg.Type.SpecialType == SpecialType.System_Int32
+             && ctorArg.Value is int value
+                ? value
+                : null;
    }
 
    private static bool IsDisallowingDefaultValue(ITypeSymbol type)
@@ -163,6 +186,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && DisallowsDefaultValue == other.DisallowsDefaultValue
              && Kind == other.Kind
              && NullableAnnotation == other.NullableAnnotation
+             && MessagePackKey == other.MessagePackKey
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -178,6 +202,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ DisallowsDefaultValue.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)Kind;
          hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
+         hashCode = (hashCode * 397) ^ MessagePackKey.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;

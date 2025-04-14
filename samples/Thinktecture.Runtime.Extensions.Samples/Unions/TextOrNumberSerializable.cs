@@ -13,7 +13,7 @@ namespace Thinktecture.Unions;
 [JsonConverter(typeof(ValueObjectJsonConverterFactory<TextOrNumberSerializable, string, ValidationError>))] // Optional: otherwise ValueObjectJsonConverterFactory is required
 public partial class TextOrNumberSerializable :
    IValueObjectFactory<TextOrNumberSerializable, string, ValidationError>, // For deserialization
-   IValueObjectConvertable<string>,                                        // For serialization
+   IValueObjectConvertible<string>,                                        // For serialization
    IParsable<TextOrNumberSerializable> // For Minimal API and ASP.NET Core model binding validation
 {
    // For serialization

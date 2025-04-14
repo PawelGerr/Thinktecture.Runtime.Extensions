@@ -159,4 +159,34 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_MessagePackFormatter_for_complex_value_object_with_partial_keys()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+            public partial class ComplexValueObjectWithPartialKeys
+            {
+               public decimal Property1 { get; }
+
+               [MessagePack.Key(5)]
+               public string Property2 { get; }
+
+               public int Property3 { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

@@ -96,7 +96,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
+      string global::Thinktecture.IValueObjectConvertible<string>.ToValue()
       {
          return this.Key;
       }

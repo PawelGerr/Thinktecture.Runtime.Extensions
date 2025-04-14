@@ -35,7 +35,7 @@ public partial class BoundaryWithFactoryAndExplicitImplementation
       return Validate(lower, upper, out item);
    }
 
-   string IValueObjectConvertable<string>.ToValue()
+   string IValueObjectConvertible<string>.ToValue()
    {
       return $"{Lower}:{Upper}";
    }

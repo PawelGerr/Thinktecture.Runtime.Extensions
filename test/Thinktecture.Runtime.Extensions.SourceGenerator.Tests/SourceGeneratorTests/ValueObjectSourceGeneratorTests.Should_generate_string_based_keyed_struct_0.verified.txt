@@ -7,7 +7,7 @@ namespace Thinktecture.Tests
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>))]
    readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::Thinktecture.IKeyedValueObject<string>,
-      global::Thinktecture.IValueObjectConvertable<string>,
+      global::Thinktecture.IValueObjectConvertible<string>,
       global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>,
       global::Thinktecture.IDisallowDefaultValue
    {
@@ -91,7 +91,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      string global::Thinktecture.IValueObjectConvertable<string>.ToValue()
+      string global::Thinktecture.IValueObjectConvertible<string>.ToValue()
       {
          return this._value;
       }

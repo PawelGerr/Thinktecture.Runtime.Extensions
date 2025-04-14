@@ -69,7 +69,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConvertable<").AppendTypeFullyQualified(desiredFactory).Append(">");
+      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
          }
       }
 

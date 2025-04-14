@@ -12,11 +12,13 @@ namespace Thinktecture.Formatters;
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 public sealed class StructValueObjectMessagePackFormatter<T, TKey, TValidationError> : IMessagePackFormatter<T>, IMessagePackFormatter<T?>
-   where T : struct, IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
+   where T : struct, IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertible<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+   private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
+   private static readonly TKey? _keyDefaultValue = default;
 
    /// <inheritdoc />
    public void Serialize(ref MessagePackWriter writer, T value, MessagePackSerializerOptions options)
@@ -41,8 +43,19 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey, TValidationEr
    /// <inheritdoc />
    public T Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
    {
-      if (!TryReadKey(ref reader, options, out var key))
+      var formatter = options.Resolver.GetFormatterWithVerify<TKey?>();
+      var key = formatter.Deserialize(ref reader, options);
+
+      if (key is null)
+      {
+         if (_disallowDefaultValues)
+            throw new MessagePackSerializationException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+
          return default;
+      }
+
+      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
+         throw new MessagePackSerializationException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       return Deserialize(key);
    }
@@ -51,7 +64,7 @@ public sealed class StructValueObjectMessagePackFormatter<T, TKey, TValidationEr
    T? IMessagePackFormatter<T?>.Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
    {
       if (!TryReadKey(ref reader, options, out var key))
-         return default;
+         return default; // nullable struct
 
       return Deserialize(key);
    }

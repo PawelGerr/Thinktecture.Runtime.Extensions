@@ -7,6 +7,8 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBa
    private readonly ITypeInformation _type;
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
+   private readonly int _nextFreeKey;
+   private readonly int _headerValue;
 
    public override string CodeGeneratorName => "Complex-ValueObject-MessagePack-CodeGenerator";
    public override string FileNameSuffix => ".MessagePack";
@@ -19,6 +21,30 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBa
       _type = type;
       _assignableInstanceFieldsAndProperties = assignableInstanceFieldsAndProperties;
       _sb = stringBuilder;
+
+      (_headerValue, _nextFreeKey) = GetKeys(assignableInstanceFieldsAndProperties);
+   }
+
+   private static (int MaxKey, int NextFreeKey) GetKeys(IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties)
+   {
+      var nextFreeKey = -1;
+      var numberOfMembersWithoutKey = 0;
+
+      for (var i = 0; i < assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = assignableInstanceFieldsAndProperties[i];
+
+         if (memberInfo.MessagePackKey is null)
+         {
+            numberOfMembersWithoutKey++;
+            continue;
+         }
+
+         if (nextFreeKey < memberInfo.MessagePackKey.Value)
+            nextFreeKey = memberInfo.MessagePackKey.Value;
+      }
+
+      return (nextFreeKey == -1 ? assignableInstanceFieldsAndProperties.Count : nextFreeKey + numberOfMembersWithoutKey + 1, nextFreeKey + 1);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -45,18 +71,23 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       public ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
       {
          if (reader.TryReadNil())
-            return default;
+            ");
 
-         var count = reader.ReadArrayHeader();
+      if (_type.DisallowsDefaultValue)
+      {
+         _sb.Append("throw new global::MessagePack.MessagePackSerializationException($\"Cannot convert null to type \\\"").AppendTypeMinimallyQualified(_type).Append("\\\" because it doesn't allow default values.\");");
+      }
+      else
+      {
+         _sb.Append("return default;");
+      }
 
-         if (count != ").Append(_assignableInstanceFieldsAndProperties.Count).Append(@")
-            throw new global::MessagePack.MessagePackSerializationException($""Invalid member count. Expected ").Append(_assignableInstanceFieldsAndProperties.Count).Append(@" but found {count} field/property values."");
+      _sb.Append(@"
 
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
          options.Security.DepthStep(ref reader);
 
-         try
-         {
+         var count = reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver resolver = options.Resolver;
 ");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
@@ -64,11 +95,66 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-            var ").AppendEscaped(memberInfo.ArgumentName).Append(" = ");
+         var ").AppendEscaped(memberInfo.ArgumentName).Append(" = default(").AppendTypeFullyQualified(memberInfo).Append(")!;");
+      }
+
+      _sb.Append(@"
+
+         try
+         {");
+
+      var nextFreeKey = _nextFreeKey;
+
+      _sb.Append(@"
+            for (int i = 0; i < count; i++)
+            {
+               switch (i)
+               {");
+
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+         var key = memberInfo.MessagePackKey ?? nextFreeKey++;
+
+         _sb.Append(@"
+                  case ").Append(key).Append(@":
+                  {");
+
+         _sb.Append(@"
+                     ").AppendEscaped(memberInfo.ArgumentName).Append(" = ");
 
          GenerateReadValue(_sb, memberInfo);
 
-         _sb.Append("!;");
+         _sb.Append(@"!;
+                     break;
+                  }");
+      }
+
+      _sb.Append(@"
+                  default:
+                     reader.Skip();
+                     break;
+               }
+            }");
+
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         if (memberInfo.DisallowsDefaultValue)
+         {
+            _sb.Append(@"
+
+            if (").AppendEscaped(memberInfo.ArgumentName).Append(" == default(").AppendTypeFullyQualified(memberInfo).Append(@"))
+               throw new global::MessagePack.MessagePackSerializationException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" is missing and does not allow default values."");");
+         }
+         else if (memberInfo is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.NotAnnotated })
+         {
+            _sb.Append(@"
+
+            if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
+               throw new global::MessagePack.MessagePackSerializationException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" must not be null."");");
+         }
       }
 
       _sb.Append(@"
@@ -115,21 +201,32 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
 
       _sb.Append(@"
-         writer.WriteArrayHeader(").Append(_assignableInstanceFieldsAndProperties.Count).Append(@");
+         writer.WriteArrayHeader(").Append(_headerValue).Append(@");
 
          var resolver = options.Resolver;");
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      nextFreeKey = _nextFreeKey;
+      var numberOfUsedMembersWithoutKey = 0;
+
+      for (var i = 0; i < _headerValue; i++)
       {
-         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+         var memberInfo = GetMemberWithKey(i, ref numberOfUsedMembersWithoutKey, ref nextFreeKey);
 
-         _sb.Append(@"
+         if (memberInfo is not null)
+         {
+            _sb.Append(@"
          ");
-         GenerateWriteValue(_sb, memberInfo);
+            GenerateWriteValue(_sb, memberInfo);
 
-         _sb.Append(";");
+            _sb.Append(";");
+         }
+         else
+         {
+            _sb.Append(@"
+         writer.WriteNil();");
+         }
       }
 
       _sb.Append(@"
@@ -140,6 +237,37 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       _sb.RenderContainingTypesEnd(_type.ContainingTypes)
          .Append(@"
 ");
+   }
+
+   private InstanceMemberInfo? GetMemberWithKey(int key, ref int numberOfUsedMembersWithoutKey, ref int nextFreeKey)
+   {
+      var skippedMembersWithoutKey = 0;
+
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         if (memberInfo.MessagePackKey == key)
+            return memberInfo;
+
+         if (memberInfo.MessagePackKey is null)
+         {
+            if (key != nextFreeKey)
+               continue;
+
+            if (numberOfUsedMembersWithoutKey > skippedMembersWithoutKey)
+            {
+               skippedMembersWithoutKey++;
+               continue;
+            }
+
+            nextFreeKey++;
+            numberOfUsedMembersWithoutKey++;
+            return memberInfo;
+         }
+      }
+
+      return null;
    }
 
    private static void GenerateWriteValue(StringBuilder sb, InstanceMemberInfo memberInfo)

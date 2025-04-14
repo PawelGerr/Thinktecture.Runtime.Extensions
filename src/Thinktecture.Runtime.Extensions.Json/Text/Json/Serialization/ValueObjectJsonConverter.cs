@@ -10,7 +10,7 @@ namespace Thinktecture.Text.Json.Serialization;
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonConverter<T>
-   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertable<TKey>
+   where T : IValueObjectFactory<T, TKey, TValidationError>, IValueObjectConvertible<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
@@ -71,7 +71,7 @@ public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : JsonCo
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 public sealed class ValueObjectJsonConverter<T, TValidationError> : JsonConverter<T>
-   where T : IValueObjectFactory<T, string, TValidationError>, IValueObjectConvertable<string>
+   where T : IValueObjectFactory<T, string, TValidationError>, IValueObjectConvertible<string>
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));

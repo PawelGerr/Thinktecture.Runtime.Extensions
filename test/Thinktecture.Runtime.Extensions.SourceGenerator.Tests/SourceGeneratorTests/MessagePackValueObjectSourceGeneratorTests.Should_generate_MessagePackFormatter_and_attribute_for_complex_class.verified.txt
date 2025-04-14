@@ -14,20 +14,41 @@ partial class TestValueObject
          if (reader.TryReadNil())
             return default;
 
-         var count = reader.ReadArrayHeader();
-
-         if (count != 3)
-            throw new global::MessagePack.MessagePackSerializationException($"Invalid member count. Expected 3 but found {count} field/property values.");
-
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
          options.Security.DepthStep(ref reader);
+
+         var count = reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+
+         var @referenceField = default(string)!;
+         var @structProperty = default(int)!;
+         var @nullableStructProperty = default(decimal?)!;
 
          try
          {
-
-            var @referenceField = reader.ReadString()!;
-            var @structProperty = reader.ReadInt32()!;
-            var @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
+            for (int i = 0; i < count; i++)
+            {
+               switch (i)
+               {
+                  case 0:
+                  {
+                     @referenceField = reader.ReadString()!;
+                     break;
+                  }
+                  case 1:
+                  {
+                     @structProperty = reader.ReadInt32()!;
+                     break;
+                  }
+                  case 2:
+                  {
+                     @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal?>(resolver).Deserialize(ref reader, options)!;
+                     break;
+                  }
+                  default:
+                     reader.Skip();
+                     break;
+               }
+            }
 
             var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
                                        @referenceField,
