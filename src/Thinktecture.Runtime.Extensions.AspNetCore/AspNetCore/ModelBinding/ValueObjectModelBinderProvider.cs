@@ -1,7 +1,5 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Thinktecture.Internal;
 
 namespace Thinktecture.AspNetCore.ModelBinding;
@@ -11,20 +9,28 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// </summary>
 public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
 {
-   private readonly bool _trimStringBasedEnums;
    private readonly bool _skipBindingFromBody;
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ValueObjectModelBinderProvider"/>.
+   /// </summary>
+   /// <param name="skipBindingFromBody">Indication whether to skip model binding if the raw value comes from request body.</param>
+   public ValueObjectModelBinderProvider(bool skipBindingFromBody = true)
+   {
+      _skipBindingFromBody = skipBindingFromBody;
+   }
 
    /// <summary>
    /// Initializes new instance of <see cref="ValueObjectModelBinderProvider"/>.
    /// </summary>
    /// <param name="trimStringBasedEnums">Indication whether to trim string-values before parsing them.</param>
    /// <param name="skipBindingFromBody">Indication whether to skip model binding if the raw value comes from request body.</param>
+   [Obsolete("Use constructor without 'trimStringBasedEnums' parameter instead")]
    public ValueObjectModelBinderProvider(
-      bool trimStringBasedEnums = true,
+      bool trimStringBasedEnums,
       bool skipBindingFromBody = true)
+      : this(skipBindingFromBody)
    {
-      _trimStringBasedEnums = trimStringBasedEnums;
-      _skipBindingFromBody = skipBindingFromBody;
    }
 
    /// <inheritdoc />
@@ -56,12 +62,9 @@ public sealed class ValueObjectModelBinderProvider : IModelBinderProvider
       }
 
       var validationErrorType = type.GetCustomAttribute<ValueObjectValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
-      var loggerFactory = context.Services.GetRequiredService<ILoggerFactory>();
 
-      var modelBinderType = _trimStringBasedEnums && metadata?.IsEnumeration == true && keyType == typeof(string)
-                               ? typeof(TrimmingSmartEnumModelBinder<,>).MakeGenericType(type, validationErrorType)
-                               : typeof(ValueObjectModelBinder<,,>).MakeGenericType(type, keyType, validationErrorType);
-      var modelBinder = Activator.CreateInstance(modelBinderType, loggerFactory)
+      var modelBinderType = typeof(ValueObjectModelBinder<,,>).MakeGenericType(type, keyType, validationErrorType);
+      var modelBinder = Activator.CreateInstance(modelBinderType)
                         ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 
       return (IModelBinder)modelBinder;

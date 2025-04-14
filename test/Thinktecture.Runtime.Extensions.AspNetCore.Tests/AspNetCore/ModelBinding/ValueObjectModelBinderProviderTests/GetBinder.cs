@@ -19,9 +19,23 @@ public class GetBinder
    }
 
    [Fact]
+   public void Should_return_binder_for_int_based_struct()
+   {
+      var binder = GetModelBinder<TestSmartEnum_Struct_IntBased_Validatable>();
+      binder.Should().BeOfType<ValueObjectModelBinder<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>();
+   }
+
+   [Fact]
+   public void Should_return_binder_for_int_based_struct_nullable()
+   {
+      var binder = GetModelBinder<TestSmartEnum_Struct_IntBased_Validatable?>();
+      binder.Should().BeOfType<ValueObjectModelBinder<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>();
+   }
+
+   [Fact]
    public void Should_return_binder_for_string_based_enum()
    {
-      GetModelBinder<TestEnum>().Should().BeOfType<TrimmingSmartEnumModelBinder<TestEnum, ValidationError>>();
+      GetModelBinder<TestEnum>().Should().BeOfType<ValueObjectModelBinder<TestEnum, string, ValidationError>>();
    }
 
    [Fact]
@@ -56,7 +70,7 @@ public class GetBinder
    public void Should_return_string_base_binder_specified_by_ValueObjectFactoryAttribute_smart_enum()
    {
       var binder = GetModelBinder<EnumWithFactory>();
-      binder.Should().BeOfType<TrimmingSmartEnumModelBinder<EnumWithFactory, ValidationError>>();
+      binder.Should().BeOfType<ValueObjectModelBinder<EnumWithFactory, string, ValidationError>>();
    }
 
    [Fact]

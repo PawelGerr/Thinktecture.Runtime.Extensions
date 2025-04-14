@@ -1,7 +1,6 @@
-using System.Runtime.CompilerServices;
+using System.ComponentModel;
+using System.Runtime.ExceptionServices;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.Extensions.Logging;
 
 namespace Thinktecture.AspNetCore.ModelBinding;
 
@@ -11,49 +10,135 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key member.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-public abstract class ValueObjectModelBinderBase<T, TKey, TValidationError> : SimpleTypeModelBinder
+public abstract class ValueObjectModelBinderBase<T, TKey, TValidationError> : IModelBinder
    where T : IValueObjectFactory<T, TKey, TValidationError>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
+   private static readonly Type _type = typeof(T);
+   private static readonly Type _keyType = typeof(TKey);
+   private static readonly TKey? _keyDefaultValue = default;
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
+   private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
+
+   private readonly TypeConverter? _keyConverter;
 
    /// <summary>
    /// Initializes a new instance of <see cref="ValueObjectModelBinder{T,TKey,TValidationError}"/>.
    /// </summary>
-   /// <param name="loggerFactory">Logger factory.</param>
-   protected ValueObjectModelBinderBase(
-      ILoggerFactory loggerFactory)
-      : base(typeof(TKey), loggerFactory)
+   protected ValueObjectModelBinderBase()
    {
+      var converter = TypeDescriptor.GetConverter(typeof(TKey));
+      _keyConverter = converter.CanConvertFrom(typeof(string)) ? converter : null;
    }
 
    /// <inheritdoc />
-   protected override void CheckModel(ModelBindingContext bindingContext, ValueProviderResult valueProviderResult, object? model)
+   public Task BindModelAsync(ModelBindingContext bindingContext)
    {
-      if (model is not TKey key)
+      ArgumentNullException.ThrowIfNull(bindingContext);
+
+      var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+      bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
+
+      try
       {
-         base.CheckModel(bindingContext, valueProviderResult, model);
+         var value = valueProviderResult.FirstValue;
+
+         if (bindingContext.ModelMetadata.ConvertEmptyStringToNull)
+            value = value.TrimOrNullify();
+
+         if (value is null)
+         {
+            var isNullable = Nullable.GetUnderlyingType(bindingContext.ModelType) == _type;
+
+            if (isNullable || (bindingContext.ModelType.IsClass && !_disallowDefaultValues))
+            {
+               bindingContext.Result = ModelBindingResult.Success(null);
+               bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
+               return Task.CompletedTask;
+            }
+         }
+
+         object? key;
+
+         if (_keyType == typeof(string))
+         {
+            key = value;
+         }
+         else
+         {
+            if (_keyConverter is null)
+            {
+               bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert a string to type \"{typeof(T).Name}\".");
+               return Task.CompletedTask;
+            }
+
+            if (value is null && _keyType.IsValueType)
+            {
+               bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert null to type \"{typeof(T).Name}\".");
+               return Task.CompletedTask;
+            }
+
+            key = _keyConverter.ConvertFrom(
+               null,
+               valueProviderResult.Culture,
+               value!);
+         }
+
+         if (key is null)
+         {
+            if (_disallowDefaultValues)
+            {
+               bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+               return Task.CompletedTask;
+            }
+
+            bindingContext.Result = ModelBindingResult.Success(default(T));
+            bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
+            return Task.CompletedTask;
+         }
+
+         CheckKey(bindingContext, valueProviderResult, (TKey)key);
+
+         return Task.CompletedTask;
+      }
+      catch (Exception exception)
+      {
+         var isFormatException = exception is FormatException;
+
+         if (!isFormatException && exception.InnerException != null)
+         {
+            // TypeConverter throws System.Exception wrapping the FormatException, so we capture the inner exception.
+            exception = ExceptionDispatchInfo.Capture(exception.InnerException).SourceException;
+         }
+
+         bindingContext.ModelState.TryAddModelError(
+            bindingContext.ModelName,
+            exception,
+            bindingContext.ModelMetadata);
+
+         // Were able to find a converter for the type but conversion failed.
+         return Task.CompletedTask;
+      }
+   }
+
+   private void CheckKey(ModelBindingContext bindingContext, ValueProviderResult valueProviderResult, TKey key)
+   {
+      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
+      {
+         bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
          return;
       }
 
-      key = Prepare(key);
       var validationError = T.Validate(key, valueProviderResult.Culture, out var obj);
 
       if (validationError is null || _mayReturnInvalidObjects)
       {
+         bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
          bindingContext.Result = ModelBindingResult.Success(obj);
          return;
       }
 
       bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationError.ToString() ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
    }
-
-   /// <summary>
-   /// Prepares the key before validation.
-   /// </summary>
-   /// <param name="key">Key to prepare.</param>
-   /// <returns>Prepared key.</returns>
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   protected abstract TKey Prepare(TKey key);
 }
