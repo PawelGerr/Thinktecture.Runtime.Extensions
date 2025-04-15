@@ -149,4 +149,50 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       output.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_not_generate_JsonConverter_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".Json",
+                                                                typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".Json",
+                                                                typeof(IEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

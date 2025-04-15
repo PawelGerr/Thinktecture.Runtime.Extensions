@@ -103,7 +103,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                {
                }
             }
-         
+
             [SmartEnum<string>]
             [MessagePackFormatter(typeof(TestEnumMessagePackFormatter))]
          	public partial class TestEnum
@@ -144,5 +144,51 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                                                                 typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_not_generate_Formatter_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".MessagePack",
+                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_Formatter_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".MessagePack",
+                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
    }
 }

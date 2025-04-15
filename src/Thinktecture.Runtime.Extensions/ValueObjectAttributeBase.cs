@@ -68,10 +68,17 @@ public abstract class ValueObjectAttributeBase : Attribute
    }
 
    /// <summary>
+   /// Specifies the serialization frameworks to be generated.
+   /// Default is <see cref="SerializationFrameworks.All"/>.
+   /// </summary>
+   public SerializationFrameworks SerializationFrameworks { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="ValueObjectAttributeBase"/>.
    /// </summary>
    protected ValueObjectAttributeBase()
    {
       ConstructorAccessModifier = ValueObjectAccessModifier.Private;
+      SerializationFrameworks = SerializationFrameworks.All;
    }
 }

@@ -15,6 +15,7 @@ public sealed class MessagePackSmartEnumCodeGeneratorFactory : IKeyedSerializerC
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
       return !state.AttributeInfo.HasMessagePackFormatterAttribute
+             && state.SerializationFrameworks.HasFlag(SerializationFrameworks.MessagePack)
              && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.MessagePack)));
    }
 

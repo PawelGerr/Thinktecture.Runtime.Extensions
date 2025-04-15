@@ -258,8 +258,108 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
-                                                                  ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public void Should_not_generate_JsonConverter_for_keyed_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_keyed_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public void Should_not_generate_JsonConverter_for_complex_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         public partial class ComplexValueObjectWithNonNullProperty
+         {
+            public int Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         public partial class ComplexValueObjectWithNonNullProperty
+         {
+            public int Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }

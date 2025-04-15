@@ -169,6 +169,16 @@ public static class AttributeDataExtensions
       return frameworks.Value;
    }
 
+   public static SerializationFrameworks FindSerializationFrameworks(this AttributeData attributeData)
+   {
+      var frameworks = (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "SerializationFrameworks");
+
+      if (frameworks is null || !frameworks.Value.IsValid())
+         return SerializationFrameworks.All;
+
+      return frameworks.Value;
+   }
+
    public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
    {
       var defaultStringComparison = (StringComparison?)GetIntegerParameterValue(attributeData, "DefaultStringComparison");

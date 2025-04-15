@@ -189,4 +189,104 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public void Should_not_generate_Formatter_for_keyed_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_Formatter_for_keyed_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public void Should_not_generate_Formatter_for_complex_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(SerializationFrameworks = SerializationFrameworks.SystemTextJson)]
+         public partial class ComplexValueObjectWithNonNullProperty
+         {
+            public int Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_Formatter_for_complex_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         public partial class ComplexValueObjectWithNonNullProperty
+         {
+            public int Property { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

@@ -43,7 +43,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
 
          using System;
          using Thinktecture;
-         
+
             [SmartEnum<string>]
          public partial class TestEnum
          {
@@ -101,7 +101,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
                {
                }
             }
-         
+
             [SmartEnum<string>]
             [JsonConverterAttribute(typeof(TestEnum_ValueObjectNewtonsoftJsonConverter))]
          	public partial class TestEnum
@@ -142,5 +142,51 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
                                                                 typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_not_generate_JsonConverter_when_disabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.MessagePack)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".NewtonsoftJson",
+                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_when_enabled_via_SerializationFrameworks()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         [SmartEnum<string>(SerializationFrameworks = SerializationFrameworks.NewtonsoftJson)]
+         public partial class TestEnum
+         {
+            public static readonly TestEnum Item1 = new("Item1");
+            public static readonly TestEnum Item2 = new("Item2");
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".NewtonsoftJson",
+                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
    }
 }

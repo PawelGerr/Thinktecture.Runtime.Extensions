@@ -28,6 +28,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public ConversionOperatorsGeneration UnsafeConversionToKeyMemberType { get; }
    public ConversionOperatorsGeneration ConversionToKeyMemberType { get; }
    public StringComparison DefaultStringComparison { get; }
+   public SerializationFrameworks SerializationFrameworks { get; }
 
    public AllValueObjectSettings(AttributeData valueObjectAttribute)
    {
@@ -57,6 +58,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       UnsafeConversionToKeyMemberType = valueObjectAttribute.FindUnsafeConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
       ConversionFromKeyMemberType = valueObjectAttribute.FindConversionFromKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
       DefaultStringComparison = valueObjectAttribute.FindDefaultStringComparison();
+      SerializationFrameworks = valueObjectAttribute.FindSerializationFrameworks();
 
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
@@ -100,7 +102,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
              && UnsafeConversionToKeyMemberType == other.UnsafeConversionToKeyMemberType
              && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
-             && DefaultStringComparison == other.DefaultStringComparison;
+             && DefaultStringComparison == other.DefaultStringComparison
+             && SerializationFrameworks == other.SerializationFrameworks;
    }
 
    public override int GetHashCode()
@@ -133,6 +136,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ (int)UnsafeConversionToKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)DefaultStringComparison;
+         hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
 
          return hashCode;
       }

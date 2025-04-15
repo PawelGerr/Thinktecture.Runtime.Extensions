@@ -123,7 +123,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                       {
-                                                         var serializerState = new KeyedSerializerGeneratorState(state.State, state.State.KeyMember, state.AttributeInfo);
+                                                         var serializerState = new KeyedSerializerGeneratorState(
+                                                            state.State,
+                                                            state.State.KeyMember,
+                                                            state.AttributeInfo,
+                                                            state.Settings.SerializationFrameworks);
 
                                                          return ImmutableArray.Create(serializerState);
                                                       })
@@ -157,7 +161,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                          if (state.AttributeInfo.DesiredFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
                                                             return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
 
-                                                         var serializerState = new KeyedSerializerGeneratorState(state.State, null, state.AttributeInfo);
+                                                         var serializerState = new KeyedSerializerGeneratorState(
+                                                            state.State,
+                                                            null,
+                                                            state.AttributeInfo,
+                                                            state.Settings.SerializationFrameworks);
 
                                                          return [serializerState];
                                                       })
@@ -177,7 +185,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       var complexSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                         {
-                                                           var serializerState = new ComplexSerializerGeneratorState(state.State, state.State.AssignableInstanceFieldsAndProperties, state.AttributeInfo);
+                                                           var serializerState = new ComplexSerializerGeneratorState(
+                                                              state.State,
+                                                              state.State.AssignableInstanceFieldsAndProperties,
+                                                              state.AttributeInfo,
+                                                              state.Settings.SerializationFrameworks);
 
                                                            return ImmutableArray.Create(serializerState);
                                                         })

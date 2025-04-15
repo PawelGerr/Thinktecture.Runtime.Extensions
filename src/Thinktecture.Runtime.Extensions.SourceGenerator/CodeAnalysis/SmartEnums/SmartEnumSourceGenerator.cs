@@ -191,7 +191,11 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                                                  : states.Distinct())
                                                 .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
 
-      var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(state.State, state.KeyMember, state.AttributeInfo))
+      var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(
+                                                            state.State,
+                                                            state.KeyMember,
+                                                            state.AttributeInfo,
+                                                            state.Settings.SerializationFrameworks))
                                                  .Combine(serializerGeneratorFactories)
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple =>

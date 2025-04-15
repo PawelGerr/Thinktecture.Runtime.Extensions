@@ -4,11 +4,11 @@
 namespace Thinktecture.Tests;
 
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
-partial struct ComplexValueObjectWithNonNullProperty
+partial class ComplexValueObjectWithNonNullProperty
 {
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty>
    {
-      private readonly global::System.Text.Json.Serialization.JsonConverter<string> _propertyConverter;
+      private readonly global::System.Text.Json.Serialization.JsonConverter<int> _propertyConverter;
       private readonly string _propertyPropertyName;
 
       public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
@@ -18,20 +18,20 @@ partial struct ComplexValueObjectWithNonNullProperty
 
          var namingPolicy = options.PropertyNamingPolicy;
 
-         this._propertyConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
+         this._propertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
          this._propertyPropertyName = namingPolicy?.ConvertName("Property") ?? "Property";
       }
 
       /// <inheritdoc />
-      public override global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
       {
          if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
-            throw new global::System.Text.Json.JsonException($"Cannot convert null to type \"ComplexValueObjectWithNonNullProperty\" because it doesn't allow default values.");
+            return default;
 
          if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
             throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObjectWithNonNullProperty\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
-         string? @property = default;
+         int @property = default;
 
          var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
@@ -50,7 +50,7 @@ partial struct ComplexValueObjectWithNonNullProperty
 
             if (comparer.Equals(propName, this._propertyPropertyName))
             {
-               @property = this._propertyConverter.Read(ref reader, typeof(string), options);
+               @property = this._propertyConverter.Read(ref reader, typeof(int), options);
             }
             else
             {
@@ -78,7 +78,7 @@ partial struct ComplexValueObjectWithNonNullProperty
 
          var @propertyPropertyValue = value.Property;
 
-         if(!ignoreNullValues || @propertyPropertyValue is not null)
+         if(!ignoreDefaultValues || !@propertyPropertyValue.Equals(default(int)))
          {
             writer.WritePropertyName(this._propertyPropertyName);
             this._propertyConverter.Write(writer, @propertyPropertyValue, options);

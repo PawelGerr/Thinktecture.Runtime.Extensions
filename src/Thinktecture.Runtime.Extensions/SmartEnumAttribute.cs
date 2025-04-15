@@ -145,6 +145,12 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; set; }
 
    /// <summary>
+   /// Specifies the serialization frameworks to be generated.
+   /// Default is <see cref="SerializationFrameworks.All"/>.
+   /// </summary>
+   public SerializationFrameworks SerializationFrameworks { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.
    /// </summary>
    public SmartEnumAttribute()
@@ -154,5 +160,6 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
       KeyMemberKind = ValueObjectMemberKind.Property;
       ConversionToKeyMemberType = ConversionOperatorsGeneration.Implicit;
       ConversionFromKeyMemberType = ConversionOperatorsGeneration.Explicit;
+      SerializationFrameworks = SerializationFrameworks.All;
    }
 }
