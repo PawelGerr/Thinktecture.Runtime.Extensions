@@ -10,18 +10,19 @@ namespace Thinktecture.Benchmarks;
 
 /*
 
-22.01.2025
+15.04.2025
 
-.NET 9.0.1
+.NET 9.0.4
 
-| Method                       | Mean      | Error     | StdDev    | Median    | Allocated |
-|----------------------------- |----------:|----------:|----------:|----------:|----------:|
-| Real_Enum_StringConverter    | 15.722 ms | 3.4459 ms | 10.106 ms | 10.545 ms |   7.16 MB |
-| SmartEnum_Struct_StringBased | 12.430 ms | 2.6370 ms |  7.307 ms | 10.046 ms |   8.51 MB |
-| SmartEnum_Class_StringBased  |  9.328 ms | 1.1271 ms |  3.008 ms |  8.682 ms |   8.21 MB |
-| Real_Enum_IntBased           |  6.801 ms | 1.0520 ms |  2.826 ms |  5.830 ms |   6.67 MB |
-| SmartEnum_Struct_IntBased    |  7.341 ms | 0.8959 ms |  2.482 ms |  6.327 ms |   8.03 MB |
-| SmartEnum_Class_IntBased     |  7.453 ms | 0.8701 ms |  2.352 ms |  6.643 ms |   7.72 MB |
+| Method                       | Mean     | Error    | StdDev    | Median    | Allocated |
+|----------------------------- |---------:|---------:|----------:|----------:|----------:|
+| Real_Enum_StringConverter    | 11.34 ms | 1.382 ms |  3.876 ms |  9.640 ms |   7.16 MB |
+| SmartEnum_Struct_StringBased | 11.63 ms | 1.485 ms |  4.214 ms | 10.541 ms |   8.51 MB |
+| SmartEnum_Class_StringBased  | 15.93 ms | 2.599 ms |  7.416 ms | 13.270 ms |   8.21 MB |
+| Real_Enum_IntBased           | 15.07 ms | 2.923 ms |  8.574 ms | 11.595 ms |   6.67 MB |
+| SmartEnum_Struct_IntBased    | 16.91 ms | 4.670 ms | 13.399 ms | 10.216 ms |   8.02 MB |
+| SmartEnum_Class_IntBased     | 20.11 ms | 5.255 ms | 15.078 ms | 12.856 ms |   7.72 MB |
+
 
  */
 
@@ -35,12 +36,18 @@ public class LoadingSmartEnums
    private const int _NUMBER_OF_ENTITIES = 10_000;
    private static readonly RealEnum[] _enums = Enum.GetValues<RealEnum>();
 
-   private readonly Entity_Enum_StringConverter[] _Entity_Enum_StringConverter = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_Enum_StringConverter(i, _enums[i % _enums.Length])).ToArray();
-   private readonly Entity_Enum_IntBased[] _Entity_Enum_IntBased = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_Enum_IntBased(i, _enums[i % _enums.Length])).ToArray();
-   private readonly Entity_SmartEnum_Class_StringBased[] _Entity_SmartEnum_Class_StringBased = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Class_StringBased(i, TestSmartEnum_Class_StringBased.Items[i % _enums.Length])).ToArray();
-   private readonly Entity_SmartEnum_Struct_StringBased[] _Entity_SmartEnum_Struct_StringBased = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Struct_StringBased(i, TestSmartEnum_Struct_StringBased.Items[i % _enums.Length])).ToArray();
-   private readonly Entity_SmartEnum_Class_IntBased[] _Entity_SmartEnum_Class_IntBased = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Class_IntBased(i, TestSmartEnum_Class_IntBased.Items[i % _enums.Length])).ToArray();
-   private readonly Entity_SmartEnum_Struct_IntBased[] _Entity_SmartEnum_Struct_IntBased = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Struct_IntBased(i, TestSmartEnum_Struct_IntBased.Items[i % _enums.Length])).ToArray();
+   private readonly Entity_Enum_StringConverter[] _Entity_Enum_StringConverter
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_Enum_StringConverter(i, _enums[i % _enums.Length]) { Enum = RealEnum.Value1 }).ToArray();
+   private readonly Entity_Enum_IntBased[] _Entity_Enum_IntBased
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_Enum_IntBased(i, _enums[i % _enums.Length]) { Enum = RealEnum.Value1 }).ToArray();
+   private readonly Entity_SmartEnum_Class_StringBased[] _Entity_SmartEnum_Class_StringBased
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Class_StringBased(i, TestSmartEnum_Class_StringBased.Items[i % _enums.Length]) { Enum = TestSmartEnum_Class_StringBased.Value1 }).ToArray();
+   private readonly Entity_SmartEnum_Struct_StringBased[] _Entity_SmartEnum_Struct_StringBased
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Struct_StringBased(i, TestSmartEnum_Struct_StringBased.Items[i % _enums.Length]) { Enum = TestSmartEnum_Struct_StringBased.Value1 }).ToArray();
+   private readonly Entity_SmartEnum_Class_IntBased[] _Entity_SmartEnum_Class_IntBased
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Class_IntBased(i, TestSmartEnum_Class_IntBased.Items[i % _enums.Length]) { Enum = TestSmartEnum_Class_IntBased.Value1 }).ToArray();
+   private readonly Entity_SmartEnum_Struct_IntBased[] _Entity_SmartEnum_Struct_IntBased
+      = Enumerable.Range(1, _NUMBER_OF_ENTITIES).Select(i => new Entity_SmartEnum_Struct_IntBased(i, TestSmartEnum_Struct_IntBased.Items[i % _enums.Length]) { Enum = TestSmartEnum_Struct_IntBased.Value1 }).ToArray();
 
    [GlobalSetup]
    public void Initialize()

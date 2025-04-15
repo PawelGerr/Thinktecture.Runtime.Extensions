@@ -11,6 +11,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_PARTIAL = "Make the type partial";
    private const string _MAKE_METHOD_PARTIAL = "Make the method partial";
    private const string _MAKE_MEMBER_PUBLIC = "Make the member public";
+   private const string _MAKE_MEMBER_REQUIRED = "Make the member required";
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
    private const string _MAKE_INIT_PRIVATE = "Make init private";
@@ -39,6 +40,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id,
       DiagnosticsDescriptors.UnionRecordMustBeSealed.Id,
+      DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id,
    ];
 
    /// <inheritdoc />
@@ -119,6 +121,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.UnionRecordMustBeSealed.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => ReplaceOrAddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_REQUIRED, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().MemberDeclaration, SyntaxKind.RequiredKeyword), _MAKE_MEMBER_REQUIRED), diagnostic);
          }
       }
    }
@@ -451,6 +457,9 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       private FieldDeclarationSyntax? _fieldDeclaration;
       public FieldDeclarationSyntax? FieldDeclaration => _fieldDeclaration ??= GetDeclaration<FieldDeclarationSyntax>();
+
+      private MemberDeclarationSyntax? _memberDeclaration;
+      public MemberDeclarationSyntax? MemberDeclaration => _memberDeclaration ??= GetDeclaration<MemberDeclarationSyntax>();
 
       private PropertyDeclarationSyntax? _propertyDeclaration;
       public PropertyDeclarationSyntax? PropertyDeclaration => _propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>();

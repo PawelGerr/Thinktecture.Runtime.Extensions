@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Thinktecture.SmartEnums;
 using Thinktecture.ValueObjects;
 
@@ -11,11 +12,12 @@ public class Product
    public ProductCategory Category { get; private set; }
    public ProductType ProductType { get; private set; }
    public OpenEndDate EndDate { get; set; }
-   public DayMonth ScheduledDeliveryDate { get; set; }
+   public required DayMonth ScheduledDeliveryDate { get; set; }
 
    private Boundary? _boundary;
    public Boundary Boundary => _boundary ?? throw new InvalidOperationException("Boundary is not loaded.");
 
+   [SetsRequiredMembers]
    private Product(
       Guid id,
       ProductName name,
@@ -32,6 +34,7 @@ public class Product
       ScheduledDeliveryDate = scheduledDeliveryDate;
    }
 
+   [SetsRequiredMembers]
    public Product(
       Guid id,
       ProductName name,

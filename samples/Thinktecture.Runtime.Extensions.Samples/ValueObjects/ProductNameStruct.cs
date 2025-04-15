@@ -2,7 +2,7 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
-[ValueObject<string>(DefaultInstancePropertyName = "None")]
+[ValueObject<string>]
 [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial struct ProductNameStruct

@@ -51,7 +51,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    private TestUnion_struct_string_int _field;
-            
+
                    public void TestMethod()
                    {
                       _field = {|#0:default|};
@@ -77,8 +77,8 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
             {
                public class TestClass
                {
-                   public TestUnion_struct_string_int Property { get; set; }
-            
+                   public required TestUnion_struct_string_int Property { get; set; }
+
                    public void TestMethod()
                    {
                       Property = {|#0:default|};
@@ -130,7 +130,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    public TestUnion_struct_string_int? Property { get; set; }
-            
+
                    public void TestMethod()
                    {
                       Property ??= {|#0:default|};
@@ -160,7 +160,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                    {
                       OtherMethod({|#0:default(TestUnion_struct_string_int)|});
                    }
-            
+
                    public void OtherMethod(TestUnion_struct_string_int value)
                    {
                    }
@@ -313,7 +313,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    private StructValueObject _field;
-            
+
                    public void TestMethod()
                    {
                       _field = {|#0:default|};
@@ -339,8 +339,8 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
             {
                public class TestClass
                {
-                   public StructValueObject Property { get; set; }
-            
+                   public required StructValueObject Property { get; set; }
+
                    public void TestMethod()
                    {
                       Property = {|#0:default|};
@@ -392,7 +392,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    public StructValueObject? Property { get; set; }
-            
+
                    public void TestMethod()
                    {
                       Property ??= {|#0:default|};
@@ -422,7 +422,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                    {
                       OtherMethod({|#0:default(StructValueObject)|});
                    }
-            
+
                    public void OtherMethod(StructValueObject value)
                    {
                    }
@@ -599,7 +599,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    private BoundaryStruct _field;
-            
+
                    public void TestMethod()
                    {
                       _field = {|#0:default|};
@@ -625,8 +625,8 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
             {
                public class TestClass
                {
-                   public BoundaryStruct Property { get; set; }
-            
+                   public required BoundaryStruct Property { get; set; }
+
                    public void TestMethod()
                    {
                       Property = {|#0:default|};
@@ -678,7 +678,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                public class TestClass
                {
                    public BoundaryStruct? Property { get; set; }
-            
+
                    public void TestMethod()
                    {
                       Property ??= {|#0:default|};
@@ -708,7 +708,7 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                    {
                       OtherMethod({|#0:default(BoundaryStruct)|});
                    }
-            
+
                    public void OtherMethod(BoundaryStruct value)
                    {
                    }

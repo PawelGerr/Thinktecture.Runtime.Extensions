@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
@@ -57,6 +58,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.NonAbstractDerivedUnionIsLessAccessibleThanBaseUnion,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
+      DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
    ];
 
    /// <inheritdoc />
@@ -74,6 +76,59 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
       context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
       context.RegisterOperationAction(AnalyzeObjectCreation, OperationKind.ObjectCreation);
+
+      context.RegisterSyntaxNodeAction(AnalyzeFieldDisallowingDefaultValues, SyntaxKind.FieldDeclaration);
+      context.RegisterSyntaxNodeAction(AnalyzePropertyDisallowingDefaultValues, SyntaxKind.PropertyDeclaration);
+   }
+
+   private static void AnalyzePropertyDisallowingDefaultValues(SyntaxNodeAnalysisContext context)
+   {
+      if (context.Node is not PropertyDeclarationSyntax propertyDeclarationSyntax
+          || propertyDeclarationSyntax.ExpressionBody is not null // public MyStruct Member => ...;
+          || propertyDeclarationSyntax.Initializer is not null    // public MyStruct Member { get; } = ...;
+          || context.ContainingSymbol is not IPropertySymbol propertySymbol
+          || propertySymbol.SetMethod is null // public MyStruct Member { get; }
+          || propertySymbol.IsStatic
+          || propertySymbol.DeclaredAccessibility < propertySymbol.ContainingType.DeclaredAccessibility            // required members must not be less visible than the containing type
+          || propertySymbol.SetMethod.DeclaredAccessibility < propertySymbol.ContainingType.DeclaredAccessibility) // setter of required members must not be less visible than the containing type
+         return;
+
+      MemberDisallowingDefaultValuesMustBeRequired(context, propertyDeclarationSyntax, propertySymbol.Type, "property", propertySymbol.Name);
+   }
+
+   private static void AnalyzeFieldDisallowingDefaultValues(SyntaxNodeAnalysisContext context)
+   {
+      if (context.Node is not FieldDeclarationSyntax fieldDeclarationSyntax
+          || (fieldDeclarationSyntax.Declaration.Variables.Count == 1 && fieldDeclarationSyntax.Declaration.Variables[0].Initializer is not null) // public MyStruct Member = ...;
+          || context.ContainingSymbol is not IFieldSymbol fieldSymbol
+          || fieldSymbol.IsStatic
+          || fieldSymbol.DeclaredAccessibility < fieldSymbol.ContainingType.DeclaredAccessibility) // required members must not be less visible than the containing type
+         return;
+
+      MemberDisallowingDefaultValuesMustBeRequired(context, fieldDeclarationSyntax, fieldSymbol.Type, "field", fieldSymbol.Name);
+   }
+
+   private static void MemberDisallowingDefaultValuesMustBeRequired(
+      SyntaxNodeAnalysisContext context,
+      MemberDeclarationSyntax memberDeclarationSyntax,
+      ITypeSymbol memberType,
+      string memberKind,
+      string memberName)
+   {
+      if (memberDeclarationSyntax.Modifiers.Any(SyntaxKind.RequiredKeyword))
+         return;
+
+      if (memberType.SpecialType != SpecialType.None || !memberType.IsValueType)
+         return;
+
+      if (!memberType.Interfaces.Any(i => i.IsIDisallowDefaultValue()))
+         return;
+
+      context.ReportDiagnostic(Diagnostic.Create(
+                                  DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
+                                  context.Node.GetLocation(),
+                                  memberKind,
+                                  memberName));
    }
 
    private static void AnalyzeMethodWithUseDelegateFromConstructor(OperationAnalysisContext context)

@@ -4,8 +4,8 @@ namespace Thinktecture.Database;
 public class Entity_with_StructValueObjects
 {
    public int Id { get; set; }
-   public NameStruct Name { get; set; }
-   public DescriptionStruct Description { get; set; }
+   public required NameStruct Name { get; set; }
+   public required DescriptionStruct Description { get; set; }
 
    // ReSharper disable once UnusedMember.Local
    private Entity_with_StructValueObjects(int id, NameStruct name, DescriptionStruct description)
