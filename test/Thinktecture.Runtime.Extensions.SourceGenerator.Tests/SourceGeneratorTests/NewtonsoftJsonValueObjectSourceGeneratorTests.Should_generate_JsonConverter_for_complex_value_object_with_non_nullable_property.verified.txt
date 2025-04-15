@@ -103,18 +103,6 @@ partial struct ComplexValueObjectWithNonNullProperty
             }
          }
 
-         if (@property is null)
-         {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
-
-            throw new global::Newtonsoft.Json.JsonReaderException(
-               $"Cannot deserialize type \"ComplexValueObjectWithNonNullProperty\" because the member \"Property\" of type \"string\" must not be null.",
-               reader.Path,
-               lineNumber,
-               linePosition,
-               null);
-         }
-
          var validationError = global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty.Validate(
                                     @property!,
                                     out var obj);

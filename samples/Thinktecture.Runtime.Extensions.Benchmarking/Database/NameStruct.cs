@@ -11,7 +11,6 @@ public partial struct NameStruct
    {
       if (String.IsNullOrWhiteSpace(value))
       {
-         value = null!;
          validationError = new ValidationError("Name cannot be empty.");
          return;
       }

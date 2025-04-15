@@ -205,22 +205,6 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
                null);
          }");
          }
-         else if (memberInfo is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.NotAnnotated })
-         {
-            _sb.Append(@"
-
-         if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
-         {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
-
-            throw new global::Newtonsoft.Json.JsonReaderException(
-               $""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" must not be null."",
-               reader.Path,
-               lineNumber,
-               linePosition,
-               null);
-         }");
-         }
       }
 
       _sb.Append(@"

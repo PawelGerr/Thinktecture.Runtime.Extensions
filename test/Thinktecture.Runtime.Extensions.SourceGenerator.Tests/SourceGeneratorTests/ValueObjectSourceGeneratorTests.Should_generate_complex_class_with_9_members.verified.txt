@@ -50,7 +50,62 @@ namespace Thinktecture.Tests
          string @value9,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         if (@value1 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value1\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value2 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value2\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value3 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value3\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value4 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value4\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value5 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value5\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value6 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value6\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value7 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value7\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value8 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value8\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@value9 is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_value9\" of type \"TestValueObject\" must not be null.");
+         }
+
          global::Thinktecture.ValidationError? validationError = null;
+
          ValidateFactoryArguments(
             ref validationError,
             ref @value1,
@@ -170,15 +225,15 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value1,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value2,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value3,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value4,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value5,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value6,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value7,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value8,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value9);
+         ref string @value1,
+         ref string @value2,
+         ref string @value3,
+         ref string @value4,
+         ref string @value5,
+         ref string @value6,
+         ref string @value7,
+         ref string @value8,
+         ref string @value9);
 
       partial void FactoryPostInit();
 

@@ -148,13 +148,6 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
             if (").AppendEscaped(memberInfo.ArgumentName).Append(" == default(").AppendTypeFullyQualified(memberInfo).Append(@"))
                throw new global::MessagePack.MessagePackSerializationException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" is missing and does not allow default values."");");
          }
-         else if (memberInfo is { IsReferenceType: true, NullableAnnotation: NullableAnnotation.NotAnnotated })
-         {
-            _sb.Append(@"
-
-            if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
-               throw new global::MessagePack.MessagePackSerializationException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" must not be null."");");
-         }
       }
 
       _sb.Append(@"

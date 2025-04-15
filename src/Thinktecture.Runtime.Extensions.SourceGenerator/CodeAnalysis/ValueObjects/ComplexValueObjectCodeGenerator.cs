@@ -245,8 +245,27 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
          out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+      {");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
       {
+         var memberInfo = fieldsAndProperties[i];
+
+         if (memberInfo.IsReferenceType && memberInfo.NullableAnnotation == NullableAnnotation.NotAnnotated)
+         {
+            _sb.Append(@"
+         if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
+         {
+            obj = default;
+            return ").AppendTypeFullyQualified(_state.ValidationError).Append(@".Create(""The member \""").Append(memberInfo.Name).Append(@"\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
+         }
+");
+         }
+      }
+
+      _sb.Append(@"
          ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
+
          ");
 
       if (_state.FactoryValidationReturnType is not null)
@@ -294,7 +313,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", comma: @",
-         ", leadingComma: true, addAllowNullNotNullCombi: true);
+         ", leadingComma: true);
 
       _sb.Append(");");
    }

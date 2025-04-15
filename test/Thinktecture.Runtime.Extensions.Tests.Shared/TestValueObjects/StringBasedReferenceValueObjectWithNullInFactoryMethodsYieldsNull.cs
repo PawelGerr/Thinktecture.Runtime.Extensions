@@ -14,7 +14,6 @@ public partial class StringBasedReferenceValueObjectWithNullInFactoryMethodsYiel
    {
       if (String.IsNullOrWhiteSpace(property))
       {
-         property = null!;
          validationError = new ValidationError("Property cannot be empty.");
          return;
       }

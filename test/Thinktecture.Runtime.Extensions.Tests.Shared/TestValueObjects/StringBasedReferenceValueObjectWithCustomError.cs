@@ -14,7 +14,6 @@ public partial class StringBasedReferenceValueObjectWithCustomError
    {
       if (String.IsNullOrWhiteSpace(property))
       {
-         property = null!;
          validationError = new StringBasedReferenceValueObjectValidationError("Property cannot be empty.");
          return;
       }

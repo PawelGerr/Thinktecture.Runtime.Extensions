@@ -81,7 +81,7 @@ namespace Thinktecture.Tests
          return validationError is null;
       }
 
-      static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @value);
+      static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref string @value);
 
       partial void FactoryPostInit();
 

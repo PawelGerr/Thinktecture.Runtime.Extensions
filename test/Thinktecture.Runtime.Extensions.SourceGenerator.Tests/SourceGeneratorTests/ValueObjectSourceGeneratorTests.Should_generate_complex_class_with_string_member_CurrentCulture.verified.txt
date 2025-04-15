@@ -34,7 +34,14 @@ namespace Thinktecture.Tests
          string @property,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         if (@property is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"Property\" of type \"TestValueObject\" must not be null.");
+         }
+
          global::Thinktecture.ValidationError? validationError = null;
+
          ValidateFactoryArguments(
             ref validationError,
             ref @property);
@@ -90,7 +97,7 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @property);
+         ref string @property);
 
       partial void FactoryPostInit();
 

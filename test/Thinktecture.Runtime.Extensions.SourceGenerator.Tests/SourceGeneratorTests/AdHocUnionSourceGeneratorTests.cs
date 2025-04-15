@@ -1,7 +1,5 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.CodeAnalysis.AdHocUnions;
-using VerifyXunit;
 using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;

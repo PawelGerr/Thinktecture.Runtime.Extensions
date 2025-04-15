@@ -11,7 +11,6 @@ public partial struct DescriptionStruct
    {
       if (String.IsNullOrWhiteSpace(value))
       {
-         value = null!;
          validationError = new ValidationError("Description cannot be empty.");
          return;
       }

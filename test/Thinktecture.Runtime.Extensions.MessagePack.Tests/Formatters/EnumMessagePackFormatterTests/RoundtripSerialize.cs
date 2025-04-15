@@ -391,7 +391,7 @@ public partial class Serialize
    {
       FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), ComplexValueObjectWithNonNullProperty.Create("")))
                    .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot deserialize type \"ComplexValueObjectWithNonNullProperty\" because the member \"Property\" of type \"string\" must not be null.");
+                   .WithInnerException<MessagePackSerializationException>().WithMessage("The member \"Property\" of type \"ComplexValueObjectWithNonNullProperty\" must not be null.");
 
       FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), ComplexValueObjectWithPropertyWithoutNullableAnnotation.Create(null!)))
                    .Should().NotThrow();

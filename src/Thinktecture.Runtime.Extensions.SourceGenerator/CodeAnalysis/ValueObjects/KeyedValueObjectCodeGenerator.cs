@@ -435,7 +435,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("private ");
 
-      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError, ").RenderArgumentWithType(_state.KeyMember, "ref ", addAllowNullNotNullCombi: true).Append(");");
+      _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError, ").RenderArgumentWithType(_state.KeyMember, "ref ").Append(");");
    }
 
    private void GenerateFactoryPostInit()

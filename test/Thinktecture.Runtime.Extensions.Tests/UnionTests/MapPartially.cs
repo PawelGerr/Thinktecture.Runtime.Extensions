@@ -1,5 +1,4 @@
 using System;
-using Thinktecture.Runtime.Tests.TestAdHocUnions;
 using Thinktecture.Runtime.Tests.TestUnions;
 
 namespace Thinktecture.Runtime.Tests.UnionTests;

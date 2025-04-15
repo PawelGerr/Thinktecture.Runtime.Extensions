@@ -10,10 +10,9 @@ public partial class BoundaryWithStrings
 
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string lower, ref string? upper)
    {
-      if (lower is null)
+      if (String.IsNullOrWhiteSpace(lower))
       {
-         lower = null!;
-         validationError = new ValidationError("Lower boundary must not be null.");
+         validationError = new ValidationError("Lower boundary must not be empty.");
          return;
       }
 

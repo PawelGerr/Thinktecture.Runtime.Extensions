@@ -46,7 +46,20 @@ namespace Thinktecture.Tests
          int? @nullableStructProperty,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
+         if (@stringValue is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"_stringValue\" of type \"TestValueObject\" must not be null.");
+         }
+
+         if (@referenceProperty is null)
+         {
+            obj = default;
+            return global::Thinktecture.ValidationError.Create("The member \"ReferenceProperty\" of type \"TestValueObject\" must not be null.");
+         }
+
          global::Thinktecture.ValidationError? validationError = null;
+
          ValidateFactoryArguments(
             ref validationError,
             ref @stringValue,
@@ -142,9 +155,9 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @stringValue,
+         ref string @stringValue,
          ref int @intValue,
-         [global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ref string @referenceProperty,
+         ref string @referenceProperty,
          ref string? @nullableReferenceProperty,
          ref int @structProperty,
          ref int? @nullableStructProperty);

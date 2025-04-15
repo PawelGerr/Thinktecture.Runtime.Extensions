@@ -37,6 +37,7 @@ namespace Thinktecture.Tests
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
+
          ValidateFactoryArguments(
             ref validationError,
             ref @prop1,

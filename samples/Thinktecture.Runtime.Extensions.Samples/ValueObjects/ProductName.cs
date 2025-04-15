@@ -11,7 +11,6 @@ public partial class ProductName
    {
       if (String.IsNullOrWhiteSpace(value))
       {
-         value = null!;
          validationError = new ValidationError("Product name cannot be empty.");
          return;
       }

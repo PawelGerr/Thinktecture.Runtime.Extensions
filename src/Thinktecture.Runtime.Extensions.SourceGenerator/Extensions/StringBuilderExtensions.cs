@@ -141,15 +141,14 @@ public static class StringBuilderExtensions
       string comma = ", ",
       bool leadingComma = false,
       bool trailingComma = false,
-      bool useNullableTypes = false,
-      bool addAllowNullNotNullCombi = false)
+      bool useNullableTypes = false)
    {
       for (var i = 0; i < members.Count; i++)
       {
          if (leadingComma || i > 0)
             sb.Append(comma);
 
-         sb.RenderArgumentWithType(members[i], prefix, useNullableTypes, addAllowNullNotNullCombi);
+         sb.RenderArgumentWithType(members[i], prefix, useNullableTypes);
       }
 
       if (trailingComma && members.Count > 0)
@@ -162,12 +161,8 @@ public static class StringBuilderExtensions
       this StringBuilder sb,
       IMemberState member,
       string? prefix = null,
-      bool useNullableTypes = false,
-      bool addAllowNullNotNullCombi = false)
+      bool useNullableTypes = false)
    {
-      if (addAllowNullNotNullCombi && member.IsReferenceType && member.NullableAnnotation != NullableAnnotation.Annotated)
-         sb.Append("[global::System.Diagnostics.CodeAnalysis.AllowNullAttribute, global::System.Diagnostics.CodeAnalysis.NotNullAttribute] ");
-
       sb.Append(prefix).AppendTypeFullyQualified(member);
 
       if (useNullableTypes && !member.IsNullableStruct)

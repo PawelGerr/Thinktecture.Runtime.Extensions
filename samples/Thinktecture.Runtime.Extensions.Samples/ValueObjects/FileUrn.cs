@@ -22,16 +22,12 @@ public partial class FileUrn
       if (string.IsNullOrWhiteSpace(fileStore))
       {
          validationError = new ValidationError("FileStore cannot be empty");
-         fileStore = string.Empty;
-         urn = string.Empty;
          return;
       }
 
       if (string.IsNullOrWhiteSpace(urn))
       {
          validationError = new ValidationError("Urn cannot be empty");
-         fileStore = string.Empty;
-         urn = string.Empty;
          return;
       }
 

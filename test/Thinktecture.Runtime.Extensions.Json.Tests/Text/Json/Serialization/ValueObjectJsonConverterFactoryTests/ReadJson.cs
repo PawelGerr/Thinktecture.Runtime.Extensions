@@ -335,7 +335,7 @@ public class ReadJson : JsonTestsBase
    public void Should_throw_if_complex_value_object_property_has_AllowDefaultStructs_but_the_property_non_nullable()
    {
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectWithNonNullProperty>("{ \"Property\": null }"))
-                   .Should().Throw<JsonException>().WithMessage("Cannot deserialize type \"ComplexValueObjectWithNonNullProperty\" because the member \"Property\" of type \"string\" must not be null.");
+                   .Should().Throw<JsonException>().WithMessage("The member \"Property\" of type \"ComplexValueObjectWithNonNullProperty\" must not be null.");
 
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectWithPropertyWithoutNullableAnnotation>("{ \"Property\": null }"))
                    .Should().NotThrow();

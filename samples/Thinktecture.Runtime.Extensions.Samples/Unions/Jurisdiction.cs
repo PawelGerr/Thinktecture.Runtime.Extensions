@@ -16,7 +16,6 @@ public abstract partial class Jurisdiction
          if (string.IsNullOrWhiteSpace(isoCode))
          {
             validationError = new ValidationError("ISO code is required.");
-            isoCode = string.Empty;
             return;
          }
 

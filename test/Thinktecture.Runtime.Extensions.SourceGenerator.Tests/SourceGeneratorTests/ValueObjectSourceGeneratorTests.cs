@@ -22,6 +22,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ComplexValueObject]
@@ -49,6 +51,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -104,6 +108,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<int>]
@@ -124,6 +130,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -146,6 +154,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          [ComplexValueObject]
          public partial class TestValueObject
          {
@@ -164,6 +174,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -186,6 +198,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -214,6 +228,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ComplexValueObject]
@@ -235,6 +251,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -258,6 +276,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -285,6 +305,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -317,6 +339,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -351,6 +375,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<int>(SkipKeyMember = true)]
@@ -384,6 +410,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
@@ -410,6 +438,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -438,6 +468,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<string>]
@@ -464,6 +496,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -497,6 +531,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<DateOnly>(KeyMemberName = "_value")]
@@ -525,6 +561,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<DateOnly>(EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
@@ -552,6 +590,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -589,6 +629,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<string>(NullInFactoryMethodsYieldsNull = true)]
@@ -616,6 +658,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<string>(EmptyStringInFactoryMethodsYieldsNull = true)]
@@ -642,6 +686,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -671,6 +717,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ValueObject<string>]
@@ -699,6 +747,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -732,6 +782,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
             [ValueObject<string>(ConversionFromKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
@@ -762,6 +814,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
             [ValueObject<string>(ConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
@@ -791,6 +845,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var source = $$"""
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -823,6 +879,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -872,6 +930,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {
@@ -925,6 +985,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
            [ComplexValueObject]
@@ -977,6 +1039,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
             [ComplexValueObject]
@@ -1013,6 +1077,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          using System;
          using Thinktecture;
 
+         #nullable enable
+
          namespace Thinktecture.Tests
          {
             [ComplexValueObject(DefaultStringComparison = StringComparison.{{stringComparison}})]
@@ -1035,6 +1101,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+
+         #nullable enable
 
          namespace Thinktecture.Tests
          {

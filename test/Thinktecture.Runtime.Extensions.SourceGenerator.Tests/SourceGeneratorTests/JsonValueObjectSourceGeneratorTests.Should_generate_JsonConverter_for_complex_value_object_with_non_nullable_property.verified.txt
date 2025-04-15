@@ -58,9 +58,6 @@ partial struct ComplexValueObjectWithNonNullProperty
             }
          }
 
-         if (@property is null)
-            throw new global::System.Text.Json.JsonException($"Cannot deserialize type \"ComplexValueObjectWithNonNullProperty\" because the member \"Property\" of type \"string\" must not be null.");
-
          var validationError = global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty.Validate(
                                     @property!,
                                     out var obj);
