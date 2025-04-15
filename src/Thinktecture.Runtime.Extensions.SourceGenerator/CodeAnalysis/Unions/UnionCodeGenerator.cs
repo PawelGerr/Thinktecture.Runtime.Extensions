@@ -188,6 +188,9 @@ abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").App
          {
             var ctorArg = memberType.UniqueSingleArgumentConstructors[j];
 
+            if(ctorArg.IsInterface)
+               continue;
+
             _sb.Append(@"
 
    /// <summary>

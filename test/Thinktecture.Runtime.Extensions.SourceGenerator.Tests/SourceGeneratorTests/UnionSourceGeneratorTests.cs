@@ -276,6 +276,31 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_has_an_interface()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class TestUnion
+            {
+               public sealed class Child1(IReadOnlyList<string> List) : TestUnion;
+
+               public sealed class Child2 : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_record_with_multiple_implicit_conversions()
    {
       var source = """

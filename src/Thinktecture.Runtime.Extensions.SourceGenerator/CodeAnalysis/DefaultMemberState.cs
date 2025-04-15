@@ -13,6 +13,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
+   public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;
 
    public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
    {
