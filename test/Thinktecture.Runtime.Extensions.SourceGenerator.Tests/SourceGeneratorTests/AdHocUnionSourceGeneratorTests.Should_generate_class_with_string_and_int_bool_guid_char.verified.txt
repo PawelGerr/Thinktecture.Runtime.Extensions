@@ -374,7 +374,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="string"/>.
+      /// Explicit conversion to type <see cref="string"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="string"/>.</returns>
@@ -385,7 +385,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="int"/>.
+      /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
@@ -396,7 +396,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="bool"/>.
+      /// Explicit conversion to type <see cref="bool"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="bool"/>.</returns>
@@ -407,7 +407,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="global::System.Guid"/>.
+      /// Explicit conversion to type <see cref="global::System.Guid"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="global::System.Guid"/>.</returns>
@@ -418,7 +418,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="char"/>.
+      /// Explicit conversion to type <see cref="char"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="char"/>.</returns>

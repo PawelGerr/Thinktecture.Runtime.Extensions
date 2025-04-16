@@ -144,6 +144,16 @@ public static class AttributeDataExtensions
       return GetSwitchMapGeneration(attributeData, "MapMethods");
    }
 
+   public static ConversionOperatorsGeneration? FindConversionFromValue(this AttributeData attributeData)
+   {
+      return GetConversionOperatorsGeneration(attributeData, "ConversionFromValue");
+   }
+
+   public static ConversionOperatorsGeneration? FindConversionToValue(this AttributeData attributeData)
+   {
+      return GetConversionOperatorsGeneration(attributeData, "ConversionToValue");
+   }
+
    public static ConversionOperatorsGeneration? FindConversionToKeyMemberType(this AttributeData attributeData)
    {
       return GetConversionOperatorsGeneration(attributeData, "ConversionToKeyMemberType");
@@ -203,11 +213,6 @@ public static class AttributeDataExtensions
    {
       return (UnionConstructorAccessModifier?)GetIntegerParameterValue(attributeData, "ConstructorAccessModifier")
              ?? UnionConstructorAccessModifier.Public;
-   }
-
-   public static bool FindSkipImplicitConversionFromValue(this AttributeData attributeData)
-   {
-      return GetBooleanParameterValue(attributeData, "SkipImplicitConversionFromValue") ?? false;
    }
 
    public static bool FindAllowDefaultStructs(this AttributeData attributeData)

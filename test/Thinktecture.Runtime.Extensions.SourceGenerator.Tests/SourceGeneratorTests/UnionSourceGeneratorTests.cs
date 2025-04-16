@@ -154,7 +154,7 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            [Union(SkipImplicitConversionFromValue = true)]
+            [Union(ConversionFromValue = ConversionOperatorsGeneration.None)]
             public partial record Result<T>
             {
                public partial record Success(T Value) : Result<T>;
@@ -310,6 +310,35 @@ public class UnionSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [Union]
+            public partial record Result<T>
+            {
+               public partial record Success(T Value) : Result<T>;
+
+               public partial record Failure(string Error) : Result<T>
+               {
+                  public Failure(int error) : this(error.ToString())
+                  {
+                  }
+               };
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<UnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_record_with_multiple_explicit_conversions_if_configured()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(ConversionFromValue = ConversionOperatorsGeneration.Explicit)]
             public partial record Result<T>
             {
                public partial record Success(T Value) : Result<T>;

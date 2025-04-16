@@ -189,7 +189,27 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="string"/>.
+      /// Explicit conversion from type <see cref="string"/>.
+      /// </summary>
+      /// <param name="string">Value to covert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+      public static explicit operator global::Thinktecture.Tests.TestUnion(string @string)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@string);
+      }
+
+      /// <summary>
+      /// Explicit conversion from type <see cref="int"/>.
+      /// </summary>
+      /// <param name="int32">Value to covert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+      public static explicit operator global::Thinktecture.Tests.TestUnion(int @int32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@int32);
+      }
+
+      /// <summary>
+      /// Explicit conversion to type <see cref="string"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="string"/>.</returns>
@@ -200,7 +220,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="int"/>.
+      /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>

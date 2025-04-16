@@ -209,7 +209,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <c>string?</c>.
+      /// Explicit conversion to type <c>string?</c>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <c>string?</c>.</returns>
@@ -220,7 +220,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <c>int?</c>.
+      /// Explicit conversion to type <c>int?</c>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <c>int?</c>.</returns>

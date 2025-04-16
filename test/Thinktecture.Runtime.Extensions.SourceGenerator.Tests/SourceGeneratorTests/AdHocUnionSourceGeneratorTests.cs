@@ -63,14 +63,65 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_class_with_string_and_int_without_implicit_conversion()
+   public async Task Should_generate_class_with_string_and_int_without_implicit_conversion_from_value()
    {
       var source = """
          using System;
 
          namespace Thinktecture.Tests
          {
-         	[Union<string, int>(SkipImplicitConversionFromValue = true)]
+         	[Union<string, int>(ConversionFromValue = ConversionOperatorsGeneration.None)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_class_with_string_and_int_with_explicit_conversion_from_value()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ConversionFromValue = ConversionOperatorsGeneration.Explicit)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_class_with_string_and_int_without_explicit_conversion_to_value()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ConversionToValue = ConversionOperatorsGeneration.None)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_class_with_string_and_int_with_implilcit_conversion_to_value()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ConversionToValue = ConversionOperatorsGeneration.Implicit)]
          	public partial class TestUnion;
          }
          """;

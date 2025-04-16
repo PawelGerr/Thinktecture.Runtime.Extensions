@@ -168,15 +168,17 @@ abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").App
             GenerateMap(true);
       }
 
-      if (!_state.Settings.SkipImplicitConversionFromValue)
-         GenerateImplicitConversions();
+      GenerateConversionsFromValue();
 
       _sb.Append(@"
 }");
    }
 
-   private void GenerateImplicitConversions()
+   private void GenerateConversionsFromValue()
    {
+      if (_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.None)
+         return;
+
       for (var i = 0; i < _state.TypeMembers.Count; i++)
       {
          var memberType = _state.TypeMembers[i];
@@ -188,17 +190,17 @@ abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").App
          {
             var ctorArg = memberType.UniqueSingleArgumentConstructors[j];
 
-            if(ctorArg.IsInterface)
+            if (ctorArg.IsInterface)
                continue;
 
             _sb.Append(@"
 
    /// <summary>
-   /// Implicit conversion from type ").AppendTypeForXmlComment(ctorArg).Append(@".
+   /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(ctorArg).Append(@".
    /// </summary>
    /// <param name=""").Append(ctorArg.ArgumentName).Append(@""">Value to covert from.</param>
    /// <returns>A new instance of ").AppendTypeForXmlComment(memberType).Append(@" converted from <paramref name=""").Append(ctorArg.ArgumentName).Append(@"""/>.</returns>
-   public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
+   public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
    {
       return new ").AppendTypeFullyQualified(memberType).Append("(").AppendEscaped(ctorArg.ArgumentName).Append(@");
    }");

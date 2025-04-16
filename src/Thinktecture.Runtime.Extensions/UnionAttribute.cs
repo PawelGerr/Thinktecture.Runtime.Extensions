@@ -4,7 +4,7 @@ namespace Thinktecture;
 /// Marks a type as a discriminated union.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class UnionAttribute : Attribute
+public sealed class UnionAttribute : Attribute
 {
    /// <summary>
    /// Indication whether and how the generator should generate the methods <c>Switch</c>.
@@ -17,7 +17,16 @@ public class UnionAttribute : Attribute
    public SwitchMapMethodsGeneration MapMethods { get; set; }
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of implicit conversions from value to union type.
+   /// Indication whether and how the generator should generate the conversion operators from value to union type.
+   /// Default is <see cref="ConversionOperatorsGeneration.Implicit"/>.
    /// </summary>
-   public bool SkipImplicitConversionFromValue { get; set; }
+   public ConversionOperatorsGeneration ConversionFromValue { get; set; }
+
+   /// <summary>
+   /// Initializes a new instance of <see cref="UnionAttribute"/>.
+   /// </summary>
+   public UnionAttribute()
+   {
+      ConversionFromValue = ConversionOperatorsGeneration.Implicit;
+   }
 }

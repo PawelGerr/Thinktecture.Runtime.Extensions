@@ -114,10 +114,8 @@ namespace ").Append(_state.Namespace).Append(@"
             GenerateMap(true);
       }
 
-      if (!_state.Settings.SkipImplicitConversionFromValue)
-         GenerateImplicitConversions();
-
-      GenerateExplicitConversions();
+      GenerateConversionsFromValue();
+      GenerateConversionsToValue();
       GenerateEqualityOperators();
       GenerateEquals();
       GenerateGetHashCode();
@@ -129,8 +127,11 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
-   private void GenerateImplicitConversions()
+   private void GenerateConversionsFromValue()
    {
+      if (_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.None)
+         return;
+
       foreach (var memberType in _state.MemberTypes)
       {
          if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
@@ -139,19 +140,22 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion from type ").AppendTypeForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to covert from.</param>
       /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.</returns>
-      public static implicit operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
+      public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
          return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
       }");
       }
    }
 
-   private void GenerateExplicitConversions()
+   private void GenerateConversionsToValue()
    {
+      if (_state.Settings.ConversionToValue == ConversionOperatorsGeneration.None)
+         return;
+
       foreach (var memberType in _state.MemberTypes)
       {
          if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
@@ -160,12 +164,12 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Implicit conversion to type ").AppendTypeForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionToValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to covert.</param>
       /// <returns>Inner value of type ").AppendTypeForXmlComment(memberType).Append(@".</returns>
       /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendTypeForXmlComment(memberType).Append(@".</exception>
-      public static explicit operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
+      public static ").AppendConversionOperator(_state.Settings.ConversionToValue).Append(" operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.As").Append(memberType.Name).Append(@";
       }");

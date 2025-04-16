@@ -209,23 +209,23 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Explicit conversion to type <see cref="string"/>.
+      /// Implicit conversion to type <see cref="string"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="string"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
-      public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
+      public static implicit operator string(global::Thinktecture.Tests.TestUnion obj)
       {
          return obj.AsString;
       }
 
       /// <summary>
-      /// Explicit conversion to type <see cref="int"/>.
+      /// Implicit conversion to type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
-      public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
+      public static implicit operator int(global::Thinktecture.Tests.TestUnion obj)
       {
          return obj.AsInt32;
       }

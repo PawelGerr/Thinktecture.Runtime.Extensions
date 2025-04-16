@@ -26,9 +26,16 @@ public abstract class UnionAttributeBase : Attribute
    public UnionConstructorAccessModifier ConstructorAccessModifier { get; set; } = UnionConstructorAccessModifier.Public;
 
    /// <summary>
-   /// Indication whether the generator should skip the implementation of implicit conversions from value to union type.
+   /// Indication whether and how the generator should generate the conversion operators from value to union type.
+   /// Default is <see cref="ConversionOperatorsGeneration.Implicit"/>.
    /// </summary>
-   public bool SkipImplicitConversionFromValue { get; set; }
+   public ConversionOperatorsGeneration ConversionFromValue { get; set; }
+
+   /// <summary>
+   /// Indication whether and how the generator should generate the conversion operators from union type to value.
+   /// Default is <see cref="ConversionOperatorsGeneration.Explicit"/>.
+   /// </summary>
+   public ConversionOperatorsGeneration ConversionToValue { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the methods <c>Switch</c>.
@@ -39,4 +46,13 @@ public abstract class UnionAttributeBase : Attribute
    /// Indication whether and how the generator should generate the methods <c>Map</c>.
    /// </summary>
    public SwitchMapMethodsGeneration MapMethods { get; set; }
+
+   /// <summary>
+   /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
+   /// </summary>
+   protected UnionAttributeBase()
+   {
+      ConversionFromValue = ConversionOperatorsGeneration.Implicit;
+      ConversionToValue = ConversionOperatorsGeneration.Explicit;
+   }
 }

@@ -2,7 +2,7 @@ namespace Thinktecture.Runtime.Tests.TestUnions;
 
 [Union(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
        MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
-       SkipImplicitConversionFromValue = true)]
+       ConversionFromValue = ConversionOperatorsGeneration.None)]
 public partial record ResultWithCustomConversion<T>
 {
    public sealed record Success(T Value) : ResultWithCustomConversion<T>;

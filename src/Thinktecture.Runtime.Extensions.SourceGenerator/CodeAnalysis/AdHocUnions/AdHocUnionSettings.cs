@@ -10,7 +10,8 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public IReadOnlyList<AdHocUnionMemberTypeSetting> MemberTypeSettings { get; }
    public StringComparison DefaultStringComparison { get; }
    public UnionConstructorAccessModifier ConstructorAccessModifier { get; }
-   public bool SkipImplicitConversionFromValue { get; }
+   public ConversionOperatorsGeneration ConversionFromValue { get; }
+   public ConversionOperatorsGeneration ConversionToValue { get; }
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
 
    public AdHocUnionSettings(
@@ -23,7 +24,8 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       MapMethods = attribute.FindMapMethods();
       DefaultStringComparison = attribute.FindDefaultStringComparison();
       ConstructorAccessModifier = attribute.FindUnionConstructorAccessModifier();
-      SkipImplicitConversionFromValue = attribute.FindSkipImplicitConversionFromValue();
+      ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
+      ConversionToValue = attribute.FindConversionToValue() ?? ConversionOperatorsGeneration.Explicit;
       _attributeInfo = attributeInfo;
 
       var memberTypeSettings = new AdHocUnionMemberTypeSetting[numberOfMemberTypes];
@@ -53,7 +55,8 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && MapMethods == other.MapMethods
              && DefaultStringComparison == other.DefaultStringComparison
              && ConstructorAccessModifier == other.ConstructorAccessModifier
-             && SkipImplicitConversionFromValue == other.SkipImplicitConversionFromValue
+             && ConversionFromValue == other.ConversionFromValue
+             && ConversionToValue == other.ConversionToValue
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
@@ -67,7 +70,8 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)DefaultStringComparison;
          hashCode = (hashCode * 397) ^ (int)ConstructorAccessModifier;
-         hashCode = (hashCode * 397) ^ SkipImplicitConversionFromValue.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
+         hashCode = (hashCode * 397) ^ (int)ConversionToValue;
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 

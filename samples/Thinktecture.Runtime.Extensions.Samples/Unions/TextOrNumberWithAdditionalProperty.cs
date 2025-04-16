@@ -2,7 +2,7 @@ namespace Thinktecture.Unions;
 
 [Union<string, int>(T1Name = "Text",
                     T2Name = "Number",
-                    SkipImplicitConversionFromValue = true,
+                    ConversionFromValue = ConversionOperatorsGeneration.None,
                     ConstructorAccessModifier = UnionConstructorAccessModifier.Private)]
 public partial class TextOrNumberExtended
 {

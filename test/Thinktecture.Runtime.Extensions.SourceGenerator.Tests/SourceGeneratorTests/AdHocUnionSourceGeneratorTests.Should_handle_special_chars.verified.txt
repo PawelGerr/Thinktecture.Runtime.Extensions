@@ -209,7 +209,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="int"/>.
+      /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
@@ -220,7 +220,7 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion to type <see cref="global::Thinktecture.Tests._1Test"/>.
+      /// Explicit conversion to type <see cref="global::Thinktecture.Tests._1Test"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
       /// <returns>Inner value of type <see cref="global::Thinktecture.Tests._1Test"/>.</returns>
