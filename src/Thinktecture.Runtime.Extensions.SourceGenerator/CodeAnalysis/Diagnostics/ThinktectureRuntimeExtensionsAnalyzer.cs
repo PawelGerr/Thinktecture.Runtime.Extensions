@@ -121,7 +121,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (memberType.SpecialType != SpecialType.None || !memberType.IsValueType)
          return;
 
-      if (!memberType.Interfaces.Any(i => i.IsIDisallowDefaultValue()))
+      if (!memberType.ImplementsIDisallowDefaultValue())
          return;
 
       context.ReportDiagnostic(Diagnostic.Create(
@@ -177,7 +177,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private void AnalyzeObjectCreation(OperationAnalysisContext context)
+   private static void AnalyzeObjectCreation(OperationAnalysisContext context)
    {
       var operation = (IObjectCreationOperation)context.Operation;
 
@@ -186,14 +186,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || operation.Arguments.Length > 0)
          return;
 
-      if (operation.Type.IsAdHocUnionType(out _)
-          || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
-      {
+      if (operation.Type.ImplementsIDisallowDefaultValue())
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
-      }
    }
 
-   private void AnalyzeDefaultValueAssignment(OperationAnalysisContext context)
+   private static void AnalyzeDefaultValueAssignment(OperationAnalysisContext context)
    {
       var operation = (IDefaultValueOperation)context.Operation;
 
@@ -204,11 +201,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (operation.Type.IsAdHocUnionType(out _)
-          || (operation.Type.IsValueObjectType(out var valueObjectAttributeBase) && !valueObjectAttributeBase.FindAllowDefaultStructs()))
-      {
+      if (operation.Type.ImplementsIDisallowDefaultValue())
          ReportDiagnostic(context, DiagnosticsDescriptors.VariableMustBeInitializedWithNonDefaultValue, operation.Syntax.GetLocation(), operation.Type);
-      }
    }
 
    private static bool IsAssignmentOrInitialization(IOperation? operation)
@@ -527,7 +521,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             ReportDiagnostic(context, DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass, attribute.Syntax.GetLocation(), type, keyType);
          }
-         else if (keyType.AllInterfaces.Any(i => i.IsIDisallowDefaultValue()))
+         else if (keyType.ImplementsIDisallowDefaultValue())
          {
             ReportDiagnostic(context,
                              DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,

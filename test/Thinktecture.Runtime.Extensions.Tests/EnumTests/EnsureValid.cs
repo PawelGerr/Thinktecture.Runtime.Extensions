@@ -34,9 +34,6 @@ public class EnsureValid
    {
       new StructIntegerEnum().Invoking(e => e.EnsureValid())
                              .Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type \"{nameof(StructIntegerEnum)}\" with identifier \"0\" is not valid.");
-
-      new StructStringEnum().Invoking(e => e.EnsureValid())
-                            .Should().Throw<InvalidOperationException>().WithMessage($"The current enumeration item of type \"{nameof(StructStringEnum)}\" with identifier \"\" is not valid.");
    }
 
    [Fact]

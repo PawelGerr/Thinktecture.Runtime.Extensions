@@ -31,7 +31,6 @@ public class WriteJson : JsonTestsBase
       SerializeNullableStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(null).Should().Be("null");
       SerializeNullableStruct<TestSmartEnum_Struct_StringBased_Validatable, string>(null).Should().Be("null");
       SerializeStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(default).Should().Be("0");
-      SerializeStruct<TestSmartEnum_Struct_StringBased_Validatable, string>(default).Should().Be("null");
    }
 
    [Fact]

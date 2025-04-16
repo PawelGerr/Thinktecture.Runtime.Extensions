@@ -127,7 +127,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
 
    private static bool IsDisallowingDefaultValue(ITypeSymbol type)
    {
-      if (type.AllInterfaces.Any(i => i.IsIDisallowDefaultValue()))
+      if (type.ImplementsIDisallowDefaultValue())
          return true;
 
       if (type.IsReferenceType

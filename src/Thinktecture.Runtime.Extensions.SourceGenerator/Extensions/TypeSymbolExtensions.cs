@@ -844,4 +844,17 @@ public static class TypeSymbolExtensions
    {
       return type is { Name: Constants.Interfaces.DisallowDefaultStructs.NAME, ContainingNamespace: { Name: Constants.Interfaces.DisallowDefaultStructs.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
+
+   public static bool ImplementsIDisallowDefaultValue(this ITypeSymbol type)
+   {
+      for (var i = 0; i < type.AllInterfaces.Length; i++)
+      {
+         var @interface = type.AllInterfaces[i];
+
+         if (@interface.IsIDisallowDefaultValue())
+            return true;
+      }
+
+      return false;
+   }
 }
