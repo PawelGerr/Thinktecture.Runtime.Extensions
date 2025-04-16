@@ -10,16 +10,19 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
    private const string _DIAGNOSTIC_ID = "TTRESG104";
 
    [Theory]
-   [InlineData("field", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                          // field: non-readonly VO
-   [InlineData("field", "StructStringEnum Member;")]                                                             // field: non-readonly SE
-   [InlineData("field", "TestUnion_struct_string_int Member;")]                                                  // field: non-readonly DU
-   [InlineData("property", "StructStringEnum Member { get; set; }")]                                             // property: non-readonly SE
-   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]          // property: non-readonly VO
-   [InlineData("property", "TestUnion_struct_string_int Member { get; set; }")]                                  // property: non-readonly VO
-   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; init; }")]         // property: non-readonly with init
-   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { set { } }")]            // property: setter only
-   [InlineData("property", "abstract IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")] // property: setter only
-   public async Task Should_trigger_on_members(string memberKind, string member)
+   [InlineData("field", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                          // field: non-readonly VO
+   [InlineData("field", "StructStringEnum", "StructStringEnum Member;")]                                                                                                // field: non-readonly SE
+   [InlineData("field", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member;")]                                                                          // field: non-readonly DU
+   [InlineData("property", "StructStringEnum", "StructStringEnum Member { get; set; }")]                                                                                // property: non-readonly SE
+   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]          // property: non-readonly VO
+   [InlineData("property", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member { get; set; }")]                                                          // property: non-readonly VO
+   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; init; }")]         // property: non-readonly with init
+   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { set { } }")]            // property: setter only
+   [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "abstract IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")] // property: abstract
+   public async Task Should_trigger_on_members(
+      string memberKind,
+      string memberType,
+      string member)
    {
       var typeModifer = member.Contains("abstract") ? "abstract " : null;
 
@@ -61,7 +64,7 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
          }
          """;
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(memberKind, "Member");
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(memberKind, "Member", memberType);
       await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
    }
 

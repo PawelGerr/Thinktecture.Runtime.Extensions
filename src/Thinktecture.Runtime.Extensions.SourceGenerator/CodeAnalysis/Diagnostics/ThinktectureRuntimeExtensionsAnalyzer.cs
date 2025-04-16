@@ -127,8 +127,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ReportDiagnostic(Diagnostic.Create(
                                   DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
                                   context.Node.GetLocation(),
-                                  memberKind,
-                                  memberName));
+                                  memberKind, memberName, BuildTypeName(memberType)));
    }
 
    private static void AnalyzeMethodWithUseDelegateFromConstructor(OperationAnalysisContext context)
