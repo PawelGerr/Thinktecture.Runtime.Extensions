@@ -32,7 +32,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -53,7 +53,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -77,7 +77,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -104,7 +104,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -128,7 +128,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -155,7 +155,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -185,7 +185,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -209,7 +209,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -233,7 +233,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -259,7 +259,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -285,7 +285,7 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".MessagePack",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }

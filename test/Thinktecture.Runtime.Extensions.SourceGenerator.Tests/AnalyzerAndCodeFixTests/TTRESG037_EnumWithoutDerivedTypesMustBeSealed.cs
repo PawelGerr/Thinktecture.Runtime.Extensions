@@ -22,18 +22,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private class Type_1 : TestEnum
                {
                   public class {|#0:Type_3|} : Type_1
                   {
                   }
-         
+
                   public sealed class Type_4 : Type_2
                   {
                   }
                }
-         
+
                private class Type_2 : Type_1
                {
                }
@@ -52,18 +52,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private class Type_1 : TestEnum
                {
                   public sealed class Type_3 : Type_1
                   {
                   }
-         
+
                   public sealed class Type_4 : Type_2
                   {
                   }
                }
-         
+
                private class Type_2 : Type_1
                {
                }
@@ -72,7 +72,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_3");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -89,18 +89,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private class Type_1 : TestEnum
                {
                   public sealed class Type_3 : Type_1
                   {
                   }
-         
+
                   public class {|#0:Type_4|} : Type_2
                   {
                   }
                }
-         
+
                private class Type_2 : Type_1
                {
                }
@@ -119,18 +119,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private class Type_1 : TestEnum
                {
                   public sealed class Type_3 : Type_1
                   {
                   }
-         
+
                   public sealed class Type_4 : Type_2
                   {
                   }
                }
-         
+
                private class Type_2 : Type_1
                {
                }
@@ -139,7 +139,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Type_4");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -156,7 +156,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class DerivedType : TestEnum
                {
                }
@@ -164,7 +164,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -181,7 +181,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class DerivedType : TestEnum
                {
                }
@@ -189,7 +189,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -206,7 +206,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class DerivedType<T> : TestEnum
                {
                }
@@ -214,7 +214,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -231,7 +231,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class DerivedType<T> : TestEnum
                {
                }
@@ -239,7 +239,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -256,18 +256,18 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private class Type_1 : TestEnum
                {
                   public sealed class Type_3 : Type_1
                   {
                   }
-         
+
                   public sealed class Type_4 : Type_2
                   {
                   }
                }
-         
+
                private class Type_2 : Type_1
                {
                }
@@ -275,7 +275,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -296,7 +296,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 
    [Fact]
@@ -313,7 +313,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private abstract class Type_1 : TestEnum
                {
                }
@@ -321,6 +321,6 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 }

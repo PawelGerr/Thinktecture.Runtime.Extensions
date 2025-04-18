@@ -130,7 +130,7 @@ public class Validate
    }
 
    [Fact]
-   public void Should_return_item_using_factory_specified_via_ValueObjectFactoryAttribute()
+   public void Should_return_item_using_factory_specified_via_ObjectFactoryAttribute()
    {
       var validationError = EnumWithFactory.Validate("=1=", null, out var item);
       validationError.Should().BeNull();
@@ -139,7 +139,7 @@ public class Validate
    }
 
    [Fact]
-   public void Should_return_custom_error_if_enum_uses_ValueObjectValidationErrorAttribute()
+   public void Should_return_custom_error_if_enum_uses_ValidationErrorAttribute()
    {
       var validationError = TestEnumWithCustomError.Validate("invalid", null, out var item);
       validationError.Should().BeOfType<TestEnumValidationError>();

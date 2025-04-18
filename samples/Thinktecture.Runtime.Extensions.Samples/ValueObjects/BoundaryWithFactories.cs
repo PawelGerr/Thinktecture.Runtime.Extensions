@@ -3,8 +3,8 @@ using System;
 namespace Thinktecture.ValueObjects;
 
 [ComplexValueObject]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[ValueObjectFactory<ValueTuple<int, int>>]
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<ValueTuple<int, int>>]
 public partial class BoundaryWithFactories
 {
    public decimal Lower { get; }
@@ -19,8 +19,8 @@ public partial class BoundaryWithFactories
    }
 
    /// <summary>
-   /// Custom implementation of "IValueObjectFactory&lt;Boundary, string&gt;"
-   /// requested by "ValueObjectFactory&lt;string&gt;".
+   /// Custom implementation of "IObjectFactory&lt;Boundary, string&gt;"
+   /// requested by "ObjectFactory&lt;string&gt;".
    /// </summary>
    public static ValidationError? Validate(string? value, IFormatProvider? provider, out BoundaryWithFactories? item)
    {
@@ -41,8 +41,7 @@ public partial class BoundaryWithFactories
    }
 
    /// <summary>
-   /// Custom implementation of "IValueObjectConvertible&amp;lt;string&amp;gt;"
-   /// requested by "ValueObjectFactory&lt;string&gt;".
+   /// Custom implementation of "IConvertible&amp;lt;string&amp;gt;"
    /// </summary>
    public string ToValue()
    {
@@ -50,7 +49,7 @@ public partial class BoundaryWithFactories
    }
 
    /// <summary>
-   /// Custom implementation of "IValueObjectFactory&lt;Boundary, (int, int)&gt;"
+   /// Custom implementation of "IObjectFactory&lt;Boundary, (int, int)&gt;"
    /// </summary>
    public static ValidationError? Validate((int, int) value, IFormatProvider? provider, out BoundaryWithFactories? item)
    {

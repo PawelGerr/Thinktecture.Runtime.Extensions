@@ -1,8 +1,8 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject<decimal>(KeyMemberKind = ValueObjectMemberKind.Property,
+[ValueObject<decimal>(KeyMemberKind = MemberKind.Property,
                       KeyMemberName = "Property",
-                      KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
+                      KeyMemberAccessModifier = AccessModifier.Public,
                       ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,

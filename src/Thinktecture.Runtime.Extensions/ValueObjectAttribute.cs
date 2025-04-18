@@ -16,15 +16,15 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
 
    /// <summary>
    /// Access modifier of the key member.
-   /// Default is <see cref="ValueObjectAccessModifier.Private"/>.
+   /// Default is <see cref="AccessModifier.Private"/>.
    /// </summary>
-   public ValueObjectAccessModifier KeyMemberAccessModifier { get; set; }
+   public AccessModifier KeyMemberAccessModifier { get; set; }
 
    /// <summary>
    /// Kind of the key member.
-   /// Default is <see cref="ValueObjectMemberKind.Field"/>.
+   /// Default is <see cref="MemberKind.Field"/>.
    /// </summary>
-   public ValueObjectMemberKind KeyMemberKind { get; set; }
+   public MemberKind KeyMemberKind { get; set; }
 
    private string? _keyMemberName;
 
@@ -34,7 +34,7 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </summary>
    public string KeyMemberName
    {
-      get => _keyMemberName ?? (KeyMemberAccessModifier == ValueObjectAccessModifier.Private && KeyMemberKind == ValueObjectMemberKind.Field ? "_value" : "Value");
+      get => _keyMemberName ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_value" : "Value");
       set => _keyMemberName = value;
    }
 
@@ -79,7 +79,7 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// Indication whether the generator should skip the implementation of <see cref="IComparable{T}"/> or not.
    ///
    /// This setting has no effect if:
-   /// - key-member is not <see cref="IComparable{T}"/> itself and no custom comparer is provided via <see cref="ValueObjectKeyMemberComparerAttribute{T,TMember}"/>.
+   /// - key-member is not <see cref="IComparable{T}"/> itself and no custom comparer is provided via <see cref="KeyMemberComparerAttribute{T,TMember}"/>.
    /// </summary>
    public bool SkipIComparable { get; set; }
 
@@ -186,7 +186,7 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    public ValueObjectAttribute()
    {
       KeyMemberType = typeof(TKey);
-      KeyMemberAccessModifier = ValueObjectAccessModifier.Private;
+      KeyMemberAccessModifier = AccessModifier.Private;
       ConversionToKeyMemberType = ConversionOperatorsGeneration.Implicit;
       UnsafeConversionToKeyMemberType = ConversionOperatorsGeneration.Explicit;
       ConversionFromKeyMemberType = ConversionOperatorsGeneration.Explicit;

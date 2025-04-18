@@ -28,7 +28,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          }
          """;
 
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
       outputs.Should().BeEmpty();
    }
 
@@ -48,7 +48,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -76,7 +76,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
       outputs.Should().BeEmpty();
    }
 
@@ -97,7 +97,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -113,7 +113,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum]
-           [ValueObjectFactory<string>]
+            [ObjectFactory<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new("Item1");
@@ -121,7 +121,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -129,7 +129,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_string_based_class_having_ValueObjectValidationErrorAttribute()
+   public async Task Should_generate_string_based_class_having_ValidationErrorAttribute()
    {
       var source = """
          using System;
@@ -138,7 +138,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          {
          	[SmartEnum<string>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                               MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-           [ValueObjectValidationError<TestEnumValidationError>]
+           [ValidationError<TestEnumValidationError>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new("Item1");
@@ -166,7 +166,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -194,7 +194,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -222,7 +222,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -260,7 +260,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -285,7 +285,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             public static readonly TestEnum Item2 = new("Item2");
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "TestEnum.g.cs",
@@ -352,15 +352,14 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
          """;
 
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.DerivedTypes.g.cs");
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
    [Fact]
@@ -381,7 +380,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -409,7 +408,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -431,8 +430,8 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                               KeyMemberName = "Name",
                               SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                               MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-           [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
-           [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+           [KeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
+           [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
          	public partial class TestEnum
          	{
          		 public static readonly TestEnum Item1 = new("Item1", 1, -1, "ReferenceProperty1", "NullableReferenceProperty1", 11, "ReferenceField1");
@@ -473,7 +472,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          }
          """;
 
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -499,7 +498,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -526,7 +525,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -538,7 +537,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_int_based_class_with_ValueObjectFactoryAttribute()
+   public async Task Should_generate_int_based_class_with_ObjectFactoryAttribute()
    {
       var source = """
 
@@ -548,7 +547,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          {
             [SmartEnum<int>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                             MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-            [ValueObjectFactory<string>]
+            [ObjectFactory<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new(1);
@@ -557,7 +556,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -569,7 +568,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_int_based_class_with_ValueObjectFactoryAttribute_and_UseForSerialization()
+   public async Task Should_generate_int_based_class_with_ObjectFactoryAttribute_and_UseForSerialization()
    {
       var source = """
 
@@ -579,7 +578,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          {
             [SmartEnum<int>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                             MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-            [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new(1);
@@ -588,7 +587,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -627,15 +626,14 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.DerivedTypes.g.cs");
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
    [Fact]
@@ -656,7 +654,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -685,7 +683,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
@@ -715,7 +713,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
@@ -745,7 +743,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -774,7 +772,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -803,7 +801,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -832,7 +830,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -861,7 +859,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -890,7 +888,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -919,7 +917,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -948,7 +946,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -977,7 +975,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1006,7 +1004,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1035,7 +1033,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1070,7 +1068,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1100,7 +1098,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1129,7 +1127,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
@@ -1154,7 +1152,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests._1TestEnum.g.cs",
@@ -1180,7 +1178,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(IEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",

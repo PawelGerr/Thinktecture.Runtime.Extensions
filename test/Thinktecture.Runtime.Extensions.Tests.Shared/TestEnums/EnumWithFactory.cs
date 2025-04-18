@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<int>]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 public partial class EnumWithFactory
 {
    public static readonly EnumWithFactory Item1 = new(1);

@@ -64,7 +64,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          {
             hasMessagePackFormatterAttribute = true;
          }
-         else if (attribute.AttributeClass.IsValueObjectFactoryAttribute())
+         else if (attribute.AttributeClass.IsObjectFactoryAttribute())
          {
             var useForSerialization = attribute.FindUseForSerialization();
             var desiredFactory = new DesiredFactory(attribute.AttributeClass.TypeArguments[0], useForSerialization);
@@ -72,15 +72,15 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
             valueObjectFactories = valueObjectFactories.RemoveAll(static (f, fullTypeName) => f.TypeFullyQualified == fullTypeName, desiredFactory.TypeFullyQualified);
             valueObjectFactories = valueObjectFactories.Add(desiredFactory);
          }
-         else if (attribute.AttributeClass.IsValueObjectValidationErrorAttribute())
+         else if (attribute.AttributeClass.IsValidationErrorAttribute())
          {
             validationError = new ValidationErrorState(attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString());
          }
-         else if (attribute.AttributeClass.IsValueObjectKeyMemberComparerAttribute())
+         else if (attribute.AttributeClass.IsKeyMemberComparerAttribute())
          {
             keyMemberComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString();
          }
-         else if (attribute.AttributeClass.IsValueObjectKeyMemberEqualityComparerAttribute())
+         else if (attribute.AttributeClass.IsKeyMemberEqualityComparerAttribute())
          {
             keyMemberEqualityComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString();
          }

@@ -722,8 +722,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
            [ValueObject<string>]
-           [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-           [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
+           [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+           [KeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
          	public partial class TestValueObject
          	{
          	}
@@ -753,7 +753,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
            [ValueObject<Foo>]
-           [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<Foo>, Foo>]
+           [KeyMemberEqualityComparer<ComparerAccessors.Default<Foo>, Foo>]
          	public partial class TestValueObject
          	{
            }
@@ -887,10 +887,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
            [ComplexValueObject]
          	public partial class TestValueObject
          	{
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [MemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
 
                public string ReferenceProperty { get; }
@@ -924,7 +924,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_complex_class_with_8_members_and_ValueObjectFactoryAttribute()
+   public async Task Should_generate_complex_class_with_8_members_and_ObjectFactoryAttribute()
    {
       var source = """
 
@@ -936,13 +936,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
            [ComplexValueObject]
-           [ValueObjectFactory<string>]
+           [ObjectFactory<string>]
          	public partial class TestValueObject
          	{
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [MemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
 
                public string ReferenceProperty { get; }
@@ -978,7 +978,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_complex_class_with_8_members_and_ValueObjectFactoryAttribute_and_UseForSerialization()
+   public async Task Should_generate_complex_class_with_8_members_and_ObjectFactoryAttribute_and_UseForSerialization()
    {
       var source = """
 
@@ -990,13 +990,13 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
            [ComplexValueObject]
-           [ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+           [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestValueObject
          	{
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public readonly string _stringValue;
 
-               [ValueObjectMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [MemberEqualityComparer<ComparerAccessors.Default<int>, int>]
                public readonly int _intValue;
 
                public string ReferenceProperty { get; }

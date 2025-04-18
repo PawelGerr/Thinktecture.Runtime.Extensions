@@ -36,10 +36,10 @@ namespace ").Append(_type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_type.ContainingTypes);
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
 partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
 {
-   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
+   public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
@@ -53,7 +53,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
 
       _sb.Append(@"
 
-      public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
+      public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
             throw new global::System.ArgumentNullException(nameof(options));
@@ -68,7 +68,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
+         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
          this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
@@ -241,7 +241,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
       }
    }
 
-   public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+   public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
    {
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type typeToConvert)
@@ -257,7 +257,7 @@ partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append
          if (options is null)
             throw new global::System.ArgumentNullException(nameof(options));
 
-         return new ValueObjectJsonConverter(options);
+         return new JsonConverter(options);
       }
    }
 }");

@@ -2,12 +2,12 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject<string>(KeyMemberKind = ValueObjectMemberKind.Property,
+[ValueObject<string>(KeyMemberKind = MemberKind.Property,
                      KeyMemberName = "Property",
-                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
+                     KeyMemberAccessModifier = AccessModifier.Public,
                      EmptyStringInFactoryMethodsYieldsNull = true)]
-[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull
 {
    static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)

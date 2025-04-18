@@ -1,13 +1,15 @@
 namespace Thinktecture.Internal;
 
 /// <summary>
-/// For internal use only.
+/// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
+/// the same compatibility standards as public APIs. It may be changed or removed without notice in
+/// any release. You should only use it directly in your code with extreme caution and knowing that
+/// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
 /// </summary>
 public static class ValidationErrorCreator
 {
    /// <summary>
    /// Creates a validation error of type <typeparamref name="TError"/>.
-   /// Is necessary if the method <see cref="IValidationError{T}.Create"/> is implemented explicitly.
    /// </summary>
    /// <param name="message">Error message.</param>
    /// <typeparam name="TError">Type of the validation error.</typeparam>

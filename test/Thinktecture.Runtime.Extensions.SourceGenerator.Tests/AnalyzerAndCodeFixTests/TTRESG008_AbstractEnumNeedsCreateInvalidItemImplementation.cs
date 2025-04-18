@@ -37,7 +37,7 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
          	public abstract partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                  private static TestEnum CreateInvalidItem(string key)
                  {
                      throw new global::System.NotImplementedException();
@@ -47,7 +47,7 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -64,7 +64,7 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
          	public abstract partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private static TestEnum CreateInvalidItem(string key)
                {
                   throw new System.NotImplementedException();
@@ -73,6 +73,6 @@ public class TTRESG008_AbstractEnumNeedsCreateInvalidItemImplementation
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 }

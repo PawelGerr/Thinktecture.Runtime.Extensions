@@ -1,10 +1,10 @@
 namespace Thinktecture.Collections;
 
 /// <summary>
-/// Provides most common comparers for string-based value objects and smart enums.
+/// Provides the most common comparers for string-based value objects and smart enums.
 /// </summary>
 public sealed class StringValueObjectComparer<T> : IEqualityComparer<T>
-   where T : IKeyedValueObject<string>
+   where T : IKeyedObject<string>
 {
    /// <summary>
    /// Comparer using <see cref="StringComparer.Ordinal"/>.

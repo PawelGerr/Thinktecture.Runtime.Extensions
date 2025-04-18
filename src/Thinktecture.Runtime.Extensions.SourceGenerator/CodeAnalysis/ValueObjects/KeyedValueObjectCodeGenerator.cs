@@ -57,18 +57,20 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state is { Settings.SkipFactoryMethods: false })
       {
          _sb.Append(@"
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
       }
 
       _sb.Append(@"
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
    ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
-      global::Thinktecture.IKeyedValueObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
-      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(">");
+      global::Thinktecture.IKeyedObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
+      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
+      global::Thinktecture.Internal.IMetadataOwner");
 
       if (!_state.Settings.SkipFactoryMethods)
       {
          _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
       }
 
       if (_state.DisallowsDefaultValue)
@@ -83,21 +85,33 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
+      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
          }
       }
 
       _sb.Append(@"
    {");
 
-      GenerateModuleInitializerForKeyedValueObject(emptyStringYieldsNull);
-
       _sb.Append(@"
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
+      {
+         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
+         KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
+         ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+         ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+         ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+         GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
+         ConvertFromKey = ").GenerateDelegateConvertFromKey(_state).Append(@",
+         ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
+         ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
+         TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
+      };
+
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 
       if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
@@ -152,55 +166,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
+      ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
       {
          return this.").Append(_state.KeyMember.Name).Append(@";
       }");
-   }
-
-   private void GenerateModuleInitializerForKeyedValueObject(bool emptyStringYieldsNull)
-   {
-      var keyMember = _state.KeyMember;
-
-      _sb.Append(@"
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
-      {
-         global::System.Func<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state, nullable: emptyStringYieldsNull).Append(">").Append(_state.Settings.SkipFactoryMethods ? "?" : null).Append(" convertFromKey = ");
-
-      if (_state.Settings.SkipFactoryMethods)
-      {
-         _sb.Append("null");
-      }
-      else
-      {
-         _sb.Append("new (").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append(")");
-      }
-
-      _sb.Append(@";
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state, nullable: emptyStringYieldsNull).Append(">>").Append(_state.Settings.SkipFactoryMethods ? "?" : null).Append(" convertFromKeyExpression = ");
-
-      if (_state.Settings.SkipFactoryMethods)
-      {
-         _sb.Append("null");
-      }
-      else
-      {
-         _sb.Append("static ").AppendEscaped(keyMember.ArgumentName).Append(" => ").AppendTypeFullyQualified(_state).Append(".").Append(_state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
-      }
-
-      _sb.Append(@";
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append(">> convertFromKeyExpressionViaCtor = static ").AppendEscaped(keyMember.ArgumentName).Append(" => new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(keyMember.ArgumentName).Append(@");
-
-         var convertToKey = new global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">(static item => item.").Append(keyMember.Name).Append(@");
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">> convertToKeyExpression = static obj => obj.").Append(keyMember.Name).Append(@";
-
-         var type = typeof(").AppendTypeFullyQualified(_state).Append(@");
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(").AppendTypeFullyQualified(keyMember).Append(@"), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
-");
    }
 
    private void GenerateSafeConversionToKey()
@@ -535,5 +504,54 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          return this.").Append(_state.KeyMember.Name).Append(@".ToString();
       }");
+   }
+}
+
+file static class Extensions
+{
+   public static StringBuilder GenerateDelegateConvertFromKey(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state)
+   {
+      if (state.Settings.SkipFactoryMethods)
+      {
+         sb.Append("null");
+      }
+      else
+      {
+         var keyMember = state.KeyMember;
+         sb.Append("static ").AppendTypeFullyQualified(state, nullable: state.Settings.EmptyStringInFactoryMethodsYieldsNull).Append(" (").AppendTypeFullyQualified(keyMember).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(") => ").AppendTypeFullyQualified(state).Append(".").Append(state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder GenerateDelegateTryGetFromKey(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state)
+   {
+      if (state.Settings.SkipFactoryMethods)
+      {
+         sb.Append("null");
+      }
+      else
+      {
+         sb.Append(@"
+            (object? key,
+             out object? obj,
+             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+            {
+               error = ").AppendTypeFullyQualified(state).Append(".Validate(key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item);
+               obj = item;
+
+               return error is null;
+            }");
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder GenerateDelegateConvertFromKeyExpressionViaCtor(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state)
+   {
+      var keyMember = state.KeyMember;
+      sb.Append("static ").AppendTypeFullyQualified(state).Append(" (").AppendTypeFullyQualified(keyMember).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(") => new ").AppendTypeFullyQualified(state).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
+
+      return sb;
    }
 }

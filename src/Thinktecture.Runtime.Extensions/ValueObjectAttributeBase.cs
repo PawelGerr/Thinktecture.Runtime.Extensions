@@ -12,9 +12,9 @@ public abstract class ValueObjectAttributeBase : Attribute
 
    /// <summary>
    /// Access modifier of the constructor.
-   /// Default is <see cref="ValueObjectAccessModifier.Private"/>.
+   /// Default is <see cref="AccessModifier.Private"/>.
    /// </summary>
-   public ValueObjectAccessModifier ConstructorAccessModifier { get; set; }
+   public AccessModifier ConstructorAccessModifier { get; set; }
 
    private string? _createFactoryMethodName;
 
@@ -76,9 +76,9 @@ public abstract class ValueObjectAttributeBase : Attribute
    /// <summary>
    /// Initializes new instance of <see cref="ValueObjectAttributeBase"/>.
    /// </summary>
-   protected ValueObjectAttributeBase()
+   private protected ValueObjectAttributeBase()
    {
-      ConstructorAccessModifier = ValueObjectAccessModifier.Private;
+      ConstructorAccessModifier = AccessModifier.Private;
       SerializationFrameworks = SerializationFrameworks.All;
    }
 }

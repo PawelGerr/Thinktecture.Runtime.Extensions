@@ -29,7 +29,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "string", "int");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -45,8 +45,8 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             namespace TestNamespace
             {
                [ValueObject<string>(SkipKeyMember = true)]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public partial class ValueObject
             	{
                   private readonly string? {|#0:_value|};
@@ -55,7 +55,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "string?", "string");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -79,7 +79,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "int?", "int");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -100,7 +100,7 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 }

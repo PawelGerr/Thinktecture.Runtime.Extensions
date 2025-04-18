@@ -51,9 +51,10 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateValueObject(CancellationToken cancellationToken)
    {
       _sb.Append(@"
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
    ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
       global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(@", bool>,
-      global::Thinktecture.IComplexValueObject");
+      global::Thinktecture.Internal.IMetadataOwner");
 
       if (_state.DisallowsDefaultValue)
       {
@@ -64,21 +65,32 @@ namespace ").Append(_state.Namespace).Append(@"
       foreach (var desiredFactory in _state.Settings.DesiredFactories)
       {
          _sb.Append(@",
-      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@",
-      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
+      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
          }
       }
 
       _sb.Append(@"
-   {");
+   {
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.ComplexValueObject
+      {
+         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
+         AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
+               global::System.Linq.Enumerable.Select(
+                  ((global::System.Linq.Expressions.NewExpression)
+                     ((global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(@", object>>)
+                        (object (").AppendTypeFullyQualified(_state).Append(@" o) => new
+                           {").AppendAssignableMembersBody(_state.AssignableInstanceFieldsAndProperties).Append(@"
+                           })).Body).Arguments,
+                  arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
+            )
+            .AsReadOnly()
+      };
 
-      GenerateModuleInitializerForComplexValueObject();
-
-      _sb.Append(@"
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 
       if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
@@ -111,45 +123,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    }");
-   }
-
-   private void GenerateModuleInitializerForComplexValueObject()
-   {
-      _sb.Append(@"
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
-      {
-         global::System.Linq.Expressions.Expression<global::System.Func<").Append(_state.Name).Append(@", object>> action = o => new
-                                                                                                            {");
-
-      var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
-
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
-      {
-         if (i > 0)
-            _sb.Append(",");
-
-         var memberInfo = fieldsAndProperties[i];
-         _sb.Append(@"
-                                                                                                               o.").Append(memberInfo.Name);
-      }
-
-      _sb.Append(@"
-                                                                                                            };
-
-         var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
-
-         foreach (var arg in ((global::System.Linq.Expressions.NewExpression)action.Body).Arguments)
-         {
-            members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
-         }
-
-         var type = typeof(").AppendTypeFullyQualified(_state).Append(@");
-         var metadata = new global::Thinktecture.Internal.ComplexValueObjectMetadata(type, members.AsReadOnly());
-
-         global::Thinktecture.Internal.ComplexValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
-");
    }
 
    private void GenerateCreateMethod()
@@ -632,5 +605,24 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       }");
+   }
+}
+
+file static class Extensions
+{
+   public static StringBuilder AppendAssignableMembersBody(this StringBuilder sb, IReadOnlyList<InstanceMemberInfo> members)
+   {
+      for (var i = 0; i < members.Count; i++)
+      {
+         var member = members[i];
+
+         if (i > 0)
+            sb.Append(",");
+
+         sb.Append(@"
+                              o.").Append(member.Name);
+      }
+
+      return sb;
    }
 }

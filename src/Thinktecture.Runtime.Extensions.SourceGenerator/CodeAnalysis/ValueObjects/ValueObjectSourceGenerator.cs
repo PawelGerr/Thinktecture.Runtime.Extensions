@@ -436,6 +436,9 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (!TryGetType(context, tds, out var type))
             return null;
 
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
          var attributeType = context.Attributes[0].AttributeClass;
 
          if (attributeType is null)
@@ -489,7 +492,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         var settings = new AllValueObjectSettings(context.Attributes[0]);
+         var settings = new AllValueObjectSettings(context.Attributes[0], keyMemberType.SpecialType == SpecialType.System_String);
 
          var keyTypedMemberState = factory.Create(keyMemberType);
          var keyMember = settings.CreateKeyMember(keyTypedMemberState);
@@ -540,7 +543,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         var settings = new AllValueObjectSettings(context.Attributes[0]);
+         var settings = new AllValueObjectSettings(context.Attributes[0], false);
 
          var state = new ComplexValueObjectSourceGeneratorState(factory, type, attributeInfo.ValidationError, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
 

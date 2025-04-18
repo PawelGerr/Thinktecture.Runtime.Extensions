@@ -40,15 +40,15 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
 
    /// <summary>
    /// Access modifier of the key member.
-   /// Default is <see cref="ValueObjectAccessModifier.Public"/>.
+   /// Default is <see cref="AccessModifier.Public"/>.
    /// </summary>
-   public ValueObjectAccessModifier KeyMemberAccessModifier { get; set; }
+   public AccessModifier KeyMemberAccessModifier { get; set; }
 
    /// <summary>
    /// Kind of the key member.
-   /// Default is <see cref="ValueObjectMemberKind.Property"/>.
+   /// Default is <see cref="MemberKind.Property"/>.
    /// </summary>
-   public ValueObjectMemberKind KeyMemberKind { get; set; }
+   public MemberKind KeyMemberKind { get; set; }
 
    private string? _keyMemberName;
 
@@ -58,13 +58,13 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// </summary>
    public string KeyMemberName
    {
-      get => _keyMemberName ?? (KeyMemberAccessModifier == ValueObjectAccessModifier.Private && KeyMemberKind == ValueObjectMemberKind.Field ? "_key" : "Key");
+      get => _keyMemberName ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_key" : "Key");
       set => _keyMemberName = value;
    }
 
    /// <summary>
    /// Indication whether the Smart Enum should be "validatable" or always-valid one.
-   /// Default is "false", i.e. always-valid.
+   /// Default is "false", i.e., always-valid.
    /// </summary>
    public bool IsValidatable { get; set; }
 
@@ -162,8 +162,8 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public SmartEnumAttribute()
    {
       KeyMemberType = typeof(TKey);
-      KeyMemberAccessModifier = ValueObjectAccessModifier.Public;
-      KeyMemberKind = ValueObjectMemberKind.Property;
+      KeyMemberAccessModifier = AccessModifier.Public;
+      KeyMemberKind = MemberKind.Property;
       ConversionToKeyMemberType = ConversionOperatorsGeneration.Implicit;
       ConversionFromKeyMemberType = ConversionOperatorsGeneration.Explicit;
       SerializationFrameworks = SerializationFrameworks.All;

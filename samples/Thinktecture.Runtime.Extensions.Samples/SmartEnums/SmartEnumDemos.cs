@@ -44,9 +44,9 @@ public class SmartEnumDemos
          ProductType.Get("Unknown");
          logger.Warning("This line won't be reached.");
       }
-      catch (UnknownEnumIdentifierException)
+      catch (UnknownSmartEnumIdentifierException)
       {
-         logger.Information("UnknownEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
+         logger.Information("UnknownSmartEnumIdentifierException is thrown because there is no product type with the key 'Unknown'.");
       }
 
       // Conversion to key type (throws if invalid)
@@ -342,7 +342,7 @@ public class SmartEnumDemos
    }
 
    private static void PrintAllItems<T, TKey, TValidationError>(ILogger logger)
-      where T : IEnum<TKey, T, TValidationError>
+      where T : ISmartEnum<TKey, T, TValidationError>
       where TKey : notnull
       where TValidationError : class, IValidationError<TValidationError>
    {
@@ -355,7 +355,7 @@ public class SmartEnumDemos
    }
 
    private static void Get<T, TKey, TValidationError>(ILogger logger, TKey key)
-      where T : IEnum<TKey, T, TValidationError>
+      where T : ISmartEnum<TKey, T, TValidationError>
       where TKey : notnull
       where TValidationError : class, IValidationError<TValidationError>
    {

@@ -7,9 +7,9 @@ internal static class TypeExtensions
 {
    public static bool TryGetAssignableMembers(this Type type, out IReadOnlyList<MemberInfo> members)
    {
-      var metadata = ComplexValueObjectMetadataLookup.Find(type);
+      var metadata = MetadataLookup.Find(type) as Metadata.ComplexValueObject;
 
-      members = metadata?.AssignableMembers ?? Array.Empty<MemberInfo>();
+      members = metadata?.AssignableMembers ?? [];
       return metadata is not null;
    }
 }

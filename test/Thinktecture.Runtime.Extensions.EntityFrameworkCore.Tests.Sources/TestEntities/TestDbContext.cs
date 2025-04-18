@@ -45,6 +45,6 @@ public class TestDbContext : DbContext
 #endif
 
       if (_valueConverterRegistration == ValueConverterRegistration.OnModelCreating)
-         modelBuilder.AddValueObjectConverters(true);
+         modelBuilder.AddThinktectureValueConverters(true);
    }
 }

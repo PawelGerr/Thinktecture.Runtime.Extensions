@@ -3,8 +3,8 @@ using System;
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[ValueObjectFactory<ValueTuple<int, int>>]
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<ValueTuple<int, int>>]
 public partial class BoundaryWithFactories
 {
    public decimal Lower { get; }

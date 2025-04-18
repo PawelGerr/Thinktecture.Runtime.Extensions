@@ -30,7 +30,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -51,7 +51,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -75,7 +75,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -102,7 +102,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -129,7 +129,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -156,7 +156,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -183,7 +183,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -207,7 +207,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -233,7 +233,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -259,7 +259,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -283,7 +283,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       output.Should().BeNull();
    }
@@ -307,7 +307,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }
@@ -333,7 +333,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       output.Should().BeNull();
    }
@@ -359,7 +359,7 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".Json",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ValueObjectJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
 
       await VerifyAsync(output);
    }

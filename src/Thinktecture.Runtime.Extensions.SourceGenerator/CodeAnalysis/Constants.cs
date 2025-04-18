@@ -4,15 +4,15 @@ public static class Constants
 {
    public static class SmartEnum
    {
-      public const ValueObjectAccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = ValueObjectAccessModifier.Public;
-      public const ValueObjectMemberKind DEFAULT_KEY_MEMBER_KIND = ValueObjectMemberKind.Property;
+      public const AccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = AccessModifier.Public;
+      public const MemberKind DEFAULT_KEY_MEMBER_KIND = MemberKind.Property;
    }
 
    public static class ValueObject
    {
-      public const ValueObjectAccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = ValueObjectAccessModifier.Private;
-      public const ValueObjectMemberKind DEFAULT_KEY_MEMBER_KIND = ValueObjectMemberKind.Field;
-      public const ValueObjectAccessModifier DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER = ValueObjectAccessModifier.Private;
+      public const AccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = AccessModifier.Private;
+      public const MemberKind DEFAULT_KEY_MEMBER_KIND = MemberKind.Field;
+      public const AccessModifier DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER = AccessModifier.Private;
    }
 
    public static class Modules

@@ -8,14 +8,14 @@ partial class TestEnum :
 #endif
 {
    private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::TestEnum? result)
-      where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>
+      where T : global::Thinktecture.IObjectFactory<global::TestEnum, string, global::Thinktecture.ValidationError>
    {
       return T.Validate(key, provider, out result);
    }
 
 #if NET9_0_OR_GREATER
    private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::TestEnum? result)
-      where T : global::Thinktecture.IValueObjectFactory<global::TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+      where T : global::Thinktecture.IObjectFactory<global::TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
    {
       return T.Validate(key, provider, out result);
    }

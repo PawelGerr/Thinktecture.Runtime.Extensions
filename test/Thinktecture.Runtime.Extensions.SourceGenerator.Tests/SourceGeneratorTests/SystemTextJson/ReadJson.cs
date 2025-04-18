@@ -8,7 +8,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests.SystemTextJson;
 public class ReadJson
 {
    [Fact]
-   public void Should_throw_JsonException_if_enum_parsing_throws_UnknownEnumIdentifierException()
+   public void Should_throw_JsonException_if_enum_parsing_throws_UnknownSmartEnumIdentifierException()
    {
       Action action = () => Deserialize<ValidTestEnum>("\"invalid\"");
 

@@ -69,6 +69,9 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
             return null;
          }
 
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
          if (context.Attributes.Length > 1)
          {
             Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.Union.NAME}'", tds);

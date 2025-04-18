@@ -5,12 +5,12 @@ namespace Thinktecture.Runtime.Tests.EnumTests;
 public class ToValue
 {
    [Fact]
-   public void Should_return_value_using_factory_specified_via_ValueObjectFactoryAttribute()
+   public void Should_return_value_using_factory_specified_via_ObjectFactoryAttribute()
    {
-      ((IValueObjectConvertible<string>)EnumWithFactory.Item1).ToValue()
+      ((IConvertible<string>)EnumWithFactory.Item1).ToValue()
                                                               .Should().Be("=1=");
 
-      ((IValueObjectConvertible<int>)EnumWithFactory.Item1).ToValue()
+      ((IConvertible<int>)EnumWithFactory.Item1).ToValue()
                                                            .Should().Be(1);
    }
 }

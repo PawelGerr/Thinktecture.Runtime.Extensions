@@ -2,12 +2,12 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>, IKeyMemberSettings
 {
-   public ValueObjectAccessModifier KeyMemberAccessModifier { get; }
-   public ValueObjectMemberKind KeyMemberKind { get; }
+   public AccessModifier KeyMemberAccessModifier { get; }
+   public MemberKind KeyMemberKind { get; }
    public string KeyMemberName { get; }
    public bool SkipKeyMember { get; }
    public bool SkipFactoryMethods { get; }
-   public ValueObjectAccessModifier ConstructorAccessModifier { get; }
+   public AccessModifier ConstructorAccessModifier { get; }
    public string CreateFactoryMethodName { get; }
    public string TryCreateFactoryMethodName { get; }
    public bool EmptyStringInFactoryMethodsYieldsNull { get; }
@@ -30,7 +30,9 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public StringComparison DefaultStringComparison { get; }
    public SerializationFrameworks SerializationFrameworks { get; }
 
-   public AllValueObjectSettings(AttributeData valueObjectAttribute)
+   public AllValueObjectSettings(
+      AttributeData valueObjectAttribute,
+      bool hasStringKey)
    {
       KeyMemberAccessModifier = valueObjectAttribute.FindKeyMemberAccessModifier() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
       KeyMemberKind = valueObjectAttribute.FindKeyMemberKind() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_KIND;
@@ -40,7 +42,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       ConstructorAccessModifier = valueObjectAttribute.FindConstructorAccessModifier() ?? Constants.ValueObject.DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER;
       CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? "Create";
       TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? "TryCreate";
-      EmptyStringInFactoryMethodsYieldsNull = valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false;
+      EmptyStringInFactoryMethodsYieldsNull = hasStringKey && (valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false);
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
       SkipIParsable = SkipFactoryMethods || (valueObjectAttribute.FindSkipIParsable() ?? false);

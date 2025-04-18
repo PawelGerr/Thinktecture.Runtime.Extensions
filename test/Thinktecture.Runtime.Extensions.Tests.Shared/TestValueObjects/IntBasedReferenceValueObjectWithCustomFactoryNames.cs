@@ -1,8 +1,8 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject<int>(KeyMemberKind = ValueObjectMemberKind.Property,
+[ValueObject<int>(KeyMemberKind = MemberKind.Property,
                   KeyMemberName = "Property",
-                  KeyMemberAccessModifier = ValueObjectAccessModifier.Public,
+                  KeyMemberAccessModifier = AccessModifier.Public,
                   CreateFactoryMethodName = "Get",
                   TryCreateFactoryMethodName = "TryGet",
                   AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,

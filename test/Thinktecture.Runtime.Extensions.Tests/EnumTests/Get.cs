@@ -115,6 +115,6 @@ public class Get
    public void Should_throw_if_key_is_unknown_to_non_validatable_enum()
    {
       Action action = () => ValidTestEnum.Get("invalid");
-      action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      action.Should().Throw<UnknownSmartEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
    }
 }

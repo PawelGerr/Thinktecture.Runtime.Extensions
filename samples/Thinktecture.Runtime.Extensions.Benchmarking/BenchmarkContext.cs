@@ -18,7 +18,7 @@ public class BenchmarkContext : IDisposable
                      .AddDbContext<BenchmarkDbContext>(builder => builder
                                                                   .UseSqlServer("Server=localhost;Database=TT_RE_Benchmarking;Integrated Security=true;TrustServerCertificate=true;")
                                                                   .UseLoggerFactory(NullLoggerFactory.Instance)
-                                                                  .UseValueObjectValueConverter());
+                                                                  .UseThinktectureValueConverters());
 
       RootServiceProvider = services.BuildServiceProvider();
    }

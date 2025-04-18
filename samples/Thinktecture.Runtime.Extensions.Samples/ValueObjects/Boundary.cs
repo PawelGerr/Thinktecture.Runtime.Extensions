@@ -1,7 +1,7 @@
 namespace Thinktecture.ValueObjects;
 
 [ComplexValueObject]
-[ValueObjectValidationError<BoundaryValidationError>]
+[ValidationError<BoundaryValidationError>]
 public partial class Boundary
 {
    public decimal Lower { get; }

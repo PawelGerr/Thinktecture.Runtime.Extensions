@@ -44,42 +44,42 @@ public class TestEntity_with_Enum_and_ValueObjects
       {
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
-            builder.Property(e => e.TestEnum).HasValueObjectConversion(true);
+            builder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
 
-            builder.Property(e => e.TestSmartEnum_Class_IntBased).HasValueObjectConversion(true);
-            builder.Property(e => e.TestSmartEnum_Class_StringBased).HasValueObjectConversion(true);
-            builder.Property(e => e.TestSmartEnum_Struct_IntBased).HasValueObjectConversion(true);
-            builder.Property(e => e.TestSmartEnum_Struct_StringBased).HasValueObjectConversion(true);
-            builder.Property(e => e.NullableTestSmartEnum_Struct_StringBased).HasValueObjectConversion(true);
-            builder.Property(e => e.TestEnumWithCustomError).HasValueObjectConversion(true);
+            builder.Property(e => e.TestSmartEnum_Class_IntBased).HasThinktectureValueConverter(true);
+            builder.Property(e => e.TestSmartEnum_Class_StringBased).HasThinktectureValueConverter(true);
+            builder.Property(e => e.TestSmartEnum_Struct_IntBased).HasThinktectureValueConverter(true);
+            builder.Property(e => e.TestSmartEnum_Struct_StringBased).HasThinktectureValueConverter(true);
+            builder.Property(e => e.NullableTestSmartEnum_Struct_StringBased).HasThinktectureValueConverter(true);
+            builder.Property(e => e.TestEnumWithCustomError).HasThinktectureValueConverter(true);
 
-            builder.Property(e => e.IntBasedReferenceValueObject).HasValueObjectConversion(true);
-            builder.Property(e => e.IntBasedStructValueObject).HasValueObjectConversion(true);
-            builder.Property(e => e.StringBasedReferenceValueObject).HasValueObjectConversion(true);
-            builder.Property(e => e.StringBasedStructValueObject).HasValueObjectConversion(true);
-            builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasValueObjectConversion(true);
+            builder.Property(e => e.IntBasedReferenceValueObject).HasThinktectureValueConverter(true);
+            builder.Property(e => e.IntBasedStructValueObject).HasThinktectureValueConverter(true);
+            builder.Property(e => e.StringBasedReferenceValueObject).HasThinktectureValueConverter(true);
+            builder.Property(e => e.StringBasedStructValueObject).HasThinktectureValueConverter(true);
+            builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasThinktectureValueConverter(true);
 
-            builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasValueObjectConversion(true);
+            builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter(true);
          }
 
          builder.OwnsOne(e => e.Boundary, navigationBuilder =>
          {
             if (!configureOnEntityTypeLevel)
-               navigationBuilder.AddValueObjectConverters(true);
+               navigationBuilder.AddThinktectureValueConverters(true);
          });
          builder.OwnsOne(e => e.BoundaryWithCustomError, navigationBuilder =>
          {
             if (!configureOnEntityTypeLevel)
-               navigationBuilder.AddValueObjectConverters(true);
+               navigationBuilder.AddThinktectureValueConverters(true);
          });
          builder.OwnsOne(e => e.BoundaryWithCustomFactoryNames, navigationBuilder =>
          {
             if (!configureOnEntityTypeLevel)
-               navigationBuilder.AddValueObjectConverters(true);
+               navigationBuilder.AddThinktectureValueConverters(true);
          });
 
          if (configureOnEntityTypeLevel)
-            builder.AddValueObjectConverters(true);
+            builder.AddThinktectureValueConverters(true);
       });
    }
 }

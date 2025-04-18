@@ -79,7 +79,7 @@ public class TTRESG049_ComplexValueObjectWithStringMembersNeedsDefaultEqualityCo
             [ComplexValueObject]
          	public partial class {|#0:TestValueObject|}
          	{
-         	   [ValueObjectMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+         	   [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public string Property { get; }
             }
          }

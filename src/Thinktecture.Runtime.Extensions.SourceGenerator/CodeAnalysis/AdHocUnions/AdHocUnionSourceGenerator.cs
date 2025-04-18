@@ -100,6 +100,9 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return null;
          }
 
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
          if (context.Attributes.Length > 1)
          {
             Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.Union.NAME}'", tds);
@@ -113,6 +116,9 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             Logger.LogDebug("The attribute type is null", tds);
             return null;
          }
+
+         if (attributeType.TypeArguments.IsDefaultOrEmpty)
+            return null;
 
          if (attributeType.TypeKind == TypeKind.Error)
          {

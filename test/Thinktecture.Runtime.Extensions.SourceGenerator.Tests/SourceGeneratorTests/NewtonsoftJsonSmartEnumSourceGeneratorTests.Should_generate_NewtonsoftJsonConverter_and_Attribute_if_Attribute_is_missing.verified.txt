@@ -3,7 +3,7 @@
 
 namespace Thinktecture.Tests;
 
-[global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+[global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ThinktectureNewtonsoftJsonConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
 partial class TestEnum
 {
 }

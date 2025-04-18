@@ -110,6 +110,7 @@ namespace ").Append(_state.Namespace).Append(@";
    private void GenerateUnion(CancellationToken cancellationToken)
    {
       _sb.Append(@"
+[global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
 abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").Append(_state.Name);
 
       if (_state.GenericsFullyQualified.Count > 0)

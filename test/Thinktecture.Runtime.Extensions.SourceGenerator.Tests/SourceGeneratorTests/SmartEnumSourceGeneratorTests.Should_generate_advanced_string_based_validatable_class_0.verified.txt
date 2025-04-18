@@ -3,28 +3,40 @@
 
 namespace Thinktecture.Tests
 {
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
-   sealed partial class TestEnum : global::Thinktecture.IEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
+   sealed partial class TestEnum :
+      global::Thinktecture.ISmartEnum<string, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
+      global::Thinktecture.Internal.IMetadataOwner,
 #if NET9_0_OR_GREATER
-      global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
 #endif
       global::Thinktecture.IValidatableEnum,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum
       {
-         var convertFromKey = new global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>(global::Thinktecture.Tests.TestEnum.Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<string?, global::Thinktecture.Tests.TestEnum?>> convertFromKeyExpression = static @name => global::Thinktecture.Tests.TestEnum.Get(@name);
+         Type = typeof(global::Thinktecture.Tests.TestEnum),
+         KeyType = typeof(string),
+         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+         IsValidatable = true,
+         GetItems = () => global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.TestEnum.Items, i => (object)i),
+         ConvertToKey = static string (global::Thinktecture.Tests.TestEnum item) => item.Name,
+         ConvertToKeyExpression = static string (global::Thinktecture.Tests.TestEnum item) => item.Name,
+         GetKey = static object (object item) => ((global::Thinktecture.Tests.TestEnum)item).Name,
+         ConvertFromKey = static global::Thinktecture.Tests.TestEnum (string key) => global::Thinktecture.Tests.TestEnum.Get(key),
+         ConvertFromKeyExpression = static global::Thinktecture.Tests.TestEnum (string key) => global::Thinktecture.Tests.TestEnum.Get(key),
+         TryGetFromKey =
+            (object? key,
+             out object? obj,
+             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+            {
+               error = global::Thinktecture.Tests.TestEnum.Validate(key is string typedKey ? typedKey : default, null, out var item)!;
+               obj = item;
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestEnum, string>(static item => item.Name);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestEnum, string>> convertToKeyExpression = static item => item.Name;
-
-         var enumType = typeof(global::Thinktecture.Tests.TestEnum);
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(string), true, true, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-      }
+               return item is not null;
+            }
+      };
 
       private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
@@ -124,7 +136,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      string global::Thinktecture.IValueObjectConvertible<string>.ToValue()
+      string global::Thinktecture.IConvertible<string>.ToValue()
       {
          return this.Name;
       }

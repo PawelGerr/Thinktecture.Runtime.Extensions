@@ -24,7 +24,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceProperty|} { get; set; }
                }
             }
@@ -41,14 +41,14 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int InstanceProperty { get; }
                }
             }
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -65,7 +65,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int {|#0:InstanceProperty|} { get; set; }
                }
             }
@@ -82,14 +82,14 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int InstanceProperty { get; }
                }
             }
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -106,7 +106,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get => 42;
@@ -116,7 +116,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -133,7 +133,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int {|#0:InstanceProperty|}
                   {
                      get => 42;
@@ -143,7 +143,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -160,7 +160,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get { return 42; }
@@ -170,7 +170,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -187,7 +187,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int {|#0:InstanceProperty|}
                   {
                      get { return 42; }
@@ -197,7 +197,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -214,12 +214,12 @@ public class TTRESG003_PropertyMustBeReadOnly
                {
                   public static int Property { get; set; }
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      set => Helper.Property = value;
@@ -227,7 +227,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                }
             }
             """;
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -244,12 +244,12 @@ public class TTRESG003_PropertyMustBeReadOnly
                {
                   public static int Property { get; set; }
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int {|#0:InstanceProperty|}
                   {
                      set => Helper.Property = value;
@@ -257,7 +257,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                }
             }
             """;
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -274,7 +274,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      set { }
@@ -283,7 +283,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -300,7 +300,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static int {|#0:InstanceProperty|}
                   {
                      set { }
@@ -309,7 +309,7 @@ public class TTRESG003_PropertyMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 

@@ -24,19 +24,19 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
    }
 
-   public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
+   public static AccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
    {
       return attributeData.FindAccessModifier(Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
    }
 
-   public static ValueObjectAccessModifier? FindConstructorAccessModifier(this AttributeData attributeData)
+   public static AccessModifier? FindConstructorAccessModifier(this AttributeData attributeData)
    {
       return attributeData.FindAccessModifier(Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER);
    }
 
-   private static ValueObjectAccessModifier? FindAccessModifier(this AttributeData attributeData, string propertyName)
+   private static AccessModifier? FindAccessModifier(this AttributeData attributeData, string propertyName)
    {
-      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(attributeData, propertyName);
+      var modifier = (AccessModifier?)GetIntegerParameterValue(attributeData, propertyName);
 
       if (modifier is null || !modifier.Value.IsValid())
          return null;
@@ -44,9 +44,9 @@ public static class AttributeDataExtensions
       return modifier;
    }
 
-   public static ValueObjectMemberKind? FindKeyMemberKind(this AttributeData attributeData)
+   public static MemberKind? FindKeyMemberKind(this AttributeData attributeData)
    {
-      var kind = (ValueObjectMemberKind?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);
+      var kind = (MemberKind?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);
 
       if (kind is null || !kind.Value.IsValid())
          return null;

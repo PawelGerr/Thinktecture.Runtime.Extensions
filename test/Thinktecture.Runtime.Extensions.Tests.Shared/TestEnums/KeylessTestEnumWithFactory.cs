@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum]
-[ValueObjectFactory<string>]
+[ObjectFactory<string>]
 public partial class KeylessTestEnumWithFactory
 {
    public static readonly KeylessTestEnumWithFactory Item1 = new(1);

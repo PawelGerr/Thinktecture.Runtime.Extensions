@@ -3,7 +3,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 [ComplexValueObject]
 public partial class ValueObjectWithInitProperties
 {
-   [ValueObjectMemberIgnore]
+   [IgnoreMemberAttribute]
    private readonly int _initExpression;
 
    public int InitExpression
@@ -12,7 +12,7 @@ public partial class ValueObjectWithInitProperties
       private init => _initExpression = value;
    }
 
-   [ValueObjectMemberIgnore]
+   [IgnoreMemberAttribute]
    private readonly int _initBody;
 
    public int InitBody

@@ -3,7 +3,7 @@ using System;
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 public partial class BoundaryWithFactoryAndExplicitImplementation
 {
    public decimal Lower { get; }
@@ -17,7 +17,7 @@ public partial class BoundaryWithFactoryAndExplicitImplementation
       validationError = new ValidationError($"Lower boundary '{lower}' must be less than upper boundary '{upper}'");
    }
 
-   static ValidationError? IValueObjectFactory<BoundaryWithFactoryAndExplicitImplementation, string, ValidationError>.Validate(string? value, IFormatProvider? provider, out BoundaryWithFactoryAndExplicitImplementation? item)
+   static ValidationError? IObjectFactory<BoundaryWithFactoryAndExplicitImplementation, string, ValidationError>.Validate(string? value, IFormatProvider? provider, out BoundaryWithFactoryAndExplicitImplementation? item)
    {
       item = null;
 
@@ -35,7 +35,7 @@ public partial class BoundaryWithFactoryAndExplicitImplementation
       return Validate(lower, upper, out item);
    }
 
-   string IValueObjectConvertible<string>.ToValue()
+   string IConvertible<string>.ToValue()
    {
       return $"{Lower}:{Upper}";
    }

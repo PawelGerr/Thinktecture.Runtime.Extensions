@@ -2,7 +2,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public interface IKeyMemberSettings
 {
-   ValueObjectAccessModifier KeyMemberAccessModifier { get; }
-   ValueObjectMemberKind KeyMemberKind { get; }
+   AccessModifier KeyMemberAccessModifier { get; }
+   MemberKind KeyMemberKind { get; }
    string KeyMemberName { get; }
 }

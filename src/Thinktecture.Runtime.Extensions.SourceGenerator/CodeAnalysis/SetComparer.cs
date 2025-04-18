@@ -8,6 +8,9 @@ public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
       if (x.IsDefaultOrEmpty)
          return y.IsDefaultOrEmpty;
 
+      if (y.IsDefaultOrEmpty)
+         return false;
+
       if (x.Length != y.Length)
          return false;
 

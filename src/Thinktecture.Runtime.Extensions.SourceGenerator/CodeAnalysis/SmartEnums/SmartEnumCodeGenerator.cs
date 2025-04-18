@@ -55,10 +55,11 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
       }
 
       _sb.Append(@"
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
    ");
 
       if (!_state.HasDerivedTypes)
@@ -68,13 +69,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
-         _sb.Append(" global::Thinktecture.IEnum<").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">,");
+         _sb.Append(@"
+      global::Thinktecture.ISmartEnum<").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
+      global::Thinktecture.Internal.IMetadataOwner,");
 
          if (_state.KeyMember.IsString())
          {
             _sb.Append(@"
 #if NET9_0_OR_GREATER
-      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
 #endif");
          }
       }
@@ -85,12 +88,12 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@"
-      global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">,");
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">,");
 
          if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
          {
             _sb.Append(@"
-      global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">,");
+      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">,");
          }
       }
 
@@ -114,9 +117,32 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
-         GenerateModuleInitializer(_state.KeyMember);
-
          _sb.Append(@"
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum
+      {
+         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
+         KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
+         ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+         IsValidatable = ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@",
+         GetItems = () => global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, i => (object)i),
+         ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+         ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+         GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
+         ConvertFromKey = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
+         ConvertFromKeyExpression = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
+         TryGetFromKey =
+            (object? key,
+             out object? obj,
+             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+            {
+               error = ").AppendTypeFullyQualified(_state).Append(".Validate(key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item)!;
+               obj = item;
+
+               return ").Append(_state.Settings.IsValidatable
+                                   ? _state.IsReferenceType ? "item is not null" : (_state.KeyMember.IsReferenceType ? "key is not null" : "true")
+                                   : "error is null").Append(@";
+            }
+      };
 
       private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
@@ -912,25 +938,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   private void GenerateModuleInitializer(IMemberState keyMember)
-   {
-      _sb.Append(@"
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
-      {
-         var convertFromKey = new global::System.Func<").AppendTypeFullyQualifiedNullAnnotated(keyMember).Append(", ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">(").AppendTypeFullyQualified(_state).Append(@".Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualifiedNullAnnotated(keyMember).Append(", ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">> convertFromKeyExpression = static ").AppendEscaped(keyMember.ArgumentName).Append(" => ").AppendTypeFullyQualified(_state).Append(".").Append(Constants.Methods.GET).Append("(").AppendEscaped(keyMember.ArgumentName).Append(@");
-
-         var convertToKey = new global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">(static item => item.").Append(keyMember.Name).Append(@");
-         global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(keyMember).Append(">> convertToKeyExpression = static item => item.").Append(keyMember.Name).Append(@";
-
-         var enumType = typeof(").AppendTypeFullyQualified(_state).Append(@");
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(").AppendTypeFullyQualified(keyMember).Append("), true, ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@", convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-      }");
-   }
-
    private void GenerateTryGet(IMemberState keyProperty)
    {
       _sb.Append(@"
@@ -1380,7 +1387,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IValueObjectConvertible<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
+      ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
       {
          return this.").Append(keyProperty.Name).Append(@";
       }");
@@ -1399,7 +1406,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.Settings.IsValidatable)
       {
          _sb.Append(@"
-      /// <exception cref=""Thinktecture.UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
       }
 
       var returnTypeMayBeNull = _state.IsReferenceType && keyProperty.IsReferenceType;
@@ -1434,7 +1441,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(");");
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(");");
       }
 
       _sb.Append(@"
@@ -1458,7 +1465,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.Settings.IsValidatable)
       {
          _sb.Append(@"
-      /// <exception cref=""Thinktecture.UnknownEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
       }
 
       _sb.Append(@"
@@ -1475,7 +1482,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(".ToString());");
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(".ToString());");
       }
 
       _sb.Append(@"
@@ -1569,7 +1576,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                .Select(ctor =>
                                {
                                   if (ctor.Arguments.Length == 0)
-                                     return (IReadOnlyList<ConstructorArgument>)Array.Empty<ConstructorArgument>();
+                                     return (IReadOnlyList<ConstructorArgument>)[];
 
                                   return ctor.Arguments
                                              .Select(a =>

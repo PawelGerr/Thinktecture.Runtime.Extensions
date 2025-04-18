@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MessagePack;
+using Thinktecture.Formatters;
 
 namespace Thinktecture;
 
@@ -9,12 +10,12 @@ namespace Thinktecture;
                     T2Name = "Number",
                     SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[MessagePackFormatter(typeof(Formatters.ValueObjectMessagePackFormatter<TextOrNumberSerializableWithFormatter, string, ValidationError>))] // Optional: otherwise ValueObjectMessageFormatterResolver is required
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[MessagePackFormatter(typeof(ThinktectureMessagePackFormatter<TextOrNumberSerializableWithFormatter, string, ValidationError>))]
 public partial class TextOrNumberSerializableWithFormatter :
-   IValueObjectFactory<TextOrNumberSerializableWithFormatter, string, ValidationError>, // For deserialization
-   IValueObjectConvertible<string>,                                                     // For serialization
-   IParsable<TextOrNumberSerializableWithFormatter>                                     // For Minimal API and ASP.NET Core model binding validation
+   IObjectFactory<TextOrNumberSerializableWithFormatter, string, ValidationError>, // For deserialization
+   IConvertible<string>,                                                // For serialization
+   IParsable<TextOrNumberSerializableWithFormatter>                                // For Minimal API and ASP.NET Core model binding validation
 {
    // For serialization
    public string ToValue()

@@ -1,8 +1,8 @@
 namespace Thinktecture.SmartEnums;
 
 [SmartEnum<string>]
-[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
-[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+[KeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
+[KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
 public partial class ProductCategoryWithCaseSensitiveComparer
 {
    public static readonly ProductCategoryWithCaseSensitiveComparer FruitsLowerCased = new("fruits");

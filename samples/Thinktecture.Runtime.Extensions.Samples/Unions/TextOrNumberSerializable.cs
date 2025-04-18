@@ -9,11 +9,11 @@ namespace Thinktecture.Unions;
                     T2Name = "Number",
                     SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[JsonConverter(typeof(ValueObjectJsonConverterFactory<TextOrNumberSerializable, string, ValidationError>))] // Optional: otherwise ValueObjectJsonConverterFactory is required
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[JsonConverter(typeof(ThinktectureJsonConverterFactory<TextOrNumberSerializable, string, ValidationError>))]
 public partial class TextOrNumberSerializable :
-   IValueObjectFactory<TextOrNumberSerializable, string, ValidationError>, // For deserialization
-   IValueObjectConvertible<string>,                                        // For serialization
+   IObjectFactory<TextOrNumberSerializable, string, ValidationError>, // For deserialization
+   IConvertible<string>,                                        // For serialization
    IParsable<TextOrNumberSerializable> // For Minimal API and ASP.NET Core model binding validation
 {
    // For serialization

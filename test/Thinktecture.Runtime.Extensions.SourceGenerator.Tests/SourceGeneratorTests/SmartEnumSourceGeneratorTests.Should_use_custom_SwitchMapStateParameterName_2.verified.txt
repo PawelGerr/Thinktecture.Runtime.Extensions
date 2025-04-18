@@ -7,7 +7,7 @@ partial class TestEnum :
    global::System.IParsable<global::Thinktecture.Tests.TestEnum>
 {
    private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-      where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>
+      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, int, global::Thinktecture.ValidationError>
    {
       return T.Validate(key, provider, out result);
    }

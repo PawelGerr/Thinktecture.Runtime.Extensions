@@ -60,7 +60,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
       sb.Append(@"
    private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
+      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
    {
       return T.Validate(key, provider, out result);
    }");
@@ -71,7 +71,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
 #if NET9_0_OR_GREATER
    private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IValueObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(state.ValidationError).Append(@">
+      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(state.ValidationError).Append(@">
    {
       return T.Validate(key, provider, out result);
    }

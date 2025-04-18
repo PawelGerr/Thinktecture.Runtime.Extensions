@@ -55,7 +55,7 @@ public class Program
       await DoRequestAsync(logger, client, "productType?productType=groceries");
       await DoRequestAsync(logger, client, "productType", "groceries");
       await DoRequestAsync(logger, client, "productType/invalid");           // invalid
-      await DoRequestAsync(logger, client, "boundaryWithFactories/1:2");     // uses custom factory "[ValueObjectFactory<string>]"
+      await DoRequestAsync(logger, client, "boundaryWithFactories/1:2");     // uses custom factory "[ObjectFactory<string>]"
       await DoRequestAsync(logger, client, "boundaryWithFactories/invalid"); // invalid
 
       if (forMinimalWebApi)
@@ -132,8 +132,8 @@ public class Program
                        collection.AddSingleton(loggerFactory)
                                  .AddSingleton<EmailNotificationSender>()
                                  .AddSingleton<SmsNotificationSender>();
-                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
-                                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory()));
+                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider()))
+                                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory()));
                     })
                     .Build();
 
@@ -149,7 +149,7 @@ public class Program
              .AddSingleton<SmsNotificationSender>()
              .ConfigureHttpJsonOptions(options =>
              {
-                options.SerializerOptions.Converters.Add(new ValueObjectJsonConverterFactory());
+                options.SerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory());
              });
 
       var app = builder.Build();

@@ -14,11 +14,30 @@ public static class ModelBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="modelBuilder">EF model builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
    public static void AddValueObjectConverters(
+      this ModelBuilder modelBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+   {
+      modelBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="modelBuilder">EF model builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <exception cref="ArgumentNullException">If <paramref name="modelBuilder"/> is <c>null</c>.</exception>
+   public static void AddThinktectureValueConverters(
       this ModelBuilder modelBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,

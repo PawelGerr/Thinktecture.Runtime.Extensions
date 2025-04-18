@@ -25,7 +25,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       var validStates = InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYED_FULL_NAME, true, IsKeyedCandidate);
 
       InitializeSerializerGenerators(context, validStates, options);
-      InitializeDerivedTypesGeneration(context, validStates, options);
       InitializeFormattableCodeGenerator(context, validStates, options);
       InitializeComparableCodeGenerator(context, validStates, options);
       InitializeParsableCodeGenerator(context, validStates, options);
@@ -213,21 +212,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
 
-   private void InitializeDerivedTypesGeneration(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
-   {
-      var derivedTypes = validStates
-                         .Select(static (state, _) => state.DerivedTypes)
-                         .Where(static derivedTypes => derivedTypes.DerivedTypesFullyQualified.Count > 0)
-                         .Collect()
-                         .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                          ? ImmutableArray<SmartEnumDerivedTypes>.Empty
-                                                          : states.Distinct(TypeOnlyComparer.Instance))
-                         .WithComparer(new SetComparer<SmartEnumDerivedTypes>())
-                         .SelectMany((states, _) => states);
-
-      context.RegisterImplementationSourceOutput(derivedTypes.Combine(options), (ctx, types) => GenerateCode(ctx, types.Left, types.Right, DerivedTypesCodeGeneratorFactory.Instance));
-   }
-
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
       var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Error is not null
@@ -342,6 +326,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             return null;
          }
 
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
          if (context.Attributes.Length > 1)
          {
             Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
@@ -419,13 +406,13 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
          var derivedTypeDefinitionNames = FindDerivedTypes(type);
          var enumState = new SmartEnumSourceGeneratorState(factory,
-                                                      type,
-                                                      keyMember,
-                                                      attributeInfo.ValidationError,
-                                                      new SmartEnumSettings(settings, attributeInfo),
-                                                      hasCreateInvalidItemImplementation,
-                                                      derivedTypeDefinitionNames.Count > 0,
-                                                      cancellationToken);
+                                                           type,
+                                                           keyMember,
+                                                           attributeInfo.ValidationError,
+                                                           new SmartEnumSettings(settings, attributeInfo),
+                                                           hasCreateInvalidItemImplementation,
+                                                           derivedTypeDefinitionNames.Count > 0,
+                                                           cancellationToken);
          var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace,
                                                       enumState.Name,
                                                       enumState.TypeFullyQualified,

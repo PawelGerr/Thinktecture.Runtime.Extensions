@@ -1,6 +1,6 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ComplexValueObject(ConstructorAccessModifier = ValueObjectAccessModifier.Public)]
+[ComplexValueObject(ConstructorAccessModifier = AccessModifier.Public)]
 public partial class ComplexValueObjectWithPublicCtor
 {
    public decimal Lower { get; }

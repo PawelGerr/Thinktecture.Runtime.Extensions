@@ -1,8 +1,8 @@
 ﻿namespace Thinktecture.Runtime.Tests.TestEnums;
 
 [SmartEnum<string>(IsValidatable = true)]
-[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
-[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+[KeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
+[KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
 public partial class ValidatableTestEnumCaseSensitive
 {
    public static readonly ValidatableTestEnumCaseSensitive LowerCased = new("item");

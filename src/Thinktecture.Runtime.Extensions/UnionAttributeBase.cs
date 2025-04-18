@@ -56,7 +56,7 @@ public abstract class UnionAttributeBase : Attribute
    /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
-   protected UnionAttributeBase()
+   private protected UnionAttributeBase()
    {
       ConversionFromValue = ConversionOperatorsGeneration.Implicit;
       ConversionToValue = ConversionOperatorsGeneration.Explicit;

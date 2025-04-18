@@ -2,7 +2,7 @@ namespace Thinktecture.SmartEnums;
 
 [SmartEnum<string>(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                    MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-[ValueObjectValidationError<ProductTypeValidationError>]
+[ValidationError<ProductTypeValidationError>]
 public partial class ProductType
 {
    public static readonly ProductType Groceries = new("Groceries");

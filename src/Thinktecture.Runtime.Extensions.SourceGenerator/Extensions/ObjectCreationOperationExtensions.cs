@@ -7,12 +7,12 @@ public static class ObjectCreationOperationExtensions
 {
    public static bool? FindIsValidatable(this IObjectCreationOperation operation)
    {
-      return GetBooleanParameterValue(operation.Initializer,  Constants.Attributes.Properties.IS_VALIDATABLE);
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.IS_VALIDATABLE);
    }
 
    public static bool? FindSkipIComparable(this IObjectCreationOperation operation)
    {
-      return GetBooleanParameterValue(operation.Initializer,  Constants.Attributes.Properties.SKIP_ICOMPARABLE);
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.SKIP_ICOMPARABLE);
    }
 
    public static string? FindKeyMemberName(this IObjectCreationOperation operation)
@@ -30,9 +30,9 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS);
    }
 
-   public static ValueObjectAccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
+   public static AccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
    {
-      var modifier = (ValueObjectAccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+      var modifier = (AccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
 
       if (modifier is null || !modifier.Value.IsValid())
          return null;
@@ -40,9 +40,9 @@ public static class ObjectCreationOperationExtensions
       return modifier.Value;
    }
 
-   public static ValueObjectMemberKind? FindKeyMemberKind(this IObjectCreationOperation operation)
+   public static MemberKind? FindKeyMemberKind(this IObjectCreationOperation operation)
    {
-      var kind = (ValueObjectMemberKind?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_KIND);
+      var kind = (MemberKind?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_KIND);
 
       if (kind is null || !kind.Value.IsValid())
          return null;
@@ -75,6 +75,9 @@ public static class ObjectCreationOperationExtensions
 
    private static object? FindInitialization(this ImmutableArray<IOperation> initializations, string name)
    {
+      if (initializations.IsDefaultOrEmpty)
+         return null;
+
       for (var i = 0; i < initializations.Length; i++)
       {
          var init = initializations[i];
@@ -96,6 +99,9 @@ public static class ObjectCreationOperationExtensions
 
    private static bool HasInitialization(this ImmutableArray<IOperation> initializations, string name)
    {
+      if (initializations.IsDefaultOrEmpty)
+         return false;
+
       for (var i = 0; i < initializations.Length; i++)
       {
          var init = initializations[i];

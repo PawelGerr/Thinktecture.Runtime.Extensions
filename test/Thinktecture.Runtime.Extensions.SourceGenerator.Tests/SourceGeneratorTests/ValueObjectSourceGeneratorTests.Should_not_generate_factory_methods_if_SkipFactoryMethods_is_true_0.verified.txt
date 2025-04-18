@@ -3,25 +3,25 @@
 
 namespace Thinktecture.Tests
 {
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::Thinktecture.IKeyedValueObject<int>,
-      global::Thinktecture.IValueObjectConvertible<int>
+      global::Thinktecture.IKeyedObject<int>,
+      global::Thinktecture.IConvertible<int>,
+      global::Thinktecture.Internal.IMetadataOwner
    {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
       {
-         global::System.Func<int, global::Thinktecture.Tests.TestValueObject>? convertFromKey = null;
-         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>>? convertFromKeyExpression = null;
-         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static @value => new global::Thinktecture.Tests.TestValueObject(@value);
-
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, int>(static item => item._value);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, int>> convertToKeyExpression = static obj => obj._value;
-
-         var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(int), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
+         Type = typeof(global::Thinktecture.Tests.TestValueObject),
+         KeyType = typeof(int),
+         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+         ConvertToKey = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
+         ConvertToKeyExpression = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
+         GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
+         ConvertFromKey = null,
+         ConvertFromKeyExpression = null,
+         ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (int @value) => new global::Thinktecture.Tests.TestValueObject(@value),
+         TryGetFromKey = null
+      };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
@@ -34,7 +34,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      int global::Thinktecture.IValueObjectConvertible<int>.ToValue()
+      int global::Thinktecture.IConvertible<int>.ToValue()
       {
          return this._value;
       }

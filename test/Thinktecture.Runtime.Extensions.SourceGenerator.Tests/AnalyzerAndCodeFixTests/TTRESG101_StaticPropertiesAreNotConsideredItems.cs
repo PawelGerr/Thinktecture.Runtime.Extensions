@@ -22,13 +22,13 @@ public class TTRESG101_StaticPropertiesAreNotConsideredItems
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                public static TestEnum {|#0:Item2|} => default;
             }
          }
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item2");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 }

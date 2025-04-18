@@ -3,6 +3,7 @@
 
 namespace Thinktecture.Tests
 {
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class _1TestUnionWithSpecialChars :
       global::System.IEquatable<global::Thinktecture.Tests._1TestUnionWithSpecialChars>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests._1TestUnionWithSpecialChars, global::Thinktecture.Tests._1TestUnionWithSpecialChars, bool>,

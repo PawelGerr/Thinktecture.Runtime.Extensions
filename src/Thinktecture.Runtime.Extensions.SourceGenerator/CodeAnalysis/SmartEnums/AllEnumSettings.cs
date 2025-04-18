@@ -2,8 +2,8 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSettings
 {
-   public ValueObjectAccessModifier KeyMemberAccessModifier { get; }
-   public ValueObjectMemberKind KeyMemberKind { get; }
+   public AccessModifier KeyMemberAccessModifier { get; }
+   public MemberKind KeyMemberKind { get; }
    public string KeyMemberName { get; }
    public bool IsValidatable { get; }
    public bool SkipIComparable { get; }

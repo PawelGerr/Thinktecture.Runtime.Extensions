@@ -3,27 +3,36 @@
 
 namespace Thinktecture.Tests
 {
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
-      global::Thinktecture.IKeyedValueObject<global::Thinktecture.Tests.Foo>,
-      global::Thinktecture.IValueObjectConvertible<global::Thinktecture.Tests.Foo>,
-      global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
+      global::Thinktecture.IKeyedObject<global::Thinktecture.Tests.Foo>,
+      global::Thinktecture.IConvertible<global::Thinktecture.Tests.Foo>,
+      global::Thinktecture.Internal.IMetadataOwner,
+      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>
    {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
       {
-         global::System.Func<global::Thinktecture.Tests.Foo, global::Thinktecture.Tests.TestValueObject> convertFromKey = new (global::Thinktecture.Tests.TestValueObject.Create);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.Foo, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpression = static @value => global::Thinktecture.Tests.TestValueObject.Create(@value);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.Foo, global::Thinktecture.Tests.TestValueObject>> convertFromKeyExpressionViaCtor = static @value => new global::Thinktecture.Tests.TestValueObject(@value);
+         Type = typeof(global::Thinktecture.Tests.TestValueObject),
+         KeyType = typeof(global::Thinktecture.Tests.Foo),
+         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+         ConvertToKey = static global::Thinktecture.Tests.Foo (global::Thinktecture.Tests.TestValueObject item) => item._value,
+         ConvertToKeyExpression = static global::Thinktecture.Tests.Foo (global::Thinktecture.Tests.TestValueObject item) => item._value,
+         GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
+         ConvertFromKey = static global::Thinktecture.Tests.TestValueObject (global::Thinktecture.Tests.Foo @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
+         ConvertFromKeyExpression = static global::Thinktecture.Tests.TestValueObject (global::Thinktecture.Tests.Foo @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
+         ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (global::Thinktecture.Tests.Foo @value) => new global::Thinktecture.Tests.TestValueObject(@value),
+         TryGetFromKey = 
+            (object? key,
+             out object? obj,
+             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+            {
+               error = global::Thinktecture.Tests.TestValueObject.Validate(key is global::Thinktecture.Tests.Foo typedKey ? typedKey : default, null, out var item);
+               obj = item;
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>(static item => item._value);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo>> convertToKeyExpression = static obj => obj._value;
-
-         var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(type, typeof(global::Thinktecture.Tests.Foo), false, false, convertFromKey, convertFromKeyExpression, convertFromKeyExpressionViaCtor, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
+               return error is null;
+            }
+      };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
@@ -89,7 +98,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      global::Thinktecture.Tests.Foo global::Thinktecture.IValueObjectConvertible<global::Thinktecture.Tests.Foo>.ToValue()
+      global::Thinktecture.Tests.Foo global::Thinktecture.IConvertible<global::Thinktecture.Tests.Foo>.ToValue()
       {
          return this._value;
       }

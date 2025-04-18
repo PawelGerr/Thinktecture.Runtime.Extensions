@@ -3,30 +3,26 @@
 
 namespace Thinktecture.Tests
 {
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
-      global::Thinktecture.IComplexValueObject,
+      global::Thinktecture.Internal.IMetadataOwner,
       global::Thinktecture.IDisallowDefaultValue
    {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.ComplexValueObject
       {
-         global::System.Linq.Expressions.Expression<global::System.Func<TestValueObject, object>> action = o => new
-                                                                                                            {
-                                                                                                            };
-
-         var members = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>();
-
-         foreach (var arg in ((global::System.Linq.Expressions.NewExpression)action.Body).Arguments)
-         {
-            members.Add(((global::System.Linq.Expressions.MemberExpression)arg).Member);
-         }
-
-         var type = typeof(global::Thinktecture.Tests.TestValueObject);
-         var metadata = new global::Thinktecture.Internal.ComplexValueObjectMetadata(type, members.AsReadOnly());
-
-         global::Thinktecture.Internal.ComplexValueObjectMetadataLookup.AddMetadata(type, metadata);
-      }
+         Type = typeof(global::Thinktecture.Tests.TestValueObject),
+         AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
+               global::System.Linq.Enumerable.Select(
+                  ((global::System.Linq.Expressions.NewExpression)
+                     ((global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, object>>)
+                        (object (global::Thinktecture.Tests.TestValueObject o) => new
+                           {
+                           })).Body).Arguments,
+                  arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
+            )
+            .AsReadOnly()
+      };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 

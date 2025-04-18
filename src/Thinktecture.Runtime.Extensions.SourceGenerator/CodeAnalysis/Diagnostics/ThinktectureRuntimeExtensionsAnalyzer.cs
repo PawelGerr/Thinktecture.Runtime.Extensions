@@ -145,7 +145,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (method.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             return;
 
-         var syntaxRef = method.DeclaringSyntaxReferences.Single();
+         var syntaxRef = method.DeclaringSyntaxReferences[0];
 
          if (syntaxRef.GetSyntax(context.CancellationToken) is not MethodDeclarationSyntax mds)
             return;
@@ -182,7 +182,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (operation.Type is null
           || operation.Type.IsReferenceType
-          || operation.Arguments.Length > 0)
+          || !operation.Arguments.IsDefaultOrEmpty)
          return;
 
       if (operation.Type.ImplementsIDisallowDefaultValue())
@@ -279,7 +279,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       IInvocationOperation operation,
       bool isValidatable)
    {
-      var numberOfCallbacks = items.Length
+      var numberOfCallbacks = (items.IsDefaultOrEmpty ? 0 : items.Length)
                               + (isValidatable ? 1 : 0)
                               + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
 
@@ -291,9 +291,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ImmutableArray<IArgumentOperation> args,
       IInvocationOperation operation)
    {
-      var numberOfCallbacks = operation.TargetMethod.Parameters.Length;
+      var numberOfCallbacks = operation.TargetMethod.Parameters.IsDefaultOrEmpty ? 0 : operation.TargetMethod.Parameters.Length;
 
-      if (operation.TargetMethod.Parameters.Length > 0
+      if (numberOfCallbacks > 0
           && operation.TargetMethod.Parameters[0].Name == "state")
       {
          numberOfCallbacks--;
@@ -312,7 +312,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
 
       var hasNonNamedParameters = false;
-      var argsStartIndex = operation.TargetMethod.Parameters.Length == numberOfCallbacks ? 0 : 1;
+      var numberOfParameters = operation.TargetMethod.Parameters.IsDefaultOrEmpty ? 0 : operation.TargetMethod.Parameters.Length;
+      var argsStartIndex = numberOfParameters == numberOfCallbacks ? 0 : 1;
 
       for (var argIndex = argsStartIndex; argIndex < args.Length; argIndex++)
       {
@@ -545,11 +546,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       foreach (var attribute in type.GetAttributes())
       {
-         if (attribute.AttributeClass.IsValueObjectKeyMemberComparerAttribute())
+         if (attribute.AttributeClass.IsKeyMemberComparerAttribute())
          {
             keyMemberComparerAttr = attribute;
          }
-         else if (attribute.AttributeClass.IsValueObjectKeyMemberEqualityComparerAttribute())
+         else if (attribute.AttributeClass.IsKeyMemberEqualityComparerAttribute())
          {
             keyMemberEqualityComparerAttr = attribute;
          }
@@ -780,7 +781,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var items = enumType.GetEnumItems();
 
-      if (items.Length == 0)
+      if (items.IsDefaultOrEmpty)
          ReportDiagnostic(context, DiagnosticsDescriptors.EnumerationHasNoItems, locationOfFirstDeclaration, enumType);
 
       Check_ItemLike_StaticProperties(context, enumType);
@@ -857,6 +858,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var members = enumType.GetMembers();
 
+      if (members.IsDefaultOrEmpty)
+         return;
+
       for (var i = 0; i < members.Length; i++)
       {
          var member = members[i];
@@ -928,7 +932,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static Location GetDerivedTypeLocation(OperationAnalysisContext context, INamedTypeSymbol derivedType)
    {
-      return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences.First().GetSyntax(context.CancellationToken)).Identifier.GetLocation();
+      if (derivedType.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+         return Location.None;
+
+      return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences[0].GetSyntax(context.CancellationToken)).Identifier.GetLocation();
    }
 
    private static void ValidateCreateInvalidItem(
@@ -963,6 +970,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, ImmutableArray<IFieldSymbol> items)
    {
+      if (items.IsDefaultOrEmpty)
+         return;
+
       for (var i = 0; i < items.Length; i++)
       {
          var item = items[i];
@@ -1008,10 +1018,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.IsImplicitlyDeclared)
+         if (ctor.IsImplicitlyDeclared || ctor.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             continue;
 
-         var declarationSyntax = ctor.DeclaringSyntaxReferences.Single().GetSyntax(context.CancellationToken);
+         var declarationSyntax = ctor.DeclaringSyntaxReferences[0].GetSyntax(context.CancellationToken);
 
          switch (declarationSyntax)
          {

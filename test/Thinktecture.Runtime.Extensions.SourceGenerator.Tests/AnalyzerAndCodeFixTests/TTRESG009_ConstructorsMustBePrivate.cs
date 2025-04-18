@@ -24,7 +24,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   protected {|#0:TestEnum|}()
                   {
                   }
@@ -33,7 +33,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -50,7 +50,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   private protected {|#0:TestEnum|}()
                   {
                   }
@@ -59,7 +59,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -76,7 +76,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   private {|#0:TestEnum|}()
                   {
                   }
@@ -84,7 +84,7 @@ public class TTRESG009_ConstructorsMustBePrivate
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 

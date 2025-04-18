@@ -2,23 +2,23 @@ using System;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-[ValueObject<string>(KeyMemberKind = ValueObjectMemberKind.Property,
+[ValueObject<string>(KeyMemberKind = MemberKind.Property,
                      KeyMemberName = "Property",
-                     KeyMemberAccessModifier = ValueObjectAccessModifier.Public)]
-[ValueObjectValidationError<StringBasedReferenceValueObjectValidationError>]
-[ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-[ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+                     KeyMemberAccessModifier = AccessModifier.Public)]
+[ValidationError<StringBasedReferenceValidationError>]
+[KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+[KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class StringBasedReferenceValueObjectWithCustomError
 {
-   static partial void ValidateFactoryArguments(ref StringBasedReferenceValueObjectValidationError? validationError, ref string property)
+   static partial void ValidateFactoryArguments(ref StringBasedReferenceValidationError? validationError, ref string property)
    {
       if (String.IsNullOrWhiteSpace(property))
       {
-         validationError = new StringBasedReferenceValueObjectValidationError("Property cannot be empty.");
+         validationError = new StringBasedReferenceValidationError("Property cannot be empty.");
          return;
       }
 
       if (property.Length == 1)
-         validationError = new StringBasedReferenceValueObjectValidationError("Property cannot be 1 character long.");
+         validationError = new StringBasedReferenceValidationError("Property cannot be 1 character long.");
    }
 }

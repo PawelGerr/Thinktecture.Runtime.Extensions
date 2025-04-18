@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Thinktecture.Validation;
 
 public class BoundValueObject<T, TKey, TValidationError> : IBoundParam
-   where T : IValueObjectFactory<T, TKey, TValidationError>
+   where T : IObjectFactory<T, TKey, TValidationError>
    where TKey : IParsable<TKey>
    where TValidationError : class, IValidationError<TValidationError>
 {
@@ -48,7 +48,7 @@ public class BoundValueObject<T, TKey, TValidationError> : IBoundParam
 }
 
 public class BoundValueObject<T, TValidationError> : IBoundParam
-   where T : IValueObjectFactory<T, string, TValidationError>
+   where T : IObjectFactory<T, string, TValidationError>
    where TValidationError : class, IValidationError<TValidationError>
 {
    private readonly T? _item;

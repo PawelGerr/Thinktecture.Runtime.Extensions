@@ -306,7 +306,7 @@ public class ValueObjectDemos
       var equal = boundaryWithCreate.Equals(boundaryWithCreate);
       logger.Information("Boundaries are equal: {Equal}", equal);
 
-      // Custom implementation of IValueObjectFactory<Boundary, string>
+      // Custom implementation of IObjectFactory<Boundary, string>
       var boundaryValidationError = BoundaryWithFactories.Validate("3:4", null, out var boundaryFromString);
 
       if (boundaryValidationError is null)
@@ -318,7 +318,7 @@ public class ValueObjectDemos
          logger.Warning("Failed to create BoundaryWithFactories from string. Validation error: {ValidationError}", boundaryValidationError.ToString());
       }
 
-      // Custom implementation of IValueObjectFactory<Boundary, (int Lower, int Upper)>
+      // Custom implementation of IObjectFactory<Boundary, (int Lower, int Upper)>
       boundaryValidationError = BoundaryWithFactories.Validate((5, 6), null, out var boundaryFromTuple);
 
       if (boundaryValidationError is null)

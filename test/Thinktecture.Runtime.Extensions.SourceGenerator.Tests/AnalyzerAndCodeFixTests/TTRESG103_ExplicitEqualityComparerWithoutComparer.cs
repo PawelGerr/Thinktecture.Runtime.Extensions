@@ -21,7 +21,7 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
             	public partial class {|#0:TestEnum|}
             	{
             	   public static readonly TestEnum Item1 = default;
@@ -37,8 +37,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                [ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+                [KeyMemberComparer<ComparerAccessors.Default<int>, int>]
                 public partial class TestEnum
             	{
             	   public static readonly TestEnum Item1 = default;
@@ -61,7 +61,7 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
             	public partial class {|#0:TestEnum|}
             	{
             	   public static readonly TestEnum Item1 = default;
@@ -77,8 +77,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+                [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                 public partial class TestEnum
             	{
             	   public static readonly TestEnum Item1 = default;
@@ -101,8 +101,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<int>]
-               [ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
             	public partial class {|#0:TestEnum|}
             	{
                   public static readonly TestEnum Item1 = default;
@@ -124,8 +124,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [SmartEnum<string>]
-               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestEnum|}
             	{
             	   public static readonly TestEnum Item1 = default;
@@ -150,7 +150,7 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -165,8 +165,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
-                [ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+                [KeyMemberComparer<ComparerAccessors.Default<int>, int>]
                 public partial class TestValueObject
             	{
                }
@@ -188,7 +188,7 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -203,8 +203,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-                [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+                [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                 public partial class TestValueObject
             	{
                }
@@ -226,8 +226,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<int>]
-               [ValueObjectKeyMemberComparer<ComparerAccessors.Default<int>, int>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberComparer<ComparerAccessors.Default<int>, int>]
+               [KeyMemberEqualityComparer<ComparerAccessors.Default<int>, int>]
             	public partial class {|#0:TestValueObject|}
             	{
                }
@@ -248,8 +248,8 @@ public class TTRESG103_ExplicitEqualityComparerWithoutComparer
             namespace TestNamespace
             {
                [ValueObject<string>]
-               [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-               [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
             	public partial class {|#0:TestValueObject|}
             	{
                }

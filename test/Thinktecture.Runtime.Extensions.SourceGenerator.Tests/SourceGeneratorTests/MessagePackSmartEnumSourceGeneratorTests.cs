@@ -33,7 +33,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -56,7 +56,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -81,7 +81,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -116,7 +116,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -141,7 +141,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -164,7 +164,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -187,7 +187,7 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".MessagePack",
-                                                                typeof(IEnum<>).Assembly, typeof(ValueObjectMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }

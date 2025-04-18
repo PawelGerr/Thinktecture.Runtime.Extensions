@@ -31,7 +31,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -54,7 +54,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -79,7 +79,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -94,16 +94,16 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
 
          namespace Thinktecture.Tests
          {
-            public class TestEnum_ValueObjectNewtonsoftJsonConverter : Thinktecture.Json.ValueObjectNewtonsoftJsonConverter<TestEnum, string>
+            public class TestEnum_ThinktectureNewtonsoftJsonConverter : Thinktecture.Json.ThinktectureNewtonsoftJsonConverter<TestEnum, string>
             {
-               public TestEnum_ValueObjectNewtonsoftJsonConverter()
+               public TestEnum_ThinktectureNewtonsoftJsonConverter()
                   : base(TestEnum.Get)
                {
                }
             }
 
             [SmartEnum<string>]
-            [JsonConverterAttribute(typeof(TestEnum_ValueObjectNewtonsoftJsonConverter))]
+            [JsonConverterAttribute(typeof(TestEnum_ThinktectureNewtonsoftJsonConverter))]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new("Item1");
@@ -114,7 +114,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -139,7 +139,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -162,7 +162,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -185,7 +185,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          """;
       var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
                                                                 ".NewtonsoftJson",
-                                                                typeof(IEnum<>).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }

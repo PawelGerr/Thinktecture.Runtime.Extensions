@@ -30,12 +30,12 @@ public static class SymbolExtensions
 
    public static bool IsIgnored(this IFieldSymbol field)
    {
-      return field.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
+      return field.HasAttribute(static attrType => attrType.IsMemberIgnoreAttribute());
    }
 
    public static bool IsIgnored(this IPropertySymbol property)
    {
-      return property.HasAttribute(static attrType => attrType.IsValueObjectMemberIgnoreAttribute());
+      return property.HasAttribute(static attrType => attrType.IsMemberIgnoreAttribute());
    }
 
    public static bool IsValidateFactoryArgumentsImplementation(

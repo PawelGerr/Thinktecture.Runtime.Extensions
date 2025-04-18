@@ -22,7 +22,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                public static TestEnum {|#0:CreateInvalidItem|}(string key)
                {
                   return null;
@@ -32,7 +32,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -49,7 +49,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private TestEnum {|#0:CreateInvalidItem|}(string key)
                {
                   return null;
@@ -59,7 +59,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -76,7 +76,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private static string {|#0:CreateInvalidItem|}(string key)
                {
                   return null;
@@ -86,7 +86,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -103,7 +103,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private static TestEnum {|#0:CreateInvalidItem|}(int key)
                {
                   return null;
@@ -113,7 +113,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -130,7 +130,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private static TestEnum {|#0:CreateInvalidItem|}(string key, string other)
                {
                   return null;
@@ -140,7 +140,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "string");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -157,7 +157,7 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private static TestEnum {|#0:CreateInvalidItem|}(string key)
                {
                   return null;
@@ -166,6 +166,6 @@ public class TTRESG007_InvalidSignatureOfCreateInvalidItem
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 }

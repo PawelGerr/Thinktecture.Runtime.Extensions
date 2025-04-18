@@ -30,7 +30,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -51,7 +51,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -75,7 +75,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -102,7 +102,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -126,7 +126,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -153,7 +153,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -179,7 +179,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -205,7 +205,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -229,7 +229,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -253,7 +253,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -279,7 +279,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -305,7 +305,7 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
                                                                   ".NewtonsoftJson",
-                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ValueObjectNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }

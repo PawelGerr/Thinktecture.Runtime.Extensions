@@ -1,7 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-[ValueObjectValidationError<BoundaryValidationError>]
+[ValidationError<BoundaryValidationError>]
 public partial class BoundaryWithCustomError
 {
    public decimal Lower { get; }

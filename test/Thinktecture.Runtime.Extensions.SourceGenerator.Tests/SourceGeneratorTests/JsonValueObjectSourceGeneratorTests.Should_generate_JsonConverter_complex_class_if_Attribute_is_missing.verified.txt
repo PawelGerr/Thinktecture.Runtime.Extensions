@@ -3,10 +3,10 @@
 
 namespace Thinktecture.Tests;
 
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
 partial class TestValueObject
 {
-   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
+   public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
       private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
       private readonly string _referenceFieldPropertyName;
@@ -15,18 +15,18 @@ partial class TestValueObject
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
 
-      public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
+      public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
             throw new global::System.ArgumentNullException(nameof(options));
 
          var namingPolicy = options.PropertyNamingPolicy;
 
-         this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(string));
+         this._referenceFieldConverter = (global::System.Text.Json.Serialization.JsonConverter<string>)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(string));
          this._referenceFieldPropertyName = namingPolicy?.ConvertName("ReferenceField") ?? "ReferenceField";
-         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(int));
+         this._structPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<int>)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(int));
          this._structPropertyPropertyName = namingPolicy?.ConvertName("StructProperty") ?? "StructProperty";
-         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.JsonSerializerOptionsExtensions.GetCustomValueObjectMemberConverter(options, typeof(decimal?));
+         this._nullableStructPropertyConverter = (global::System.Text.Json.Serialization.JsonConverter<decimal?>)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(decimal?));
          this._nullableStructPropertyPropertyName = namingPolicy?.ConvertName("NullableStructProperty") ?? "NullableStructProperty";
       }
 
@@ -121,7 +121,7 @@ partial class TestValueObject
       }
    }
 
-   public class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+   public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
    {
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type typeToConvert)
@@ -137,7 +137,7 @@ partial class TestValueObject
          if (options is null)
             throw new global::System.ArgumentNullException(nameof(options));
 
-         return new ValueObjectJsonConverter(options);
+         return new JsonConverter(options);
       }
    }
 }

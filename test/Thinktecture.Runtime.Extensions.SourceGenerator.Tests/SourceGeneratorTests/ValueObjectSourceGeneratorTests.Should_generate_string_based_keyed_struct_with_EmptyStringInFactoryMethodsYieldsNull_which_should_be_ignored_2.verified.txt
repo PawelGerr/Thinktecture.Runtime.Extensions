@@ -7,7 +7,7 @@ partial struct TestValueObject :
    global::System.IParsable<global::Thinktecture.Tests.TestValueObject>
 {
    private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestValueObject result)
-      where T : global::Thinktecture.IValueObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
+      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>
    {
       return T.Validate(key, provider, out result);
    }

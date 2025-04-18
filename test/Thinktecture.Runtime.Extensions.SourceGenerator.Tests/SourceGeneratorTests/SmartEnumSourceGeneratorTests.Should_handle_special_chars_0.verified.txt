@@ -3,24 +3,36 @@
 
 namespace Thinktecture.Tests
 {
-   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ValueObjectTypeConverter<global::Thinktecture.Tests._1TestEnum, int, global::Thinktecture.ValidationError>))]
-   sealed partial class _1TestEnum : global::Thinktecture.IEnum<int, global::Thinktecture.Tests._1TestEnum, global::Thinktecture.ValidationError>,
+   [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<global::Thinktecture.Tests._1TestEnum, int, global::Thinktecture.ValidationError>))]
+   [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
+   sealed partial class _1TestEnum :
+      global::Thinktecture.ISmartEnum<int, global::Thinktecture.Tests._1TestEnum, global::Thinktecture.ValidationError>,
+      global::Thinktecture.Internal.IMetadataOwner,
       global::System.IEquatable<global::Thinktecture.Tests._1TestEnum?>
    {
-      [global::System.Runtime.CompilerServices.ModuleInitializer]
-      internal static void ModuleInit()
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum
       {
-         var convertFromKey = new global::System.Func<int, global::Thinktecture.Tests._1TestEnum?>(global::Thinktecture.Tests._1TestEnum.Get);
-         global::System.Linq.Expressions.Expression<global::System.Func<int, global::Thinktecture.Tests._1TestEnum?>> convertFromKeyExpression = static @_1Key => global::Thinktecture.Tests._1TestEnum.Get(@_1Key);
+         Type = typeof(global::Thinktecture.Tests._1TestEnum),
+         KeyType = typeof(int),
+         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+         IsValidatable = false,
+         GetItems = () => global::System.Linq.Enumerable.Select(global::Thinktecture.Tests._1TestEnum.Items, i => (object)i),
+         ConvertToKey = static int (global::Thinktecture.Tests._1TestEnum item) => item._1Key,
+         ConvertToKeyExpression = static int (global::Thinktecture.Tests._1TestEnum item) => item._1Key,
+         GetKey = static object (object item) => ((global::Thinktecture.Tests._1TestEnum)item)._1Key,
+         ConvertFromKey = static global::Thinktecture.Tests._1TestEnum (int key) => global::Thinktecture.Tests._1TestEnum.Get(key),
+         ConvertFromKeyExpression = static global::Thinktecture.Tests._1TestEnum (int key) => global::Thinktecture.Tests._1TestEnum.Get(key),
+         TryGetFromKey =
+            (object? key,
+             out object? obj,
+             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+            {
+               error = global::Thinktecture.Tests._1TestEnum.Validate(key is int typedKey ? typedKey : default, null, out var item)!;
+               obj = item;
 
-         var convertToKey = new global::System.Func<global::Thinktecture.Tests._1TestEnum, int>(static item => item._1Key);
-         global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests._1TestEnum, int>> convertToKeyExpression = static item => item._1Key;
-
-         var enumType = typeof(global::Thinktecture.Tests._1TestEnum);
-         var metadata = new global::Thinktecture.Internal.KeyedValueObjectMetadata(enumType, typeof(int), true, false, convertFromKey, convertFromKeyExpression, null, convertToKey, convertToKeyExpression);
-
-         global::Thinktecture.Internal.KeyedValueObjectMetadataLookup.AddMetadata(enumType, metadata);
-      }
+               return error is null;
+            }
+      };
 
       private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
@@ -64,7 +76,7 @@ namespace Thinktecture.Tests
       /// Gets the identifier of the item.
       /// </summary>
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      int global::Thinktecture.IValueObjectConvertible<int>.ToValue()
+      int global::Thinktecture.IConvertible<int>.ToValue()
       {
          return this._1Key;
       }
@@ -74,12 +86,12 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="_1Key">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref="_1TestEnum"/> if <paramref name="_1Key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref="Thinktecture.UnknownEnumIdentifierException">If there is no item with the provided <paramref name="_1Key"/>.</exception>
+      /// <exception cref="Thinktecture.UnknownSmartEnumIdentifierException">If there is no item with the provided <paramref name="_1Key"/>.</exception>
       public static global::Thinktecture.Tests._1TestEnum Get(int @_1Key)
       {
          if (!_lookups.Value.Lookup.TryGetValue(@_1Key, out var item))
          {
-            throw new global::Thinktecture.UnknownEnumIdentifierException(typeof(global::Thinktecture.Tests._1TestEnum), @_1Key);
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(global::Thinktecture.Tests._1TestEnum), @_1Key);
          }
 
          return item;

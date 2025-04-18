@@ -3,7 +3,7 @@ namespace Thinktecture;
 public partial class Empty
 {
    /// <summary>
-   /// Creates a new new <see cref="IDisposable"/> with empty method body.
+   /// Creates a new <see cref="IDisposable"/> with empty method body.
    /// </summary>
    /// <returns>An <see cref="IDisposable"/> with empty method body.</returns>
    public static IDisposable Disposable()
@@ -21,7 +21,7 @@ public partial class Empty
    }
 
    /// <summary>
-   /// Creates a new new <see cref="IAsyncDisposable"/> with empty method body.
+   /// Creates a new <see cref="IAsyncDisposable"/> with empty method body.
    /// </summary>
    /// <returns>An <see cref="IAsyncDisposable"/> with empty method body.</returns>
    public static IAsyncDisposable AsyncDisposable()

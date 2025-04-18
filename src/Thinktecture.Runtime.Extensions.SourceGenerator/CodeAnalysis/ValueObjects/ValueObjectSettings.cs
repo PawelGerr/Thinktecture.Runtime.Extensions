@@ -6,7 +6,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    private readonly AttributeInfo _attributeInfo;
 
    public bool SkipFactoryMethods => _allSettings.SkipFactoryMethods;
-   public ValueObjectAccessModifier ConstructorAccessModifier => _allSettings.ConstructorAccessModifier;
+   public AccessModifier ConstructorAccessModifier => _allSettings.ConstructorAccessModifier;
    public bool SkipKeyMember => _allSettings.SkipKeyMember;
    public string CreateFactoryMethodName => _allSettings.CreateFactoryMethodName;
    public string TryCreateFactoryMethodName => _allSettings.TryCreateFactoryMethodName;

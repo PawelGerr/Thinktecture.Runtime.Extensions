@@ -33,8 +33,8 @@ public class TTRESG048_StringBasedValueObjectNeedsEqualityComparer
          namespace TestNamespace
          {
             [ValueObject<string>]
-             [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-             [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+             [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+             [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
              public partial class TestValueObject
          	{
             }
@@ -63,8 +63,8 @@ public class TTRESG048_StringBasedValueObjectNeedsEqualityComparer
          namespace TestNamespace
          {
             [ValueObject<string>]
-            [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
-            [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+            [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
          	public partial class {|#0:TestValueObject|}
          	{
             }

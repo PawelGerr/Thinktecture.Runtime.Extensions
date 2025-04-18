@@ -35,26 +35,26 @@ public static class StringBuilderExtensions
 
    public static StringBuilder RenderAccessModifier(
       this StringBuilder sb,
-      ValueObjectAccessModifier accessModifier)
+      AccessModifier accessModifier)
    {
       switch (accessModifier)
       {
-         case ValueObjectAccessModifier.Private:
+         case AccessModifier.Private:
             sb.Append("private");
             break;
-         case ValueObjectAccessModifier.Protected:
+         case AccessModifier.Protected:
             sb.Append("protected");
             break;
-         case ValueObjectAccessModifier.Internal:
+         case AccessModifier.Internal:
             sb.Append("internal");
             break;
-         case ValueObjectAccessModifier.Public:
+         case AccessModifier.Public:
             sb.Append("public");
             break;
-         case ValueObjectAccessModifier.PrivateProtected:
+         case AccessModifier.PrivateProtected:
             sb.Append("private protected");
             break;
-         case ValueObjectAccessModifier.ProtectedInternal:
+         case AccessModifier.ProtectedInternal:
             sb.Append("protected internal");
             break;
       }

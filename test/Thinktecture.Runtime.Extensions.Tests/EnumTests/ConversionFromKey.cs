@@ -50,6 +50,6 @@ public class ConversionFromKey
    public void Should_throw_if_non_validable_enum_has_no_such_key()
    {
       Action action = () => _ = (ValidTestEnum)"invalid";
-      action.Should().Throw<UnknownEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      action.Should().Throw<UnknownSmartEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
    }
 }

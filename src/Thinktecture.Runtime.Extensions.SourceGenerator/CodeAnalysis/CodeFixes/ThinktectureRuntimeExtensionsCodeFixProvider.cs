@@ -100,7 +100,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id)
          {
@@ -108,11 +108,11 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.ExplicitComparerWithoutEqualityComparer.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddValueObjectKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_EQUALITY_COMPARER, t => AddKeyMemberEqualityComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_COMPARER, t => AddValueObjectKeyMemberComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_COMPARER), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_DEFINE_VALUE_OBJECT_COMPARER, t => AddKeyMemberComparerAttributeAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _DEFINE_VALUE_OBJECT_COMPARER), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id)
          {
@@ -317,35 +317,35 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return newDoc;
    }
 
-   private static async Task<Document> AddValueObjectKeyMemberEqualityComparerAttributeAsync(
+   private static async Task<Document> AddKeyMemberEqualityComparerAttributeAsync(
       Document document,
       SyntaxNode root,
       TypeDeclarationSyntax? declaration,
       CancellationToken cancellationToken)
    {
-      return await AddValueObjectKeyMemberComparerAsync(
+      return await AddKeyMemberComparerAsync(
                 document,
                 root,
                 declaration,
-                "ValueObjectKeyMemberEqualityComparer",
+                "KeyMemberEqualityComparer",
                 cancellationToken);
    }
 
-   private static async Task<Document> AddValueObjectKeyMemberComparerAttributeAsync(
+   private static async Task<Document> AddKeyMemberComparerAttributeAsync(
       Document document,
       SyntaxNode root,
       TypeDeclarationSyntax? declaration,
       CancellationToken cancellationToken)
    {
-      return await AddValueObjectKeyMemberComparerAsync(
+      return await AddKeyMemberComparerAsync(
                 document,
                 root,
                 declaration,
-                "ValueObjectKeyMemberComparer",
+                "KeyMemberComparer",
                 cancellationToken);
    }
 
-   private static async Task<Document> AddValueObjectKeyMemberComparerAsync(
+   private static async Task<Document> AddKeyMemberComparerAsync(
       Document document,
       SyntaxNode root,
       TypeDeclarationSyntax? declaration,

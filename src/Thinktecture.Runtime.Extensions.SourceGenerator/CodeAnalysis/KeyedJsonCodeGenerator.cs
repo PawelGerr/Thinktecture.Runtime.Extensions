@@ -39,7 +39,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ValueObjectJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ");
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ");
 
       if (!isString)
          _sb.Append(keyType).Append(", ");

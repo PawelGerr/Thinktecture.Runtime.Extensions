@@ -4,8 +4,8 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
 {
    private readonly ITypedMemberState _typedMemberState;
 
-   public ValueObjectAccessModifier AccessModifier { get; }
-   public ValueObjectMemberKind Kind { get; }
+   public AccessModifier AccessModifier { get; }
+   public MemberKind Kind { get; }
    public string Name { get; }
    public string ArgumentName { get; }
 
@@ -28,8 +28,8 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
 
    public KeyMemberState(
       ITypedMemberState typedMemberState,
-      ValueObjectAccessModifier accessModifier,
-      ValueObjectMemberKind kind,
+      AccessModifier accessModifier,
+      MemberKind kind,
       string name,
       string argumentName)
    {

@@ -29,7 +29,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -51,7 +51,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
    }
 
@@ -75,7 +75,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -96,7 +96,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
    }
 
@@ -120,7 +120,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -141,7 +141,7 @@ public class TTRESG043_PrimaryConstructorNotAllowed
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("ValueObject");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
    }
 

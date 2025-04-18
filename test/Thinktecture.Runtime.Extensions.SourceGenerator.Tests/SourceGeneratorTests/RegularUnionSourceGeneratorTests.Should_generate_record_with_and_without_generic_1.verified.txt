@@ -3,6 +3,7 @@
 
 namespace Thinktecture.Tests;
 
+[global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
 abstract partial record Result
 {
    private Result()

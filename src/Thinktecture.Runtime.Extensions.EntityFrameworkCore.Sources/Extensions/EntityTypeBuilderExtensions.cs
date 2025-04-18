@@ -18,12 +18,13 @@ public static class EntityTypeBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <typeparam name="T">The entity type.</typeparam>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
    public static EntityTypeBuilder<T> AddValueObjectConverters<T>(
       this EntityTypeBuilder<T> entityTypeBuilder,
       bool validateOnWrite,
@@ -32,7 +33,94 @@ public static class EntityTypeBuilderExtensions
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
       where T : class
    {
-      ((EntityTypeBuilder)entityTypeBuilder).AddValueObjectConverters(
+      return entityTypeBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
+   public static EntityTypeBuilder AddValueObjectConverters(
+      this EntityTypeBuilder entityTypeBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      bool addConvertersForOwnedTypes = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
+   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddValueObjectConverters<TEntity, TRelatedEntity>(
+      this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      bool addConvertersForOwnedTypes = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+      where TEntity : class
+      where TRelatedEntity : class
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
+   public static OwnedNavigationBuilder AddValueObjectConverters(
+      this OwnedNavigationBuilder entityTypeBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      bool addConvertersForOwnedTypes = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <typeparam name="T">The entity type.</typeparam>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static EntityTypeBuilder<T> AddThinktectureValueConverters<T>(
+      this EntityTypeBuilder<T> entityTypeBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      bool addConvertersForOwnedTypes = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+      where T : class
+   {
+      ((EntityTypeBuilder)entityTypeBuilder).AddThinktectureValueConverters(
          validateOnWrite,
          useConstructorForRead,
          addConvertersForOwnedTypes,
@@ -46,12 +134,12 @@ public static class EntityTypeBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
-   public static EntityTypeBuilder AddValueObjectConverters(
+   public static EntityTypeBuilder AddThinktectureValueConverters(
       this EntityTypeBuilder entityTypeBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,
@@ -76,12 +164,12 @@ public static class EntityTypeBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
-   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddValueObjectConverters<TEntity, TRelatedEntity>(
+   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddThinktectureValueConverters<TEntity, TRelatedEntity>(
       this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,
@@ -90,7 +178,7 @@ public static class EntityTypeBuilderExtensions
       where TEntity : class
       where TRelatedEntity : class
    {
-      ((OwnedNavigationBuilder)entityTypeBuilder).AddValueObjectConverters(
+      ((OwnedNavigationBuilder)entityTypeBuilder).AddThinktectureValueConverters(
          validateOnWrite,
          useConstructorForRead,
          addConvertersForOwnedTypes,
@@ -104,12 +192,12 @@ public static class EntityTypeBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
-   public static OwnedNavigationBuilder AddValueObjectConverters(
+   public static OwnedNavigationBuilder AddThinktectureValueConverters(
       this OwnedNavigationBuilder entityTypeBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,
@@ -130,16 +218,16 @@ public static class EntityTypeBuilderExtensions
    }
 
 #if COMPLEX_TYPES
-
    /// <summary>
    /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="complexPropertyBuilder">The complex property builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
    public static ComplexPropertyBuilder<TComplex> AddValueObjectConverters<TComplex>(
       this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
       bool validateOnWrite,
@@ -147,7 +235,45 @@ public static class EntityTypeBuilderExtensions
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
       where TComplex : class
    {
-      ((ComplexPropertyBuilder)complexPropertyBuilder).AddValueObjectConverters(
+      return complexPropertyBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
+   public static ComplexPropertyBuilder AddValueObjectConverters(
+      this ComplexPropertyBuilder complexPropertyBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+   {
+      return complexPropertyBuilder.AddThinktectureValueConverters(validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
+   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static ComplexPropertyBuilder<TComplex> AddThinktectureValueConverters<TComplex>(
+      this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
+      bool validateOnWrite,
+      bool useConstructorForRead = true,
+      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
+      where TComplex : class
+   {
+      ((ComplexPropertyBuilder)complexPropertyBuilder).AddThinktectureValueConverters(
          validateOnWrite,
          useConstructorForRead,
          configureEnumsAndKeyedValueObjects);
@@ -160,11 +286,11 @@ public static class EntityTypeBuilderExtensions
    /// Properties with a value provider are skipped.
    /// </summary>
    /// <param name="complexPropertyBuilder">The complex property builder.</param>
-   /// <param name="validateOnWrite">In case of a validatable Smart Enum, ensures that the item is valid before writing it to database.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from database.</param>
+   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
+   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
-   public static ComplexPropertyBuilder AddValueObjectConverters(
+   public static ComplexPropertyBuilder AddThinktectureValueConverters(
       this ComplexPropertyBuilder complexPropertyBuilder,
       bool validateOnWrite,
       bool useConstructorForRead = true,
@@ -270,9 +396,7 @@ public static class EntityTypeBuilderExtensions
       if (!propertyInfo.IsCandidateProperty())
          return;
 
-      var metadata = KeyedValueObjectMetadataLookup.Find(propertyInfo.PropertyType);
-
-      if (metadata is null)
+      if (MetadataLookup.Find(propertyInfo.PropertyType) is not Metadata.Keyed metadata)
          return;
 
       var property = entity.AddProperty(propertyInfo);
@@ -320,16 +444,14 @@ public static class EntityTypeBuilderExtensions
       Dictionary<Type, ValueConverter>? converterLookup,
       Action<IMutableProperty> configure)
    {
-      List<(IMutableNavigation, KeyedValueObjectMetadata)>? navigationsToConvert = null;
+      List<(IMutableNavigation, Metadata.Keyed)>? navigationsToConvert = null;
 
       foreach (var navigation in entity.GetNavigations())
       {
-         var metadata = KeyedValueObjectMetadataLookup.Find(navigation.ClrType);
-
-         if (metadata is null)
+         if (MetadataLookup.Find(navigation.ClrType) is not Metadata.Keyed metadata)
             continue;
 
-         (navigationsToConvert ??= new List<(IMutableNavigation, KeyedValueObjectMetadata)>()).Add((navigation, metadata));
+         (navigationsToConvert ??= new List<(IMutableNavigation, Metadata.Keyed)>()).Add((navigation, metadata));
       }
 
       if (navigationsToConvert is null)
@@ -386,9 +508,7 @@ public static class EntityTypeBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-         var metadata = KeyedValueObjectMetadataLookup.Find(property.ClrType);
-
-         if (metadata is null)
+         if (MetadataLookup.Find(property.ClrType) is not Metadata.Keyed metadata)
             continue;
 
          SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
@@ -467,10 +587,9 @@ public static class EntityTypeBuilderExtensions
       Dictionary<Type, ValueConverter>? converterLookup,
       Action<IMutableProperty> configure,
       IMutableProperty property,
-      KeyedValueObjectMetadata metadata)
+      Metadata.Keyed metadata)
    {
       var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, metadata);
-
       property.SetValueConverter(valueConverter);
       configure(property);
    }
@@ -479,11 +598,11 @@ public static class EntityTypeBuilderExtensions
       bool validateOnWrite,
       bool useConstructorForRead,
       Dictionary<Type, ValueConverter>? converterLookup,
-      KeyedValueObjectMetadata metadata)
+      Metadata.Keyed metadata)
    {
       if (converterLookup is null || !converterLookup.TryGetValue(metadata.Type, out var valueConverter))
       {
-         valueConverter = ValueObjectValueConverterFactory.Create(metadata, validateOnWrite, useConstructorForRead);
+         valueConverter = ThinktectureValueConverterFactory.Create(metadata, validateOnWrite, useConstructorForRead);
          converterLookup?.Add(metadata.Type, valueConverter);
       }
 

@@ -22,7 +22,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class InnerTestEnum : TestEnum
          	   {
                   private sealed class {|#0:MostInnerTestEnum|} : TestEnum
@@ -44,7 +44,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class InnerTestEnum : TestEnum
          	   {
                   public sealed class {|#0:MostInnerTestEnum|} : TestEnum
@@ -56,7 +56,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MostInnerTestEnum");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
    }
 
    [Fact]
@@ -73,7 +73,7 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
-         
+
                private sealed class InnerTestEnum : TestEnum
          	   {
                   public sealed class {|#0:MostInnerTestEnum|} : TestEnum
@@ -84,6 +84,6 @@ public class TTRESG015_InnerEnumOnNonFirstLevelMustBePublic
          }
          """;
 
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
    }
 }

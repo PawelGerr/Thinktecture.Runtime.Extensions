@@ -25,7 +25,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public static object Field = default;
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
@@ -35,7 +35,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -52,7 +52,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public static readonly object Field = default;
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
@@ -61,7 +61,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -78,7 +78,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public object Field = default;
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
@@ -88,7 +88,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClass");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -105,7 +105,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public readonly object Field = default;
                }
-            
+
                [SmartEnum<string>(IsValidatable = true)]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
@@ -114,7 +114,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 
@@ -140,7 +140,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithStaticField");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly, typeof(BaseClassWithStaticField).Assembly], expected);
       }
 
       [Fact]
@@ -162,7 +162,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly, typeof(BaseClassWithStaticReadonlyField).Assembly]);
       }
 
       [Fact]
@@ -185,7 +185,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Field", "BaseClassWithInstanceField");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly], expected);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly, typeof(BaseClassWithInstanceField).Assembly], expected);
       }
 
       [Fact]
@@ -207,7 +207,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly, typeof(BaseClassWithInstanceReadonlyField).Assembly]);
       }
    }
 
@@ -332,7 +332,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public static object Field = default;
                }
-            
+
                [ComplexValueObject]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
@@ -358,7 +358,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public static readonly object Field = default;
                }
-            
+
                [ComplexValueObject]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
@@ -383,7 +383,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public object Field = default;
                }
-            
+
                [ComplexValueObject]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{
@@ -409,7 +409,7 @@ public class TTRESG034_BaseClassFieldMustBeReadOnly
                {
                   public readonly object Field = default;
                }
-            
+
                [ComplexValueObject]
             	public partial class {|#0:TestValueObject|} : BaseClass
             	{

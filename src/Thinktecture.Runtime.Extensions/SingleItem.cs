@@ -3,7 +3,7 @@ using Thinktecture.Collections;
 namespace Thinktecture;
 
 /// <summary>
-/// Partial class containing convenience members.
+/// Provides factory methods for creating collections with a single item.
 /// </summary>
 public static class SingleItem
 {

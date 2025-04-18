@@ -92,8 +92,8 @@ public class Program
                     .ConfigureServices(collection =>
                     {
                        collection.AddSingleton(loggerFactory);
-                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ValueObjectModelBinderProvider()))
-                                 .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ValueObjectNewtonsoftJsonConverter()));
+                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider()))
+                                 .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new ThinktectureNewtonsoftJsonConverterFactory()));
                     })
                     .Build();
 

@@ -8,6 +8,7 @@ namespace Thinktecture;
 /// <summary>
 /// Extensions for <see cref="Utf8JsonReader"/>
 /// </summary>
+[ThinktectureRuntimeExtensionInternal]
 public static class Utf8JsonReaderExtensions
 {
    private static readonly Read<byte> _readByte = GetReadMethod<byte>("GetByteWithQuotes");

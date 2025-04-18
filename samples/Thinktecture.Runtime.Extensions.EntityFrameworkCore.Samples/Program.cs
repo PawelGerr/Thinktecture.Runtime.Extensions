@@ -180,7 +180,7 @@ public class Program
              })
              .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true")
                                                                 .EnableSensitiveDataLogging()
-                                                                .UseValueObjectValueConverter(configureEnumsAndKeyedValueObjects: property =>
+                                                                .UseThinktectureValueConverters(configureEnumsAndKeyedValueObjects: property =>
                                                                 {
                                                                    if (property.ClrType == typeof(ProductType))
                                                                    {

@@ -44,7 +44,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -81,7 +81,7 @@ public class TTRESG006_TypeMustBePartial
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -102,7 +102,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
@@ -123,7 +123,7 @@ public class TTRESG006_TypeMustBePartial
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 

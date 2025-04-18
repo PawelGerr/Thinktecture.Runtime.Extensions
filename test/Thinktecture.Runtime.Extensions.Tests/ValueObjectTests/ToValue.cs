@@ -5,7 +5,7 @@ namespace Thinktecture.Runtime.Tests.ValueObjectTests;
 public class ToValue
 {
    [Fact]
-   public void Should_return_value_using_factory_specified_via_ValueObjectFactoryAttribute()
+   public void Should_return_value_using_factory_specified_via_ObjectFactoryAttribute()
    {
       BoundaryWithFactories.Create(1, 2)
                            .ToValue()

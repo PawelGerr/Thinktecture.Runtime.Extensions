@@ -31,10 +31,10 @@ Console.WriteLine(textOrNumber);
 var textOrNumberWithFormatter = DoRoundTripSerialization((TextOrNumberSerializableWithFormatter)42);
 Console.WriteLine(textOrNumberWithFormatter);
 
-// Smart Enums and Value Objects without [MessagePackFormatterAttribute] need "ValueObjectMessageFormatterResolver".
+// Smart Enums and Value Objects without [MessagePackFormatterAttribute] need "ThinktectureMessageFormatterResolver".
 static T DoRoundTripSerializationOfTypesWithoutFormatter<T>(T obj)
 {
-   var resolver = CompositeResolver.Create(ValueObjectMessageFormatterResolver.Instance, StandardResolver.Instance);
+   var resolver = CompositeResolver.Create(ThinktectureMessageFormatterResolver.Instance, StandardResolver.Instance);
    var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
 
    var bytes = MessagePackSerializer.Serialize(obj, options, CancellationToken.None);

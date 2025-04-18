@@ -29,7 +29,7 @@ public static class NamedTypeSymbolExtensions
       BaseTypeState? baseType)
    {
       if (type.Constructors.IsDefaultOrEmpty)
-         return Array.Empty<ConstructorState>();
+         return [];
 
       List<ConstructorState>? ctorStates = null;
 

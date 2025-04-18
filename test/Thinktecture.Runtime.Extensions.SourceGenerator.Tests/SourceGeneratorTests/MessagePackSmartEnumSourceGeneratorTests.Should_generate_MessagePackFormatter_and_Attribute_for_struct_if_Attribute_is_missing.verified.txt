@@ -3,7 +3,7 @@
 
 namespace Thinktecture.Tests;
 
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.StructValueObjectMessagePackFormatter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
+[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.ThinktectureStructMessagePackFormatter<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>))]
 partial struct TestEnum
 {
 }

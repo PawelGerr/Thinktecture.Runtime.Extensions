@@ -6,9 +6,9 @@ namespace Thinktecture.ValueObjects;
 /// Represents a file location combining a file store identifier and a store-specific URN.
 /// </summary>
 [ComplexValueObject(
-   ConstructorAccessModifier = ValueObjectAccessModifier.Public,
+   ConstructorAccessModifier = AccessModifier.Public,
    DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
-[ValueObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)] // (de)serialization to/from string
+[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)] // (de)serialization to/from string
 public partial class FileUrn
 {
    public string FileStore { get; }

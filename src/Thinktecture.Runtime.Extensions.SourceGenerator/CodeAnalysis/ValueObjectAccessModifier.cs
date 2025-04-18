@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public enum ValueObjectAccessModifier
+public enum AccessModifier
 {
    Private = 1 << 0,
    Protected = 1 << 1,

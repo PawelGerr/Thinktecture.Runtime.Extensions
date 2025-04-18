@@ -35,7 +35,7 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
 
       foreach (var attribute in member.GetAttributes())
       {
-         if (attribute.AttributeClass.IsValueObjectMemberEqualityComparerAttribute())
+         if (attribute.AttributeClass.IsMemberEqualityComparerAttribute())
             equalityComparerAttr = attribute;
       }
 

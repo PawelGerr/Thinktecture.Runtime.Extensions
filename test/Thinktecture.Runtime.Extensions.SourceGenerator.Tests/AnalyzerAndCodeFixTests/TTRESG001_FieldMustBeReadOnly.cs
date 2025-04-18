@@ -46,7 +46,7 @@ public class TTRESG001_FieldMustBeReadOnly
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -63,7 +63,7 @@ public class TTRESG001_FieldMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static object {|#0:SomeStaticField|} = default;
                }
             }
@@ -80,14 +80,14 @@ public class TTRESG001_FieldMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public static readonly object {|#0:SomeStaticField|} = default;
                }
             }
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SomeStaticField", "TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -104,7 +104,7 @@ public class TTRESG001_FieldMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public int {|#0:InstanceField|};
                }
             }
@@ -121,14 +121,14 @@ public class TTRESG001_FieldMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public readonly int InstanceField;
                }
             }
             """;
 
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceField", "TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(IEnum<>).Assembly], expected);
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
       }
 
       [Fact]
@@ -145,13 +145,13 @@ public class TTRESG001_FieldMustBeReadOnly
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
-            
+
                   public readonly int {|#0:InstanceField|};
                }
             }
             """;
 
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(IEnum<>).Assembly]);
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 

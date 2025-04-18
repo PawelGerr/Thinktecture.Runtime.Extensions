@@ -7,8 +7,8 @@ namespace Thinktecture.Unions;
 public abstract partial class Jurisdiction
 {
    [ValueObject<string>(KeyMemberName = "IsoCode")]
-   [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>] // case-insensitive comparison
-   [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+   [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>] // case-insensitive comparison
+   [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    public partial class Country : Jurisdiction
    {
       static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string isoCode)
@@ -33,8 +33,8 @@ public abstract partial class Jurisdiction
    public partial class FederalState : Jurisdiction;
 
    [ValueObject<string>(KeyMemberName = "Name")]
-   [ValueObjectKeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>] // case-insensitive comparison
-   [ValueObjectKeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+   [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>] // case-insensitive comparison
+   [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
    public partial class District : Jurisdiction;
 
    /// <summary>
