@@ -96,7 +96,7 @@ namespace Thinktecture.Tests
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       /// <param name="_1Test">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, int> @int32,
          global::System.Action<TState, global::Thinktecture.Tests._1Test> @_1Test)
 #if NET9_0_OR_GREATER
@@ -106,10 +106,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @int32(state, this._int32);
+               @int32(@state, this._int32);
                return;
             case 2:
-               @_1Test(state, this.__1Test!);
+               @_1Test(@state, this.__1Test!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -146,7 +146,7 @@ namespace Thinktecture.Tests
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       /// <param name="_1Test">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, int, TResult> @int32,
          global::System.Func<TState, global::Thinktecture.Tests._1Test, TResult> @_1Test)
 #if NET9_0_OR_GREATER
@@ -157,9 +157,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @int32(state, this._int32);
+               return @int32(@state, this._int32);
             case 2:
-               return @_1Test(state, this.__1Test!);
+               return @_1Test(@state, this.__1Test!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }

@@ -184,7 +184,7 @@ namespace Thinktecture.Tests
       /// <param name="string3">The action to execute if the current value is of type <c>string?</c>.</param>
       /// <param name="nullableOfInt32">The action to execute if the current value is of type <c>int?</c>.</param>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, string> @text,
          global::System.Action<TState, int> @int32,
          global::System.Action<TState, string> @string2,
@@ -197,19 +197,19 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @text(state, this._string!);
+               @text(@state, this._string!);
                return;
             case 2:
-               @int32(state, this._int32);
+               @int32(@state, this._int32);
                return;
             case 3:
-               @string2(state, this._string!);
+               @string2(@state, this._string!);
                return;
             case 4:
-               @string3(state, this._string);
+               @string3(@state, this._string);
                return;
             case 5:
-               @nullableOfInt32(state, this._nullableOfInt32);
+               @nullableOfInt32(@state, this._nullableOfInt32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -261,7 +261,7 @@ namespace Thinktecture.Tests
       /// <param name="string3">The function to execute if the current value is of type <c>string?</c>.</param>
       /// <param name="nullableOfInt32">The function to execute if the current value is of type <c>int?</c>.</param>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, string, TResult> @text,
          global::System.Func<TState, int, TResult> @int32,
          global::System.Func<TState, string, TResult> @string2,
@@ -275,15 +275,15 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @text(state, this._string!);
+               return @text(@state, this._string!);
             case 2:
-               return @int32(state, this._int32);
+               return @int32(@state, this._int32);
             case 3:
-               return @string2(state, this._string!);
+               return @string2(@state, this._string!);
             case 4:
-               return @string3(state, this._string);
+               return @string3(@state, this._string);
             case 5:
-               return @nullableOfInt32(state, this._nullableOfInt32);
+               return @nullableOfInt32(@state, this._nullableOfInt32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }

@@ -422,7 +422,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                       type,
                                                       keyMember,
                                                       attributeInfo.ValidationError,
-                                                      new EnumSettings(settings, attributeInfo),
+                                                      new SmartEnumSettings(settings, attributeInfo),
                                                       hasCreateInvalidItemImplementation,
                                                       derivedTypeDefinitionNames.Count > 0,
                                                       cancellationToken);

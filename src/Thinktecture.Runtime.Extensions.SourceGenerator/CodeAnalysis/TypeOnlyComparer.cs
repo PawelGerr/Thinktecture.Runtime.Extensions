@@ -1,6 +1,6 @@
 using Thinktecture.CodeAnalysis.AdHocUnions;
+using Thinktecture.CodeAnalysis.RegularUnions;
 using Thinktecture.CodeAnalysis.SmartEnums;
-using Thinktecture.CodeAnalysis.Unions;
 using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
@@ -17,7 +17,7 @@ public class TypeOnlyComparer
      IEqualityComparer<KeyedValueObjectSourceGeneratorState>,
      IEqualityComparer<ComplexValueObjectSourceGeneratorState>,
      IEqualityComparer<AdHocUnionSourceGenState>,
-     IEqualityComparer<UnionSourceGenState>
+     IEqualityComparer<RegularUnionSourceGenState>
 {
    public static readonly TypeOnlyComparer Instance = new();
 
@@ -32,7 +32,7 @@ public class TypeOnlyComparer
    public bool Equals(KeyedValueObjectSourceGeneratorState x, KeyedValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(ComplexValueObjectSourceGeneratorState x, ComplexValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(AdHocUnionSourceGenState x, AdHocUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
-   public bool Equals(UnionSourceGenState x, UnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
+   public bool Equals(RegularUnionSourceGenState x, RegularUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
 
    public int GetHashCode(FormattableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComparableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
@@ -45,7 +45,7 @@ public class TypeOnlyComparer
    public int GetHashCode(KeyedValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComplexValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(AdHocUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
-   public int GetHashCode(UnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(RegularUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
 
    private TypeOnlyComparer()
    {

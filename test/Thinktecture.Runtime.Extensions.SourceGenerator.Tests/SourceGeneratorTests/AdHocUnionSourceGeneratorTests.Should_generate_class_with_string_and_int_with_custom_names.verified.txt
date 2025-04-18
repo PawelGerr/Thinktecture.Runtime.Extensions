@@ -96,7 +96,7 @@ namespace Thinktecture.Tests
       /// <param name="text">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="number">The action to execute if the current value is of type <see cref="int"/>.</param>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, string> @text,
          global::System.Action<TState, int> @number)
 #if NET9_0_OR_GREATER
@@ -106,10 +106,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @text(state, this._text!);
+               @text(@state, this._text!);
                return;
             case 2:
-               @number(state, this._number);
+               @number(@state, this._number);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -146,7 +146,7 @@ namespace Thinktecture.Tests
       /// <param name="text">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="number">The function to execute if the current value is of type <see cref="int"/>.</param>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, string, TResult> @text,
          global::System.Func<TState, int, TResult> @number)
 #if NET9_0_OR_GREATER
@@ -157,9 +157,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @text(state, this._text!);
+               return @text(@state, this._text!);
             case 2:
-               return @number(state, this._number);
+               return @number(@state, this._number);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }

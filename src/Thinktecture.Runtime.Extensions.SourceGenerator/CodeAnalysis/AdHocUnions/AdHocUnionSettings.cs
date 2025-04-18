@@ -12,6 +12,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public UnionConstructorAccessModifier ConstructorAccessModifier { get; }
    public ConversionOperatorsGeneration ConversionFromValue { get; }
    public ConversionOperatorsGeneration ConversionToValue { get; }
+   public string SwitchMapStateParameterName { get; }
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
 
    public AdHocUnionSettings(
@@ -26,6 +27,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       ConstructorAccessModifier = attribute.FindUnionConstructorAccessModifier();
       ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
       ConversionToValue = attribute.FindConversionToValue() ?? ConversionOperatorsGeneration.Explicit;
+      SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
       _attributeInfo = attributeInfo;
 
       var memberTypeSettings = new AdHocUnionMemberTypeSetting[numberOfMemberTypes];
@@ -57,6 +59,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && ConstructorAccessModifier == other.ConstructorAccessModifier
              && ConversionFromValue == other.ConversionFromValue
              && ConversionToValue == other.ConversionToValue
+             && SwitchMapStateParameterName == other.SwitchMapStateParameterName
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
@@ -72,6 +75,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ (int)ConstructorAccessModifier;
          hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
          hashCode = (hashCode * 397) ^ (int)ConversionToValue;
+         hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 

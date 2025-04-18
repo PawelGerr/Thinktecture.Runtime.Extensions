@@ -100,7 +100,7 @@ namespace Thinktecture.Tests
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, string> @string,
          global::System.Action<TState, int> @int32)
 #if NET9_0_OR_GREATER
@@ -112,10 +112,10 @@ namespace Thinktecture.Tests
             case 0:
                throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               @string(state, this._string!);
+               @string(@state, this._string!);
                return;
             case 2:
-               @int32(state, this._int32);
+               @int32(@state, this._int32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -156,7 +156,7 @@ namespace Thinktecture.Tests
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, string, TResult> @string,
          global::System.Func<TState, int, TResult> @int32)
 #if NET9_0_OR_GREATER
@@ -169,9 +169,9 @@ namespace Thinktecture.Tests
             case 0:
                throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               return @string(state, this._string!);
+               return @string(@state, this._string!);
             case 2:
-               return @int32(state, this._int32);
+               return @int32(@state, this._int32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }

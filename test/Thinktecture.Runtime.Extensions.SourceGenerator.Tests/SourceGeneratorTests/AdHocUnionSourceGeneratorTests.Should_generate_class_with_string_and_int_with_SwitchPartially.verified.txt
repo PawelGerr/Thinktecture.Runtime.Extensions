@@ -128,7 +128,7 @@ namespace Thinktecture.Tests
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, string> @string,
          global::System.Action<TState, int> @int32)
 #if NET9_0_OR_GREATER
@@ -138,10 +138,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @string(state, this._string!);
+               @string(@state, this._string!);
                return;
             case 2:
-               @int32(state, this._int32);
+               @int32(@state, this._int32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -156,7 +156,7 @@ namespace Thinktecture.Tests
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       public void SwitchPartially<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, object?>? @default = null,
          global::System.Action<TState, string>? @string = null,
          global::System.Action<TState, int>? @int32 = null)
@@ -170,19 +170,19 @@ namespace Thinktecture.Tests
                if (@string is null)
                   break;
 
-               @string(state, this._string!);
+               @string(@state, this._string!);
                return;
             case 2:
                if (@int32 is null)
                   break;
 
-               @int32(state, this._int32);
+               @int32(@state, this._int32);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
 
-         @default?.Invoke(state, this.Value);
+         @default?.Invoke(@state, this.Value);
       }
 
       /// <summary>
@@ -248,7 +248,7 @@ namespace Thinktecture.Tests
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, string, TResult> @string,
          global::System.Func<TState, int, TResult> @int32)
 #if NET9_0_OR_GREATER
@@ -259,9 +259,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @string(state, this._string!);
+               return @string(@state, this._string!);
             case 2:
-               return @int32(state, this._int32);
+               return @int32(@state, this._int32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -275,7 +275,7 @@ namespace Thinktecture.Tests
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       public TResult SwitchPartially<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, object?, TResult> @default,
          global::System.Func<TState, string, TResult>? @string = null,
          global::System.Func<TState, int, TResult>? @int32 = null)
@@ -290,17 +290,17 @@ namespace Thinktecture.Tests
                if (@string is null)
                   break;
 
-               return @string(state, this._string!);
+               return @string(@state, this._string!);
             case 2:
                if (@int32 is null)
                   break;
 
-               return @int32(state, this._int32);
+               return @int32(@state, this._int32);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
 
-         return @default(state, this.Value);
+         return @default(@state, this.Value);
       }
 
       /// <summary>

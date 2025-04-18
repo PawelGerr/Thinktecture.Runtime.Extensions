@@ -385,7 +385,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""state"">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
@@ -414,7 +414,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
       public void ").Append(methodName).Append(@"<TState>(
-         TState state,");
+         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
       }
       else
       {
@@ -508,7 +508,7 @@ namespace ").Append(_state.Namespace).Append(@"
                ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withState)
-            _sb.Append("state, ");
+            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
          _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
@@ -526,7 +526,7 @@ namespace ").Append(_state.Namespace).Append(@"
          @default?.Invoke(");
 
          if (withState)
-            _sb.Append("state, ");
+            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
          _sb.Append("this.Value);");
       }
@@ -543,7 +543,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""state"">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
@@ -572,7 +572,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
       public TResult ").Append(methodName).Append(@"<TState, TResult>(
-         TState state,");
+         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
       }
       else
       {
@@ -669,7 +669,7 @@ namespace ").Append(_state.Namespace).Append(@"
                return ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withState)
-            _sb.Append("state, ");
+            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
          _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
@@ -686,7 +686,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return @default(");
 
          if (withState)
-            _sb.Append("state, ");
+            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
          _sb.Append("this.Value);");
       }

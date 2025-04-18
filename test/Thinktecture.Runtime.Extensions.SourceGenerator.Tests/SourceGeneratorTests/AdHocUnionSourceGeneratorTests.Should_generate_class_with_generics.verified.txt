@@ -96,7 +96,7 @@ namespace Thinktecture.Tests
       /// <param name="listOfString">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
       /// <param name="listOfInt32">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       public void Switch<TState>(
-         TState state,
+         TState @state,
          global::System.Action<TState, global::System.Collections.Generic.List<string>> @listOfString,
          global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32)
 #if NET9_0_OR_GREATER
@@ -106,10 +106,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @listOfString(state, this._listOfString!);
+               @listOfString(@state, this._listOfString!);
                return;
             case 2:
-               @listOfInt32(state, this._listOfInt32!);
+               @listOfInt32(@state, this._listOfInt32!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -146,7 +146,7 @@ namespace Thinktecture.Tests
       /// <param name="listOfString">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
       /// <param name="listOfInt32">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       public TResult Switch<TState, TResult>(
-         TState state,
+         TState @state,
          global::System.Func<TState, global::System.Collections.Generic.List<string>, TResult> @listOfString,
          global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
 #if NET9_0_OR_GREATER
@@ -157,9 +157,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @listOfString(state, this._listOfString!);
+               return @listOfString(@state, this._listOfString!);
             case 2:
-               return @listOfInt32(state, this._listOfInt32!);
+               return @listOfInt32(@state, this._listOfInt32!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }

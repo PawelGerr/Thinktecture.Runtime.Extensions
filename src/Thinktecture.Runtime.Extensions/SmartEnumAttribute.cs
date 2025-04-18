@@ -151,6 +151,12 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public SerializationFrameworks SerializationFrameworks { get; set; }
 
    /// <summary>
+   /// The name of the "state" parameter used in <c>Switch</c> and <c>Map</c> methods.
+   /// Default is <c>state</c>.
+   /// </summary>
+   public string? SwitchMapStateParameterName { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="SmartEnumAttribute{TKey}"/>.
    /// </summary>
    public SmartEnumAttribute()

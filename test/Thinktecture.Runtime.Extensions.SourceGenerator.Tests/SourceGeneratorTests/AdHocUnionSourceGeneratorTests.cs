@@ -373,4 +373,22 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests._1TestUnionWithSpecialChars.g.cs");
    }
+
+   [Fact]
+   public async Task Should_use_custom_SwitchMapStateParameterName()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string>(SwitchMapStateParameterName = "context")]
+            public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+   }
 }

@@ -48,6 +48,12 @@ public abstract class UnionAttributeBase : Attribute
    public SwitchMapMethodsGeneration MapMethods { get; set; }
 
    /// <summary>
+   /// The name of the "state" parameter used in <c>Switch</c> and <c>Map</c> methods.
+   /// Default is <c>state</c>.
+   /// </summary>
+   public string? SwitchMapStateParameterName { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    protected UnionAttributeBase()

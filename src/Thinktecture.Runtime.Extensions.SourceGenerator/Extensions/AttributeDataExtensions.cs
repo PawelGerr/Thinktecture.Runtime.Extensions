@@ -209,6 +209,11 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, $"T{index}Name");
    }
 
+   public static string FindSwitchMapStateParameterName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, "SwitchMapStateParameterName") ?? "state";
+   }
+
    public static UnionConstructorAccessModifier FindUnionConstructorAccessModifier(this AttributeData attributeData)
    {
       return (UnionConstructorAccessModifier?)GetIntegerParameterValue(attributeData, "ConstructorAccessModifier")

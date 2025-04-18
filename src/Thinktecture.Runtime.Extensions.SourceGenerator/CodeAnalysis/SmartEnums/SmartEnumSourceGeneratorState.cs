@@ -13,7 +13,7 @@ public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable
 
    public KeyMemberState? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
-   public EnumSettings Settings { get; }
+   public SmartEnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
 
    public bool HasCreateInvalidItemImplementation { get; }
@@ -32,7 +32,7 @@ public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable
       INamedTypeSymbol type,
       KeyMemberState? keyMember,
       ValidationErrorState validationError,
-      EnumSettings settings,
+      SmartEnumSettings settings,
       bool hasCreateInvalidItemImplementation,
       bool hasDerivedTypes,
       CancellationToken cancellationToken)
