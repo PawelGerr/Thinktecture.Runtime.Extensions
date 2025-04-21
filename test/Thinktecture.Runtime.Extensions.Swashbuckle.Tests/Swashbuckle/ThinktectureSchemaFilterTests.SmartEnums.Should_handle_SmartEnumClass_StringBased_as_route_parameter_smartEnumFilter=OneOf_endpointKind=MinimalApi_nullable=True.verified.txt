@@ -1,0 +1,55 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test/{value}": {
+      "get": {
+        "tags": [
+          "Tests"
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TestEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestEnum"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TestEnum": {
+        "type": "string",
+        "oneOf": [
+          {
+            "title": "item1",
+            "const": "item1"
+          },
+          {
+            "title": "item2",
+            "const": "item2"
+          }
+        ]
+      }
+    }
+  }
+}

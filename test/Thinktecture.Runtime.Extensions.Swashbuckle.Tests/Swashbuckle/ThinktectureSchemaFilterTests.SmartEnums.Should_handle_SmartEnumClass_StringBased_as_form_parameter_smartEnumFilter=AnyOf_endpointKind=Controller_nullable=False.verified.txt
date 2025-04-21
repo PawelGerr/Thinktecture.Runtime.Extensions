@@ -1,0 +1,68 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestEnum"
+                      }
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "value": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestEnum"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TestEnum": {
+        "type": "string",
+        "anyOf": [
+          {
+            "title": "item1",
+            "const": "item1"
+          },
+          {
+            "title": "item2",
+            "const": "item2"
+          }
+        ]
+      }
+    }
+  }
+}

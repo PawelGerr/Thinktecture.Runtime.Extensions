@@ -11,11 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Thinktecture.AspNetCore.ModelBinding;
+using Thinktecture.Controllers;
 using Thinktecture.Helpers;
 using Thinktecture.SmartEnums;
+using Thinktecture.Swashbuckle;
 using Thinktecture.Text.Json.Serialization;
 using Thinktecture.Unions;
 using Thinktecture.Validation;
@@ -40,7 +43,7 @@ public class Program
 
       await DoHttpRequestsAsync(loggerFactory.CreateLogger<Program>(), startMinimalWebApi);
 
-      await Task.Delay(5000);
+      await Task.Delay(60000);
    }
 
    private static async Task DoHttpRequestsAsync(ILogger logger, bool forMinimalWebApi)
@@ -118,22 +121,31 @@ public class Program
    private static Task StartServerAsync(ILoggerFactory loggerFactory)
    {
       var webHost = new HostBuilder()
+                    .ConfigureServices(services =>
+                    {
+                       services.AddSingleton(loggerFactory)
+                               .AddSingleton<EmailNotificationSender>()
+                               .AddSingleton<SmsNotificationSender>();
+                       services.AddMvc(options => options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider()))
+                               .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory()))
+                               .AddApplicationPart(typeof(DemoController).Assembly);
+
+                       services.AddEndpointsApiExplorer()
+                               .AddSwaggerGen(options => options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" }))
+                               .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
+                    })
                     .ConfigureWebHostDefaults(builder =>
                     {
                        builder.UseKestrel()
                               .Configure(app =>
                               {
                                  app.UseRouting();
-                                 app.UseEndpoints(endpoints => endpoints.MapControllers());
+                                 app.UseEndpoints(endpoints =>
+                                 {
+                                    endpoints.MapSwagger();
+                                    endpoints.MapControllers();
+                                 });
                               });
-                    })
-                    .ConfigureServices(collection =>
-                    {
-                       collection.AddSingleton(loggerFactory)
-                                 .AddSingleton<EmailNotificationSender>()
-                                 .AddSingleton<SmsNotificationSender>();
-                       collection.AddControllers(options => options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider()))
-                                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory()));
                     })
                     .Build();
 
@@ -150,7 +162,10 @@ public class Program
              .ConfigureHttpJsonOptions(options =>
              {
                 options.SerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory());
-             });
+             })
+             .AddEndpointsApiExplorer()
+             .AddSwaggerGen(options => options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" }))
+             .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
 
       var app = builder.Build();
 

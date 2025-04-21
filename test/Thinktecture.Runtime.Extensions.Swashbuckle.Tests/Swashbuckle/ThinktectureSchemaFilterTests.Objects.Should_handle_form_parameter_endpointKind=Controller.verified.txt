@@ -1,0 +1,383 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "KeyedValueObject_Struct_StringBased",
+                  "SmartEnum_Struct_StringBased"
+                ],
+                "type": "object",
+                "properties": {
+                  "SmartEnum_Class_StringBased": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestEnum"
+                      }
+                    ]
+                  },
+                  "SmartEnum_Class_StringBased_Nullable": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestEnum"
+                      }
+                    ]
+                  },
+                  "SmartEnum_Struct_StringBased": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StructStringEnum"
+                      }
+                    ]
+                  },
+                  "SmartEnum_Struct_StringBased_Nullable": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StructStringEnum"
+                      }
+                    ]
+                  },
+                  "KeyedValueObject_Class_StringBased": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+                      }
+                    ]
+                  },
+                  "KeyedValueObject_Class_StringBased_Nullable": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+                      }
+                    ]
+                  },
+                  "KeyedValueObject_Struct_StringBased": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StringBasedStructValueObject"
+                      }
+                    ]
+                  },
+                  "KeyedValueObject_Struct_StringBased_Nullable": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/StringBasedStructValueObject"
+                      }
+                    ]
+                  },
+                  "ComplexValueObject_Class.Lower": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Class.Upper": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Class_Nullabe.Lower": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Class_Nullabe.Upper": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Struct.Lower": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Struct.Upper": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Struct_Nullabe.Lower": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "ComplexValueObject_Struct_Nullabe.Upper": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "AdHocUnion_Class": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestUnion_class_string_int"
+                      }
+                    ]
+                  },
+                  "AdHocUnion_Class_Nullable": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestUnion_class_string_int"
+                      }
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "SmartEnum_Class_StringBased": {
+                  "style": "form"
+                },
+                "SmartEnum_Class_StringBased_Nullable": {
+                  "style": "form"
+                },
+                "SmartEnum_Struct_StringBased": {
+                  "style": "form"
+                },
+                "SmartEnum_Struct_StringBased_Nullable": {
+                  "style": "form"
+                },
+                "KeyedValueObject_Class_StringBased": {
+                  "style": "form"
+                },
+                "KeyedValueObject_Class_StringBased_Nullable": {
+                  "style": "form"
+                },
+                "KeyedValueObject_Struct_StringBased": {
+                  "style": "form"
+                },
+                "KeyedValueObject_Struct_StringBased_Nullable": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Class.Lower": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Class.Upper": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Class_Nullabe.Lower": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Class_Nullabe.Upper": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Struct.Lower": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Struct.Upper": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Struct_Nullabe.Lower": {
+                  "style": "form"
+                },
+                "ComplexValueObject_Struct_Nullabe.Upper": {
+                  "style": "form"
+                },
+                "AdHocUnion_Class": {
+                  "style": "form"
+                },
+                "AdHocUnion_Class_Nullable": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestClass"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Boundary": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        }
+      },
+      "BoundaryStruct": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        }
+      },
+      "StringBasedReferenceValueObject": {
+        "type": "string"
+      },
+      "StringBasedStructValueObject": {
+        "type": "string"
+      },
+      "StructStringEnum": {
+        "enum": [
+          "",
+          "item2"
+        ],
+        "type": "string"
+      },
+      "TestClass": {
+        "required": [
+          "adHocUnion_Class",
+          "complexValueObject_Struct",
+          "keyedValueObject_Struct_StringBased",
+          "smartEnum_Struct_StringBased"
+        ],
+        "type": "object",
+        "properties": {
+          "smartEnum_Class_StringBased": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TestEnum"
+              }
+            ]
+          },
+          "smartEnum_Class_StringBased_Nullable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TestEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "smartEnum_Struct_StringBased": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StructStringEnum"
+              }
+            ]
+          },
+          "smartEnum_Struct_StringBased_Nullable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StructStringEnum"
+              }
+            ],
+            "nullable": true
+          },
+          "keyedValueObject_Class_StringBased": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+              }
+            ]
+          },
+          "keyedValueObject_Class_StringBased_Nullable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+              }
+            ],
+            "nullable": true
+          },
+          "keyedValueObject_Struct_StringBased": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringBasedStructValueObject"
+              }
+            ]
+          },
+          "keyedValueObject_Struct_StringBased_Nullable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StringBasedStructValueObject"
+              }
+            ],
+            "nullable": true
+          },
+          "complexValueObject_Class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Boundary"
+              }
+            ]
+          },
+          "complexValueObject_Class_Nullabe": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Boundary"
+              }
+            ],
+            "nullable": true
+          },
+          "complexValueObject_Struct": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoundaryStruct"
+              }
+            ]
+          },
+          "complexValueObject_Struct_Nullabe": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BoundaryStruct"
+              }
+            ],
+            "nullable": true
+          },
+          "adHocUnion_Class": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TestUnion_class_string_int"
+              }
+            ]
+          },
+          "adHocUnion_Class_Nullable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TestUnion_class_string_int"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TestEnum": {
+        "enum": [
+          "item1",
+          "item2"
+        ],
+        "type": "string"
+      },
+      "TestUnion_class_string_int": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "format": "int32"
+          }
+        ]
+      }
+    }
+  }
+}

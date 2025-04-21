@@ -53,23 +53,33 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name);
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :");
 
       if (!_state.IsRefStruct)
       {
-         _sb.Append(@" :
+         _sb.Append(@"
       global::System.IEquatable<").AppendTypeFullyQualified(_state).Append(@">,
-      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(@", ").AppendTypeFullyQualified(_state).Append(", bool>");
+      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(", bool>,");
+      }
 
-         if (_state.DisallowsDefaultValue)
-         {
-            _sb.Append(@",
-      global::Thinktecture.IDisallowDefaultValue");
-         }
+      if (_state.DisallowsDefaultValue)
+      {
+         _sb.Append(@"
+      global::Thinktecture.IDisallowDefaultValue,");
       }
 
       _sb.Append(@"
+      global::Thinktecture.Internal.IMetadataOwner
    {
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.AdHocUnion
+      {
+         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
+         MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
+                       {").AppendMemberTypes(_state.MemberTypes).Append(@"
+                       }
+                       .AsReadOnly()
+      };
+
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(@").GetHashCode();
 
       private readonly int _valueIndex;
@@ -971,5 +981,25 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
          _ => throw new global::System.IndexOutOfRangeException($""Unexpected value index '{this._valueIndex}'."")
       };");
+   }
+}
+
+
+file static class Extensions
+{
+   public static StringBuilder AppendMemberTypes(this StringBuilder sb, IReadOnlyList<AdHocUnionMemberTypeState> memberTypes)
+   {
+      for (var i = 0; i < memberTypes.Count; i++)
+      {
+         var member = memberTypes[i];
+
+         if (i > 0)
+            sb.Append(",");
+
+         sb.Append(@"
+                           typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(member).Append(")");
+      }
+
+      return sb;
    }
 }

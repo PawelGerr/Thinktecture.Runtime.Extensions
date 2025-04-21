@@ -103,7 +103,8 @@ public class ThinktectureValueConverterFactory
          keyedValueObject: m => useConstructor
                                    ? m.ConvertFromKeyExpressionViaConstructor
                                    : m.ConvertFromKeyExpression ?? m.ConvertFromKeyExpressionViaConstructor,
-         complexValueObject: m => throw new NotSupportedException($"Complex value objects are not supported. Type: '{typeof(T).FullName}'."));
+         complexValueObject: m => throw new NotSupportedException($"Complex value objects are not supported. Type: '{m.Type.FullName}'."),
+         adHocUnion: m => throw new NotSupportedException($"Ad hoc unions are not supported. Type: '{m.Type.FullName}'."));
 
       return (Expression<Func<TKey, T>>)factoryMethod;
    }

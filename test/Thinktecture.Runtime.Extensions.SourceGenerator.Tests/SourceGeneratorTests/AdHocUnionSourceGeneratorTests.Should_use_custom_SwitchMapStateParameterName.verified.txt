@@ -7,8 +7,20 @@ namespace Thinktecture.Tests
    sealed partial class TestUnion :
       global::System.IEquatable<global::Thinktecture.Tests.TestUnion>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestUnion, global::Thinktecture.Tests.TestUnion, bool>,
-      global::Thinktecture.IDisallowDefaultValue
+      global::Thinktecture.IDisallowDefaultValue,
+      global::Thinktecture.Internal.IMetadataOwner
    {
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.AdHocUnion
+      {
+         Type = typeof(global::Thinktecture.Tests.TestUnion),
+         MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
+                       {
+                           typeof(int),
+                           typeof(string)
+                       }
+                       .AsReadOnly()
+      };
+
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
 
       private readonly int _valueIndex;

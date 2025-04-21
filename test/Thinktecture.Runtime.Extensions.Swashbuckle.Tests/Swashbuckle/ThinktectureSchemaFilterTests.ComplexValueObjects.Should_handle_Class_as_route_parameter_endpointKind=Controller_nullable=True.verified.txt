@@ -1,0 +1,57 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test/{value}": {
+      "get": {
+        "tags": [
+          "Tests"
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoundaryWithFactories"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BoundaryWithFactories": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        }
+      }
+    }
+  }
+}

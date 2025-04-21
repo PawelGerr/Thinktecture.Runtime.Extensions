@@ -1,0 +1,85 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestUnion_class_string_int"
+                      }
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "value": {
+                  "style": "form"
+                }
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TestUnion_class_string_int"
+                      }
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "value": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestUnion_class_string_int"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TestUnion_class_string_int": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "format": "int32"
+          }
+        ]
+      }
+    }
+  }
+}
