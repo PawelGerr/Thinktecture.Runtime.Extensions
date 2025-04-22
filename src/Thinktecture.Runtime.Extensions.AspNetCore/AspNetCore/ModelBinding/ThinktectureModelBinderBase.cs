@@ -127,7 +127,7 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
    {
       if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
       {
-         bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+         bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
          return;
       }
 

@@ -78,7 +78,7 @@ public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : Js
       }
 
       if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
-         throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+         throw new JsonException($"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       var validationError = T.Validate(key, null, out var obj);
 

@@ -68,7 +68,7 @@ public class ThinktectureStructMessagePackFormatter<T, TKey, TValidationError> :
       }
 
       if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
-         throw new MessagePackSerializationException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+         throw new MessagePackSerializationException($"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       return Deserialize(key);
    }
