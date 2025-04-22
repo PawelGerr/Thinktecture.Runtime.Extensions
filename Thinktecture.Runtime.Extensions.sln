@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F2
 		samples\Directory.Build.props = samples\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Samples", "samples\Thinktecture.Runtime.Extensions.Samples\Thinktecture.Runtime.Extensions.Samples.csproj", "{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basic.Samples", "samples\Basic.Samples\Basic.Samples.csproj", "{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE711F89-41F2-4519-B20D-BA1FAB0EB364}"
 ProjectSection(SolutionItems) = preProject
@@ -40,7 +40,7 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests", "test\Thinktecture.Runtime.Extensions.Tests\Thinktecture.Runtime.Extensions.Tests.csproj", "{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples", "samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples\Thinktecture.Runtime.Extensions.EntityFrameworkCore.Samples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore.Samples", "samples\EntityFrameworkCore.Samples\EntityFrameworkCore.Samples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.csproj", "{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}"
 EndProject
@@ -48,13 +48,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests", "test\Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests\Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests.csproj", "{47890FAA-7CDF-491C-A1B8-9B141EABECF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.AspNetCore.Samples", "samples\Thinktecture.Runtime.Extensions.AspNetCore.Samples\Thinktecture.Runtime.Extensions.AspNetCore.Samples.csproj", "{9F04BA7C-2D9C-4ED9-A405-BEDAB7E8954B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Samples", "samples\AspNetCore.Samples\AspNetCore.Samples.csproj", "{9F04BA7C-2D9C-4ED9-A405-BEDAB7E8954B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Json", "src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj", "{9B285235-A335-4DC1-9E22-4D4D548A35AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Json.Tests", "test\Thinktecture.Runtime.Extensions.Json.Tests\Thinktecture.Runtime.Extensions.Json.Tests.csproj", "{4172E9EC-B1E8-461E-8AE7-084870556B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.AspNetCore.Samples", "samples\Newtonsoft.Json.AspNetCore.Samples\Thinktecture.Runtime.Extensions.Newtonsoft.Json.AspNetCore.Samples.csproj", "{7268D37D-7D30-4C1E-8B73-3950B1E682B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newtonsoft.Samples", "samples\Newtonsoft.Json.AspNetCore.Samples\Newtonsoft.Samples.csproj", "{7268D37D-7D30-4C1E-8B73-3950B1E682B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.MessagePack", "src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj", "{882C9DD1-23FE-4913-9961-E87A0053AA50}"
 EndProject
@@ -72,9 +72,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests.csproj", "{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.MessagePack.Samples", "samples\Thinktecture.Runtime.Extensions.MessagePack.Samples\Thinktecture.Runtime.Extensions.MessagePack.Samples.csproj", "{B1E357B7-7F91-4558-85BA-F6784C33FF97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagePack.Samples", "samples\MessagePack.Samples\MessagePack.Samples.csproj", "{B1E357B7-7F91-4558-85BA-F6784C33FF97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Benchmarking", "samples\Thinktecture.Runtime.Extensions.Benchmarking\Thinktecture.Runtime.Extensions.Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking", "samples\Benchmarking\Benchmarking.csproj", "{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore7", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore7\Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj", "{9A80C790-3BE2-4FA7-ACC1-574577E759EF}"
 EndProject

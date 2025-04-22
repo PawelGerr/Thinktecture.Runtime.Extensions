@@ -1,0 +1,648 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Demo API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/category/{category}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductCategory"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryBoolean<>f__AnonymousType0"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/group/{group}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "group",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductGroupBoolean<>f__AnonymousType0"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productType/{productType}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "productType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productType": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "productType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductType"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductType"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productTypeWithFilter": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "productType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/boundaryWithFactories/{boundary}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "boundary",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoundaryWithFactories"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productTypeWrapper": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductTypeWrapper"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductTypeWrapper"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productName/{name}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ProductName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductName"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/productName": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductName"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductName"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/otherProductName/{name}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OtherProductName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtherProductName"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/otherProductName": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtherProductName"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtherProductName"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/boundary": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Boundary"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Boundary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/enddate/{date}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OpenEndDate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenEndDate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/enddate": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenEndDate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenEndDate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/textOrNumber/{textOrNumber}": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "textOrNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextOrNumberSerializable"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notification/channels": {
+      "get": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/notification/channels/{type}": {
+      "post": {
+        "tags": [
+          "GetDocument.Insider"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/NotificationChannelTypeDto"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Boundary": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        }
+      },
+      "BoundaryWithFactories": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        }
+      },
+      "NotificationChannelTypeDto": {
+        "enum": [
+          "email",
+          "sms"
+        ],
+        "type": "string",
+        "x-enum-varnames": [
+          "email",
+          "sms"
+        ]
+      },
+      "OpenEndDate": {
+        "type": "string",
+        "format": "date"
+      },
+      "OtherProductName": {
+        "type": "string"
+      },
+      "ProductCategory": {
+        "enum": [
+          "Fruits",
+          "Dairy"
+        ],
+        "type": "string",
+        "x-enum-varnames": [
+          "Fruits",
+          "Dairy"
+        ]
+      },
+      "ProductCategoryBoolean<>f__AnonymousType0": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ProductCategory"
+          },
+          "isValid": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductGroup": {
+        "enum": [
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enum-varnames": [
+          "Apple",
+          "Orange"
+        ]
+      },
+      "ProductGroupBoolean<>f__AnonymousType0": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/ProductGroup"
+          },
+          "isValid": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductName": {
+        "type": "string"
+      },
+      "ProductType": {
+        "enum": [
+          "Groceries",
+          "Housewares"
+        ],
+        "type": "string",
+        "x-enum-varnames": [
+          "Groceries",
+          "Housewares"
+        ]
+      },
+      "ProductTypeWrapper": {
+        "type": "object",
+        "properties": {
+          "productType": {
+            "$ref": "#/components/schemas/ProductType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextOrNumberSerializable": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "format": "int32"
+          }
+        ]
+      }
+    }
+  }
+}
