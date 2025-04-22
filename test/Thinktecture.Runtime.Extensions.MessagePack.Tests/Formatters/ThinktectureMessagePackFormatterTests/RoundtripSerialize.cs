@@ -12,15 +12,15 @@ using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests;
 
-public partial class Serialize
+public partial class RoundTripSerialize
 {
-   private static readonly MethodInfo _serializeRoundTripMethodInfo = typeof(Serialize).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+   private static readonly MethodInfo _serializeRoundTripMethodInfo = typeof(RoundTripSerialize).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
                                                                                        .SingleOrDefault(m => m.Name == nameof(RoundTrip) && m.GetParameters().Length == 1)
                                                                       ?? throw new Exception($"Method '{nameof(RoundTrip)}' not found.");
 
    private readonly MessagePackSerializerOptions _options;
 
-   public Serialize()
+   public RoundTripSerialize()
    {
       var resolver = CompositeResolver.Create(ThinktectureMessageFormatterResolver.Instance, StandardResolver.Instance);
       _options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
