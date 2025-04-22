@@ -97,7 +97,9 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
             return;
          }
 
-         var validationErrorType = metadata?.ValidationErrorType ?? type.GetCustomAttribute<ValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
+         var validationErrorType = metadata?.ValidationErrorType
+                                   ?? type.GetCustomAttribute<ValidationErrorAttribute>()?.Type
+                                   ?? typeof(ValidationError);
 
          var formatterTypeDefinition = type.IsClass
                                           ? typeof(ThinktectureMessagePackFormatter<,,>)

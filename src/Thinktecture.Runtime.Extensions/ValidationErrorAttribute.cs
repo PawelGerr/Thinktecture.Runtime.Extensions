@@ -1,6 +1,15 @@
 namespace Thinktecture;
 
 /// <summary>
+/// Defines custom type to be used as a validation error.
+/// </summary>
+/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
+[Obsolete("Use 'ValidationErrorAttribute<TValidationError>' instead.")]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+public sealed class ValueObjectValidationErrorAttribute<TValidationError> : ValidationErrorAttribute<TValidationError>
+   where TValidationError : class, IValidationError<TValidationError>;
+
+/// <summary>
 /// Defines a custom type to be used as a validation error.
 /// </summary>
 public abstract class ValidationErrorAttribute : Attribute
@@ -24,7 +33,7 @@ public abstract class ValidationErrorAttribute : Attribute
 /// </summary>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
-public sealed class ValidationErrorAttribute<TValidationError> : ValidationErrorAttribute
+public class ValidationErrorAttribute<TValidationError> : ValidationErrorAttribute
    where TValidationError : class, IValidationError<TValidationError>
 {
    /// <summary>

@@ -7,7 +7,7 @@ namespace Thinktecture;
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 [Obsolete("Use 'ISmartEnum<TKey>' instead.")]
-public interface IEnum<TKey> : IKeyedObject<TKey>
+public interface IEnum<TKey> : ISmartEnum<TKey>
    where TKey : notnull;
 
 /// <summary>
@@ -20,7 +20,7 @@ public interface IEnum<TKey> : IKeyedObject<TKey>
 /// Don't implement this interface directly. It will be implemented by a source generator.
 /// </remarks>
 [Obsolete("Use 'ISmartEnum<TKey, T, TValidationError>' instead.")]
-public interface IEnum<TKey, T, out TValidationError> : ISmartEnum<TKey>, IObjectFactory<T, TKey, TValidationError>
+public interface IEnum<TKey, T, out TValidationError> : ISmartEnum<TKey, T, TValidationError>
    where T : ISmartEnum<TKey>
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>;

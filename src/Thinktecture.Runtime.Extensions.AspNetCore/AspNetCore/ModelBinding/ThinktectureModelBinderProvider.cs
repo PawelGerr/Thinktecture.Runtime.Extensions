@@ -36,7 +36,6 @@ public sealed class ValueObjectModelBinderProvider : ThinktectureModelBinderProv
 /// <summary>
 /// Provider for creation of model binders for Smart Enums and for Value Objects with a key member.
 /// </summary>
-[ThinktectureRuntimeExtensionInternal]
 public class ThinktectureModelBinderProvider : IModelBinderProvider
 {
    private readonly bool _skipBindingFromBody;

@@ -13,9 +13,7 @@ namespace Thinktecture;
 public class ValueObjectTypeConverter<T, TKey, TValidationError> : ThinktectureTypeConverter<T, TKey, TValidationError>
    where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
    where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>
-{
-}
+   where TValidationError : class, IValidationError<TValidationError>;
 
 /// <summary>
 /// Type converter to convert corresponding types to <typeparamref name="TKey"/> and vice versa.

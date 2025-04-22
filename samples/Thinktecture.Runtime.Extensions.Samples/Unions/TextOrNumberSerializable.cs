@@ -10,7 +10,7 @@ namespace Thinktecture.Unions;
                     SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[JsonConverter(typeof(ThinktectureJsonConverterFactory<TextOrNumberSerializable, string, ValidationError>))]
+[JsonConverter(typeof(ThinktectureJsonConverterFactory))] // Optional, ThinktectureJsonConverterFactory can be registered with JsonSerializerOptions
 public partial class TextOrNumberSerializable :
    IObjectFactory<TextOrNumberSerializable, string, ValidationError>, // For deserialization
    IConvertible<string>,                                        // For serialization

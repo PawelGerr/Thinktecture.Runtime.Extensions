@@ -137,7 +137,18 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       if (type is null)
          return false;
 
-      return !_skipObjectsWithJsonConverterAttribute || type.GetCustomAttribute<JsonConverterAttribute>() is null;
+      if (!_skipObjectsWithJsonConverterAttribute)
+         return true;
+
+      var jsonConverterAttribute = type.GetCustomAttribute<JsonConverterAttribute>();
+
+      if (jsonConverterAttribute is null)
+         return true;
+
+      if (jsonConverterAttribute.ConverterType == typeof(ThinktectureJsonConverterFactory))
+         return true;
+
+      return false;
    }
 
    private static Type? GetObjectType(Type typeToConvert)
@@ -145,7 +156,7 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       // typeToConvert could be derived type (like nested Smart Enum)
       var metadata = MetadataLookup.Find(typeToConvert);
 
-      if (metadata is not null)
+      if (metadata is Metadata.Keyed)
          return metadata.Type;
 
       if (typeToConvert.GetCustomAttributes<ObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson)))

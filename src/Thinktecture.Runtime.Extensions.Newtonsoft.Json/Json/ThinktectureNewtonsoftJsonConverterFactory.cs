@@ -14,17 +14,69 @@ public sealed class ValueObjectNewtonsoftJsonConverter : ThinktectureNewtonsoftJ
 /// <summary>
 /// Non-generic converter for Value Objects.
 /// </summary>
-[ThinktectureRuntimeExtensionInternal]
 public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
 {
    private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new();
 
+   private readonly bool _skipObjectsWithJsonConverterAttribute;
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ThinktectureNewtonsoftJsonConverterFactory"/>.
+   /// </summary>
+   public ThinktectureNewtonsoftJsonConverterFactory()
+      : this(true)
+   {
+   }
+
+   /// <summary>
+   /// Initializes new instance of <see cref="ThinktectureNewtonsoftJsonConverterFactory"/>.
+   /// </summary>
+   /// <param name="skipObjectsWithJsonConverterAttribute">
+   /// Indication whether to skip value objects with <see cref="JsonConverterAttribute"/>.
+   /// </param>
+   public ThinktectureNewtonsoftJsonConverterFactory(
+      bool skipObjectsWithJsonConverterAttribute)
+   {
+      _skipObjectsWithJsonConverterAttribute = skipObjectsWithJsonConverterAttribute;
+   }
+
    /// <inheritdoc />
    public override bool CanConvert(Type objectType)
    {
-      return _cache.ContainsKey(objectType)
-             || MetadataLookup.Find(objectType) is not null
-             || objectType.GetCustomAttributes<ObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson));
+      if (_cache.ContainsKey(objectType))
+         return true;
+
+      var type = GetObjectType(objectType);
+
+      if (type is null)
+         return false;
+
+      if (!_skipObjectsWithJsonConverterAttribute)
+         return true;
+
+      var jsonConverterAttribute = type.GetCustomAttribute<JsonConverterAttribute>();
+
+      if (jsonConverterAttribute is null)
+         return true;
+
+      if (jsonConverterAttribute.ConverterType == typeof(ThinktectureNewtonsoftJsonConverterFactory))
+         return true;
+
+      return false;
+   }
+
+   private static Type? GetObjectType(Type objectType)
+   {
+      // objectType could be derived type (like nested Smart Enum)
+      var metadata = MetadataLookup.Find(objectType);
+
+      if (metadata is Metadata.Keyed)
+         return metadata.Type;
+
+      if (objectType.GetCustomAttributes<ObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson)))
+         return objectType;
+
+      return null;
    }
 
    /// <inheritdoc />

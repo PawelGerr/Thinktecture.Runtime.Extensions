@@ -138,7 +138,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "MemberEqualityComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: "MemberEqualityComparerAttribute" or "ValueObjectMemberEqualityComparerAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsMemberIgnoreAttribute(this ITypeSymbol? attributeType)
@@ -146,7 +146,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "IgnoreMemberAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: "IgnoreMemberAttribute" or "ValueObjectMemberIgnoreAttribute", ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsUseDelegateFromConstructorAttribute(this ITypeSymbol? attributeType)
@@ -185,12 +185,12 @@ public static class TypeSymbolExtensions
 
    public static bool IsObjectFactoryAttribute(this INamedTypeSymbol type)
    {
-      return type is { Name: "ObjectFactoryAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is { Name: "ObjectFactoryAttribute" or "ValueObjectFactoryAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsValidationErrorAttribute(this INamedTypeSymbol type)
    {
-      return type is { Name: "ValidationErrorAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is { Name: "ValidationErrorAttribute" or "ValueObjectValidationErrorAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsKeyMemberComparerAttribute(this INamedTypeSymbol? attributeType)
@@ -198,7 +198,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "KeyMemberComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: "KeyMemberComparerAttribute" or "ValueObjectKeyMemberComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsKeyMemberEqualityComparerAttribute(this INamedTypeSymbol? attributeType)
@@ -206,7 +206,12 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "KeyMemberEqualityComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is
+      {
+         Name: "KeyMemberEqualityComparerAttribute" or "ValueObjectKeyMemberEqualityComparerAttribute",
+         TypeArguments.Length: 2,
+         ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsStructLayoutAttribute(this ITypeSymbol type)

@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.TestAdHocUnions;
 
 [Union<string, int>(T1Name = "Text", T2Name = "Number")]
 [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[JsonConverter(typeof(ThinktectureJsonConverterFactory<TextOrNumberSerializable, string, ValidationError>))]
+[JsonConverter(typeof(ThinktectureJsonConverterFactory))]
 public partial class TextOrNumberSerializable :
    IObjectFactory<TextOrNumberSerializable, string, ValidationError>,
    IConvertible<string>,

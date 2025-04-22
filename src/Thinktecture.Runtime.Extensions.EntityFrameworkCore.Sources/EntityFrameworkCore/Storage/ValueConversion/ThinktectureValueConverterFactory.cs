@@ -7,7 +7,7 @@ namespace Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 /// <summary>
 /// Value converter for Smart Enums and for Value Objects with a key member.
 /// </summary>
-[Obsolete("Use 'ThinktectureValueConverterFactory' instead.")]
+[Obsolete("Use 'AddThinktectureValueConverters()' or 'UseThinktectureValueConverters()' with corresponding builder instead.")]
 public sealed class ValueObjectValueConverterFactory : ThinktectureValueConverterFactory;
 
 /// <summary>
