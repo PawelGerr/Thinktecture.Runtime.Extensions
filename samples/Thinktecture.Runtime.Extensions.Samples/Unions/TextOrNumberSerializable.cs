@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Thinktecture.Text.Json.Serialization;
 
@@ -11,19 +10,16 @@ namespace Thinktecture.Unions;
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 [JsonConverter(typeof(ThinktectureJsonConverterFactory))] // Optional, ThinktectureJsonConverterFactory can be registered with JsonSerializerOptions
-public partial class TextOrNumberSerializable :
-   IObjectFactory<TextOrNumberSerializable, string, ValidationError>, // For deserialization
-   IConvertible<string>,                                        // For serialization
-   IParsable<TextOrNumberSerializable> // For Minimal API and ASP.NET Core model binding validation
+public partial class TextOrNumberSerializable
 {
-   // For serialization
+   // For serialization (implementation of IConvertible<string>)
    public string ToValue()
    {
       return Switch(text: t => $"Text|{t}",
                     number: n => $"Number|{n}");
    }
 
-   // For deserialization
+   // For deserialization (implementation of IObjectFactory<TextOrNumberSerializable, string, ValidationError>)
    public static ValidationError? Validate(string? value, IFormatProvider? provider, out TextOrNumberSerializable? item)
    {
       if (String.IsNullOrWhiteSpace(value))
@@ -52,30 +48,5 @@ public partial class TextOrNumberSerializable :
 
       item = null;
       return new ValidationError("Invalid format");
-   }
-
-   public static TextOrNumberSerializable Parse(string s, IFormatProvider? provider)
-   {
-      var validationError = Validate(s, provider, out var result);
-
-      if (validationError is null)
-         return result!;
-
-      throw new FormatException(validationError.Message);
-   }
-
-   public static bool TryParse(
-      [NotNullWhen(true)] string? s,
-      IFormatProvider? provider,
-      [MaybeNullWhen(false)] out TextOrNumberSerializable result)
-   {
-      if (s is null)
-      {
-         result = null;
-         return false;
-      }
-
-      var validationError = Validate(s, provider, out result!);
-      return validationError is null;
    }
 }

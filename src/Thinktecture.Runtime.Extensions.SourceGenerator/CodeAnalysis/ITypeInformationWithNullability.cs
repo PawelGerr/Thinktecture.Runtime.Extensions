@@ -1,8 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface ITypeInformationWithNullability : ITypeFullyQualified
+public interface ITypeInformationWithNullability : ITypeFullyQualified, ITypeKindInformation
 {
-   bool IsReferenceType { get; }
    NullableAnnotation NullableAnnotation { get; }
    bool IsNullableStruct { get; }
 }

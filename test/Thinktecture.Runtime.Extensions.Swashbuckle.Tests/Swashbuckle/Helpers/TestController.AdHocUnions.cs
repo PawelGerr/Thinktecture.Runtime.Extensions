@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
-using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 

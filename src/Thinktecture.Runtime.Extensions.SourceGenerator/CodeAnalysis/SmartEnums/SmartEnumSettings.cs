@@ -14,7 +14,6 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
    public ConversionOperatorsGeneration ConversionFromKeyMemberType => _settings.ConversionFromKeyMemberType;
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
    public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
-   public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public SmartEnumSettings(AllEnumSettings settings, AttributeInfo attributeInfo)
    {
@@ -37,8 +36,7 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
              && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
-             && SwitchMapStateParameterName == other.SwitchMapStateParameterName
-             && DesiredFactories.SequenceEqual(other.DesiredFactories);
+             && SwitchMapStateParameterName == other.SwitchMapStateParameterName;
    }
 
    public override int GetHashCode()
@@ -54,7 +52,6 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
-         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }

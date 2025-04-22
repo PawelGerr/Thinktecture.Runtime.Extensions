@@ -45,7 +45,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.ValueObject.KEYED_NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.ValueObject.KEYED_NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsComplexValueObjectAttribute(this ITypeSymbol? attributeType)
@@ -53,7 +53,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.ValueObject.COMPLEX_NAME, ContainingNamespace: { Name: Constants.Attributes.ValueObject.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.ValueObject.COMPLEX_NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsSmartEnumAttribute(this ITypeSymbol? attributeType)
@@ -61,7 +61,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.SmartEnum.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsAdHocUnionAttribute(this ITypeSymbol? attributeType)
@@ -72,10 +72,10 @@ public static class TypeSymbolExtensions
           || namedType.Arity == 0)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsUnionAttribute(this ITypeSymbol? attributeType)
+   public static bool IsRegularUnionAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null
           || attributeType.TypeKind == TypeKind.Error
@@ -83,16 +83,31 @@ public static class TypeSymbolExtensions
           || namedType.Arity != 0)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsAnyUnionAttribute(this ITypeSymbol? attributeType)
    {
-      if (attributeType is null
-          || attributeType.TypeKind == TypeKind.Error)
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.Union.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsThinktectureComponentAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is
+      {
+         Name: Constants.Attributes.SmartEnum.NAME
+         or Constants.Attributes.ValueObject.KEYED_NAME
+         or Constants.Attributes.ValueObject.COMPLEX_NAME
+         or Constants.Attributes.Union.NAME, // both regular and ad-hoc
+         ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+      };
+
    }
 
    public static bool IsMessagePackKeyAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
@@ -154,7 +169,7 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.UseDelegateFromConstructorAttribute.NAME, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is { Name: Constants.Attributes.UseDelegateFromConstructor.NAME, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsEnum(
@@ -185,7 +200,7 @@ public static class TypeSymbolExtensions
 
    public static bool IsObjectFactoryAttribute(this INamedTypeSymbol type)
    {
-      return type is { Name: "ObjectFactoryAttribute" or "ValueObjectFactoryAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is { Name: Constants.Attributes.ObjectFactory.NAME or Constants.Attributes.ObjectFactory.NAME_OBSOLETE, TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsValidationErrorAttribute(this INamedTypeSymbol type)

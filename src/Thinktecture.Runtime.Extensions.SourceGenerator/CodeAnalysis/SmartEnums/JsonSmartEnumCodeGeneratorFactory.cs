@@ -16,7 +16,7 @@ public sealed class JsonSmartEnumCodeGeneratorFactory : IKeyedSerializerCodeGene
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
-             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson)));
+             && (state.KeyMember is not null || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson)));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)

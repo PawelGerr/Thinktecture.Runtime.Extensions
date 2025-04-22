@@ -15,6 +15,8 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
    public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;
 
+   public bool IsRecord => false;
+
    public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
    {
       _typedMemberState = typedMemberState;

@@ -4,8 +4,9 @@ using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class InterfaceCodeGeneratorFactory<T> : ICodeGeneratorFactory<T>
-   where T : ITypeInformationProvider
+public class InterfaceCodeGeneratorFactory<T, TType> : ICodeGeneratorFactory<T>
+   where T : ITypeInformationProvider<TType>
+   where TType : ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {
    private readonly IInterfaceCodeGenerator<T> _interfaceCodeGenerator;
 
@@ -18,7 +19,7 @@ public class InterfaceCodeGeneratorFactory<T> : ICodeGeneratorFactory<T>
 
    public CodeGeneratorBase Create(T state, StringBuilder stringBuilder)
    {
-      return new InterfaceCodeGenerator<T>(_interfaceCodeGenerator, state, stringBuilder);
+      return new InterfaceCodeGenerator<T, TType>(_interfaceCodeGenerator, state, stringBuilder);
    }
 
    public bool Equals(ICodeGeneratorFactory<T> other)
@@ -29,16 +30,16 @@ public class InterfaceCodeGeneratorFactory<T> : ICodeGeneratorFactory<T>
 
 public static class InterfaceCodeGeneratorFactory
 {
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValueObject = new InterfaceCodeGeneratorFactory<ParsableGeneratorState>(ParsableCodeGenerator.ForValueObject);
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState>(ParsableCodeGenerator.ForEnum);
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValidatableEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState>(ParsableCodeGenerator.ForValidatableEnum);
-   private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _comparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState>(ComparableCodeGenerator.Default);
+   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValueObject = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForValueObject);
+   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForEnum);
+   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValidatableEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForValidatableEnum);
+   private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _comparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(ComparableCodeGenerator.Default);
 
-   public static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> Formattable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState>(FormattableCodeGenerator.Instance);
+   public static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> Formattable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(FormattableCodeGenerator.Instance);
 
    public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Comparable(string? comparerAccessor)
    {
-      return String.IsNullOrWhiteSpace(comparerAccessor) ? _comparable : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState>(new ComparableCodeGenerator(comparerAccessor));
+      return String.IsNullOrWhiteSpace(comparerAccessor) ? _comparable : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
    }
 
    public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(
@@ -57,7 +58,7 @@ public static class InterfaceCodeGeneratorFactory
    {
       if (EqualityComparisonOperatorsCodeGenerator.TryGet(operatorsGeneration, equalityComparer, out var generator))
       {
-         generatorFactory = new InterfaceCodeGeneratorFactory<EqualityComparisonOperatorsGeneratorState>(generator);
+         generatorFactory = new InterfaceCodeGeneratorFactory<EqualityComparisonOperatorsGeneratorState, ITypeInformation>(generator);
          return true;
       }
 
@@ -67,6 +68,6 @@ public static class InterfaceCodeGeneratorFactory
 
    public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Create(IInterfaceCodeGenerator codeGenerator)
    {
-      return new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState>(codeGenerator);
+      return new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(codeGenerator);
    }
 }

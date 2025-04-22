@@ -37,7 +37,7 @@ namespace ").Append(_type.Namespace).Append(@";
 
       _sb.Append(@"
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
-partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
    public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");

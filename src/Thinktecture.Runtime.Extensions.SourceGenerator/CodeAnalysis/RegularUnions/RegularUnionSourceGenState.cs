@@ -1,6 +1,12 @@
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionSourceGenState : IEquatable<RegularUnionSourceGenState>, ITypeFullyQualified, INamespaceAndName, IHashCodeComputable
+public class RegularUnionSourceGenState
+   : IEquatable<RegularUnionSourceGenState>,
+     ITypeFullyQualified,
+     ITypeKindInformation,
+     IHasGenerics,
+     INamespaceAndName,
+     IHashCodeComputable
 {
    public string? Namespace { get; }
    public string Name { get; }
@@ -9,10 +15,14 @@ public class RegularUnionSourceGenState : IEquatable<RegularUnionSourceGenState>
    public bool IsRecord { get; }
    public bool HasNonDefaultConstructor { get; }
 
-   public IReadOnlyList<string> GenericsFullyQualified { get; }
+   public bool IsReferenceType => true;
+
+   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public IReadOnlyList<RegularUnionTypeMemberState> TypeMembers { get; }
    public RegularUnionSettings Settings { get; }
+
+   public int NumberOfGenerics => GenericParameters.Count;
 
    public RegularUnionSourceGenState(
       INamedTypeSymbol type,
@@ -25,9 +35,7 @@ public class RegularUnionSourceGenState : IEquatable<RegularUnionSourceGenState>
       TypeDefinitionFullyQualified = type.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
       HasNonDefaultConstructor = !type.Constructors.IsDefaultOrEmpty && type.Constructors.Any(c => !c.IsImplicitlyDeclared);
       ContainingTypes = type.GetContainingTypes();
-      GenericsFullyQualified = type.Arity == 0
-                                  ? []
-                                  : type.TypeArguments.Select(t => t.ToFullyQualifiedDisplayString()).ToList();
+      GenericParameters = type.GetGenericTypeParameters();
 
       IsRecord = type.IsRecord;
       TypeMembers = typeMembers;
@@ -45,7 +53,7 @@ public class RegularUnionSourceGenState : IEquatable<RegularUnionSourceGenState>
              && IsRecord == other.IsRecord
              && HasNonDefaultConstructor == other.HasNonDefaultConstructor
              && Settings.Equals(other.Settings)
-             && GenericsFullyQualified.SequenceEqual(other.GenericsFullyQualified)
+             && GenericParameters.SequenceEqual(other.GenericParameters)
              && ContainingTypes.SequenceEqual(other.ContainingTypes)
              && TypeMembers.SequenceEqual(other.TypeMembers);
    }
@@ -58,7 +66,7 @@ public class RegularUnionSourceGenState : IEquatable<RegularUnionSourceGenState>
          hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
          hashCode = (hashCode * 397) ^ HasNonDefaultConstructor.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
-         hashCode = (hashCode * 397) ^ GenericsFullyQualified.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
          hashCode = (hashCode * 397) ^ TypeMembers.ComputeHashCode();
 

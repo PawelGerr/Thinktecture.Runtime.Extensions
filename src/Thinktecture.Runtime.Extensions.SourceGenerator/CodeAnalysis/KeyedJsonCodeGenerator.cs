@@ -19,7 +19,7 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
    public override void Generate(CancellationToken cancellationToken)
    {
       var customFactory = _state.AttributeInfo
-                                .DesiredFactories
+                                .ObjectFactories
                                 .FirstOrDefault(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
       var isString = customFactory is null

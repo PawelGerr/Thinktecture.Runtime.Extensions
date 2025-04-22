@@ -63,7 +63,7 @@ namespace ").Append(_type.Namespace).Append(@";
 
       _sb.Append(@"
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@">
    {

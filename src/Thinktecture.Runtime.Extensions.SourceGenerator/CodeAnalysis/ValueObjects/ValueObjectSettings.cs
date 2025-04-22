@@ -22,7 +22,6 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
    public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
    public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
    public SerializationFrameworks SerializationFrameworks => _allSettings.SerializationFrameworks;
-   public ImmutableArray<DesiredFactory> DesiredFactories => _attributeInfo.DesiredFactories;
 
    public ValueObjectSettings(
       AllValueObjectSettings allSettings,
@@ -50,8 +49,7 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
              && DefaultStringComparison == other.DefaultStringComparison
              && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
-             && SerializationFrameworks == other.SerializationFrameworks
-             && DesiredFactories.SequenceEqual(other.DesiredFactories);
+             && SerializationFrameworks == other.SerializationFrameworks;
    }
 
    public override bool Equals(object? obj)
@@ -80,7 +78,6 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
          hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
-         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
 
          return hashCode;
       }

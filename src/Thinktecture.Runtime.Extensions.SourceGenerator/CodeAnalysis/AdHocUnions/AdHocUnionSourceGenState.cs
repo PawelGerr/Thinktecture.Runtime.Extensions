@@ -1,6 +1,8 @@
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHocUnionSourceGenState>
+public sealed class AdHocUnionSourceGenState
+   : ITypeInformation,
+     IEquatable<AdHocUnionSourceGenState>
 {
    public string? Namespace { get; }
    public string Name { get; }
@@ -13,10 +15,12 @@ public sealed class AdHocUnionSourceGenState : ITypeInformation, IEquatable<AdHo
    public bool IsNullableStruct { get; }
    public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
+
+   public bool IsRecord => false;
    public bool DisallowsDefaultValue => true;
+   public int NumberOfGenerics => 0;
 
    public IReadOnlyList<AdHocUnionMemberTypeState> MemberTypes { get; }
-   public IReadOnlyList<string> GenericsFullyQualified => [];
    public AdHocUnionSettings Settings { get; }
 
    public AdHocUnionSourceGenState(

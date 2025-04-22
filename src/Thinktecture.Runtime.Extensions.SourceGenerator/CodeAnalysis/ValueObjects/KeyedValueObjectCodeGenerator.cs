@@ -62,7 +62,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
       global::Thinktecture.IKeyedObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
       global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
       global::Thinktecture.Internal.IMetadataOwner");
@@ -77,21 +77,6 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@",
       global::Thinktecture.IDisallowDefaultValue");
-      }
-
-      foreach (var desiredFactory in _state.Settings.DesiredFactories)
-      {
-         if (_state is { Settings.SkipFactoryMethods: false } && desiredFactory.Equals(_state.KeyMember))
-            continue;
-
-         _sb.Append(@",
-      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
-
-         if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
-         {
-            _sb.Append(@",
-      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">");
-         }
       }
 
       _sb.Append(@"

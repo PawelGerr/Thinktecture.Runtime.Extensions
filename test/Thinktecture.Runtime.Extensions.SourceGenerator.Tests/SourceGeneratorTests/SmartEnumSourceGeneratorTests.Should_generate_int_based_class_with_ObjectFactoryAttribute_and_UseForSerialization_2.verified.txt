@@ -4,38 +4,37 @@
 namespace Thinktecture.Tests;
 
 partial class TestEnum :
-   global::System.IParsable<global::Thinktecture.Tests.TestEnum>
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestEnum, global::Thinktecture.Tests.TestEnum, bool>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
    {
-      return T.Validate(key, provider, out result);
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.Key < right.Key;
    }
 
-   /// <inheritdoc />
-   public static global::Thinktecture.Tests.TestEnum Parse(string s, global::System.IFormatProvider? provider)
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out var result);
-
-      if(validationError is null)
-         return result!;
-
-      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.Key <= right.Key;
    }
 
-   /// <inheritdoc />
-   public static bool TryParse(
-      string? s,
-      global::System.IFormatProvider? provider,
-      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum result)
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
    {
-      if(s is null)
-      {
-         result = default;
-         return false;
-      }
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.Key > right.Key;
+   }
 
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum>(s, provider, out result!);
-      return validationError is null;
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.TestEnum left, global::Thinktecture.Tests.TestEnum right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      return left.Key >= right.Key;
    }
 }

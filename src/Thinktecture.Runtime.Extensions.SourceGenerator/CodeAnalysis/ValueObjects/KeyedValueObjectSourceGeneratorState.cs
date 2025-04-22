@@ -1,19 +1,24 @@
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class KeyedValueObjectSourceGeneratorState : ITypeInformation, IEquatable<KeyedValueObjectSourceGeneratorState>
+public sealed class KeyedValueObjectSourceGeneratorState
+   : ITypeInformation,
+     IParsableTypeInformation,
+     IEquatable<KeyedValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
    public bool DisallowsDefaultValue => !IsReferenceType && (!Settings.AllowDefaultStructs || KeyMember.IsReferenceType);
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public IReadOnlyList<string> GenericsFullyQualified => [];
+   public int NumberOfGenerics => 0;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
+
+   public bool IsRecord => false;
 
    public string? FactoryValidationReturnType { get; }
 

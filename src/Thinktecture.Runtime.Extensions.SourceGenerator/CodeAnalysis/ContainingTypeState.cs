@@ -1,6 +1,9 @@
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class ContainingTypeState : IEquatable<ContainingTypeState>, IHashCodeComputable
+public sealed class ContainingTypeState
+   : IEquatable<ContainingTypeState>,
+     IHasGenerics,
+     IHashCodeComputable
 {
    public string Name { get; }
    public bool IsReferenceType { get; }

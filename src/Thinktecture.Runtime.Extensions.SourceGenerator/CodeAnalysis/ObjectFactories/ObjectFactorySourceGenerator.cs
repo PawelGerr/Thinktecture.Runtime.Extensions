@@ -1,0 +1,194 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace Thinktecture.CodeAnalysis.ObjectFactories;
+
+[Generator]
+public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+{
+   public ObjectFactorySourceGenerator()
+      : base(5_000)
+   {
+   }
+
+   public void Initialize(IncrementalGeneratorInitializationContext context)
+   {
+      var options = GetGeneratorOptions(context);
+
+      SetupLogger(context, options);
+
+      InitializeObjectFactorySourceGen(context, options);
+   }
+
+   private void InitializeObjectFactorySourceGen(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      InitializeObjectFactorySourceGen(context, options, Constants.Attributes.ObjectFactory.FULL_NAME);
+      InitializeObjectFactorySourceGen(context, options, Constants.Attributes.ObjectFactory.FULL_NAME_OBSOLETE);
+   }
+
+   private void InitializeObjectFactorySourceGen(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> options,
+      string fullyQualifiedMetadataName)
+   {
+      var typeOrError = context.SyntaxProvider
+                               .ForAttributeWithMetadataName(fullyQualifiedMetadataName,
+                                                             IsCandidate,
+                                                             GetSourceGenContextOrNull)
+                               .SelectMany(static (state, _) => state.HasValue
+                                                                   ? [state.Value]
+                                                                   : ImmutableArray<SourceGenContext>.Empty);
+
+      var validStates = typeOrError.SelectMany(static (state, _) => state.ValidState is not null
+                                                                       ? [state.ValidState]
+                                                                       : ImmutableArray<ObjectFactorySourceGeneratorState>.Empty);
+
+      InitializeFactoryGeneration(context, validStates, options);
+      InitializeParsableCodeGenerator(context, validStates, options);
+
+      InitializeErrorReporting(context, typeOrError);
+      InitializeExceptionReporting(context, typeOrError);
+   }
+
+   private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   {
+      try
+      {
+         return syntaxNode switch
+         {
+            ClassDeclarationSyntax => true,
+            StructDeclarationSyntax => true,
+            _ => false
+         };
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during checking whether a syntax node is a candidate for an ObjectFactory", exception: ex);
+         return false;
+      }
+   }
+
+   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   {
+      var tds = (TypeDeclarationSyntax)context.TargetNode;
+
+      try
+      {
+         var type = (INamedTypeSymbol)context.TargetSymbol;
+
+         if (type.TypeKind == TypeKind.Error)
+         {
+            Logger.LogDebug("Type from semantic model is erroneous", tds);
+            return null;
+         }
+
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
+         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo, out var thinktectureComponentAttribute);
+
+         if (errorMessage is not null)
+         {
+            Logger.LogDebug(errorMessage, tds);
+            return null;
+         }
+
+         if (attributeInfo.ObjectFactories.IsDefaultOrEmpty)
+            return null;
+
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+
+         if (factory is null)
+            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of an ObjectFactory", tds));
+
+         var state = new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute);
+
+         Logger.LogDebug("The type declaration is a valid type of ObjectFactory", null, state);
+
+         return new SourceGenContext(state);
+      }
+      catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+      {
+         throw;
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of an ObjectFactory", tds, ex);
+
+         return new SourceGenContext(new SourceGenException(ex, tds));
+      }
+   }
+
+   private void InitializeFactoryGeneration(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ObjectFactorySourceGeneratorState> validStates,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var types = validStates
+                  .Collect()
+                  .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                   ? ImmutableArray<ObjectFactorySourceGeneratorState>.Empty
+                                                   : states.Distinct(TypeOnlyComparer.Instance))
+                  .WithComparer(new SetComparer<ObjectFactorySourceGeneratorState>())
+                  .SelectMany((states, _) => states);
+
+      context.RegisterSourceOutput(types.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, ObjectFactoryCodeGeneratorFactory.Instance));
+   }
+
+   private void InitializeParsableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ObjectFactorySourceGeneratorState> validStates,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var parsables = validStates
+         .Select((state, _) =>
+         {
+            return new ParsableGeneratorState(state,
+                                              null,
+                                              state.ValidationError,
+                                              state.SkipIParsable,
+                                              false,
+                                              false,
+                                              false,
+                                              state.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String));
+         });
+      base.InitializeParsableCodeGenerator(context, parsables, options);
+   }
+
+   private void InitializeErrorReporting(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SourceGenContext> typeOrException)
+   {
+      var exceptions = typeOrException.SelectMany(static (state, _) => state.Error is not null
+                                                                          ? [state.Error.Value]
+                                                                          : ImmutableArray<SourceGenError>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportError);
+   }
+
+   private void InitializeExceptionReporting(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SourceGenContext> typeOrException)
+   {
+      var exceptions = typeOrException.SelectMany(static (state, _) => state.Exception is not null
+                                                                          ? [state.Exception.Value]
+                                                                          : ImmutableArray<SourceGenException>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportException);
+   }
+
+   private readonly record struct SourceGenContext(
+      ObjectFactorySourceGeneratorState? ValidState,
+      SourceGenException? Exception = null,
+      SourceGenError? Error = null)
+   {
+      public SourceGenContext(SourceGenException exception)
+         : this(null, exception)
+      {
+      }
+
+      public SourceGenContext(SourceGenError errorMessage)
+         : this(null, null, errorMessage)
+      {
+      }
+   }
+}

@@ -71,7 +71,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                                                                              ValueObjectCodeGeneratorFactory.Instance);
 
       InitializeSerializerGenerators(context, validComplexValueObjects, options, serializerGeneratorFactories);
-      InitializeParsableCodeGenerator(context, validComplexValueObjects, options);
    }
 
    private IncrementalValuesProvider<TState> InitializeSourceGen<TState, TGenState>(
@@ -119,7 +118,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options,
       IncrementalValueProvider<ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>> serializerGeneratorFactories)
    {
-      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
+      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                       {
@@ -154,11 +153,11 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options,
       IncrementalValueProvider<ImmutableArray<IValueObjectSerializerCodeGeneratorFactory>> serializerGeneratorFactories)
    {
-      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
+      validStates = validStates.Where(state => !state.Settings.SkipFactoryMethods || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization != SerializationFrameworks.None));
 
       var keyedSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                       {
-                                                         if (state.AttributeInfo.DesiredFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
+                                                         if (state.AttributeInfo.ObjectFactories.All(f => f.UseForSerialization == SerializationFrameworks.None))
                                                             return ImmutableArray<KeyedSerializerGeneratorState>.Empty;
 
                                                          var serializerState = new KeyedSerializerGeneratorState(
@@ -243,25 +242,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                           state.State.KeyMember,
                                                           state.State.ValidationError,
                                                           state.Settings.SkipIParsable,
-                                                          state.State.KeyMember.IsParsable,
+                                                          state.State.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
                                                           false,
                                                           false,
-                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
-
-      InitializeParsableCodeGenerator(context, parsables, options);
-   }
-
-   private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ComplexValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
-   {
-      var parsables = validStates
-         .Select((state, _) => new ParsableGeneratorState(state.State,
-                                                          null,
-                                                          state.State.ValidationError,
-                                                          state.Settings.SkipIParsable,
-                                                          false,
-                                                          false,
-                                                          false,
-                                                          state.AttributeInfo.DesiredFactories.Any(t => t.SpecialType == SpecialType.System_String)));
+                                                          false));
 
       InitializeParsableCodeGenerator(context, parsables, options);
    }

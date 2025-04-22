@@ -10,7 +10,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public string? Namespace => Type.Namespace;
    public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
-   public IReadOnlyList<string> GenericsFullyQualified => [];
+   public int NumberOfGenerics => 0;
 
    public KeyedSerializerGeneratorState(
       ITypeInformation type,

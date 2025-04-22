@@ -8,8 +8,6 @@ namespace Thinktecture.Tests
    sealed partial class TestEnum :
       global::Thinktecture.ISmartEnum<int, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
       global::Thinktecture.Internal.IMetadataOwner,
-      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-      global::Thinktecture.IConvertible<string>,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum

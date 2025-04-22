@@ -16,14 +16,14 @@ public sealed class JsonValueObjectCodeGeneratorFactory : IValueObjectSerializer
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
-             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson)));
+             && (state.KeyMember is not null || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson)));
    }
 
    public bool MustGenerateCode(ComplexSerializerGeneratorState state)
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
-             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)

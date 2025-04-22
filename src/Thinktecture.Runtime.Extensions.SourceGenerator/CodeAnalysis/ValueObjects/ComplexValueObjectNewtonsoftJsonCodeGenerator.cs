@@ -37,7 +37,7 @@ namespace ").Append(_type.Namespace).Append(@";
 
       _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-partial ").Append(_type.IsReferenceType ? "class" : "struct").Append(" ").Append(_type.Name).Append(@"
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {

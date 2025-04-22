@@ -111,21 +111,7 @@ namespace ").Append(_state.Namespace).Append(@";
    {
       _sb.Append(@"
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-abstract partial ").Append(_state.IsRecord ? "record" : "class").Append(" ").Append(_state.Name);
-
-      if (_state.GenericsFullyQualified.Count > 0)
-      {
-         _sb.Append('<');
-
-         foreach (var generic in _state.GenericsFullyQualified)
-         {
-            _sb.Append(generic);
-         }
-
-         _sb.Append('>');
-      }
-
-      _sb.Append(@"
+abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@"
 {");
 
       if (!_state.HasNonDefaultConstructor)

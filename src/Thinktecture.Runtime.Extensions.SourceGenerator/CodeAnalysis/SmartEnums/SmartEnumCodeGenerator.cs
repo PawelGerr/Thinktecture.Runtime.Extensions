@@ -65,7 +65,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.HasDerivedTypes)
          _sb.Append(_state.IsReferenceType ? "sealed " : "readonly ");
 
-      _sb.Append("partial ").Append(_state.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Name).Append(" :");
+      _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
 
       if (_state.KeyMember is not null)
       {
@@ -79,21 +79,6 @@ namespace ").Append(_state.Namespace).Append(@"
 #if NET9_0_OR_GREATER
       global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
 #endif");
-         }
-      }
-
-      foreach (var desiredFactory in _state.Settings.DesiredFactories)
-      {
-         if (desiredFactory.Equals(_state.KeyMember))
-            continue;
-
-         _sb.Append(@"
-      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(desiredFactory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">,");
-
-         if (desiredFactory.UseForSerialization != SerializationFrameworks.None)
-         {
-            _sb.Append(@"
-      global::Thinktecture.IConvertible<").AppendTypeFullyQualified(desiredFactory).Append(">,");
          }
       }
 

@@ -9,6 +9,8 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public string Name { get; }
    public string ArgumentName { get; }
 
+   public bool IsRecord => false;
+
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
    public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;

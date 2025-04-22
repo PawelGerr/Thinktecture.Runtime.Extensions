@@ -19,7 +19,7 @@ public sealed class KeyedNewtonsoftJsonCodeGenerator : CodeGeneratorBase
    public override void Generate(CancellationToken cancellationToken)
    {
       var customFactory = _state.AttributeInfo
-                                .DesiredFactories
+                                .ObjectFactories
                                 .FirstOrDefault(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
@@ -37,7 +37,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
 
       _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(global::Thinktecture.Json.ThinktectureNewtonsoftJsonConverter<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
-partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(@"
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).Append(@"
 {
 }");
 

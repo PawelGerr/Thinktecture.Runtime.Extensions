@@ -16,14 +16,14 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : IValueObject
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.NewtonsoftJson)
-             && (state.KeyMember is not null || state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson)));
+             && (state.KeyMember is not null || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson)));
    }
 
    public bool MustGenerateCode(ComplexSerializerGeneratorState state)
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.NewtonsoftJson)
-             && !state.AttributeInfo.DesiredFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson));
+             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson));
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)

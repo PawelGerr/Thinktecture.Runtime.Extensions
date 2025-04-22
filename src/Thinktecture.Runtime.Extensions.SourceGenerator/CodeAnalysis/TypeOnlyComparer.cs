@@ -1,4 +1,5 @@
 using Thinktecture.CodeAnalysis.AdHocUnions;
+using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.CodeAnalysis.RegularUnions;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.CodeAnalysis.ValueObjects;
@@ -17,7 +18,8 @@ public class TypeOnlyComparer
      IEqualityComparer<KeyedValueObjectSourceGeneratorState>,
      IEqualityComparer<ComplexValueObjectSourceGeneratorState>,
      IEqualityComparer<AdHocUnionSourceGenState>,
-     IEqualityComparer<RegularUnionSourceGenState>
+     IEqualityComparer<RegularUnionSourceGenState>,
+     IEqualityComparer<ObjectFactorySourceGeneratorState>
 {
    public static readonly TypeOnlyComparer Instance = new();
 
@@ -33,6 +35,7 @@ public class TypeOnlyComparer
    public bool Equals(ComplexValueObjectSourceGeneratorState x, ComplexValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(AdHocUnionSourceGenState x, AdHocUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(RegularUnionSourceGenState x, RegularUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
+   public bool Equals(ObjectFactorySourceGeneratorState x, ObjectFactorySourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
 
    public int GetHashCode(FormattableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComparableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
@@ -46,6 +49,7 @@ public class TypeOnlyComparer
    public int GetHashCode(ComplexValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(AdHocUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(RegularUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(ObjectFactorySourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
 
    private TypeOnlyComparer()
    {

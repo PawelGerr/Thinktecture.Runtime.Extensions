@@ -1,6 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface ITypeInformationProvider
+public interface ITypeInformationProvider<out T>
+   where T : ITypeFullyQualified, INamespaceAndName
 {
-   ITypeInformation Type { get; }
+   T Type { get; }
 }

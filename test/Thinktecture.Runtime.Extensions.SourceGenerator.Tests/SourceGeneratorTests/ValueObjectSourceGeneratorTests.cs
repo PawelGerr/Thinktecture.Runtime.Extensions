@@ -973,8 +973,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
-                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+                        "Thinktecture.Tests.TestValueObject.g.cs");
    }
 
    [Fact]
@@ -1027,8 +1026,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
-                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+                        "Thinktecture.Tests.TestValueObject.g.cs");
    }
 
    [Fact]

@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
-using MessagePack;
-using Thinktecture.Formatters;
 
 namespace Thinktecture;
 
@@ -11,20 +8,16 @@ namespace Thinktecture;
                     SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
                     MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
 [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-[MessagePackFormatter(typeof(ThinktectureMessagePackFormatter<TextOrNumberSerializableWithFormatter, string, ValidationError>))]
-public partial class TextOrNumberSerializableWithFormatter :
-   IObjectFactory<TextOrNumberSerializableWithFormatter, string, ValidationError>, // For deserialization
-   IConvertible<string>,                                                // For serialization
-   IParsable<TextOrNumberSerializableWithFormatter>                                // For Minimal API and ASP.NET Core model binding validation
+public partial class TextOrNumberSerializableWithFormatter
 {
-   // For serialization
+   // For serialization (implementation of IConvertible<string>)
    public string ToValue()
    {
       return Switch(text: t => $"Text|{t}",
                     number: n => $"Number|{n}");
    }
 
-   // For deserialization
+   // For deserialization (implementation of IObjectFactory<TextOrNumberSerializableWithFormatter, string, ValidationError>)
    public static ValidationError? Validate(string? value, IFormatProvider? provider, out TextOrNumberSerializableWithFormatter? item)
    {
       if (String.IsNullOrWhiteSpace(value))
@@ -53,30 +46,5 @@ public partial class TextOrNumberSerializableWithFormatter :
 
       item = null;
       return new ValidationError("Invalid format");
-   }
-
-   public static TextOrNumberSerializableWithFormatter Parse(string s, IFormatProvider? provider)
-   {
-      var validationError = Validate(s, provider, out var result);
-
-      if (validationError is null)
-         return result!;
-
-      throw new FormatException(validationError.Message);
-   }
-
-   public static bool TryParse(
-      [NotNullWhen(true)] string? s,
-      IFormatProvider? provider,
-      [MaybeNullWhen(false)] out TextOrNumberSerializableWithFormatter result)
-   {
-      if (s is null)
-      {
-         result = null;
-         return false;
-      }
-
-      var validationError = Validate(s, provider, out result!);
-      return validationError is null;
    }
 }

@@ -8,7 +8,7 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
    public bool IsReferenceType { get; }
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public IReadOnlyList<string> DerivedTypesFullyQualified { get; }
-   public IReadOnlyList<string> GenericsFullyQualified => [];
+   public int NumberOfGenerics => 0;
 
    public SmartEnumDerivedTypes(
       string? ns,

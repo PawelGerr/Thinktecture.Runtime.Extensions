@@ -1,6 +1,10 @@
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeState>, IMemberInformation, ITypeMinimallyQualified, IHashCodeComputable
+public sealed class AdHocUnionMemberTypeState
+   : IEquatable<AdHocUnionMemberTypeState>,
+     IMemberInformation,
+     ITypeMinimallyQualified,
+     IHashCodeComputable
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
@@ -15,6 +19,8 @@ public sealed class AdHocUnionMemberTypeState : IEquatable<AdHocUnionMemberTypeS
    public string ArgumentName { get; }
    public string BackingFieldName { get; }
    public AdHocUnionMemberTypeSetting Setting { get; }
+
+   public bool IsRecord => false;
 
    public AdHocUnionMemberTypeState(
       string name,

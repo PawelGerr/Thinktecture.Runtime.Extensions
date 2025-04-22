@@ -1,6 +1,9 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable<SmartEnumSourceGeneratorState>
+public sealed class SmartEnumSourceGeneratorState
+   : ITypeInformation,
+     IParsableTypeInformation,
+     IEquatable<SmartEnumSourceGeneratorState>
 {
    public string? Namespace { get; }
    public string Name { get; }
@@ -9,7 +12,6 @@ public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable
    public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
    public bool DisallowsDefaultValue => !IsReferenceType && KeyMember is { IsReferenceType: true }; // Only Validatable Smart Enums can be structs
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public IReadOnlyList<string> GenericsFullyQualified => [];
 
    public KeyMemberState? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
@@ -22,6 +24,9 @@ public sealed class SmartEnumSourceGeneratorState : ITypeInformation, IEquatable
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
    public bool IsAbstract { get; }
+
+   public bool IsRecord => false;
+   public int NumberOfGenerics => 0;
 
    public EnumItems Items { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }

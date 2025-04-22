@@ -561,7 +561,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -592,7 +591,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");

@@ -5,7 +5,6 @@ namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class TestEnum :
-      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items

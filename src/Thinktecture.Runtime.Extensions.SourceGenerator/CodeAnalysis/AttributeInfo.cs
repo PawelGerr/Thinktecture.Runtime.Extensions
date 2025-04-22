@@ -6,7 +6,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
    public bool HasJsonConverterAttribute { get; }
    public bool HasNewtonsoftJsonConverterAttribute { get; }
    public bool HasMessagePackFormatterAttribute { get; }
-   public ImmutableArray<DesiredFactory> DesiredFactories { get; }
+   public ImmutableArray<ObjectFactoryState> ObjectFactories { get; }
    public ValidationErrorState ValidationError { get; }
    public string? KeyMemberComparerAccessor { get; }
    public string? KeyMemberEqualityComparerAccessor { get; }
@@ -16,7 +16,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       bool hasJsonConverterAttribute,
       bool hasNewtonsoftJsonConverterAttribute,
       bool hasMessagePackFormatterAttribute,
-      ImmutableArray<DesiredFactory> desiredFactories,
+      ImmutableArray<ObjectFactoryState> objectFactories,
       ValidationErrorState validationError,
       string? keyMemberComparerAccessor,
       string? keyMemberEqualityComparerAccessor)
@@ -25,22 +25,33 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       HasJsonConverterAttribute = hasJsonConverterAttribute;
       HasNewtonsoftJsonConverterAttribute = hasNewtonsoftJsonConverterAttribute;
       HasMessagePackFormatterAttribute = hasMessagePackFormatterAttribute;
-      DesiredFactories = desiredFactories;
+      ObjectFactories = objectFactories;
       ValidationError = validationError;
       KeyMemberComparerAccessor = keyMemberComparerAccessor;
       KeyMemberEqualityComparerAccessor = keyMemberEqualityComparerAccessor;
    }
 
-   public static string? TryCreate(INamedTypeSymbol type, out AttributeInfo info)
+   public static string? TryCreate(
+      INamedTypeSymbol type,
+      out AttributeInfo info)
+   {
+      return TryCreate(type, out info, out _);
+   }
+
+   public static string? TryCreate(
+      INamedTypeSymbol type,
+      out AttributeInfo info,
+      out AttributeData? thinktectureComponentAttribute)
    {
       var hasStructLayoutAttribute = false;
       var hasJsonConverterAttribute = false;
       var hasNewtonsoftJsonConverterAttribute = false;
       var hasMessagePackFormatterAttribute = false;
       var validationError = ValidationErrorState.Default;
-      var valueObjectFactories = ImmutableArray<DesiredFactory>.Empty;
+      var valueObjectFactories = ImmutableArray<ObjectFactoryState>.Empty;
       string? keyMemberComparerAccessor = null;
       string? keyMemberEqualityComparerAccessor = null;
+      thinktectureComponentAttribute = null;
       var numberOfSourceGenAttributes = 0;
 
       foreach (var attribute in type.GetAttributes())
@@ -67,7 +78,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          else if (attribute.AttributeClass.IsObjectFactoryAttribute())
          {
             var useForSerialization = attribute.FindUseForSerialization();
-            var desiredFactory = new DesiredFactory(attribute.AttributeClass.TypeArguments[0], useForSerialization);
+            var desiredFactory = new ObjectFactoryState(attribute.AttributeClass.TypeArguments[0], useForSerialization);
 
             valueObjectFactories = valueObjectFactories.RemoveAll(static (f, fullTypeName) => f.TypeFullyQualified == fullTypeName, desiredFactory.TypeFullyQualified);
             valueObjectFactories = valueObjectFactories.Add(desiredFactory);
@@ -84,17 +95,16 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          {
             keyMemberEqualityComparerAccessor = attribute.AttributeClass.TypeArguments[0].ToFullyQualifiedDisplayString();
          }
-         else if (attribute.AttributeClass.IsSmartEnumAttribute()
-                  || attribute.AttributeClass.IsKeyedValueObjectAttribute()
-                  || attribute.AttributeClass.IsComplexValueObjectAttribute())
+         else if (attribute.AttributeClass.IsThinktectureComponentAttribute())
          {
             ++numberOfSourceGenAttributes;
+            thinktectureComponentAttribute = attribute;
          }
 
          if (numberOfSourceGenAttributes > 1)
          {
             info = default;
-            return "Multiple ValueObject/SmartEnum-attributes found";
+            return "Multiple ValueObject/SmartEnum/Union-attributes found";
          }
       }
 
@@ -120,7 +130,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
              && HasJsonConverterAttribute == other.HasJsonConverterAttribute
              && HasNewtonsoftJsonConverterAttribute == other.HasNewtonsoftJsonConverterAttribute
              && HasMessagePackFormatterAttribute == other.HasMessagePackFormatterAttribute
-             && DesiredFactories.SequenceEqual(other.DesiredFactories)
+             && ObjectFactories.SequenceEqual(other.ObjectFactories)
              && ValidationError.Equals(other.ValidationError)
              && KeyMemberComparerAccessor == other.KeyMemberComparerAccessor
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor;
@@ -134,7 +144,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          hashCode = (hashCode * 397) ^ HasJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasNewtonsoftJsonConverterAttribute.GetHashCode();
          hashCode = (hashCode * 397) ^ HasMessagePackFormatterAttribute.GetHashCode();
-         hashCode = (hashCode * 397) ^ DesiredFactories.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ ObjectFactories.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMemberComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);

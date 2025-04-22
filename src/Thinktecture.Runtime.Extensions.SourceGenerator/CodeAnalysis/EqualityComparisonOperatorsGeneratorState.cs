@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<EqualityComparisonOperatorsGeneratorState>, ITypeInformationProvider
+public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<EqualityComparisonOperatorsGeneratorState>, ITypeInformationProvider<ITypeInformation>
 {
    public ITypeInformation Type { get; }
    public IMemberInformation? KeyMember { get; }

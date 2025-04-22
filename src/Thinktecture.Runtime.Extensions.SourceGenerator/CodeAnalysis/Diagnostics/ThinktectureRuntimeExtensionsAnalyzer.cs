@@ -448,7 +448,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       try
       {
-         if (!attrCreation.Type.IsUnionAttribute())
+         if (!attrCreation.Type.IsRegularUnionAttribute())
             return;
 
          ValidateUnion(context, type);

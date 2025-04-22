@@ -17,6 +17,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public ValueObjectMemberSettings ValueObjectMemberSettings { get; }
    public SymbolKind Kind { get; }
 
+   public bool IsRecord => false;
+
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;

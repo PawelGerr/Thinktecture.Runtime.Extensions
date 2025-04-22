@@ -1,8 +1,8 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorState>, ITypeInformationProvider
+public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorState>, ITypeInformationProvider<IParsableTypeInformation>
 {
-   public ITypeInformation Type { get; }
+   public IParsableTypeInformation Type { get; }
    public IMemberInformation? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
    public bool SkipIParsable { get; }
@@ -12,7 +12,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    public bool HasStringBasedValidateMethod { get; }
 
    public ParsableGeneratorState(
-      ITypeInformation type,
+      IParsableTypeInformation type,
       IMemberInformation? keyMember,
       ValidationErrorState validationError,
       bool skipIParsable,
@@ -33,7 +33,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
 
    public bool Equals(ParsableGeneratorState other)
    {
-      return TypeInformationComparer.Instance.Equals(Type, other.Type)
+      return Type.Equals(other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
              && SkipIParsable == other.SkipIParsable
@@ -52,7 +52,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    {
       unchecked
       {
-         var hashCode = TypeInformationComparer.Instance.GetHashCode(Type);
+         var hashCode = Type.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();

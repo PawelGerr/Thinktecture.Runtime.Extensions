@@ -318,7 +318,7 @@ public static class StringBuilderExtensions
                            : containingType.IsReferenceType ? "class " : "struct ";
 
          sb.Append(@"
-partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType.GenericParameters).Append(@"
+partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType).Append(@"
 {");
       }
 
@@ -418,19 +418,19 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
 
    public static StringBuilder AppendGenericTypeParameters(
       this StringBuilder sb,
-      IReadOnlyList<GenericTypeParameterState> typeParameters)
+      IHasGenerics type)
    {
-      if (typeParameters.Count <= 0)
+      if (type.GenericParameters.Count <= 0)
          return sb;
 
       sb.Append("<");
 
-      for (var i = 0; i < typeParameters.Count; i++)
+      for (var i = 0; i < type.GenericParameters.Count; i++)
       {
          if (i > 0)
             sb.Append(", ");
 
-         sb.Append(typeParameters[i].Name);
+         sb.Append(type.GenericParameters[i].Name);
       }
 
       return sb.Append(">");
@@ -449,6 +449,22 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
             sb.Append(", ");
 
          sb.Append(constraints[i]);
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder AppendTypeKind(
+      this StringBuilder sb,
+      ITypeKindInformation type)
+   {
+      if (type.IsReferenceType)
+      {
+         sb.Append(type.IsRecord ? "record" : "class");
+      }
+      else
+      {
+         sb.Append(type.IsRecord ? "record struct" : "struct");
       }
 
       return sb;

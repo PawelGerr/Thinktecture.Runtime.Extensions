@@ -7,5 +7,6 @@ namespace Thinktecture;
 /// You should only use such APIs directly in your code with extreme caution and knowing that
 /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extension release.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Interface | AttributeTargets.Delegate)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Interface,
+                Inherited = false)]
 public sealed class ThinktectureRuntimeExtensionInternalAttribute : Attribute;

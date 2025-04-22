@@ -2,8 +2,9 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class InterfaceCodeGenerator<TState> : CodeGeneratorBase
-   where TState : ITypeInformationProvider
+public class InterfaceCodeGenerator<TState, TType> : CodeGeneratorBase
+   where TState : ITypeInformationProvider<TType>
+   where TType: ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {
    private readonly IInterfaceCodeGenerator<TState> _codeGenerator;
    private readonly TState _state;
@@ -37,7 +38,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
 
       _sb.Append(@"
-partial ").Append(_state.Type.IsReferenceType ? "class" : "struct").Append(" ").Append(_state.Type.Name).Append(" :");
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).Append(" :");
 
       _codeGenerator.GenerateBaseTypes(_sb, _state);
 

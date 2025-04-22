@@ -157,7 +157,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                                state.Left.Type.Namespace,
                                                                                                state.Left.Type.ContainingTypes,
                                                                                                state.Left.Type.Name,
-                                                                                               state.Left.Type.GenericsFullyQualified.Count,
+                                                                                               state.Left.Type.NumberOfGenerics,
                                                                                                new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
                                                                                                state.Right,
                                                                                                InterfaceCodeGeneratorFactory.Formattable));
@@ -181,7 +181,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                               state.Left.Type.Namespace,
                                                                                               state.Left.Type.ContainingTypes,
                                                                                               state.Left.Type.Name,
-                                                                                              state.Left.Type.GenericsFullyQualified.Count,
+                                                                                              state.Left.Type.NumberOfGenerics,
                                                                                               new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
                                                                                               state.Right,
                                                                                               InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
@@ -205,7 +205,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                             state.Left.Type.Namespace,
                                                                                             state.Left.Type.ContainingTypes,
                                                                                             state.Left.Type.Name,
-                                                                                            state.Left.Type.GenericsFullyQualified.Count,
+                                                                                            state.Left.Type.NumberOfGenerics,
                                                                                             state.Left,
                                                                                             state.Right,
                                                                                             InterfaceCodeGeneratorFactory.Parsable(state.Left.IsEnum, state.Left.IsValidatableEnum)));
@@ -242,7 +242,7 @@ public abstract class ThinktectureSourceGeneratorBase
                       state.Type.Namespace,
                       state.Type.ContainingTypes,
                       state.Type.Name,
-                      state.Type.GenericsFullyQualified.Count,
+                      state.Type.NumberOfGenerics,
                       new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
                       tuple.Right,
                       InterfaceCodeGeneratorFactory.Create(generator));
@@ -270,7 +270,7 @@ public abstract class ThinktectureSourceGeneratorBase
                          tuple.Left.Type.Namespace,
                          tuple.Left.Type.ContainingTypes,
                          tuple.Left.Type.Name,
-                         tuple.Left.Type.GenericsFullyQualified.Count,
+                         tuple.Left.Type.NumberOfGenerics,
                          tuple.Left,
                          tuple.Right,
                          generator);
@@ -308,7 +308,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                    state.Type.Namespace,
                                                    state.Type.ContainingTypes,
                                                    state.Type.Name,
-                                                   state.Type.GenericsFullyQualified.Count,
+                                                   state.Type.NumberOfGenerics,
                                                    new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
                                                    tuple.Right,
                                                    InterfaceCodeGeneratorFactory.Create(generator));
@@ -342,7 +342,7 @@ public abstract class ThinktectureSourceGeneratorBase
       StringBuilder stringBuilder)
       where TState : INamespaceAndName, IEquatable<TState>
    {
-      GenerateCode(context, state.Namespace, state.ContainingTypes, state.Name, state.GenericsFullyQualified.Count, state, options, generatorFactory, stringBuilder);
+      GenerateCode(context, state.Namespace, state.ContainingTypes, state.Name, state.NumberOfGenerics, state, options, generatorFactory, stringBuilder);
    }
 
    private void GenerateCode<TState>(

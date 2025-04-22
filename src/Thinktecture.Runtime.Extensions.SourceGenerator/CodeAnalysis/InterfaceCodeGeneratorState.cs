@@ -1,6 +1,7 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct InterfaceCodeGeneratorState : IEquatable<InterfaceCodeGeneratorState>, ITypeInformationProvider
+public readonly struct InterfaceCodeGeneratorState
+   : IEquatable<InterfaceCodeGeneratorState>, ITypeInformationProvider<ITypeInformation>
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
