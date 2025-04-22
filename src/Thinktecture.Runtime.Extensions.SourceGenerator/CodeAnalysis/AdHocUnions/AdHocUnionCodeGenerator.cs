@@ -5,7 +5,7 @@ namespace Thinktecture.CodeAnalysis.AdHocUnions;
 public class AdHocUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "AdHocUnion-CodeGenerator";
-   public override string? FileNameSuffix => null;
+   public override string FileNameSuffix => ".AdHocUnion";
 
    private readonly AdHocUnionSourceGenState _state;
    private readonly StringBuilder _sb;

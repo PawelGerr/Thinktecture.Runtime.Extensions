@@ -11,7 +11,7 @@ public sealed class KeyedValueObjectCodeGenerator : SmartEnumAndValueObjectCodeG
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "ValueObject-CodeGenerator";
-   public override string? FileNameSuffix => null;
+   public override string FileNameSuffix => ".ValueObject";
 
    public KeyedValueObjectCodeGenerator(KeyedValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {

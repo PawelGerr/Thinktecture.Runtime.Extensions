@@ -6,6 +6,6 @@ public abstract class CodeGeneratorBase
 #nullable enable";
 
    public abstract string CodeGeneratorName { get; }
-   public abstract string? FileNameSuffix { get; }
+   public abstract string FileNameSuffix { get; }
    public abstract void Generate(CancellationToken cancellationToken);
 }

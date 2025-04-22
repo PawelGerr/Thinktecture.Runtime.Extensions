@@ -9,7 +9,7 @@ public sealed class SmartEnumCodeGenerator : SmartEnumAndValueObjectCodeGenerato
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "SmartEnum-CodeGenerator";
-   public override string? FileNameSuffix => null;
+   public override string FileNameSuffix => ".SmartEnum";
 
    public SmartEnumCodeGenerator(SmartEnumSourceGeneratorState state, StringBuilder stringBuilder)
    {

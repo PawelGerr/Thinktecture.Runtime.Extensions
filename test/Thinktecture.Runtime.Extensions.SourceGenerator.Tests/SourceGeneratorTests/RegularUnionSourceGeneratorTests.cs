@@ -32,7 +32,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -58,7 +58,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -87,7 +87,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -116,7 +116,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -142,7 +142,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -166,7 +166,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -192,7 +192,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -218,7 +218,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -245,7 +245,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -272,7 +272,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -297,7 +297,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion.g.cs");
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -326,7 +326,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -355,7 +355,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -387,8 +387,8 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.Result`1.g.cs",
-                        "Thinktecture.Tests.Result.g.cs");
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Result.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -419,7 +419,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion.g.cs");
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -443,7 +443,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion.g.cs");
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -470,7 +470,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion.g.cs");
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -492,7 +492,7 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests._1TestUnionWithSpecialChars.g.cs");
+                        "Thinktecture.Tests._1TestUnionWithSpecialChars.RegularUnion.g.cs");
    }
 
    [Fact]
@@ -514,6 +514,6 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestUnion.g.cs");
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
 }

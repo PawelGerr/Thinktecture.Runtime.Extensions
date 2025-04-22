@@ -9,7 +9,7 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
       string ArgumentName);
 
    public override string CodeGeneratorName => "RegularUnion-CodeGenerator";
-   public override string? FileNameSuffix => null;
+   public override string FileNameSuffix => ".RegularUnion";
 
    private readonly RegularUnionSourceGenState _state;
    private readonly StringBuilder _sb;

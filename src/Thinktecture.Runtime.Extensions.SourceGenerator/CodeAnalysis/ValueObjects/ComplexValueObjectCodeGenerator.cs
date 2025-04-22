@@ -11,7 +11,7 @@ public sealed class ComplexValueObjectCodeGenerator : SmartEnumAndValueObjectCod
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "ValueObject-CodeGenerator";
-   public override string? FileNameSuffix => null;
+   public override string FileNameSuffix => ".ComplexValueObject";
 
    public ComplexValueObjectCodeGenerator(ComplexValueObjectSourceGeneratorState state, StringBuilder stringBuilder)
    {

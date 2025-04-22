@@ -213,7 +213,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -291,7 +291,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -320,7 +320,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -355,7 +355,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -390,7 +390,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -424,7 +424,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -453,7 +453,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -482,7 +482,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -511,7 +511,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -545,7 +545,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -575,7 +575,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -609,7 +609,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -643,7 +643,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -672,7 +672,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -702,7 +702,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -733,7 +733,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -767,7 +767,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
 
@@ -796,7 +796,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -828,7 +828,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
@@ -860,7 +860,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
@@ -973,7 +973,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs");
+                        "Thinktecture.Tests.TestValueObject.ComplexValueObject.g.cs");
    }
 
    [Fact]
@@ -1026,7 +1026,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestValueObject.g.cs");
+                        "Thinktecture.Tests.TestValueObject.ComplexValueObject.g.cs");
    }
 
    [Fact]
@@ -1114,7 +1114,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests._1TestValueObject.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests._1TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests._1TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests._1TestValueObject.Parsable.g.cs",

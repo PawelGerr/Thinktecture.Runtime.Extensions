@@ -25,7 +25,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -42,7 +42,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -59,7 +59,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -76,7 +76,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -93,7 +93,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -110,7 +110,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -127,7 +127,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -144,7 +144,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -161,7 +161,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -178,7 +178,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -195,7 +195,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -212,7 +212,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -229,7 +229,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -246,7 +246,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -263,7 +263,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -280,7 +280,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -297,7 +297,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -314,7 +314,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -333,7 +333,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -351,7 +351,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -371,7 +371,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests._1TestUnionWithSpecialChars.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests._1TestUnionWithSpecialChars.AdHocUnion.g.cs");
    }
 
    [Fact]
@@ -389,6 +389,6 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          """;
       var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
 
-      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.g.cs");
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
 }

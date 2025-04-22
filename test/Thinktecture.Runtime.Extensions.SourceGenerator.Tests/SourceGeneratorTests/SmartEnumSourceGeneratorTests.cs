@@ -51,7 +51,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -100,7 +100,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
@@ -124,7 +124,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
@@ -169,7 +169,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -197,7 +197,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -225,7 +225,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -263,7 +263,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -288,7 +288,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "TestEnum.g.cs",
+                        "TestEnum.SmartEnum.g.cs",
                         "TestEnum.Comparable.g.cs",
                         "TestEnum.Parsable.g.cs",
                         "TestEnum.ComparisonOperators.g.cs",
@@ -355,7 +355,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -383,7 +383,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -411,7 +411,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -475,7 +475,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -501,7 +501,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -528,7 +528,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -559,7 +559,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
@@ -589,7 +589,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
@@ -627,7 +627,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -655,7 +655,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -685,7 +685,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -715,7 +715,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(operatorsGeneration.ToString(),
                         outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -744,7 +744,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -773,7 +773,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -802,7 +802,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -831,7 +831,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -860,7 +860,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -889,7 +889,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -918,7 +918,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -947,7 +947,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -976,7 +976,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1005,7 +1005,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1034,7 +1034,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1069,7 +1069,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1099,7 +1099,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1128,7 +1128,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
@@ -1153,7 +1153,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests._1TestEnum.g.cs",
+                        "Thinktecture.Tests._1TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests._1TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests._1TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests._1TestEnum.ComparisonOperators.g.cs",
@@ -1179,7 +1179,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
 
       await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
