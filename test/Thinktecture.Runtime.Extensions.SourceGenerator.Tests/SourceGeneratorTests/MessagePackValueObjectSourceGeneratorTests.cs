@@ -9,7 +9,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public MessagePackValueObjectSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 4_000)
    {
    }
 

@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public JsonValueObjectSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 8_000)
    {
    }
 
