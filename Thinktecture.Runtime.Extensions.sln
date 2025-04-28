@@ -42,8 +42,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCore.Samples", "samples\EntityFrameworkCore.Samples\EntityFrameworkCore.Samples.csproj", "{8663F6FA-AC39-4D1D-A0A0-226E574A5202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6", "src\Thinktecture.Runtime.Extensions.EntityFrameworkCore6\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.csproj", "{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Newtonsoft.Json", "src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj", "{914196F5-6208-4710-9A75-201E17457D2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests", "test\Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests\Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests.csproj", "{47890FAA-7CDF-491C-A1B8-9B141EABECF1}"
@@ -69,8 +67,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.AspNetCore.Tests", "test\Thinktecture.Runtime.Extensions.AspNetCore.Tests\Thinktecture.Runtime.Extensions.AspNetCore.Tests.csproj", "{EF07F98E-9914-4419-A1B4-AB264F496121}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.Tests.Shared", "test\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj", "{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests", "test\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore6.Tests.csproj", "{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagePack.Samples", "samples\MessagePack.Samples\MessagePack.Samples.csproj", "{B1E357B7-7F91-4558-85BA-F6784C33FF97}"
 EndProject
@@ -114,10 +110,6 @@ Global
 		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8663F6FA-AC39-4D1D-A0A0-226E574A5202}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C34C0B86-DC38-42D6-8D64-A0B2E69B396C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{914196F5-6208-4710-9A75-201E17457D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{914196F5-6208-4710-9A75-201E17457D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{914196F5-6208-4710-9A75-201E17457D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -170,10 +162,6 @@ Global
 		{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -223,7 +211,6 @@ Global
 		{AB1E9CFF-E0AB-4450-9B2B-1E20DDF8988D} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{2D1BADCE-1B2C-4828-9995-F80B2C0F9AF9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{8663F6FA-AC39-4D1D-A0A0-226E574A5202} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
-		{C34C0B86-DC38-42D6-8D64-A0B2E69B396C} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{914196F5-6208-4710-9A75-201E17457D2B} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{47890FAA-7CDF-491C-A1B8-9B141EABECF1} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{9F04BA7C-2D9C-4ED9-A405-BEDAB7E8954B} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
@@ -237,7 +224,6 @@ Global
 		{CA1D0C43-10C9-46E2-A893-4E93FB4A1511} = {8F117684-7943-4DCE-8861-F2B854924837}
 		{EF07F98E-9914-4419-A1B4-AB264F496121} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{E654E2B6-9396-4B8D-917D-EAD8FAA0DBF2} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
-		{AB7280F9-6653-4CF0-9E26-45A3B606B5E9} = {AE711F89-41F2-4519-B20D-BA1FAB0EB364}
 		{B1E357B7-7F91-4558-85BA-F6784C33FF97} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{267EAD74-3F4D-41B8-BCF6-9D0F6F99A16F} = {E6F200ED-86D2-4D5C-9D5F-34592908B107}
 		{9A80C790-3BE2-4FA7-ACC1-574577E759EF} = {8F117684-7943-4DCE-8861-F2B854924837}

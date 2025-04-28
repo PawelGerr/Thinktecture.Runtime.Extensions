@@ -388,7 +388,7 @@ public static class EntityTypeBuilderExtensions
 #else
       var complexProperty = entity.FindComplexProperty(propertyInfo);
 #endif
-      // wil be handled by AddConverterForScalarProperties
+      // will be handled by AddConverterForScalarProperties
       if (complexProperty is not null)
          return;
 #endif
