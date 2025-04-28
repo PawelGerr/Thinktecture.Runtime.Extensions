@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public NewtonsoftJsonSmartEnumSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 1_000)
    {
    }
 

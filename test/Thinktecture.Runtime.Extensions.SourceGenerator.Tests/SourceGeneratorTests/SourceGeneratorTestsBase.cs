@@ -15,10 +15,14 @@ public abstract class SourceGeneratorTestsBase
    private const string _GENERATION_ERROR = "CS8785";
 
    private readonly ITestOutputHelper _output;
+   private readonly int _maxOutputSize;
 
-   protected SourceGeneratorTestsBase(ITestOutputHelper output)
+   protected SourceGeneratorTestsBase(
+      ITestOutputHelper output,
+      int maxOutputSize)
    {
       _output = output ?? throw new ArgumentNullException(nameof(output));
+      _maxOutputSize = maxOutputSize;
    }
 
    protected Task VerifyAsync(
@@ -48,6 +52,9 @@ public abstract class SourceGeneratorTestsBase
                                        throw new Exception($"Output file '{fileName}' not found. Available files: {String.Join(", ", outputs.Keys)}", ex);
                                     }
 
+                                    if (content.Length > _maxOutputSize)
+                                       throw new Exception($"Output file '{fileName}' is too big. Actual size: {content.Length}. Max size: {_maxOutputSize}.");
+
                                     var verify = Verifier.Verify(content);
                                     var paramText = parameterText;
 
@@ -68,6 +75,9 @@ public abstract class SourceGeneratorTestsBase
       string parameterText,
       string output)
    {
+      if (output.Length > _maxOutputSize)
+         throw new Exception($"Output file is too big. Actual size: {output.Length}. Max size: {_maxOutputSize}.");
+
       await Verifier.Verify(output)
                     .UseTextForParameters(parameterText);
    }
@@ -75,6 +85,9 @@ public abstract class SourceGeneratorTestsBase
    protected async Task VerifyAsync(
       string output)
    {
+      if (output.Length > _maxOutputSize)
+         throw new Exception($"Output file is too big. Actual size: {output.Length}. Max size: {_maxOutputSize}.");
+
       await Verifier.Verify(output);
    }
 
@@ -101,7 +114,7 @@ public abstract class SourceGeneratorTestsBase
       return output;
    }
 
-   public static Dictionary<string, string> GetGeneratedOutputs<T>(string source, params Assembly[] furtherAssemblies)
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(string source, params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);

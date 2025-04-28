@@ -9,7 +9,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public MessagePackSmartEnumSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 1_000)
    {
    }
 
