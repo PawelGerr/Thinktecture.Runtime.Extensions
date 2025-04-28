@@ -30,12 +30,8 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 # Requirements
 
-* Version 8:
-    * C# 11 (or higher) for generated code
-    * SDK 8.0.400 (or higher) for building projects
-* Version 7:
-    * C# 11 (or higher) for generated code
-    * SDK 7.0.401 (or higher) for building projects
+* C# 11 (or higher) for generated code
+* SDK 8.0.400 (or higher) for building projects
 
 # Migrations
 
@@ -299,7 +295,7 @@ Value objects help solve several common problems in software development:
 4. **Complex Value Objects**: Encapsulate multiple related values with validation
    ```csharp
    [ComplexValueObject]
-   public sealed partial class DateRange
+   public partial class DateRange
    {
        public DateOnly Start { get; }
        public DateOnly End { get; }
@@ -444,13 +440,12 @@ public partial record Result<T>
     public record Success(T Value) : Result<T>;
     public record Failure(string Error) : Result<T>;
 
-    // Convenient implicit conversions
-    public static implicit operator Result<T>(T value) => new Success(value);
-    public static implicit operator Result<T>(string error) => new Failure(error);
+    // Implicit conversions from T and string are implemented automatically 
 }
 
 // Usage
 Result<int> result = await GetDataAsync();
+
 var message = result.Switch(
     success: s => $"Got value: {s.Value}",
     failure: f => $"Error: {f.Error}"
