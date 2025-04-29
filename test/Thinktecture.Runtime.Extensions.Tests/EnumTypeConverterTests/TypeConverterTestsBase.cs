@@ -2,18 +2,15 @@ using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.EnumTypeConverterTests;
 
+// ReSharper disable InconsistentNaming
 public abstract class TypeConverterTestsBase
 {
-   protected ThinktectureTypeConverter<TestEnum, string, ValidationError> StringBasedTypeConverter { get; }
-   protected ThinktectureTypeConverter<IntegerEnum, int, ValidationError> IntBasedTypeConverter { get; }
-   protected ThinktectureTypeConverter<StructIntegerEnum, int, ValidationError> IntBasedStructEnumTypeConverter { get; }
-   protected ThinktectureTypeConverter<ValidTestEnum, string, ValidationError> ValidEnumTypeConverter { get; }
+   protected ThinktectureTypeConverter<SmartEnum_StringBased, string, ValidationError> SmartEnum_StringBased_TypeConverter { get; }
+   protected ThinktectureTypeConverter<SmartEnum_IntBased, int, ValidationError> SmartEnum_IntBased_TypeConverter { get; }
 
    protected TypeConverterTestsBase()
    {
-      StringBasedTypeConverter = new ThinktectureTypeConverter<TestEnum, string, ValidationError>();
-      IntBasedTypeConverter = new ThinktectureTypeConverter<IntegerEnum, int, ValidationError>();
-      IntBasedStructEnumTypeConverter = new ThinktectureTypeConverter<StructIntegerEnum, int, ValidationError>();
-      ValidEnumTypeConverter = new ThinktectureTypeConverter<ValidTestEnum, string, ValidationError>();
+      SmartEnum_StringBased_TypeConverter = new ThinktectureTypeConverter<SmartEnum_StringBased, string, ValidationError>();
+      SmartEnum_IntBased_TypeConverter = new ThinktectureTypeConverter<SmartEnum_IntBased, int, ValidationError>();
    }
 }

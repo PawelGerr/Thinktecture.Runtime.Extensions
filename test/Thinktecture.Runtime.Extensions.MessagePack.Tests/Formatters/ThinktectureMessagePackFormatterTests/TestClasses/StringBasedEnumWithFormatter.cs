@@ -3,7 +3,7 @@ using Thinktecture.Formatters;
 
 namespace Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests.TestClasses;
 
-[SmartEnum<string>(IsValidatable = true)]
+[SmartEnum<string>]
 [MessagePackFormatter(typeof(ThinktectureMessagePackFormatter<StringBasedEnumWithFormatter, string, ValidationError>))]
 public partial class StringBasedEnumWithFormatter
 {

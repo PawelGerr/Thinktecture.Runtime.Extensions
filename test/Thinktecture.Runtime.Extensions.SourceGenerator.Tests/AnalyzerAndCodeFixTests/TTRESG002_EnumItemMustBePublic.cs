@@ -18,7 +18,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                internal static readonly TestEnum {|#0:Item1|} = default;
@@ -33,7 +33,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -55,7 +55,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                static private readonly TestEnum {|#0:Item1|} = default;
@@ -70,7 +70,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -92,7 +92,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                static readonly TestEnum {|#0:Item1|} = default;
@@ -107,7 +107,7 @@ public class TTRESG002_EnumItemMustBePublic
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;

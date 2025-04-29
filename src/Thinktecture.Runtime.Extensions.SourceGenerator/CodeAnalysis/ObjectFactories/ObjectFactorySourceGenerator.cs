@@ -150,7 +150,6 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
                                               state.SkipIParsable,
                                               false,
                                               false,
-                                              false,
                                               state.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String));
          });
       base.InitializeParsableCodeGenerator(context, parsables, options);

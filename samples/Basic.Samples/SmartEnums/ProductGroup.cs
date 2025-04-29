@@ -1,7 +1,6 @@
 namespace Thinktecture.SmartEnums;
 
-[SmartEnum<int>(IsValidatable = true,
-                ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+[SmartEnum<int>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                 SkipToString = true)]
 public partial class ProductGroup
 {
@@ -13,18 +12,9 @@ public partial class ProductGroup
 
    public int Do(string foo)
    {
-      EnsureValid(); // "Do()" is not allowed for invalid items
-
       // do something
 
       return 42;
-   }
-
-   private static ProductGroup CreateInvalidItem(int key)
-   {
-      // the values can be anything besides the key,
-      // the key must not be null
-      return new(key, false, "Unknown product group", ProductCategory.Get("Unknown"));
    }
 
    public override string ToString()

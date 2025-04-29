@@ -29,7 +29,6 @@ public class ThinktectureStructMessagePackFormatter<T, TKey, TValidationError> :
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    /// <inheritdoc />
@@ -99,7 +98,7 @@ public class ThinktectureStructMessagePackFormatter<T, TKey, TValidationError> :
    {
       var validationError = T.Validate(key, null, out var obj);
 
-      if (validationError is not null && !_mayReturnInvalidObjects)
+      if (validationError is not null)
          throw new ValidationException(validationError.ToString() ?? "MessagePack deserialization failed.");
 
       return obj;

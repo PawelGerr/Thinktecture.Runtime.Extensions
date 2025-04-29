@@ -33,14 +33,9 @@ public class BoundValueObject<T, TKey, TValidationError> : IBoundParam
       {
          var validationError = T.Validate(key, formatProvider, out var item);
 
-         if (validationError is null || item is IValidatableEnum)
-         {
-            value = new BoundValueObject<T, TKey, TValidationError>(item);
-         }
-         else
-         {
-            value = new BoundValueObject<T, TKey, TValidationError>(validationError.ToString() ?? "Invalid format");
-         }
+         value = validationError is null
+                    ? new BoundValueObject<T, TKey, TValidationError>(item)
+                    : new BoundValueObject<T, TKey, TValidationError>(validationError.ToString() ?? "Invalid format");
       }
 
       return true;
@@ -70,14 +65,9 @@ public class BoundValueObject<T, TValidationError> : IBoundParam
    {
       var validationError = T.Validate(s, formatProvider, out var item);
 
-      if (validationError is null || item is IValidatableEnum)
-      {
-         value = new BoundValueObject<T, TValidationError>(item);
-      }
-      else
-      {
-         value = new BoundValueObject<T, TValidationError>(validationError.ToString() ?? "Invalid format");
-      }
+      value = validationError is null
+                 ? new BoundValueObject<T, TValidationError>(item)
+                 : new BoundValueObject<T, TValidationError>(validationError.ToString() ?? "Invalid format");
 
       return true;
    }

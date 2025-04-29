@@ -19,24 +19,21 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    [
       DiagnosticsDescriptors.TypeMustBePartial,
       DiagnosticsDescriptors.TypeMustBeClassOrStruct,
-      DiagnosticsDescriptors.NonValidatableEnumsMustBeClass,
       DiagnosticsDescriptors.ConstructorsMustBePrivate,
-      DiagnosticsDescriptors.EnumerationHasNoItems,
-      DiagnosticsDescriptors.EnumItemMustBePublic,
+      DiagnosticsDescriptors.SmartEnumHasNoItems,
+      DiagnosticsDescriptors.SmartEnumItemMustBePublic,
       DiagnosticsDescriptors.FieldMustBeReadOnly,
       DiagnosticsDescriptors.PropertyMustBeReadOnly,
-      DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-      DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-      DiagnosticsDescriptors.EnumKeyMemberNameNotAllowed,
-      DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate,
-      DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic,
+      DiagnosticsDescriptors.SmartEnumKeyMemberNameNotAllowed,
+      DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate,
+      DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic,
       DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
       DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-      DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric,
+      DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric,
       DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
       DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
-      DiagnosticsDescriptors.EnumKeyShouldNotBeNullable,
-      DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed,
+      DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable,
+      DiagnosticsDescriptors.SmartEnumWithoutDerivedTypesMustBeSealed,
       DiagnosticsDescriptors.ComparerTypeMustMatchMemberType,
       DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
       DiagnosticsDescriptors.InitAccessorMustBePrivate,
@@ -255,14 +252,12 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (declaredType.IsEnum(out var attribute))
       {
-         var isValidatable = attribute.FindIsValidatable() ?? false;
          var items = declaredType.GetEnumItems();
 
          AnalyzeEnumSwitchMap(context,
                               items,
                               operation.Arguments,
-                              operation,
-                              isValidatable);
+                              operation);
       }
       else if (declaredType.IsAnyUnionType(out attribute)
                && attribute.AttributeClass is not null)
@@ -277,11 +272,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       OperationAnalysisContext context,
       ImmutableArray<IFieldSymbol> items,
       ImmutableArray<IArgumentOperation> args,
-      IInvocationOperation operation,
-      bool isValidatable)
+      IInvocationOperation operation)
    {
       var numberOfCallbacks = (items.IsDefaultOrEmpty ? 0 : items.Length)
-                              + (isValidatable ? 1 : 0)
                               + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
 
       AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
@@ -783,7 +776,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var items = enumType.GetEnumItems();
 
       if (items.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumerationHasNoItems, locationOfFirstDeclaration, enumType);
+         ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumHasNoItems, locationOfFirstDeclaration, enumType);
 
       Check_ItemLike_StaticProperties(context, enumType);
       EnumItemsMustBePublic(context, enumType, items);
@@ -823,19 +816,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
+         ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable, locationOfFirstDeclaration);
          return;
-      }
-
-      var isValidatable = attribute.FindIsValidatable() ?? false;
-
-      if (isValidatable)
-      {
-         ValidateCreateInvalidItem(context, enumType, keyType, locationOfFirstDeclaration);
-      }
-      else if (enumType.IsValueType)
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.NonValidatableEnumsMustBeClass, locationOfFirstDeclaration, enumType);
       }
 
       ValidateKeyMemberComparers(context, enumType, keyType, attribute, locationOfFirstDeclaration, factory, false);
@@ -844,7 +826,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, locationOfFirstDeclaration, BuildTypeName(type));
+         ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, locationOfFirstDeclaration, BuildTypeName(type));
    }
 
    private static void TypeMustNotBeInsideGenericType(OperationAnalysisContext context, INamedTypeSymbol type, Location locationOfFirstDeclaration)
@@ -883,11 +865,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (level == 1)
          {
             if (derivedType.DeclaredAccessibility != Accessibility.Private)
-               ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(context, derivedType), derivedType);
+               ReportDiagnostic(context, DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate, GetDerivedTypeLocation(context, derivedType), derivedType);
          }
          else if (derivedType.DeclaredAccessibility != Accessibility.Public)
          {
-            ReportDiagnostic(context, DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, derivedType), derivedType);
+            ReportDiagnostic(context, DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, derivedType), derivedType);
          }
 
          if (!derivedType.BaseType.IsNullOrObject())
@@ -899,7 +881,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          var derivedType = derivedTypes[i];
 
          if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
-            ReportDiagnostic(context, DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
+            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
       }
    }
 
@@ -939,23 +921,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       return ((TypeDeclarationSyntax)derivedType.DeclaringSyntaxReferences[0].GetSyntax(context.CancellationToken)).Identifier.GetLocation();
    }
 
-   private static void ValidateCreateInvalidItem(
-      OperationAnalysisContext context,
-      INamedTypeSymbol enumType,
-      ITypeSymbol keyType,
-      Location location)
-   {
-      var hasCreateInvalidItemImplementation = enumType.HasCreateInvalidItemImplementation(keyType, context.CancellationToken, context);
-
-      if (!hasCreateInvalidItemImplementation && enumType.IsAbstract)
-      {
-         ReportDiagnostic(context, DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation,
-                          location,
-                          enumType,
-                          keyType);
-      }
-   }
-
    private static void EnumKeyMemberNameMustNotBeItem(OperationAnalysisContext context, IObjectCreationOperation enumSettingsAttr, Location location)
    {
       var keyMemberName = enumSettingsAttr.FindKeyMemberName();
@@ -965,7 +930,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.Syntax;
 
-      ReportDiagnostic(context, DiagnosticsDescriptors.EnumKeyMemberNameNotAllowed,
+      ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyMemberNameNotAllowed,
                        attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.Properties.KEY_MEMBER_NAME)?.GetLocation() ?? location, keyMemberName);
    }
 
@@ -981,7 +946,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (item.DeclaredAccessibility == Accessibility.Public)
             continue;
 
-         ReportDiagnostic(context, DiagnosticsDescriptors.EnumItemMustBePublic,
+         ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumItemMustBePublic,
                           item.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None,
                           item.Name, BuildTypeName(type));
       }

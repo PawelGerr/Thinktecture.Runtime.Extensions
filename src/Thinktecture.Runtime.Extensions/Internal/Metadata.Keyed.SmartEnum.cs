@@ -15,11 +15,6 @@ public abstract partial class Metadata
       public sealed class SmartEnum : Keyed
       {
          /// <summary>
-         /// An indication whether the type is a validatable Smart Enum.
-         /// </summary>
-         public required bool IsValidatable { get; init; }
-
-         /// <summary>
          /// A collection of items available in the current Smart Enum.
          /// </summary>
          public required Lazy<IReadOnlyList<SmartEnumItemMetadata>> Items { get; init; }

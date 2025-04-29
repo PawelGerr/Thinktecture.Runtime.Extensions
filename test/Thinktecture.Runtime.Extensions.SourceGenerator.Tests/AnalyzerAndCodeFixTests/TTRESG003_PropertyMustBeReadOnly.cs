@@ -20,7 +20,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -37,7 +37,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -61,7 +61,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -78,7 +78,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -102,7 +102,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -129,7 +129,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -156,7 +156,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -183,7 +183,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -215,7 +215,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                   public static int Property { get; set; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -245,7 +245,7 @@ public class TTRESG003_PropertyMustBeReadOnly
                   public static int Property { get; set; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -270,7 +270,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -296,7 +296,7 @@ public class TTRESG003_PropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;

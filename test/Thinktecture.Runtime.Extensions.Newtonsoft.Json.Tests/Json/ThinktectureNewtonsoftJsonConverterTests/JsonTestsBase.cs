@@ -8,14 +8,14 @@ public class JsonTestsBase
    public static IEnumerable<object[]> DataForStringBasedEnumTest =>
    [
       [null, "null"],
-      [TestEnum.Item1, "\"item1\""],
-      [TestEnum.Item2, "\"item2\""]
+      [SmartEnum_StringBased.Item1, "\"Item1\""],
+      [SmartEnum_StringBased.Item2, "\"Item2\""]
    ];
 
    public static IEnumerable<object[]> DataForIntBasedEnumTest =>
    [
       [null, "null"],
-      [IntegerEnum.Item1, "1"],
-      [IntegerEnum.Item2, "2"]
+      [SmartEnum_IntBased.Item1, "1"],
+      [SmartEnum_IntBased.Item2, "2"]
    ];
 }

@@ -173,8 +173,8 @@ public class Program
 
       var routeGroup = app.MapGroup("/api");
 
-      routeGroup.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });
-      routeGroup.MapGet("group/{group}", (ProductGroup group) => new { Value = group, group.IsValid });
+      routeGroup.MapGet("category/{category}", (ProductCategory category) => category);
+      routeGroup.MapGet("group/{group}", (ProductGroup group) => group);
       routeGroup.MapGet("productType/{productType}", (ProductType productType) => productType);
       routeGroup.MapGet("productType", (ProductType productType) => productType);
       routeGroup.MapGet("productTypeWithFilter", (BoundValueObject<ProductType, ProductTypeValidationError> productType) => ValueTask.FromResult(productType.Value))

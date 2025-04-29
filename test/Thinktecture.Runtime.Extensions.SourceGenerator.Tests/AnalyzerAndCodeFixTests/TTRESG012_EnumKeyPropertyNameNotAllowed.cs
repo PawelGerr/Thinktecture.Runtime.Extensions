@@ -18,7 +18,7 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Item"|})]
+            [SmartEnum<string>({|#0:KeyMemberName = "Item"|})]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -40,7 +40,7 @@ public class TTRESG012_EnumKeyPropertyNameNotAllowed
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true, {|#0:KeyMemberName = "Foo"|})]
+            [SmartEnum<string>({|#0:KeyMemberName = "Foo"|})]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
