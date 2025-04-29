@@ -13,8 +13,11 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
 
    public TValue this[TKey key] => _equalityComparer.Equals(_key, key) ? _value : throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
 
-   public IEnumerable<TKey> Keys => SingleItem.Collection(_key);
-   public IEnumerable<TValue> Values => SingleItem.Collection(_value);
+   private IReadOnlyList<TKey>? _keys;
+   public IEnumerable<TKey> Keys => _keys ??= [_key];
+
+   private IReadOnlyList<TValue>? _values;
+   public IEnumerable<TValue> Values => _values ??= [_value];
 
    public SingleItemReadOnlyDictionary(TKey key, TValue value, IEqualityComparer<TKey>? equalityComparer = null)
    {

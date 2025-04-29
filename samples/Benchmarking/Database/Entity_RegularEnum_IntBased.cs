@@ -1,12 +1,12 @@
 namespace Thinktecture.Database;
 
 // ReSharper disable InconsistentNaming
-public class Entity_Enum_IntBased
+public class Entity_RegularEnum_IntBased
 {
    public int Id { get; set; }
    public RealEnum Enum { get; set; }
 
-   public Entity_Enum_IntBased(int id, RealEnum @enum)
+   public Entity_RegularEnum_IntBased(int id, RealEnum @enum)
    {
       Id = id;
       Enum = @enum;

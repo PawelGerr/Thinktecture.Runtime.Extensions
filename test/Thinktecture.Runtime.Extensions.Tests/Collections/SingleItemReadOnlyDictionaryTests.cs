@@ -78,29 +78,29 @@ public class SingleItemReadOnlyDictionaryTests
    {
       using var enumerator = _sut.Keys.GetEnumerator();
 
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
 
       enumerator.Reset();
 
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(42);
    }
 
    [Fact]
@@ -108,28 +108,28 @@ public class SingleItemReadOnlyDictionaryTests
    {
       using var enumerator = _sut.Values.GetEnumerator();
 
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
 
       enumerator.Reset();
 
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeTrue();
       enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
 
       enumerator.MoveNext().Should().BeFalse();
-      enumerator.Current.Should().Be(0);
+      enumerator.Current.Should().Be(43);
    }
 }

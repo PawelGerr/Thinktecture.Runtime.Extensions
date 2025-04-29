@@ -8,17 +8,6 @@ namespace Thinktecture;
 public static class SingleItem
 {
    /// <summary>
-   /// Creates a read-only collection with 1 item.
-   /// </summary>
-   /// <param name="item">The single item in the collection.</param>
-   /// <typeparam name="T">Type of the item.</typeparam>
-   /// <returns>A read-only collection with 1 item.</returns>
-   public static IReadOnlyList<T> Collection<T>(T item)
-   {
-      return new SingleItemReadOnlyCollection<T>(item);
-   }
-
-   /// <summary>
    /// Creates a read-only dictionary with 1 item.
    /// </summary>
    /// <param name="key">The key.</param>
@@ -61,7 +50,9 @@ public static class SingleItem
    /// <param name="equalityComparer">Equality comparer.</param>
    /// <typeparam name="T">Type of the item.</typeparam>
    /// <returns>A read-only set with 1 item.</returns>
-   public static IReadOnlySet<T> Set<T>(T item, IEqualityComparer<T>? equalityComparer = null)
+   public static IReadOnlySet<T> Set<T>(
+      T item,
+      IEqualityComparer<T>? equalityComparer = null)
    {
       return new SingleItemReadOnlySet<T>(item, equalityComparer ?? EqualityComparer<T>.Default);
    }
