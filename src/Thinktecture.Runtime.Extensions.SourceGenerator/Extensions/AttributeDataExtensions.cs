@@ -79,11 +79,6 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
    }
 
-   public static bool? FindIsValidatable(this AttributeData attributeData)
-   {
-      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.IS_VALIDATABLE);
-   }
-
    public static bool? FindSkipIComparable(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_ICOMPARABLE);

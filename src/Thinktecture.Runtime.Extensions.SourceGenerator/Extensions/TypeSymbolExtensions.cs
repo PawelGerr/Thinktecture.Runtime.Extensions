@@ -426,7 +426,7 @@ public static class TypeSymbolExtensions
          (baseType, baseType.GetGenericTypeDefinition()),
          ref derivedTypes);
 
-      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)Array.Empty<DerivedTypeInfo>();
+      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)[];
    }
 
    private static void FindDerivedInnerTypes(
@@ -675,43 +675,6 @@ public static class TypeSymbolExtensions
          return false;
 
       return accessor.Body is null && accessor.ExpressionBody is null;
-   }
-
-   public static bool HasCreateInvalidItemImplementation(
-      this ITypeSymbol enumType,
-      ITypeSymbol keyType,
-      CancellationToken cancellationToken,
-      OperationAnalysisContext? reportDiagnostic = null)
-   {
-      var members = enumType.GetMembers(Constants.Methods.CREATE_INVALID_ITEM);
-
-      foreach (var member in members)
-      {
-         if (member is not IMethodSymbol { Name: Constants.Methods.CREATE_INVALID_ITEM } method)
-            continue;
-
-         if (method.Parameters is { IsDefaultOrEmpty: false, Length: 1 })
-         {
-            var parameterType = method.Parameters[0].Type;
-            var returnType = method.ReturnType;
-
-            if (member is { IsStatic: true, DeclaredAccessibility: Accessibility.Private } &&
-                SymbolEqualityComparer.Default.Equals(parameterType, keyType) &&
-                SymbolEqualityComparer.Default.Equals(returnType, enumType))
-            {
-               return true;
-            }
-         }
-
-         reportDiagnostic?.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.InvalidSignatureOfCreateInvalidItem,
-                                                              method.GetIdentifier(cancellationToken).GetLocation(),
-                                                              enumType.Name,
-                                                              keyType.ToFullyQualifiedDisplayString()));
-
-         return true;
-      }
-
-      return false;
    }
 
    public static IReadOnlyList<DelegateMethodState> GetDelegateMethods(

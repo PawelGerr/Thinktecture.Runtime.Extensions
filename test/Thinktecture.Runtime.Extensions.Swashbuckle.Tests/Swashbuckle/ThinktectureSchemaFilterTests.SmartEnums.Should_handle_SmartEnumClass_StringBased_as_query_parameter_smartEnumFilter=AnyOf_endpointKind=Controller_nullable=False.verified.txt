@@ -15,7 +15,7 @@
             "name": "value",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/TestEnum"
+              "$ref": "#/components/schemas/SmartEnum_StringBased"
             }
           }
         ],
@@ -25,7 +25,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestEnum"
+                  "$ref": "#/components/schemas/SmartEnum_StringBased"
                 }
               }
             }
@@ -36,16 +36,16 @@
   },
   "components": {
     "schemas": {
-      "TestEnum": {
+      "SmartEnum_StringBased": {
         "type": "string",
         "anyOf": [
           {
-            "title": "item1",
-            "const": "item1"
+            "title": "Item1",
+            "const": "Item1"
           },
           {
-            "title": "item2",
-            "const": "item2"
+            "title": "Item2",
+            "const": "Item2"
           }
         ]
       }

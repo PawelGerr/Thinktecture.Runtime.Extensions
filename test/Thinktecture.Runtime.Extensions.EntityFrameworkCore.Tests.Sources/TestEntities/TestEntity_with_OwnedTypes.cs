@@ -11,7 +11,7 @@ public class TestEntity_with_OwnedTypes
 {
    public Guid Id { get; set; }
 
-   public TestEnum TestEnum { get; set; }
+   public SmartEnum_StringBased TestEnum { get; set; }
    public Boundary Boundary { get; set; }
 
    public OwnedEntity_Owns_Inline Inline_Inline { get; set; }

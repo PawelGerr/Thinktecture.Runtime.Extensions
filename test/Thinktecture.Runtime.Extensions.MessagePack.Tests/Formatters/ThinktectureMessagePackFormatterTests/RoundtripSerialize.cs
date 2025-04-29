@@ -30,46 +30,16 @@ public partial class RoundTripSerialize
    public void Should_try_deserialize_enum_when_value_is_null_or_default()
    {
       // class - int
-      RoundTrip((object)null, (TestSmartEnum_Class_IntBased)null);
-      FluentActions.Invoking(() => RoundTrip(0, (TestSmartEnum_Class_IntBased)null))
+      RoundTrip((object)null, (SmartEnum_IntBased)null);
+      FluentActions.Invoking(() => RoundTrip(0, (SmartEnum_IntBased)null))
                    .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<ValidationException>().WithMessage("There is no item of type 'TestSmartEnum_Class_IntBased' with the identifier '0'.");
-
-      // [validateable] class - int
-      RoundTrip((object)null, (TestSmartEnum_Class_IntBased_Validatable)null);
-      RoundTrip(0, TestSmartEnum_Class_IntBased_Validatable.Get(0)); // invalid item "0"
+                   .WithInnerException<ValidationException>().WithMessage("There is no item of type 'SmartEnum_IntBased' with the identifier '0'.");
 
       // class - string
-      RoundTrip((object)null, (TestSmartEnum_Class_StringBased)null);
-
-      // [validateable] class - string
-      RoundTrip((object)null, (TestSmartEnum_Class_StringBased_Validatable)null);
+      RoundTrip((object)null, (SmartEnum_StringBased)null);
 
       // class - class
-      RoundTrip((object)null, (TestSmartEnum_Class_ClassBased)null);
-
-      // [validateable] nullable struct - int
-      RoundTrip((object)null, (TestSmartEnum_Struct_IntBased_Validatable?)null);
-      RoundTrip(0, (TestSmartEnum_Struct_IntBased_Validatable?)TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] struct - int
-      FluentActions.Invoking(() => RoundTrip((object)null, default(TestSmartEnum_Struct_IntBased_Validatable)))
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Unexpected msgpack code 192 (nil) encountered.");
-      RoundTrip(0, TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] nullable struct - string
-      RoundTrip((object)null, (TestSmartEnum_Struct_StringBased_Validatable?)null);
-
-      // [validateable] struct - string
-      FluentActions.Invoking(() => RoundTrip((object)null, (TestSmartEnum_Struct_StringBased_Validatable)null)) // AllowDefaultStructs = false
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_StringBased_Validatable\" because it doesn't allow default values.");
-
-      // [validateable] struct - class
-      FluentActions.Invoking(() => RoundTrip((object)null, (TestSmartEnum_Struct_ClassBased)null)) // AllowDefaultStructs = false
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_ClassBased\" because it doesn't allow default values.");
+      RoundTrip((object)null, (SmartEnum_ClassBased)null);
    }
 
    [Fact]
@@ -167,10 +137,10 @@ public partial class RoundTripSerialize
 
    public static IEnumerable<object[]> DataForValueObject =>
    [
-      [new ClassWithIntBasedEnum(IntegerEnum.Item1)],
-      [new ClassWithStringBasedEnum(TestEnum.Item1)],
-      [TestEnum.Item1],
-      [IntegerEnum.Item1]
+      [new ClassWithIntBasedEnum(SmartEnum_IntBased.Item1)],
+      [new ClassWithStringBasedEnum(SmartEnum_StringBased.Item1)],
+      [SmartEnum_StringBased.Item1],
+      [SmartEnum_IntBased.Item1]
    ];
 
    [Theory]
@@ -235,10 +205,10 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(TestEnumWithCustomError.Item1, options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<TestEnumWithCustomError>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(TestSmartEnum_CustomError.Item1, options, CancellationToken.None);
+      var value = MessagePackSerializer.Deserialize<TestSmartEnum_CustomError>(bytes, options, CancellationToken.None);
 
-      value.Should().BeEquivalentTo(TestEnumWithCustomError.Item1);
+      value.Should().BeEquivalentTo(TestSmartEnum_CustomError.Item1);
    }
 
    [Fact]

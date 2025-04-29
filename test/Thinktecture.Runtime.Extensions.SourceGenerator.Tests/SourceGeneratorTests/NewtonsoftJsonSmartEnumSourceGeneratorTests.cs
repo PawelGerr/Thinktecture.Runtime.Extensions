@@ -60,31 +60,6 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
    }
 
    [Fact]
-   public async Task Should_generate_NewtonsoftJsonConverter_and_Attribute_for_struct_if_Attribute_is_missing()
-   {
-      var source = """
-
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<string>]
-         	public partial struct TestEnum
-         	{
-               public static readonly TestEnum Item1 = new("Item1");
-               public static readonly TestEnum Item2 = new("Item2");
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".NewtonsoftJson",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
    public void Should_not_generate_NewtonsoftJsonConverter_and_attribute_if_Attribute_is_present()
    {
       var source = """

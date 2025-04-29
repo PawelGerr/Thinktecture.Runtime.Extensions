@@ -143,32 +143,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_ValidatableEnum_with_derived_type()
-   {
-      var code = """
-
-         using System;
-         using Thinktecture;
-
-         namespace TestNamespace
-         {
-            [SmartEnum<string>(IsValidatable = true)]
-         	public partial class {|#0:TestEnum|}
-         	{
-               public static readonly TestEnum Item1 = default;
-
-               private sealed class DerivedType : TestEnum
-               {
-               }
-            }
-         }
-         """;
-
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_on_Enum_with_derived_type()
+   public async Task Should_not_trigger_having_derived_type()
    {
       var code = """
 
@@ -193,32 +168,7 @@ public class TTRESG037_EnumWithoutDerivedTypesMustBeSealed
    }
 
    [Fact]
-   public async Task Should_not_trigger_on_IValidatableEnum_with_generic_derived_type()
-   {
-      var code = """
-
-         using System;
-         using Thinktecture;
-
-         namespace TestNamespace
-         {
-            [SmartEnum<string>(IsValidatable = true)]
-         	public partial class {|#0:TestEnum|}
-         	{
-               public static readonly TestEnum Item1 = default;
-
-               private sealed class DerivedType<T> : TestEnum
-               {
-               }
-            }
-         }
-         """;
-
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
-   }
-
-   [Fact]
-   public async Task Should_not_trigger_on_Enum_with_generic_derived_type()
+   public async Task Should_not_trigger_having_generic_derived_type()
    {
       var code = """
 

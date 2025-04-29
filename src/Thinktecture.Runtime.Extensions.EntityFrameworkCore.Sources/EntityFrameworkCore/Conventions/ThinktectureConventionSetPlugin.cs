@@ -17,7 +17,7 @@ internal sealed class ThinktectureConventionSetPlugin : IConventionSetPlugin
    {
       if (_settings?.IsEnabled == true)
       {
-         var convention = new ThinktectureConventionsPlugin(_settings.ValidateOnWrite, _settings.UseConstructorForRead, _settings.ConfigureEnumsAndKeyedValueObjects);
+         var convention = new ThinktectureConventionsPlugin( _settings.UseConstructorForRead, _settings.ConfigureEnumsAndKeyedValueObjects);
 
          conventionSet.NavigationAddedConventions.Add(convention);
          conventionSet.PropertyAddedConventions.Add(convention);

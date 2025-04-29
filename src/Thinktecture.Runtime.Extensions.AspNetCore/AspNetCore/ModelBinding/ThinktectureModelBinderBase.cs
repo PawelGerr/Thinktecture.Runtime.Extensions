@@ -18,7 +18,6 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    private readonly TypeConverter? _keyConverter;
@@ -100,7 +99,7 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
 
          var validationError = T.Validate((TKey)key, valueProviderResult.Culture, out var obj);
 
-         if (validationError is null || _mayReturnInvalidObjects)
+         if (validationError is null)
          {
             bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
             bindingContext.Result = ModelBindingResult.Success(obj);

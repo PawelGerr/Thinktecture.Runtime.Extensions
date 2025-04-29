@@ -13,7 +13,7 @@ using Thinktecture.AspNetCore.ModelBinding;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
-namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ValueObjectModelBinderTests;
+namespace Thinktecture.Runtime.Tests.AspNetCore.ModelBinding.ThinktectureModelBinderTests;
 
 // ReSharper disable once InconsistentNaming
 public class BindModelAsync
@@ -22,41 +22,14 @@ public class BindModelAsync
    public void Should_try_bind_enum_when_value_is_null_or_default()
    {
       // class - int
-      Bind<TestSmartEnum_Class_IntBased>(null).Should().Be(null);
-      FluentActions.Invoking(() => Bind<TestSmartEnum_Class_IntBased>("0")).Should().Throw<Exception>().WithMessage("There is no item of type 'TestSmartEnum_Class_IntBased' with the identifier '0'.");
-
-      // [validateable] class - int
-      Bind<TestSmartEnum_Class_IntBased_Validatable>(null).Should().Be(null);
-      Bind<TestSmartEnum_Class_IntBased_Validatable>("0").Should().Be(TestSmartEnum_Class_IntBased_Validatable.Get(0)); // invalid item "0"
+      Bind<SmartEnum_IntBased>(null).Should().Be(null);
+      FluentActions.Invoking(() => Bind<SmartEnum_IntBased>("0")).Should().Throw<Exception>().WithMessage("There is no item of type 'SmartEnum_IntBased' with the identifier '0'.");
 
       // class - string
-      Bind<TestSmartEnum_Class_StringBased>(null).Should().Be(null);
-
-      // [validateable] class - string
-      Bind<TestSmartEnum_Class_StringBased_Validatable>(null).Should().Be(null);
+      Bind<SmartEnum_StringBased>(null).Should().Be(null);
 
       // class - class
-      Bind<TestSmartEnum_Class_ClassBased>(null).Should().Be(null);
-
-      // [validateable] nullable struct - int
-      Bind<TestSmartEnum_Struct_IntBased_Validatable?>(null).Should().Be(null);
-      Bind<TestSmartEnum_Struct_IntBased_Validatable?>("0").Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] struct - int
-      FluentActions.Invoking(() => Bind<TestSmartEnum_Struct_IntBased_Validatable>(null))
-                   .Should().Throw<Exception>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_IntBased_Validatable\".");
-      Bind<TestSmartEnum_Struct_IntBased_Validatable>("0").Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] nullable struct - string
-      Bind<TestSmartEnum_Struct_StringBased_Validatable?>(null).Should().Be(null);
-
-      // [validateable] struct - string
-      FluentActions.Invoking(() => Bind<TestSmartEnum_Struct_StringBased_Validatable>(null)) // AllowDefaultStructs = false
-                   .Should().Throw<Exception>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_StringBased_Validatable\" because it doesn't allow default values.");
-
-      // [validateable] struct - class
-      FluentActions.Invoking(() => Bind<TestSmartEnum_Struct_ClassBased>(null)) // AllowDefaultStructs = false
-                   .Should().Throw<Exception>().WithMessage("Cannot convert a string to type \"TestSmartEnum_Struct_ClassBased\".");
+      Bind<SmartEnum_ClassBased>(null).Should().Be(null);
    }
 
    [Fact]
@@ -97,17 +70,17 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_int_based_enum()
    {
-      var ctx = await BindAsync<IntegerEnum>("1");
+      var ctx = await BindAsync<SmartEnum_IntBased>("1");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(IntegerEnum.Item1);
+      ctx.Result.Model.Should().Be(SmartEnum_IntBased.Item1);
    }
 
    [Fact]
    public async Task Should_return_null_if_value_is_empty_string()
    {
-      var ctx = await BindAsync<IntegerEnum>(String.Empty);
+      var ctx = await BindAsync<SmartEnum_IntBased>(String.Empty);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
@@ -115,42 +88,19 @@ public class BindModelAsync
    }
 
    [Fact]
-   public async Task Should_bind_validatable_enum_even_if_key_is_unknown()
-   {
-      var ctx = await BindAsync<IntegerEnum>("42");
-
-      ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
-
-      var value = (IntegerEnum)ctx.Result.Model;
-      value!.IsValid.Should().BeFalse();
-      value!.Key.Should().Be(42);
-   }
-
-   [Fact]
-   public async Task Should_not_bind_validatable_enum_if_value_not_matching_key_type()
-   {
-      var ctx = await BindAsync<IntegerEnum>("item1");
-
-      ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("The value 'item1' is not valid.")]);
-      ctx.Result.IsModelSet.Should().BeFalse();
-   }
-
-   [Fact]
    public async Task Should_not_bind_enum_if_key_is_unknown()
    {
-      var ctx = await BindAsync<ValidIntegerEnum>("42");
+      var ctx = await BindAsync<SmartEnum_IntBased>("42");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
-      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("There is no item of type 'ValidIntegerEnum' with the identifier '42'.")]);
+      ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("There is no item of type 'SmartEnum_IntBased' with the identifier '42'.")]);
       ctx.Result.IsModelSet.Should().BeFalse();
    }
 
    [Fact]
    public async Task Should_not_bind_enum_if_value_not_matching_key_type()
    {
-      var ctx = await BindAsync<ValidIntegerEnum>("item1");
+      var ctx = await BindAsync<SmartEnum_IntBased>("item1");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("The value 'item1' is not valid.")]);
@@ -160,10 +110,10 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_string_based_enum()
    {
-      var ctx = await BindAsync<TestEnum>("item1");
+      var ctx = await BindAsync<SmartEnum_StringBased>("item1");
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(TestEnum.Item1);
+      ctx.Result.Model.Should().Be(SmartEnum_StringBased.Item1);
    }
 
    [Fact]
@@ -289,17 +239,17 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_successfully_smart_enum_having_string_base_factory_specified_by_ObjectFactoryAttribute()
    {
-      var ctx = await BindAsync<EnumWithFactory>("=1=");
+      var ctx = await BindAsync<SmartEnum_Factory>("=1=");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(EnumWithFactory.Item1);
+      ctx.Result.Model.Should().Be(SmartEnum_Factory.Item1);
    }
 
    [Fact]
    public async Task Should_return_error_when_binding_smart_enum_having_string_base_factory_specified_by_ObjectFactoryAttribute()
    {
-      var ctx = await BindAsync<EnumWithFactory>("A");
+      var ctx = await BindAsync<SmartEnum_Factory>("A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Unknown item 'A'")]);
@@ -309,17 +259,17 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_successfully_keyless_enum_with_factory()
    {
-      var ctx = await BindAsync<KeylessTestEnumWithFactory>("1");
+      var ctx = await BindAsync<SmartEnum_Keyless_ObjectFactory>("1");
 
       ctx.ModelState.ErrorCount.Should().Be(0);
       ctx.Result.IsModelSet.Should().BeTrue();
-      ctx.Result.Model.Should().Be(KeylessTestEnumWithFactory.Item1);
+      ctx.Result.Model.Should().Be(SmartEnum_Keyless_ObjectFactory.Item1);
    }
 
    [Fact]
    public async Task Should_return_error_when_binding_keyless_enum_with_factories_with_invalid_intput()
    {
-      var ctx = await BindAsync<KeylessTestEnumWithFactory>("A");
+      var ctx = await BindAsync<SmartEnum_Keyless_ObjectFactory>("A");
 
       ctx.ModelState.ErrorCount.Should().Be(1);
       ctx.ModelState[ctx.ModelName]!.Errors.Should().BeEquivalentTo([new ModelError("Unknown item 'A'")]);

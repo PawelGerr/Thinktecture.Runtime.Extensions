@@ -16,7 +16,6 @@ public static class DbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useThinktectureConverters">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
@@ -24,12 +23,11 @@ public static class DbContextOptionsBuilderExtensions
    public static DbContextOptionsBuilder<T> UseValueObjectValueConverter<T>(
       this DbContextOptionsBuilder<T> builder,
       bool useThinktectureConverters = true,
-      bool validateOnWrite = true,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
       where T : DbContext
    {
-      return builder.UseThinktectureValueConverters(useThinktectureConverters, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      return builder.UseThinktectureValueConverters(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects);
    }
 
    /// <summary>
@@ -37,7 +35,6 @@ public static class DbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useThinktectureConverters">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from a database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
@@ -45,11 +42,10 @@ public static class DbContextOptionsBuilderExtensions
    public static DbContextOptionsBuilder UseValueObjectValueConverter(
       this DbContextOptionsBuilder builder,
       bool useThinktectureConverters = true,
-      bool validateOnWrite = true,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      return builder.UseThinktectureValueConverters(useThinktectureConverters, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      return builder.UseThinktectureValueConverters(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects);
    }
 
    /// <summary>
@@ -57,19 +53,17 @@ public static class DbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useThinktectureConverters">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from a database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
    public static DbContextOptionsBuilder<T> UseThinktectureValueConverters<T>(
       this DbContextOptionsBuilder<T> builder,
       bool useThinktectureConverters = true,
-      bool validateOnWrite = true,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
       where T : DbContext
    {
-      ((DbContextOptionsBuilder)builder).UseThinktectureValueConverters(useThinktectureConverters, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      ((DbContextOptionsBuilder)builder).UseThinktectureValueConverters(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects);
       return builder;
    }
 
@@ -78,18 +72,16 @@ public static class DbContextOptionsBuilderExtensions
    /// </summary>
    /// <param name="builder">Options builder.</param>
    /// <param name="useThinktectureConverters">Indication whether to enable or disable the feature.</param>
-   /// <param name="validateOnWrite">If <c>true</c> and the type is a validatable Smart Enum, ensures that the item is valid before writing it to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from a database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
    public static DbContextOptionsBuilder UseThinktectureValueConverters(
       this DbContextOptionsBuilder builder,
       bool useThinktectureConverters = true,
-      bool validateOnWrite = true,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      builder.AddOrUpdateExtension(extension => extension.UseThinktectureValueConverters(useThinktectureConverters, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects));
+      builder.AddOrUpdateExtension(extension => extension.UseThinktectureValueConverters(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects));
       return builder;
    }
 

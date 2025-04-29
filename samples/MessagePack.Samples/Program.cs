@@ -28,9 +28,6 @@ Console.WriteLine(boundaryWithFormatter);
 var textOrNumber = DoRoundTripSerializationOfTypesWithoutFormatter((TextOrNumberSerializable)42);
 Console.WriteLine(textOrNumber);
 
-var textOrNumberWithFormatter = DoRoundTripSerialization((TextOrNumberSerializableWithFormatter)42);
-Console.WriteLine(textOrNumberWithFormatter);
-
 // Smart Enums and Value Objects without [MessagePackFormatterAttribute] need "ThinktectureMessageFormatterResolver".
 static T DoRoundTripSerializationOfTypesWithoutFormatter<T>(T obj)
 {

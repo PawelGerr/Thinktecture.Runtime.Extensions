@@ -12,8 +12,8 @@ public class JsonTestsBase
    public static IEnumerable<object[]> DataForStringBasedEnumTest =>
    [
       [null, "null"],
-      [TestEnum.Item1, "\"item1\""],
-      [TestEnum.Item2, "\"item2\""]
+      [SmartEnum_StringBased.Item1, "\"Item1\""],
+      [SmartEnum_StringBased.Item2, "\"Item2\""]
    ];
 
    public static IEnumerable<object[]> DataForClassWithStringBasedEnumTest =>
@@ -21,15 +21,15 @@ public class JsonTestsBase
       [null, "null"],
       [new ClassWithStringBasedEnum(), "{}", true],
       [new ClassWithStringBasedEnum(), "{\"Enum\":null}"],
-      [new ClassWithStringBasedEnum(TestEnum.Item1), "{\"Enum\":\"item1\"}"],
-      [new ClassWithStringBasedEnum(TestEnum.Item2), "{\"Enum\":\"item2\"}"]
+      [new ClassWithStringBasedEnum(SmartEnum_StringBased.Item1), "{\"Enum\":\"Item1\"}"],
+      [new ClassWithStringBasedEnum(SmartEnum_StringBased.Item2), "{\"Enum\":\"Item2\"}"]
    ];
 
    public static IEnumerable<object[]> DataForIntBasedEnumTest =>
    [
       [null, "null"],
-      [IntegerEnum.Item1, "1"],
-      [IntegerEnum.Item2, "2"]
+      [SmartEnum_IntBased.Item1, "1"],
+      [SmartEnum_IntBased.Item2, "2"]
    ];
 
    public static IEnumerable<object[]> DataForClassWithIntBasedEnumTest =>
@@ -37,8 +37,8 @@ public class JsonTestsBase
       [null, "null"],
       [new ClassWithIntBasedEnum(), "{}", true],
       [new ClassWithIntBasedEnum(), "{\"Enum\":null}"],
-      [new ClassWithIntBasedEnum(IntegerEnum.Item1), "{\"Enum\":1}"],
-      [new ClassWithIntBasedEnum(IntegerEnum.Item2), "{\"Enum\":2}"]
+      [new ClassWithIntBasedEnum(SmartEnum_IntBased.Item1), "{\"Enum\":1}"],
+      [new ClassWithIntBasedEnum(SmartEnum_IntBased.Item2), "{\"Enum\":2}"]
    ];
 
    protected static string Serialize<T, TKey>(

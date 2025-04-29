@@ -14,28 +14,14 @@ public class GetBinder
    [Fact]
    public void Should_return_binder_for_int_based_enum()
    {
-      var binder = GetModelBinder<IntegerEnum>();
-      binder.Should().BeOfType<ThinktectureModelBinder<IntegerEnum, int, ValidationError>>();
-   }
-
-   [Fact]
-   public void Should_return_binder_for_int_based_struct()
-   {
-      var binder = GetModelBinder<TestSmartEnum_Struct_IntBased_Validatable>();
-      binder.Should().BeOfType<ThinktectureModelBinder<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>();
-   }
-
-   [Fact]
-   public void Should_return_binder_for_int_based_struct_nullable()
-   {
-      var binder = GetModelBinder<TestSmartEnum_Struct_IntBased_Validatable?>();
-      binder.Should().BeOfType<ThinktectureModelBinder<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>();
+      var binder = GetModelBinder<SmartEnum_IntBased>();
+      binder.Should().BeOfType<ThinktectureModelBinder<SmartEnum_IntBased, int, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_binder_for_string_based_enum()
    {
-      GetModelBinder<TestEnum>().Should().BeOfType<ThinktectureModelBinder<TestEnum, string, ValidationError>>();
+      GetModelBinder<SmartEnum_StringBased>().Should().BeOfType<ThinktectureModelBinder<SmartEnum_StringBased, string, ValidationError>>();
    }
 
    [Fact]
@@ -55,22 +41,22 @@ public class GetBinder
    [Fact]
    public void Should_return_null_for_keyless_enum()
    {
-      var binder = GetModelBinder<KeylessTestEnum>();
+      var binder = GetModelBinder<SmartEnum_Keyless>();
       binder.Should().BeNull();
    }
 
    [Fact]
    public void Should_return_binder_for_keyless_enum_with_factory()
    {
-      var binder = GetModelBinder<KeylessTestEnumWithFactory>();
-      binder.Should().BeOfType<ThinktectureModelBinder<KeylessTestEnumWithFactory, string, ValidationError>>();
+      var binder = GetModelBinder<SmartEnum_Keyless_ObjectFactory>();
+      binder.Should().BeOfType<ThinktectureModelBinder<SmartEnum_Keyless_ObjectFactory, string, ValidationError>>();
    }
 
    [Fact]
    public void Should_return_string_base_binder_specified_by_ObjectFactoryAttribute_smart_enum()
    {
-      var binder = GetModelBinder<EnumWithFactory>();
-      binder.Should().BeOfType<ThinktectureModelBinder<EnumWithFactory, string, ValidationError>>();
+      var binder = GetModelBinder<SmartEnum_Factory>();
+      binder.Should().BeOfType<ThinktectureModelBinder<SmartEnum_Factory, string, ValidationError>>();
    }
 
    [Fact]

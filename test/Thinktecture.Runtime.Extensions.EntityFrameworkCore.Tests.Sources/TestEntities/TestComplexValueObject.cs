@@ -5,5 +5,5 @@ namespace Thinktecture.Runtime.Tests.TestEntities;
 [ComplexValueObject]
 public partial class TestComplexValueObject
 {
-   public TestEnum TestEnum { get; }
+   public SmartEnum_StringBased TestEnum { get; }
 }

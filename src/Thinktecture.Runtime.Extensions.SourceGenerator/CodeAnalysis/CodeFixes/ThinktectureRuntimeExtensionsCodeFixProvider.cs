@@ -15,7 +15,6 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _MAKE_FIELD_READONLY = "Make the field read-only";
    private const string _REMOVE_PROPERTY_SETTER = "Remove property setter";
    private const string _MAKE_INIT_PRIVATE = "Make init private";
-   private const string _IMPLEMENT_CREATE_INVALID = $"Implement '{Constants.Methods.CREATE_INVALID_ITEM}'";
    private const string _MAKE_TYPE_PRIVATE = "Make type private";
    private const string _MAKE_TYPE_PUBLIC = "Make type public";
    private const string _SEAL_CLASS = "Seal class";
@@ -26,13 +25,12 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
    [
       DiagnosticsDescriptors.TypeMustBePartial.Id,
-      DiagnosticsDescriptors.EnumItemMustBePublic.Id,
+      DiagnosticsDescriptors.SmartEnumItemMustBePublic.Id,
       DiagnosticsDescriptors.FieldMustBeReadOnly.Id,
       DiagnosticsDescriptors.PropertyMustBeReadOnly.Id,
-      DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id,
-      DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id,
-      DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id,
-      DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id,
+      DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate.Id,
+      DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic.Id,
+      DiagnosticsDescriptors.SmartEnumWithoutDerivedTypesMustBeSealed.Id,
       DiagnosticsDescriptors.InitAccessorMustBePrivate.Id,
       DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer.Id,
       DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer.Id,
@@ -70,7 +68,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_FIELD_READONLY, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.ReadOnlyKeyword), _MAKE_FIELD_READONLY), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.EnumItemMustBePublic.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.SmartEnumItemMustBePublic.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().FieldDeclaration, SyntaxKind.PublicKeyword), _MAKE_MEMBER_PUBLIC), diagnostic);
          }
@@ -82,19 +80,15 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.AbstractEnumNeedsCreateInvalidItemImplementation.Id)
-         {
-            context.RegisterCodeFix(CodeAction.Create(_IMPLEMENT_CREATE_INVALID, t => AddCreateInvalidItemAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _IMPLEMENT_CREATE_INVALID), diagnostic);
-         }
-         else if (diagnostic.Id == DiagnosticsDescriptors.InnerEnumOnFirstLevelMustBePrivate.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PrivateKeyword), _MAKE_TYPE_PRIVATE), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.InnerEnumOnNonFirstLevelMustBePublic.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_TYPE_PUBLIC, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PublicKeyword), _MAKE_TYPE_PUBLIC), diagnostic);
          }
-         else if (diagnostic.Id == DiagnosticsDescriptors.EnumWithoutDerivedTypesMustBeSealed.Id)
+         else if (diagnostic.Id == DiagnosticsDescriptors.SmartEnumWithoutDerivedTypesMustBeSealed.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_SEAL_CLASS, _ => ReplaceOrAddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.AbstractKeyword, SyntaxKind.SealedKeyword), _SEAL_CLASS), diagnostic);
          }
@@ -276,45 +270,6 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       }
 
       return Task.FromResult(document);
-   }
-
-   private static async Task<Document> AddCreateInvalidItemAsync(
-      Document document,
-      SyntaxNode root,
-      TypeDeclarationSyntax? declaration,
-      CancellationToken cancellationToken)
-   {
-      if (declaration is null)
-         return document;
-
-      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-
-      if (model is null)
-         return document;
-
-      var enumType = model.GetDeclaredSymbol(declaration);
-
-      if (!enumType.IsEnum(out var smartEnumAttribute))
-         return document;
-
-      var keyType = smartEnumAttribute.AttributeClass?.TypeArguments[0];
-
-      if (keyType is null)
-         return document;
-
-      var parameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("key"))
-                                   .WithType(SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)));
-
-      var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName(enumType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start)), Constants.Methods.CREATE_INVALID_ITEM)
-                                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                                .AddParameterListParameters(parameter)
-                                .WithBody(SyntaxFactory.Block(BuildThrowNotImplementedException()));
-
-      var newDeclaration = declaration.AddMembers(method);
-      var newRoot = root.ReplaceNode(declaration, newDeclaration);
-      var newDoc = document.WithSyntaxRoot(newRoot);
-
-      return newDoc;
    }
 
    private static async Task<Document> AddKeyMemberEqualityComparerAttributeAsync(

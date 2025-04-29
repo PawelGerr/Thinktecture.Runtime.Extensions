@@ -13,16 +13,14 @@ public static class PropertyBuilderExtensions
    /// </summary>
    /// <typeparam name="TProperty">The property type.</typeparam>
    /// <param name="propertyBuilder">The property builder.</param>
-   /// <param name="validateOnWrite">Whether to validate the value when writing to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
    /// <returns>The property builder for chaining.</returns>
    [Obsolete("Use 'HasThinktectureValueConverter' instead.")]
    public static PropertyBuilder<TProperty> HasValueObjectConversion<TProperty>(
       this PropertyBuilder<TProperty> propertyBuilder,
-      bool validateOnWrite,
       bool useConstructorForRead = true)
    {
-      return propertyBuilder.HasThinktectureValueConverter(validateOnWrite, useConstructorForRead);
+      return propertyBuilder.HasThinktectureValueConverter(useConstructorForRead);
    }
 
    /// <summary>
@@ -30,15 +28,13 @@ public static class PropertyBuilderExtensions
    /// </summary>
    /// <typeparam name="TProperty">The property type.</typeparam>
    /// <param name="propertyBuilder">The property builder.</param>
-   /// <param name="validateOnWrite">Whether to validate the value when writing to the database.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
    /// <returns>The property builder for chaining.</returns>
    public static PropertyBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
       this PropertyBuilder<TProperty> propertyBuilder,
-      bool validateOnWrite,
       bool useConstructorForRead = true)
    {
-      var converter = ThinktectureValueConverterFactory.Create(typeof(TProperty), validateOnWrite, useConstructorForRead);
+      var converter = ThinktectureValueConverterFactory.Create(typeof(TProperty), useConstructorForRead);
       propertyBuilder.HasConversion(converter);
 
       return propertyBuilder;

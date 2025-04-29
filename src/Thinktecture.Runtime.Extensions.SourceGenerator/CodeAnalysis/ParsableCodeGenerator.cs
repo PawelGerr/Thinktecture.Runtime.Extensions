@@ -4,22 +4,17 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGeneratorState>
 {
-   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForValueObject = new ParsableCodeGenerator(false, false);
-   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForEnum = new ParsableCodeGenerator(true, false);
-   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForValidatableEnum = new ParsableCodeGenerator(true, true);
+   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForValueObject = new ParsableCodeGenerator(false);
+   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForEnum = new ParsableCodeGenerator(true);
 
    private readonly bool _isForEnum;
-   private readonly bool _isForValidatableEnum;
 
    public string CodeGeneratorName => "Parsable-CodeGenerator";
    public string FileNameSuffix => ".Parsable";
 
-   private ParsableCodeGenerator(
-      bool isForEnum,
-      bool isForValidatableEnum)
+   private ParsableCodeGenerator(bool isForEnum)
    {
       _isForEnum = isForEnum;
-      _isForValidatableEnum = isForValidatableEnum;
    }
 
    public void GenerateBaseTypes(StringBuilder sb, ParsableGeneratorState state)
@@ -99,58 +94,36 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out var result);");
       }
 
-      if (_isForValidatableEnum)
-      {
-         sb.Append(@"
-      return result!;
-   }");
-      }
-      else
-      {
-         sb.Append(@"
+      sb.Append(@"
 
       if(validationError is null)
          return result!;
 
       throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
    }");
-      }
    }
 
-   private void GenerateParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
+   private static void GenerateParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
-   {");
-
-      sb.Append(@"
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out var result);");
-
-      if (_isForValidatableEnum)
-      {
-         sb.Append(@"
-      return result!;
-   }");
-      }
-      else
-      {
-         sb.Append(@"
+   {
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(@">(s, provider, out var result);
 
       if(validationError is null)
          return result!;
 
       throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
    }");
-      }
 
       sb.Append(@"
 #endif");
    }
 
-   private void GenerateTryParse(StringBuilder sb, ParsableGeneratorState state)
+   private static void GenerateTryParse(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
 
@@ -185,21 +158,12 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out result!);");
       }
 
-      if (_isForValidatableEnum)
-      {
-         sb.Append(@"
-      return true;
-   }");
-      }
-      else
-      {
-         sb.Append(@"
+      sb.Append(@"
       return validationError is null;
    }");
-      }
    }
 
-   private void GenerateTryParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
+   private static void GenerateTryParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
 
@@ -210,22 +174,9 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(state.Type).Append(@" result)
    {
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out result!);");
-
-      if (_isForValidatableEnum)
-      {
-         sb.Append(@"
-      return true;
-   }");
-      }
-      else
-      {
-         sb.Append(@"
+      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(@">(s, provider, out result!);
       return validationError is null;
-   }");
-      }
-
-      sb.Append(@"
+   }
 #endif");
    }
 }

@@ -7,10 +7,10 @@ public class ToValue
    [Fact]
    public void Should_return_value_using_factory_specified_via_ObjectFactoryAttribute()
    {
-      ((IConvertible<string>)EnumWithFactory.Item1).ToValue()
+      ((IConvertible<string>)SmartEnum_Factory.Item1).ToValue()
                                                               .Should().Be("=1=");
 
-      ((IConvertible<int>)EnumWithFactory.Item1).ToValue()
+      ((IConvertible<int>)SmartEnum_Factory.Item1).ToValue()
                                                            .Should().Be(1);
    }
 }

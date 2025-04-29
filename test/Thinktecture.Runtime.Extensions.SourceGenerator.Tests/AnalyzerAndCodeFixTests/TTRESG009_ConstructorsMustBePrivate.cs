@@ -20,7 +20,7 @@ public class TTRESG009_ConstructorsMustBePrivate
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -46,7 +46,7 @@ public class TTRESG009_ConstructorsMustBePrivate
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -72,7 +72,7 @@ public class TTRESG009_ConstructorsMustBePrivate
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;

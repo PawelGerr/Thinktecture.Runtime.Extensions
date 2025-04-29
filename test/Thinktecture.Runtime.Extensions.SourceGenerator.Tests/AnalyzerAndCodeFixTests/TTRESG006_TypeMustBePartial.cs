@@ -20,7 +20,7 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public class {|#0:TestEnum|}
             	{
                   public static readonly TestEnum Item1 = default;
@@ -35,45 +35,8 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|}
-            	{
-                  public static readonly TestEnum Item1 = default;
-               }
-            }
-            """;
-
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
-      }
-
-      [Fact]
-      public async Task Should_trigger_on_non_partial_struct()
-      {
-         var code = """
-
-            using System;
-            using Thinktecture;
-
-            namespace TestNamespace
-            {
-               [SmartEnum<string>(IsValidatable = true)]
-            	public struct {|#0:TestEnum|}
-            	{
-                  public static readonly TestEnum Item1 = default;
-               }
-            }
-            """;
-
-         var expectedCode = """
-
-            using System;
-            using Thinktecture;
-
-            namespace TestNamespace
-            {
-               [SmartEnum<string>(IsValidatable = true)]
-            	public partial struct {|#0:TestEnum|}
             	{
                   public static readonly TestEnum Item1 = default;
                }
@@ -94,29 +57,8 @@ public class TTRESG006_TypeMustBePartial
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|}
-            	{
-                  public static readonly TestEnum Item1 = default;
-               }
-            }
-            """;
-
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
-      }
-
-      [Fact]
-      public async Task Should_not_trigger_on_partial_struct()
-      {
-         var code = """
-
-            using System;
-            using Thinktecture;
-
-            namespace TestNamespace
-            {
-               [SmartEnum<string>(IsValidatable = true)]
-            	public partial struct {|#0:TestEnum|}
             	{
                   public static readonly TestEnum Item1 = default;
                }

@@ -9,32 +9,24 @@ public class GetHashCode
    [Fact]
    public void Should_return_hashcode_of_the_type_plus_key()
    {
-      var expected = HashCode.Combine(typeof(TestEnum), StringComparer.OrdinalIgnoreCase.GetHashCode(TestEnum.Item1.Key));
+      var expected = HashCode.Combine(typeof(SmartEnum_StringBased), StringComparer.OrdinalIgnoreCase.GetHashCode(SmartEnum_StringBased.Item1.Key));
 
-      TestEnum.Item1.GetHashCode().Should().Be(expected);
-   }
-
-   [Fact]
-   public void Should_return_hashcode_of_the_type_plus_key_for_structs()
-   {
-      var expected = HashCode.Combine(typeof(StructIntegerEnum), StructIntegerEnum.Item1.Key.GetHashCode());
-
-      StructIntegerEnum.Item1.GetHashCode().Should().Be(expected);
+      SmartEnum_StringBased.Item1.GetHashCode().Should().Be(expected);
    }
 
    [Fact]
    public void Should_return_hashcode_of_instance_of_keyless_smart_enum()
    {
-      var expected = RuntimeHelpers.GetHashCode(KeylessTestEnum.Item1);
+      var expected = RuntimeHelpers.GetHashCode(SmartEnum_Keyless.Item1);
 
-      KeylessTestEnum.Item1.GetHashCode().Should().Be(expected);
+      SmartEnum_Keyless.Item1.GetHashCode().Should().Be(expected);
    }
 
    [Fact]
    public void Should_return_hashcode_of_case_sensitive_enum()
    {
-      var expected = HashCode.Combine(typeof(ValidatableTestEnumCaseSensitive), StringComparer.Ordinal.GetHashCode(ValidatableTestEnumCaseSensitive.LowerCased.Key));
+      var expected = HashCode.Combine(typeof(SmartEnum_CaseSensitive), StringComparer.Ordinal.GetHashCode(SmartEnum_CaseSensitive.LowerCased.Key));
 
-      ValidatableTestEnumCaseSensitive.LowerCased.GetHashCode().Should().Be(expected);
+      SmartEnum_CaseSensitive.LowerCased.GetHashCode().Should().Be(expected);
    }
 }

@@ -9,7 +9,7 @@ public class ConversionFromKey
    public void Should_return_null_if_key_is_null()
    {
       string key = null;
-      var item = (TestEnum)key;
+      var item = (SmartEnum_StringBased)key;
 
       item.Should().BeNull();
    }
@@ -17,39 +17,22 @@ public class ConversionFromKey
    [Fact]
    public void Should_be_implicit_if_configured()
    {
-      TestEnumWithCustomConversionOperators item = 1;
+      SmartEnum_CustomConversionOperators item = 1;
 
-      item.Should().Be(TestEnumWithCustomConversionOperators.Item);
-   }
-
-   [Fact]
-   public void Should_return_invalid_item_if_struct_is_default_and_there_are_no_items_for_default_value()
-   {
-      int key = default;
-      var item = (StructIntegerEnum)key;
-
-      item.Should().Be(new StructIntegerEnum());
+      item.Should().Be(SmartEnum_CustomConversionOperators.Item);
    }
 
    [Fact]
    public void Should_return_item()
    {
-      var testEnum = (TestEnum)"item1";
-      testEnum.Should().Be(TestEnum.Item1);
+      var testEnum = (SmartEnum_StringBased)"item1";
+      testEnum.Should().Be(SmartEnum_StringBased.Item1);
    }
 
    [Fact]
-   public void Should_return_invalid_item_if_enum_has_no_such_key()
+   public void Should_throw_if_enum_has_no_such_key()
    {
-      var item = TestEnum.Get("invalid");
-      item.Key.Should().Be("invalid");
-      item.IsValid.Should().BeFalse();
-   }
-
-   [Fact]
-   public void Should_throw_if_non_validable_enum_has_no_such_key()
-   {
-      Action action = () => _ = (ValidTestEnum)"invalid";
-      action.Should().Throw<UnknownSmartEnumIdentifierException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      Action action = () => _ = (SmartEnum_StringBased)"invalid";
+      action.Should().Throw<UnknownSmartEnumIdentifierException>().WithMessage("There is no item of type 'SmartEnum_StringBased' with the identifier 'invalid'.");
    }
 }

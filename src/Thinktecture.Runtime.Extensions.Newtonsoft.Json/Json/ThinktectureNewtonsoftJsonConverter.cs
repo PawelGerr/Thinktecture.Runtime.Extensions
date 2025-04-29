@@ -27,7 +27,6 @@ public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : Js
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly Type _type = typeof(T);
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    /// <inheritdoc />
@@ -78,7 +77,7 @@ public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : Js
 
       var validationError = T.Validate(key, null, out var obj);
 
-      if (validationError is not null && !_mayReturnInvalidObjects)
+      if (validationError is not null)
          throw new JsonSerializationException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;

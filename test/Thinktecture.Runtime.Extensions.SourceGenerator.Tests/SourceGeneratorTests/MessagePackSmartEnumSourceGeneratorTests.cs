@@ -62,31 +62,6 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_MessagePackFormatter_and_Attribute_for_struct_if_Attribute_is_missing()
-   {
-      var source = """
-
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<string>]
-         	public partial struct TestEnum
-         	{
-               public static readonly TestEnum Item1 = new("Item1");
-               public static readonly TestEnum Item2 = new("Item2");
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".MessagePack",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
    public void Should_not_generate_MessagePackFormatter_and_attribute_if_Attribute_is_present()
    {
       var source = """

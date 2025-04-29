@@ -244,7 +244,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                           state.Settings.SkipIParsable,
                                                           state.State.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
                                                           false,
-                                                          false,
                                                           false));
 
       InitializeParsableCodeGenerator(context, parsables, options);

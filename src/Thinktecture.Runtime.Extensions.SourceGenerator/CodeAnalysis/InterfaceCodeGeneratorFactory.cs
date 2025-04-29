@@ -32,7 +32,6 @@ public static class InterfaceCodeGeneratorFactory
 {
    private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValueObject = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForValueObject);
    private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForEnum);
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValidatableEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForValidatableEnum);
    private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _comparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(ComparableCodeGenerator.Default);
 
    public static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> Formattable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(FormattableCodeGenerator.Instance);
@@ -42,12 +41,10 @@ public static class InterfaceCodeGeneratorFactory
       return String.IsNullOrWhiteSpace(comparerAccessor) ? _comparable : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
    }
 
-   public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(
-      bool forEnum,
-      bool forValidatableEnum)
+   public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(bool forEnum)
    {
       return forEnum
-                ? forValidatableEnum ? _parsableForValidatableEnum : _parsableForEnum
+                ? _parsableForEnum
                 : _parsableForValueObject;
    }
 

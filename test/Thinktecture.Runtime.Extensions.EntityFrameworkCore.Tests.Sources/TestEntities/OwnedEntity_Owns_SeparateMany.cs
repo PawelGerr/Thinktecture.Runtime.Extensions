@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.TestEntities;
 // ReSharper disable once InconsistentNaming
 public class OwnedEntity_Owns_SeparateMany
 {
-   public TestEnum TestEnum { get; set; }
+   public SmartEnum_StringBased TestEnum { get; set; }
 
    public List<OwnedEntity> SeparateEntities { get; set; }
 }

@@ -30,7 +30,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(item1: () => {},
                                            () => {})|};
@@ -39,66 +39,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(item => {}, // invalid item callback
-                                           item1: () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(invalid: item => {},
-                                           () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
 
          [Fact]
@@ -116,7 +58,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(item1: () => {},
                                            item2: () => {})|};
@@ -125,35 +67,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(invalid: item => {},
-                                           item1: () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -174,7 +88,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(@default: item => {},
                                            item1: () => {},
@@ -184,8 +98,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -203,7 +117,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(value => {}, // default
                                            item1: () => {},
@@ -213,97 +127,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(item => {}, // invalid item callback
-                                           item1: () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(@default: value => {},
-                                           invalid: item => {},
-                                           () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_default_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(value => {}, // default
-                                           invalid: item => {},
-                                           item1: () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -321,7 +146,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(@default: value => {},
                                            item1: () => {},
@@ -331,36 +156,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(@default: value => {},
-                                           invalid: item => {},
-                                           item1: () => {},
-                                           item2: () => {})|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly]);
          }
       }
 
@@ -381,7 +177,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(42,
                                            item1: value => {},
@@ -391,68 +187,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(42,
-                                           (value, item) => {}, // invalid item callback
-                                           item1: value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(42,
-                                           invalid: (value, item) => {},
-                                           value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
 
          [Fact]
@@ -470,7 +206,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(42,
                                            item1: i => {},
@@ -480,36 +216,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.Switch(42,
-                                           invalid: (value, item) => {},
-                                           item1: value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -530,7 +237,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
                                            @default: (state, value) => {},
@@ -541,8 +248,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -560,7 +267,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
                                            (state, value) => {}, // default
@@ -571,100 +278,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(42,
-                                           (value, item) => {}, // invalid item callback
-                                           item1: value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => {},
-                                           invalid: (value, item) => {},
-                                           value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_default_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(42,
-                                           (value, item) => {}, // default
-                                           invalid: (value, item) => {},
-                                           item1: value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -682,7 +297,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
                                            @default: (value, item) => {},
@@ -693,37 +308,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => {},
-                                           invalid: (value, item) => {},
-                                           item1: value => {},
-                                           item2: value => {})|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -744,7 +329,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(item1: () => 1,
                                            () => 2)|};
@@ -753,66 +338,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(item => 0,
-                                           item1: () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(invalid: item => 0,
-                                           () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
 
          [Fact]
@@ -830,7 +357,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(item1: () => 1,
                                            item2: () => 2)|};
@@ -839,35 +366,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(invalid: item => 0,
-                                           item1: () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -888,7 +387,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(@default: value => 0,
                                            item1: () => 1,
@@ -898,8 +397,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -917,7 +416,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(value => 0, // default
                                            item1: () => 1,
@@ -927,98 +426,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(@default: item => 0,
-                                           item => -1, // invalid
-                                           item1: () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(@default: item => 0,
-                                           invalid: item => -1,
-                                           () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_default_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(item => 0,
-                                           invalid: item => -1,
-                                           item1: () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -1036,7 +445,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(@default: item => 0,
                                            item1: () => 1,
@@ -1046,36 +455,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(@default: item => 0,
-                                           invalid: item => -1,
-                                           item1: () => 1,
-                                           item2: () => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly]);
          }
       }
 
@@ -1096,7 +476,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(42,
                                            item1: i => 1,
@@ -1106,68 +486,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(42,
-                                           (value, item) => 0,
-                                           item1: value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(42,
-                                           invalid: (value, item) => 0,
-                                           value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
 
          [Fact]
@@ -1185,7 +505,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(42,
                                            item1: i => 1,
@@ -1195,36 +515,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Switch(42,
-                                           invalid: (value, item) => 0,
-                                           item1: value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -1245,7 +536,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
                                            @default: (value, item) => 0,
@@ -1256,8 +547,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -1275,7 +566,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
                                            (value, item) => 0, // default
@@ -1286,100 +577,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           (value, item) => 0,
-                                           item1: value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => 0,
-                                           invalid: (value, item) => -1,
-                                           value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_default_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           (value, item) => 0, // default
-                                           invalid: (value, item) => -1,
-                                           item1: value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -1397,7 +596,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
                                            @default: (value, item) => 0,
@@ -1408,37 +607,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => 0,
-                                           invalid: (value, item) => -1,
-                                           item1: value => 1,
-                                           item2: value => 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly]);
          }
       }
 
@@ -1459,7 +628,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Map(item1: 1,
                                            2)|};
@@ -1468,66 +637,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Map(0,
-                                           item1: 1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Map(invalid: 0,
-                                           1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
 
          [Fact]
@@ -1545,7 +656,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Map(item1: 1,
                                            item2: 2)|};
@@ -1554,35 +665,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.Map(invalid: 0,
-                                           item1: 1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
 
@@ -1603,7 +686,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.MapPartially(@default: 0,
                                            item1: 1,
@@ -1613,8 +696,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -1632,7 +715,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.MapPartially(0, // default
                                            item1: 1,
@@ -1642,98 +725,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(ValidTestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_invalid_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.MapPartially(@default: 0,
-                                           -1, // invalid
-                                           item1: 1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_default_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.MapPartially(0, // default
-                                           invalid: -1,
-                                           item1: 1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
-         }
-
-         [Fact]
-         public async Task Should_trigger_without_named_arg_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.MapPartially(@default: 0,
-                                           invalid: -1,
-                                           1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestEnum));
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestEnum).Assembly], expected);
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
 
          [Fact]
@@ -1751,7 +744,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      public void Do()
                      {
-                        var testEnum = ValidTestEnum.Item1;
+                        var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.MapPartially(
                                            @default: 0,
@@ -1762,37 +755,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                }
                """;
 
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
-         }
-
-         [Fact]
-         public async Task Should_not_trigger_when_all_args_are_named_having_validatable_enum()
-         {
-            var code = """
-
-               using System;
-               using Thinktecture;
-               using Thinktecture.Runtime.Tests.TestEnums;
-
-               namespace TestNamespace
-               {
-                  public class Test
-                  {
-                     public void Do()
-                     {
-                        var testEnum = TestEnum.Item1;
-
-                        var returnValue = {|#0:testEnum.MapPartially(
-                                           @default: 0,
-                                           invalid: -1,
-                                           item1: 1,
-                                           item2: 2)|};
-                     }
-                  }
-               }
-               """;
-
-            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(ValidTestEnum).Assembly]);
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
          }
       }
    }

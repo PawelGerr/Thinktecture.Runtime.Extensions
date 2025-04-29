@@ -1,6 +1,6 @@
 namespace Thinktecture;
 
-[SmartEnum<string>(IsValidatable = true)]
+[SmartEnum<string>]
 public partial class ProductCategoryWithJsonConverter
 {
    public static readonly ProductCategoryWithJsonConverter Fruits = new("Fruits");

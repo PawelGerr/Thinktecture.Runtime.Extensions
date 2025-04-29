@@ -8,7 +8,6 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    public bool SkipIParsable { get; }
    public bool IsKeyMemberParsable { get; }
    public bool IsEnum { get; }
-   public bool IsValidatableEnum { get; }
    public bool HasStringBasedValidateMethod { get; }
 
    public ParsableGeneratorState(
@@ -18,7 +17,6 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       bool skipIParsable,
       bool isKeyMemberParsable,
       bool isEnum,
-      bool isValidatableEnum,
       bool hasStringBasedValidateMethod)
    {
       Type = type;
@@ -27,7 +25,6 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       SkipIParsable = skipIParsable;
       IsKeyMemberParsable = isKeyMemberParsable;
       IsEnum = isEnum;
-      IsValidatableEnum = isValidatableEnum;
       HasStringBasedValidateMethod = hasStringBasedValidateMethod;
    }
 
@@ -39,7 +36,6 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
              && SkipIParsable == other.SkipIParsable
              && IsKeyMemberParsable == other.IsKeyMemberParsable
              && IsEnum == other.IsEnum
-             && IsValidatableEnum == other.IsValidatableEnum
              && HasStringBasedValidateMethod == other.HasStringBasedValidateMethod;
    }
 
@@ -58,7 +54,6 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsEnum.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsValidatableEnum.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStringBasedValidateMethod.GetHashCode();
 
          return hashCode;

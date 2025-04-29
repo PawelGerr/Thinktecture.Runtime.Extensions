@@ -26,11 +26,8 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_if_null_and_default()
    {
-      Serialize<TestSmartEnum_Class_IntBased, int>(null).Should().Be("null");
-      Serialize<TestSmartEnum_Class_StringBased, string>(null).Should().Be("null");
-      SerializeNullableStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(null).Should().Be("null");
-      SerializeNullableStruct<TestSmartEnum_Struct_StringBased_Validatable, string>(null).Should().Be("null");
-      SerializeStruct<TestSmartEnum_Struct_IntBased_Validatable, int>(default).Should().Be("0");
+      Serialize<SmartEnum_IntBased, int>(null).Should().Be("null");
+      Serialize<SmartEnum_StringBased, string>(null).Should().Be("null");
    }
 
    [Fact]
@@ -53,18 +50,18 @@ public class WriteJson : JsonTestsBase
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]
-   public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
+   public void Should_serialize_string_based_enum(SmartEnum_StringBased enumValue, string expectedJson)
    {
-      var json = Serialize<TestEnum, string>(enumValue);
+      var json = Serialize<SmartEnum_StringBased, string>(enumValue);
 
       json.Should().Be(expectedJson);
    }
 
    [Theory]
    [MemberData(nameof(DataForIntBasedEnumTest))]
-   public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
+   public void Should_serialize_int_based_enum(SmartEnum_IntBased enumValue, string expectedJson)
    {
-      var json = Serialize<IntegerEnum, int>(enumValue);
+      var json = Serialize<SmartEnum_IntBased, int>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -93,7 +90,7 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_serialize_enum_with_ValidationErrorAttribute()
    {
-      var value = Serialize<TestEnumWithCustomError, string, TestEnumValidationError>(TestEnumWithCustomError.Item1);
+      var value = Serialize<TestSmartEnum_CustomError, string, CustomValidationError>(TestSmartEnum_CustomError.Item1);
 
       value.Should().BeEquivalentTo("\"item1\"");
    }

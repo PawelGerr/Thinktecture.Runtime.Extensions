@@ -5,7 +5,6 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
    private readonly AllEnumSettings _settings;
    private readonly AttributeInfo _attributeInfo;
 
-   public bool IsValidatable => _settings.IsValidatable;
    public bool SkipToString => _settings.SkipToString;
    public SwitchMapMethodsGeneration SwitchMethods => _settings.SwitchMethods;
    public SwitchMapMethodsGeneration MapMethods => _settings.MapMethods;
@@ -28,8 +27,7 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
 
    public bool Equals(SmartEnumSettings other)
    {
-      return IsValidatable == other.IsValidatable
-             && SkipToString == other.SkipToString
+      return SkipToString == other.SkipToString
              && SwitchMethods == other.SwitchMethods
              && MapMethods == other.MapMethods
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
@@ -43,8 +41,7 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
    {
       unchecked
       {
-         var hashCode = IsValidatable.GetHashCode();
-         hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
+         var hashCode = SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
          hashCode = (hashCode * 397) ^ ConversionFromKeyMemberType.GetHashCode();

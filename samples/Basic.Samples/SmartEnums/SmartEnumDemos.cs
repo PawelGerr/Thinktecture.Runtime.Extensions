@@ -13,7 +13,6 @@ public class SmartEnumDemos
    {
       DemoForSmartEnum(logger);
       DemoForSmartEnumWithCustomComparer(logger);
-      DemoForValidatableEnum(logger);
 
       DemoForDailySalesCsvImporterType(logger);
       DemoForMonthlySalesCsvImporterType(logger);
@@ -97,7 +96,10 @@ public class SmartEnumDemos
       isBigger = ProductGroup.Apple > 42;
       logger.Information("{Apple} > {42} = {IsBigger}", ProductGroup.Apple, 42, isBigger);
 
-      logger.Information("==== Demo for abstract static members ====");
+      logger.Information(@"
+
+==== Demo for abstract static members ====
+");
 
       Get<ProductType, string, ProductTypeValidationError>(logger, "Groceries");
    }
@@ -173,11 +175,6 @@ public class SmartEnumDemos
                          groceries: static l => l.Information("Switch with Action: Groceries"),
                          housewares: static l => l.Information("Switch with Action: Housewares"));
 
-      // Switch of a "validatable" enum
-      ProductGroupStruct.Get(42).Switch(invalid: invalidItem => Console.WriteLine($"Invalid item: {invalidItem}"),
-                                        apple: () => Console.WriteLine("apple"),
-                                        orange: () => Console.WriteLine("orange"));
-
       // SwitchPartially with Action
       productType.SwitchPartially(@default: item => logger.Information("SwitchPartially with Action: default ('{Item}')", item),
                                   groceries: () => logger.Information("SwitchPartially with Action: Groceries"));
@@ -187,11 +184,6 @@ public class SmartEnumDemos
 
       ProductType.Housewares.SwitchPartially(@default: item => logger.Information("SwitchPartially with Action: default ('{Item}')", item),
                                              groceries: () => logger.Information("SwitchPartially with Action: Groceries"));
-
-      // Switch of a "validatable" enum
-      ProductGroupStruct.Get(42).SwitchPartially(invalid: invalidItem => Console.WriteLine($"SwitchPartially with Action: Invalid item ({invalidItem})"),
-                                                 apple: () => Console.WriteLine("SwitchPartially with Action: apple"),
-                                                 orange: () => Console.WriteLine("SwitchPartially with Action: orange"));
 
       // SwitchPartially with Action<TState>
       productType.SwitchPartially(logger,
@@ -240,35 +232,6 @@ public class SmartEnumDemos
                          lowerCased,
                          upperCased,
                          lowerCased > upperCased);
-   }
-
-   private static void DemoForValidatableEnum(ILogger logger)
-   {
-      logger.Information("""
-
-
-                         ==== Demo for SmartEnum<T>(IsValidatable = true) ====
-
-                         """);
-
-      var categories = ProductCategory.Items;
-      logger.Information("Categories: {Categories}", categories);
-
-      var category = ProductCategory.Get("Fruits");
-      logger.Information("Category: {Category}", category);
-
-      // Throws "InvalidOperationException" if not valid
-      category.EnsureValid();
-
-      if (ProductCategory.TryGet("fruits", out var fruits))
-         logger.Information("Category {Category} with TryGet found", fruits);
-
-      string keyOfTheCategory = category;
-      logger.Information("Implicit conversion of Category -> string: {Key}", keyOfTheCategory);
-
-      var unknownCategory = ProductCategory.Get("Grains");
-      logger.Information("unknownCategory.Key: {CategoryKey}", unknownCategory.Name);
-      logger.Information("unknownCategory.isValid: {IsValid}", unknownCategory.IsValid);
    }
 
    private static void DemoForDailySalesCsvImporterType(ILogger logger)
@@ -350,7 +313,7 @@ public class SmartEnumDemos
 
       foreach (var item in T.Items)
       {
-         logger.Information("Item: {Item}", item);
+         logger.Information("  Item: {Item}", item);
       }
    }
 

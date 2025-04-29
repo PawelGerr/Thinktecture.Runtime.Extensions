@@ -28,8 +28,6 @@ public class ThinktectureMessagePackFormatter<T, TKey, TValidationError> : IMess
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
-
    /// <inheritdoc />
    public void Serialize(ref MessagePackWriter writer, T? value, MessagePackSerializerOptions options)
    {
@@ -58,7 +56,7 @@ public class ThinktectureMessagePackFormatter<T, TKey, TValidationError> : IMess
 
       var validationError = T.Validate(key, null, out var obj);
 
-      if (validationError is not null && !_mayReturnInvalidObjects)
+      if (validationError is not null)
          throw new ValidationException(validationError.ToString() ?? "MessagePack deserialization failed.");
 
       return obj;

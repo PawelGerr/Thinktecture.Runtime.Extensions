@@ -30,11 +30,8 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_if_null_and_default()
    {
-      SerializeWithConverter<TestSmartEnum_Class_IntBased, ThinktectureJsonConverterFactory<TestSmartEnum_Class_IntBased, int, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Class_StringBased, ThinktectureJsonConverterFactory<TestSmartEnum_Class_StringBased, string, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased_Validatable?, ThinktectureJsonConverterFactory<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_StringBased_Validatable?, ThinktectureJsonConverterFactory<TestSmartEnum_Struct_StringBased_Validatable, string, ValidationError>>(null).Should().Be("null");
-      SerializeWithConverter<TestSmartEnum_Struct_IntBased_Validatable, ThinktectureJsonConverterFactory<TestSmartEnum_Struct_IntBased_Validatable, int, ValidationError>>(default).Should().Be("0");
+      SerializeWithConverter<SmartEnum_IntBased, ThinktectureJsonConverterFactory<SmartEnum_IntBased, int, ValidationError>>(null).Should().Be("null");
+      SerializeWithConverter<SmartEnum_StringBased, ThinktectureJsonConverterFactory<SmartEnum_StringBased, string, ValidationError>>(null).Should().Be("null");
    }
 
    [Fact]
@@ -57,18 +54,18 @@ public class WriteJson : JsonTestsBase
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]
-   public void Should_serialize_string_based_enum(TestEnum enumValue, string expectedJson)
+   public void Should_serialize_string_based_enum(SmartEnum_StringBased enumValue, string expectedJson)
    {
-      var json = SerializeWithConverter<TestEnum, ThinktectureJsonConverterFactory<TestEnum, string, ValidationError>>(enumValue);
+      var json = SerializeWithConverter<SmartEnum_StringBased, ThinktectureJsonConverterFactory<SmartEnum_StringBased, string, ValidationError>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
 
    [Theory]
    [MemberData(nameof(DataForIntBasedEnumTest))]
-   public void Should_serialize_int_based_enum(IntegerEnum enumValue, string expectedJson)
+   public void Should_serialize_int_based_enum(SmartEnum_IntBased enumValue, string expectedJson)
    {
-      var json = SerializeWithConverter<IntegerEnum, ThinktectureJsonConverterFactory<IntegerEnum, int, ValidationError>>(enumValue);
+      var json = SerializeWithConverter<SmartEnum_IntBased, ThinktectureJsonConverterFactory<SmartEnum_IntBased, int, ValidationError>>(enumValue);
 
       json.Should().Be(expectedJson);
    }
@@ -77,7 +74,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithStringBasedEnumTest))]
    public void Should_serialize_class_containing_string_based_enum(ClassWithStringBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = SerializeWithConverter<ClassWithStringBasedEnum, ThinktectureJsonConverterFactory<TestEnum, string, ValidationError>>(classWithEnum, null, ignoreNullValues);
+      var json = SerializeWithConverter<ClassWithStringBasedEnum, ThinktectureJsonConverterFactory<SmartEnum_StringBased, string, ValidationError>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }
@@ -86,7 +83,7 @@ public class WriteJson : JsonTestsBase
    [MemberData(nameof(DataForClassWithIntBasedEnumTest))]
    public void Should_serialize_class_containing_int_based_enum(ClassWithIntBasedEnum classWithEnum, string expectedJson, bool ignoreNullValues = false)
    {
-      var json = SerializeWithConverter<ClassWithIntBasedEnum, ThinktectureJsonConverterFactory<IntegerEnum, int, ValidationError>>(classWithEnum, null, ignoreNullValues);
+      var json = SerializeWithConverter<ClassWithIntBasedEnum, ThinktectureJsonConverterFactory<SmartEnum_IntBased, int, ValidationError>>(classWithEnum, null, ignoreNullValues);
 
       json.Should().Be(expectedJson);
    }
@@ -115,7 +112,7 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_serialize_enum_with_ValidationErrorAttribute()
    {
-      var value = Serialize<TestEnumWithCustomError, string, TestEnumValidationError>(TestEnumWithCustomError.Item1);
+      var value = Serialize<TestSmartEnum_CustomError, string, CustomValidationError>(TestSmartEnum_CustomError.Item1);
 
       value.Should().BeEquivalentTo("\"item1\"");
    }
@@ -139,9 +136,9 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_throw_if_non_string_based_enum_is_used_as_dictionary_key()
    {
-      var dictionary = new Dictionary<TestSmartEnum_Class_IntBased, int>
+      var dictionary = new Dictionary<SmartEnum_IntBased, int>
                        {
-                          { TestSmartEnum_Class_IntBased.Value1, 1 }
+                          { SmartEnum_IntBased.Item1, 1 }
                        };
 
       var options = new JsonSerializerOptions { Converters = { new ThinktectureJsonConverterFactory() } };

@@ -31,28 +31,6 @@ public class TTRESG043_PrimaryConstructorNotAllowed
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
       }
-
-      [Fact]
-      public async Task Should_trigger_if_enum_is_struct_and_has_primary_constructor()
-      {
-         var code = """
-
-            using System;
-            using Thinktecture;
-
-            namespace TestNamespace
-            {
-               [SmartEnum<string>(IsValidatable = true)]
-               public partial struct {|#0:TestEnum|}()
-            	{
-                  public static readonly TestEnum Item1 = default;
-               }
-            }
-            """;
-
-         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum");
-         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
-      }
    }
 
    public class ValueObject_cannot_have_a_primary_constructor

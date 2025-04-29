@@ -11,9 +11,7 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
 
    [Theory]
    [InlineData("field", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                          // field: non-readonly VO
-   [InlineData("field", "StructStringEnum", "StructStringEnum Member;")]                                                                                                // field: non-readonly SE
    [InlineData("field", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member;")]                                                                          // field: non-readonly DU
-   [InlineData("property", "StructStringEnum", "StructStringEnum Member { get; set; }")]                                                                                // property: non-readonly SE
    [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]          // property: non-readonly VO
    [InlineData("property", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member { get; set; }")]                                                          // property: non-readonly VO
    [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; init; }")]         // property: non-readonly with init
@@ -74,13 +72,11 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; internal set; }")]                                                         // property: setter less visible
    [InlineData("public required IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                                                                      // field: required
    [InlineData("public required IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]                                                         // property: required
-   [InlineData("public required StructStringEnum Member { get; set; }")]                                                                                            // property: required
    [InlineData("public required TestUnion_struct_string_int Member { get; set; }")]                                                                                 // property: required
    [InlineData("public static IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                                                                        // field: static
    [InlineData("public static IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]                                                           // property: static
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs? Member;")]                                                                              // field: nullable VO
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs? Member { get; set; }")]                                                                 // property: nullable VO
-   [InlineData("public StructStringEnum? Member { get; set; }")]                                                                                                    // property: nullable SE
    [InlineData("public TestUnion_struct_string_int? Member { get; set; }")]                                                                                         // property: nullable DU
    [InlineData("public IntBasedStructValueObject Member;")]                                                                                                         // field: AllowDefaultStructs = true
    [InlineData("public IntBasedStructValueObject Member { get; set; }")]                                                                                            // property: AllowDefaultStructs = true

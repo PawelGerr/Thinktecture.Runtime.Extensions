@@ -16,7 +16,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/TestEnumWithNameDuplicates"
+                    "$ref": "#/components/schemas/SmartEnum_NameDuplicates"
                   }
                 ]
               }
@@ -30,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestEnumWithNameDuplicates"
+                  "$ref": "#/components/schemas/SmartEnum_NameDuplicates"
                 }
               }
             }
@@ -41,7 +41,7 @@
   },
   "components": {
     "schemas": {
-      "TestEnumWithNameDuplicates": {
+      "SmartEnum_NameDuplicates": {
         "enum": [
           1,
           2

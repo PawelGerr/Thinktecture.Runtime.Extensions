@@ -29,8 +29,7 @@ public class ProductsDbContext : DbContext
       });
 
       // Alternative way to apply ValueConverters to Smart Enums and Value Objects
-      // modelBuilder.AddThinktectureValueConverters(validateOnWrite: true,
-      //                                       configureEnumsAndKeyedValueObjects: property =>
+      // modelBuilder.AddThinktectureValueConverters(configureEnumsAndKeyedValueObjects: property =>
       //                                                                           {
       //                                                                              if (property.ClrType == typeof(ProductType))
       //                                                                                 property.SetMaxLength(20);

@@ -18,7 +18,7 @@ public class TTRESG100_EnumerationHasNoItems
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class {|#0:TestEnum|}
          	{
             }
@@ -39,7 +39,7 @@ public class TTRESG100_EnumerationHasNoItems
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class {|#0:TestEnum|}
          	{
                public static readonly TestEnum Item1 = default;

@@ -61,30 +61,6 @@ public class Program
             DayMonth.Create(1, 15),
             Boundary.Create(1, 2), today));
 
-      try
-      {
-         // provoke exception by providing invalid ProductCategory
-         loggingLevelSwitch.MinimumLevel = LogEventLevel.Fatal;
-         await InsertProductAsync(
-            ctx,
-            new Product(
-               Guid.NewGuid(),
-               ProductName.Create("Pear"),
-               ProductCategory.Get("Invalid Category"),
-               ProductType.Groceries,
-               DayMonth.Create(1, 15),
-               Boundary.Create(1, 2)));
-      }
-      catch (DbUpdateException)
-      {
-         logger.LogError("Error during persistence of invalid category");
-      }
-      finally
-      {
-         ctx.ChangeTracker.Clear(); // remove invalid product from the EF context
-         loggingLevelSwitch.MinimumLevel = LogEventLevel.Information;
-      }
-
       var products = await ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToListAsync();
       logger.LogInformation("Loaded products: {@Products}", products);
 

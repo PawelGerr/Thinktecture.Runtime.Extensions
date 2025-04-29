@@ -13,7 +13,7 @@ public static partial class TestController
          public class Route : ControllerBase
          {
             [HttpGet("/test/{value}")]
-            public TestEnum Get(TestEnum value)
+            public SmartEnum_StringBased Get(SmartEnum_StringBased value)
             {
                return value;
             }
@@ -22,7 +22,7 @@ public static partial class TestController
             public class Nullable : ControllerBase
             {
                [HttpGet("/test/{value}")]
-               public TestEnum? Get(TestEnum? value = null)
+               public SmartEnum_StringBased? Get(SmartEnum_StringBased? value = null)
                {
                   return value;
                }
@@ -33,7 +33,7 @@ public static partial class TestController
          public class QueryString : ControllerBase
          {
             [HttpGet("/test")]
-            public TestEnum Get(TestEnum value)
+            public SmartEnum_StringBased Get(SmartEnum_StringBased value)
             {
                return value;
             }
@@ -42,7 +42,7 @@ public static partial class TestController
             public class Nullable : ControllerBase
             {
                [HttpGet("/test")]
-               public TestEnum? Get(TestEnum? value = null)
+               public SmartEnum_StringBased? Get(SmartEnum_StringBased? value = null)
                {
                   return value;
                }
@@ -53,7 +53,7 @@ public static partial class TestController
          public class Body : ControllerBase
          {
             [HttpPost("/test")]
-            public TestEnum Get([FromBody] TestEnum value)
+            public SmartEnum_StringBased Get([FromBody] SmartEnum_StringBased value)
             {
                return value;
             }
@@ -62,7 +62,7 @@ public static partial class TestController
             public class Nullable : ControllerBase
             {
                [HttpPost("/test")]
-               public TestEnum? Get([FromBody] TestEnum? value = null)
+               public SmartEnum_StringBased? Get([FromBody] SmartEnum_StringBased? value = null)
                {
                   return value;
                }
@@ -73,7 +73,7 @@ public static partial class TestController
          public class Form : ControllerBase
          {
             [HttpPost("/test")]
-            public TestEnum Get([FromForm] TestEnum value)
+            public SmartEnum_StringBased Get([FromForm] SmartEnum_StringBased value)
             {
                return value;
             }
@@ -82,53 +82,7 @@ public static partial class TestController
             public class Nullable : ControllerBase
             {
                [HttpPost("/test")]
-               public TestEnum? Get([FromForm] TestEnum? value = null)
-               {
-                  return value;
-               }
-            }
-         }
-      }
-   }
-
-   public static class SmartEnumStruct
-   {
-      public static class StringBased
-      {
-         [Route("/")]
-         public class Route : ControllerBase
-         {
-            [HttpGet("/test/{value}")]
-            public StructStringEnum Get(StructStringEnum value)
-            {
-               return value;
-            }
-
-            [Route("/")]
-            public class Nullable : ControllerBase
-            {
-               [HttpGet("/test/{value}")]
-               public StructStringEnum? Get(StructStringEnum? value = null)
-               {
-                  return value;
-               }
-            }
-         }
-
-         [Route("/")]
-         public class QueryString : ControllerBase
-         {
-            [HttpGet("/test")]
-            public StructStringEnum Get(StructStringEnum value)
-            {
-               return value;
-            }
-
-            [Route("/")]
-            public class Nullable : ControllerBase
-            {
-               [HttpGet("/test")]
-               public StructStringEnum? Get(StructStringEnum? value = null)
+               public SmartEnum_StringBased? Get([FromForm] SmartEnum_StringBased? value = null)
                {
                   return value;
                }

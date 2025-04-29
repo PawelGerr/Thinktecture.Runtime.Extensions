@@ -27,7 +27,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   public int Property { get; set; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -54,7 +54,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   public int Property { get; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -80,7 +80,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   public static int Property { get; set; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -107,7 +107,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   public static int Property { get; }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -137,7 +137,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -167,7 +167,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -197,7 +197,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -227,7 +227,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -261,7 +261,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -295,7 +295,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -324,7 +324,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -353,7 +353,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
                   }
                }
 
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClass
             	{
                   public static readonly TestEnum Item1 = default;
@@ -378,7 +378,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithInstanceProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -401,7 +401,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithInstancePropertyWithGetterOnly
             	{
                   public static readonly TestEnum Item1 = default;
@@ -423,7 +423,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithStaticProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -446,7 +446,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithStaticPropertyWithGetterOnly
             	{
                   public static readonly TestEnum Item1 = default;
@@ -468,7 +468,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithSetExpressionProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -490,7 +490,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithSetExpressionStaticProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -512,7 +512,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithSetBodyProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -534,7 +534,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|} : BaseClassWithSetBodyStaticProperty
             	{
                   public static readonly TestEnum Item1 = default;
@@ -558,7 +558,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
                namespace TestNamespace
                {
-                  [SmartEnum<string>(IsValidatable = true)]
+                  [SmartEnum<string>]
                	public partial class {|#0:TestEnum|} : BaseClassWithGetExpressionProperty
                	{
                      public static readonly TestEnum Item1 = default;
@@ -581,7 +581,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
                namespace TestNamespace
                {
-                  [SmartEnum<string>(IsValidatable = true)]
+                  [SmartEnum<string>]
                	public partial class {|#0:TestEnum|} : BaseClassWithGetExpressionStaticProperty
                	{
                      public static readonly TestEnum Item1 = default;
@@ -604,7 +604,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
                namespace TestNamespace
                {
-                  [SmartEnum<string>(IsValidatable = true)]
+                  [SmartEnum<string>]
                	public partial class {|#0:TestEnum|} : BaseClassWithGetBodyProperty
                	{
                      public static readonly TestEnum Item1 = default;
@@ -627,7 +627,7 @@ public class TTRESG035_BaseClassPropertyMustBeReadOnly
 
                namespace TestNamespace
                {
-                  [SmartEnum<string>(IsValidatable = true)]
+                  [SmartEnum<string>]
                	public partial class {|#0:TestEnum|} : BaseClassWithGetBodyStaticProperty
                	{
                      public static readonly TestEnum Item1 = default;

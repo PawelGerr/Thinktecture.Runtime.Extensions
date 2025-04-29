@@ -22,7 +22,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private void InitializeKeyedSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
    {
-      var validStates = InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYED_FULL_NAME, true, IsKeyedCandidate);
+      var validStates = InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYED_FULL_NAME, true, IsSmartEnumCandidate);
 
       InitializeSerializerGenerators(context, validStates, options);
       InitializeFormattableCodeGenerator(context, validStates, options);
@@ -33,7 +33,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private void InitializeKeylessSmartEnum(IncrementalGeneratorInitializationContext context, IncrementalValueProvider<GeneratorOptions> options)
    {
-      InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYLESS_FULL_NAME, false, IsKeylessCandidate);
+      InitializeSmartEnum(context, options, Constants.Attributes.SmartEnum.KEYLESS_FULL_NAME, false, IsSmartEnumCandidate);
    }
 
    private IncrementalValuesProvider<ValidSourceGenState> InitializeSmartEnum(
@@ -113,7 +113,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                           state.Settings.SkipIParsable,
                                           state.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
                                           true,
-                                          state.State.Settings.IsValidatable,
                                           false)
             ];
          });
@@ -261,25 +260,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return factories;
    }
 
-   private bool IsKeyedCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
-   {
-      try
-      {
-         return syntaxNode switch
-         {
-            ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
-            StructDeclarationSyntax structDeclaration when IsEnumCandidate(structDeclaration) => true,
-            _ => false
-         };
-      }
-      catch (Exception ex)
-      {
-         Logger.LogError("Error during checking whether a syntax node is a smart enum candidate", exception: ex);
-         return false;
-      }
-   }
-
-   private bool IsKeylessCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private bool IsSmartEnumCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
       try
       {
@@ -402,27 +383,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             keyMember = settings.CreateKeyMember(keyTypedMemberState);
          }
 
-         var hasCreateInvalidItemImplementation = keyMemberType is not null && settings.IsValidatable && type.HasCreateInvalidItemImplementation(keyMemberType, cancellationToken);
-
-         var derivedTypeDefinitionNames = FindDerivedTypes(type);
          var enumState = new SmartEnumSourceGeneratorState(factory,
                                                            type,
                                                            keyMember,
                                                            attributeInfo.ValidationError,
                                                            new SmartEnumSettings(settings, attributeInfo),
-                                                           hasCreateInvalidItemImplementation,
-                                                           derivedTypeDefinitionNames.Count > 0,
+                                                           type.FindDerivedInnerTypes().Count > 0,
                                                            cancellationToken);
-         var derivedTypes = new SmartEnumDerivedTypes(enumState.Namespace,
-                                                      enumState.Name,
-                                                      enumState.TypeFullyQualified,
-                                                      enumState.IsReferenceType,
-                                                      enumState.ContainingTypes,
-                                                      derivedTypeDefinitionNames);
 
          Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 
-         return new SourceGenContext(new ValidSourceGenState(enumState, derivedTypes, settings, keyMember, attributeInfo));
+         return new SourceGenContext(new ValidSourceGenState(enumState, settings, keyMember, attributeInfo));
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -436,22 +407,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
    }
 
-   private static IReadOnlyList<string> FindDerivedTypes(INamedTypeSymbol type)
-   {
-      var derivedTypes = type.FindDerivedInnerTypes();
-
-      if (derivedTypes.Count == 0)
-         return Array.Empty<string>();
-
-      return derivedTypes
-             .Select(t => t.TypeDef.ToFullyQualifiedDisplayString())
-             .Distinct()
-             .ToList();
-   }
-
    private readonly record struct ValidSourceGenState(
       SmartEnumSourceGeneratorState State,
-      SmartEnumDerivedTypes DerivedTypes,
       AllEnumSettings Settings,
       KeyMemberState? KeyMember,
       AttributeInfo AttributeInfo);

@@ -29,7 +29,7 @@ public sealed class SmartEnumAttribute : Attribute
 /// <summary>
 /// Marks the type as a Smart Enum with an identifier of type <typeparamref name="TKey"/>.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class SmartEnumAttribute<TKey> : Attribute
    where TKey : notnull
 {
@@ -61,12 +61,6 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
       get => _keyMemberName ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_key" : "Key");
       set => _keyMemberName = value;
    }
-
-   /// <summary>
-   /// Indication whether the Smart Enum should be "validatable" or always-valid one.
-   /// Default is "false", i.e., always-valid.
-   /// </summary>
-   public bool IsValidatable { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="IComparable{T}"/> or not.
