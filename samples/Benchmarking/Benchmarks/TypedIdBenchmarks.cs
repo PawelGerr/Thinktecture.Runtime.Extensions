@@ -5,23 +5,23 @@ namespace Thinktecture.Benchmarks;
 
 /*
 
-22.01.2025
+29.04.2025
 
-.NET 9.0.1
+.NET 9.0.4
 
-| Method           | Mean     | Error    | StdDev   | Median   | Allocated |
-|----------------- |---------:|---------:|---------:|---------:|----------:|
-| Guid_NewGuid     | 56.12 ns | 2.936 ns | 8.658 ns | 59.00 ns |         - |
-| CustomerId_NewId | 41.61 ns | 0.861 ns | 1.024 ns | 41.94 ns |         - |
+| Method              | Mean     | Error    | StdDev   | Allocated |
+|-------------------- |---------:|---------:|---------:|----------:|
+| Guid_CreateVersion7 | 54.24 ns | 0.398 ns | 0.372 ns |         - |
+| CustomerId_NewId    | 57.59 ns | 0.188 ns | 0.176 ns |         - |
 
  */
 
 public class TypedIdBenchmarks
 {
    [Benchmark]
-   public Guid Guid_NewGuid()
+   public Guid Guid_CreateVersion7()
    {
-      return Guid.NewGuid();
+      return Guid.CreateVersion7();
    }
 
    [Benchmark]
@@ -34,5 +34,5 @@ public class TypedIdBenchmarks
 [ValueObject<Guid>(ConversionToKeyMemberType = ConversionOperatorsGeneration.Explicit)]
 public partial struct CustomerId
 {
-   public static CustomerId NewId() => new(Guid.NewGuid());
+   public static CustomerId NewId() => new(Guid.CreateVersion7());
 }
