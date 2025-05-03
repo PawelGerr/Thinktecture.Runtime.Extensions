@@ -527,7 +527,8 @@
             "format": "double",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "BoundaryWithFactories": {
         "type": "object",
@@ -542,7 +543,8 @@
             "format": "double",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "NotificationChannelTypeDto": {
         "enum": [

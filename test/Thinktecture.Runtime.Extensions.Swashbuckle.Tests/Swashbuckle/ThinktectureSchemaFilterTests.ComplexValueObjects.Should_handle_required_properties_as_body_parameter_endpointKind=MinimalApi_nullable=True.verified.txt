@@ -48,7 +48,8 @@
             "format": "int32",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "IntBasedStructValueObjectDoesNotAllowDefaultStructs": {
         "type": "integer",
@@ -98,7 +99,8 @@
             "nullable": true,
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
   }

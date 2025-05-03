@@ -53,7 +53,8 @@
             "format": "double",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "BoundaryStruct": {
         "type": "object",
@@ -68,7 +69,8 @@
             "format": "double",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       },
       "StringBasedReferenceValueObject": {
         "type": "string"

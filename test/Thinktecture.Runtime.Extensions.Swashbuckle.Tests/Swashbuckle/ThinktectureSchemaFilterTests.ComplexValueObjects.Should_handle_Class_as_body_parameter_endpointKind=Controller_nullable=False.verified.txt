@@ -53,7 +53,8 @@
             "format": "double",
             "readOnly": true
           }
-        }
+        },
+        "additionalProperties": false
       }
     }
   }

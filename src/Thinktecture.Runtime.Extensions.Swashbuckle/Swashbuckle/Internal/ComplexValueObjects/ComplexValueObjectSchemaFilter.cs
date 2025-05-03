@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
@@ -43,9 +42,5 @@ public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaF
          if (_requiredMemberEvaluator.IsRequired(schema, context, memberInfo))
             schema.Required.Add(memberInfo.Name);
       }
-
-      // Otherwise the type gets: "additionalProperties": false
-      schema.AdditionalPropertiesAllowed = true;
-      schema.AdditionalProperties = null;
    }
 }
