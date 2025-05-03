@@ -164,7 +164,7 @@ public partial class ThinktectureSchemaFilterTests
          _smartEnumFilter = SmartEnumSchemaFilter.Default;
          _smartEnumExtension = SmartEnumSchemaExtension.VarNamesFromDotnetIdentifiers;
 
-         App.MapPost("/test", ([FromBody] TestEnumWithName value) => value);
+         App.MapPost("/test", ([FromBody] SmartEnum_NameDuplicates value) => value);
 
          var openApi = GetOpenApiJsonAsync();
 
