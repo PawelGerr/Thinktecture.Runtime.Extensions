@@ -102,8 +102,16 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         _sb.Append(@"
+         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
+         {
+            _sb.Append(@"
+         global::Thinktecture.Argument<").AppendTypeFullyQualified(memberInfo).Append("> ").AppendEscaped(memberInfo.ArgumentName).Append(" = default;");
+         }
+         else
+         {
+            _sb.Append(@"
          ").AppendTypeFullyQualifiedNullAnnotated(memberInfo).Append(" ").AppendEscaped(memberInfo.ArgumentName).Append(" = default;");
+         }
       }
 
       _sb.Append(@"
@@ -163,11 +171,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         if (memberInfo.DisallowsDefaultValue)
+         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
          {
             _sb.Append(@"
 
-         if (").AppendEscaped(memberInfo.ArgumentName).Append(" == default(").AppendTypeFullyQualified(memberInfo).Append(@"))
+         if (!").AppendEscaped(memberInfo.ArgumentName).Append(@".IsSet)
             throw new global::System.Text.Json.JsonException($""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append("\\\" is missing and does not allow default values.\");");
          }
       }
@@ -183,7 +191,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-                                    ").AppendEscaped(memberInfo.ArgumentName).Append("!,");
+                                    ").AppendEscaped(memberInfo.ArgumentName).Append(memberInfo is { IsReferenceTypeOrNullableStruct: false, DisallowsDefaultValue: true } ? ".Value," : "!,");
       }
 
       _sb.Append(@"

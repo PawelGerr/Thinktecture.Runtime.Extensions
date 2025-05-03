@@ -19,7 +19,7 @@ partial class ComplexValueObjectWithNonNullProperty
          var count = reader.ReadArrayHeader();
          global::MessagePack.IFormatterResolver resolver = options.Resolver;
 
-         var @property = default(int)!;
+         int @property = default;
 
          try
          {
@@ -39,7 +39,7 @@ partial class ComplexValueObjectWithNonNullProperty
             }
 
             var validationError = global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty.Validate(
-                                       @property,
+                                       @property!,
                                        out var obj);
 
             if (validationError is not null)

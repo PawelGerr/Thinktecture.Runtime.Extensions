@@ -309,4 +309,36 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_with_properties_disallowing_default_values()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         public class ClassDisallowingDefaultValues : IDisallowDefaultValue;
+         public struct StructDisallowingDefaultValues : IDisallowDefaultValue;
+
+         [ComplexValueObject]
+         public partial class TestValueObject
+         {
+            public readonly ClassDisallowingDefaultValues _nonNullableReferenceType;
+            public readonly ClassDisallowingDefaultValues? _nullableReferenceType;
+            public readonly StructDisallowingDefaultValues _nonNullableStruct;
+            public readonly StructDisallowingDefaultValues? _nullableStruct;
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

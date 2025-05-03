@@ -19,9 +19,9 @@ partial class ComplexValueObjectWithPartialKeys
          var count = reader.ReadArrayHeader();
          global::MessagePack.IFormatterResolver resolver = options.Resolver;
 
-         var @property1 = default(decimal)!;
-         var @property2 = default(string)!;
-         var @property3 = default(int)!;
+         decimal @property1 = default;
+         string? @property2 = default;
+         int @property3 = default;
 
          try
          {
@@ -51,9 +51,9 @@ partial class ComplexValueObjectWithPartialKeys
             }
 
             var validationError = global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys.Validate(
-                                       @property1,
-                                       @property2,
-                                       @property3,
+                                       @property1!,
+                                       @property2!,
+                                       @property3!,
                                        out var obj);
 
             if (validationError is not null)

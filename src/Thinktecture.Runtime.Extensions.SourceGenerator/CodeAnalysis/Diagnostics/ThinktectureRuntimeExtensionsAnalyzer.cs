@@ -101,6 +101,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (context.Node is not FieldDeclarationSyntax fieldDeclarationSyntax
           || (fieldDeclarationSyntax.Declaration.Variables.Count == 1 && fieldDeclarationSyntax.Declaration.Variables[0].Initializer is not null) // public MyStruct Member = ...;
           || context.ContainingSymbol is not IFieldSymbol fieldSymbol
+          || fieldSymbol.IsReadOnly
           || fieldSymbol.IsStatic
           || fieldSymbol.DeclaredAccessibility < fieldSymbol.ContainingType.DeclaredAccessibility) // required members must not be less visible than the containing type
          return;

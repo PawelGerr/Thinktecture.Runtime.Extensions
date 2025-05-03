@@ -19,9 +19,9 @@ partial struct TestValueObject
          var count = reader.ReadArrayHeader();
          global::MessagePack.IFormatterResolver resolver = options.Resolver;
 
-         var @referenceField = default(string)!;
-         var @structProperty = default(int)!;
-         var @nullableStructProperty = default(decimal?)!;
+         string? @referenceField = default;
+         int @structProperty = default;
+         decimal? @nullableStructProperty = default;
 
          try
          {
@@ -51,9 +51,9 @@ partial struct TestValueObject
             }
 
             var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
-                                       @referenceField,
-                                       @structProperty,
-                                       @nullableStructProperty,
+                                       @referenceField!,
+                                       @structProperty!,
+                                       @nullableStructProperty!,
                                        out var obj);
 
             if (validationError is not null)
