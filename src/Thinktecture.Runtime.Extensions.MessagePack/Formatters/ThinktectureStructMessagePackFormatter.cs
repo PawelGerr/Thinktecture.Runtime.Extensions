@@ -31,7 +31,6 @@ public class ThinktectureStructMessagePackFormatter<T, TKey, TValidationError> :
 {
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
-   private static readonly TKey? _keyDefaultValue = default;
 
    /// <inheritdoc />
    public void Serialize(ref MessagePackWriter writer, T value, MessagePackSerializerOptions options)
@@ -66,9 +65,6 @@ public class ThinktectureStructMessagePackFormatter<T, TKey, TValidationError> :
 
          return default;
       }
-
-      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
-         throw new MessagePackSerializationException($"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       return Deserialize(key);
    }

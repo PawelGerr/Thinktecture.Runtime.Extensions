@@ -15,7 +15,7 @@ namespace Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatter
 public partial class RoundTripSerialize
 {
    private static readonly MethodInfo _serializeRoundTripMethodInfo = typeof(RoundTripSerialize).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                                                                                       .SingleOrDefault(m => m.Name == nameof(RoundTrip) && m.GetParameters().Length == 1)
+                                                                                                .SingleOrDefault(m => m.Name == nameof(RoundTrip) && m.GetParameters().Length == 1)
                                                                       ?? throw new Exception($"Method '{nameof(RoundTrip)}' not found.");
 
    private readonly MessagePackSerializerOptions _options;
@@ -94,9 +94,7 @@ public partial class RoundTripSerialize
                    .Should().Throw<MessagePackSerializationException>()
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Unexpected msgpack code 192 (nil) encountered.");
 
-      FluentActions.Invoking(() => RoundTrip(0, IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(-1))) // AllowDefaultStructs = true
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+      FluentActions.Invoking(() => RoundTrip(0, IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0))); // AllowDefaultStructs = true
 
       // nullable struct - string
       RoundTrip((object)null, (StringBasedStructValueObject?)null);
@@ -113,12 +111,15 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
-   public void Should_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_null_and_default()
+   public void Should_not_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_default()
    {
-      FluentActions.Invoking(() => RoundTrip(new GenericClass<int>(0), (GenericClass<IntBasedStructValueObjectDoesNotAllowDefaultStructs>)null))
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+      FluentActions.Invoking(() => RoundTrip(new GenericClass<int>(0), new GenericClass<IntBasedStructValueObjectDoesNotAllowDefaultStructs>(IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0))))
+                   .Should().NotThrow();
+   }
 
+   [Fact]
+   public void Should_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_null()
+   {
       FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), (GenericClass<StringBasedStructValueObject>)null))
                    .Should().Throw<MessagePackSerializationException>()
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"StringBasedStructValueObject\" because it doesn't allow default values.");
@@ -359,16 +360,20 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
-   public void Should_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_null_or_default()
+   public void Should_not_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_default()
    {
       // property is null or default
       FluentActions.Invoking(() => RoundTrip(new GenericClass<int>(0), ComplexValueObjectDoesNotAllowDefaultStructsWithInt.Create(0)))
                    .Should().NotThrow();
 
       FluentActions.Invoking(() => RoundTrip(new GenericClass<int>(0), ComplexValueObjectDoesNotAllowDefaultStructsWithIntBasedStruct.Create(IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0))))
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+                   .Should().NotThrow();
+   }
 
+   [Fact]
+   public void Should_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_null_or_default()
+   {
+      // property is null
       FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), ComplexValueObjectDoesNotAllowDefaultStructsWithStringBasedStruct.Create(StringBasedStructValueObject.Create(""))))
                    .Should().Throw<MessagePackSerializationException>()
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"StringBasedStructValueObject\" because it doesn't allow default values.");

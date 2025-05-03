@@ -27,7 +27,6 @@ public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : Js
    where TValidationError : class, IValidationError<TValidationError>
 {
    private static readonly Type _type = typeof(T);
-   private static readonly TKey? _keyDefaultValue = default;
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
@@ -76,9 +75,6 @@ public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : Js
 
          return null;
       }
-
-      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
-         throw new JsonException($"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
 
       var validationError = T.Validate(key, null, out var obj);
 

@@ -18,7 +18,6 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
 {
    private static readonly Type _type = typeof(T);
    private static readonly Type _keyType = typeof(TKey);
-   private static readonly TKey? _keyDefaultValue = default;
    private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
@@ -99,7 +98,17 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
             return Task.CompletedTask;
          }
 
-         CheckKey(bindingContext, valueProviderResult, (TKey)key);
+         var validationError = T.Validate((TKey)key, valueProviderResult.Culture, out var obj);
+
+         if (validationError is null || _mayReturnInvalidObjects)
+         {
+            bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
+            bindingContext.Result = ModelBindingResult.Success(obj);
+         }
+         else
+         {
+            bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationError.ToString() ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
+         }
 
          return Task.CompletedTask;
       }
@@ -121,25 +130,5 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
          // Were able to find a converter for the type but conversion failed.
          return Task.CompletedTask;
       }
-   }
-
-   private static void CheckKey(ModelBindingContext bindingContext, ValueProviderResult valueProviderResult, TKey key)
-   {
-      if (_disallowDefaultValues && key.Equals(_keyDefaultValue))
-      {
-         bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, $"Cannot convert the value {_keyDefaultValue} to type \"{typeof(T).Name}\" because it doesn't allow default values.");
-         return;
-      }
-
-      var validationError = T.Validate(key, valueProviderResult.Culture, out var obj);
-
-      if (validationError is null || _mayReturnInvalidObjects)
-      {
-         bindingContext.ModelState.MarkFieldValid(bindingContext.ModelName);
-         bindingContext.Result = ModelBindingResult.Success(obj);
-         return;
-      }
-
-      bindingContext.ModelState.TryAddModelError(bindingContext.ModelName, validationError.ToString() ?? $"There is no item of type '{typeof(T).Name}' with the identifier '{key}'.");
    }
 }

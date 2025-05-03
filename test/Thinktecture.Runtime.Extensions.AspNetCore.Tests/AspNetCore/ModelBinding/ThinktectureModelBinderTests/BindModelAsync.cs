@@ -80,8 +80,7 @@ public class BindModelAsync
       FluentActions.Invoking(() => Bind<IntBasedStructValueObject>(null))
                    .Should().Throw<Exception>().WithMessage("Cannot convert null to type \"IntBasedStructValueObject\".");
 
-      FluentActions.Invoking(() => Bind<IntBasedStructValueObjectDoesNotAllowDefaultStructs>("0")) // AllowDefaultStructs = true
-                   .Should().Throw<Exception>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+      Bind<IntBasedStructValueObjectDoesNotAllowDefaultStructs>("0").Should().Be(IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0)); // AllowDefaultStructs = true
 
       // nullable struct - string
       Bind<StringBasedStructValueObject?>(null).Should().Be(null);

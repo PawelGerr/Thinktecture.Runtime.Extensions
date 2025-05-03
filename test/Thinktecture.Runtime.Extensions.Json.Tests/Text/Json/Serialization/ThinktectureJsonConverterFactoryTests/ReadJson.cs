@@ -83,8 +83,7 @@ public class ReadJson : JsonTestsBase
       FluentActions.Invoking(() => Deserialize<IntBasedStructValueObject>("null"))
                    .Should().Throw<JsonException>().WithMessage("The JSON value could not be converted to Thinktecture.Runtime.Tests.TestValueObjects.IntBasedStructValueObject. Path: $ | LineNumber: 0 | BytePositionInLine: 4.");
 
-      FluentActions.Invoking(() => Deserialize<IntBasedStructValueObjectDoesNotAllowDefaultStructs>("0")) // AllowDefaultStructs = true
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+      Deserialize<IntBasedStructValueObjectDoesNotAllowDefaultStructs>("0").Should().Be(IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0)); // AllowDefaultStructs = true
 
       // nullable struct - string
       Deserialize<StringBasedStructValueObject?>("null").Should().Be(null);
@@ -99,11 +98,15 @@ public class ReadJson : JsonTestsBase
    }
 
    [Fact]
-   public void Should_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_null_and_default()
+   public void Should_not_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_default()
    {
       FluentActions.Invoking(() => Deserialize<GenericClass<IntBasedStructValueObjectDoesNotAllowDefaultStructs>>("{\"Property\": 0 }"))
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+                   .Should().NotThrow();
+   }
 
+   [Fact]
+   public void Should_throw_if_AllowDefaultStructs_is_disabled_on_keyed_value_object_and_value_is_null()
+   {
       FluentActions.Invoking(() => Deserialize<GenericClass<StringBasedStructValueObject>>("{\"Property\": null }"))
                    .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"StringBasedStructValueObject\" because it doesn't allow default values.");
    }
@@ -308,15 +311,20 @@ public class ReadJson : JsonTestsBase
    }
 
    [Fact]
-   public void Should_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_null_or_default()
+   public void Should_not_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_default()
    {
-      // property is null or default
+      // property is default
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectDoesNotAllowDefaultStructsWithInt>("{ \"Property\": 0 }"))
                    .Should().NotThrow();
 
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectDoesNotAllowDefaultStructsWithIntBasedStruct>("{ \"Property\": 0 }"))
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert the value 0 to type \"IntBasedStructValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
+                   .Should().NotThrow();
+   }
 
+   [Fact]
+   public void Should_throw_if_complex_value_object_property_has_AllowDefaultStructs_equals_to_false_and_value_is_null_or_default()
+   {
+      // property is null
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectDoesNotAllowDefaultStructsWithStringBasedStruct>("{ \"Property\": null }"))
                    .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"StringBasedStructValueObject\" because it doesn't allow default values.");
 
