@@ -120,6 +120,36 @@ public partial class ThinktectureSchemaFilterTests
 
       [Theory]
       [MemberData(nameof(TestData))]
+      public async Task Should_handle_required_properties_as_body_parameter(
+         EndpointKind endpointKind,
+         bool nullable)
+      {
+         if (endpointKind == EndpointKind.MinimalApi)
+         {
+            if (nullable)
+            {
+               App.MapPost("/test", ([FromBody] ValueObjectWithRequiredProperties? value = null) => value);
+            }
+            else
+            {
+               App.MapPost("/test", ([FromBody] ValueObjectWithRequiredProperties value) => value);
+            }
+         }
+         else
+         {
+            _controllerType = nullable
+                                 ? typeof(TestController.ComplexValueObjectClass.Class.BodyWithRequiredProperties.Nullable)
+                                 : typeof(TestController.ComplexValueObjectClass.Class.BodyWithRequiredProperties);
+         }
+
+         var openApi = GetOpenApiJsonAsync();
+
+         await Verify(openApi)
+            .UseParameters(endpointKind, nullable);
+      }
+
+      [Theory]
+      [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_form_parameter(
          EndpointKind endpointKind,
          bool nullable)

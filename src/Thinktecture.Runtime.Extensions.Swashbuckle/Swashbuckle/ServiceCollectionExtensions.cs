@@ -25,14 +25,15 @@ public static class ServiceCollectionExtensions
       Action<ThinktectureSchemaFilterOptions>? configureOptions = null)
    {
       services.TryAddSingleton<IOpenApiValueFactoryProvider, JsonSerializerOpenApiValueFactoryProvider>();
+      services.TryAddSingleton<IKeyedValueObjectSchemaFilter, KeyedValueObjectSchemaFilter>();
+      services.TryAddSingleton<IComplexValueObjectSchemaFilter, ComplexValueObjectSchemaFilter>();
+      services.TryAddSingleton<IRequiredMemberEvaluator, DefaultRequiredMemberEvaluator>();
+      services.TryAddSingleton<IAdHocUnionSchemaFilter, AdHocUnionSchemaFilter>();
+      services.TryAddSingleton<ISmartEnumSchemaFilter, DefaultSmartEnumSchemaFilter>();
+      services.TryAddSingleton<ISmartEnumSchemaExtension, NoSmartEnumSchemaExtension>();
 
       services
          .AddSingleton<JsonSerializerOptionsResolver>()
-         .AddSingleton<ISmartEnumSchemaFilter, DefaultSmartEnumSchemaFilter>()
-         .AddSingleton<IKeyedValueObjectSchemaFilter, KeyedValueObjectSchemaFilter>()
-         .AddSingleton<IComplexValueObjectSchemaFilter, ComplexValueObjectSchemaFilter>()
-         .AddSingleton<IAdHocUnionSchemaFilter, AdHocUnionSchemaFilter>()
-         .AddSingleton<ISmartEnumSchemaExtension, NoSmartEnumSchemaExtension>()
          .Configure<ThinktectureSchemaFilterOptions>(options => configureOptions?.Invoke(options))
          .AddOptions<SwaggerGenOptions>()
          .Configure((SwaggerGenOptions options,

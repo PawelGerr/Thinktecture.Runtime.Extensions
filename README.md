@@ -72,7 +72,7 @@ Unlike regular C# enums which are limited to numeric values and lack extensibili
 * Include additional fields, properties and behavior
 * Use polymorphism to define custom behavior for each value
 * Prevent creation of invalid values
-* Integrate seamlessly with JSON serializers, MessagePack, Entity Framework Core and ASP.NET Core
+* Integrate seamlessly with JSON serializers, MessagePack, Entity Framework Core, ASP.NET Core and Swashbuckle (OpenAPI)
 
 Install: `Install-Package Thinktecture.Runtime.Extensions`
 
@@ -345,6 +345,7 @@ Key Features:
     * JSON serialization (System.Text.Json and Newtonsoft.Json)
     * Entity Framework Core support
     * ASP.NET Core Model Binding
+    * Swashbuckle (OpenAPI)
     * MessagePack serialization
 * Rich feature set:
     * Type conversion and comparison operators

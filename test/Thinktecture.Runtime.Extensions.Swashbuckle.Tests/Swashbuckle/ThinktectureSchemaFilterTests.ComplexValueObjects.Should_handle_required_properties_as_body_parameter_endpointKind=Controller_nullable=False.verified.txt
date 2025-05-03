@@ -1,0 +1,105 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ValueObjectWithRequiredProperties"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValueObjectWithRequiredProperties"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ComplexValueObjectDoesNotAllowDefaultStructsWithInt": {
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "IntBasedStructValueObjectDoesNotAllowDefaultStructs": {
+        "type": "integer",
+        "format": "int32"
+      },
+      "ValueObjectWithRequiredProperties": {
+        "required": [
+          "ComplexStruct",
+          "KeyedStruct",
+          "NonNullableReferenceType"
+        ],
+        "type": "object",
+        "properties": {
+          "keyedStruct": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IntBasedStructValueObjectDoesNotAllowDefaultStructs"
+              }
+            ],
+            "readOnly": true
+          },
+          "complexStruct": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ComplexValueObjectDoesNotAllowDefaultStructsWithInt"
+              }
+            ],
+            "readOnly": true
+          },
+          "nonNullableReferenceType": {
+            "type": "string",
+            "readOnly": true
+          },
+          "nullableReferenceType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          }
+        }
+      }
+    }
+  }
+}

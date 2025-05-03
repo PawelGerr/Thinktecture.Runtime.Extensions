@@ -70,6 +70,26 @@ public static partial class TestController
          }
 
          [Route("/")]
+         public class BodyWithRequiredProperties : ControllerBase
+         {
+            [HttpPost("/test")]
+            public ValueObjectWithRequiredProperties Get([FromBody] ValueObjectWithRequiredProperties value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpPost("/test")]
+               public ValueObjectWithRequiredProperties? Get([FromBody] ValueObjectWithRequiredProperties? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+
+         [Route("/")]
          public class Form : ControllerBase
          {
             [HttpPost("/test")]
