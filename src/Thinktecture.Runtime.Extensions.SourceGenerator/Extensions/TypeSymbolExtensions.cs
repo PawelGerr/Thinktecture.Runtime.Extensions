@@ -107,7 +107,6 @@ public static class TypeSymbolExtensions
          or Constants.Attributes.Union.NAME, // both regular and ad-hoc
          ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
-
    }
 
    public static bool IsMessagePackKeyAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
@@ -582,7 +581,7 @@ public static class TypeSymbolExtensions
                           if (field.IsIgnored())
                              return null;
 
-                          if (!field.IsReadOnly && !field.IsConst)
+                          if (field is { IsReadOnly: false, IsConst: false })
                              ReportField(field);
 
                           return (field, null);
@@ -604,7 +603,7 @@ public static class TypeSymbolExtensions
                           {
                              var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
 
-                             if (syntax.ExpressionBody is not null) // public int Foo => 42;
+                             if (syntax.ExpressionBody is not null) // public int Foo => 42; OR public int Foo => field;
                                 return null;
 
                              if (syntax.AccessorList is null)
@@ -633,8 +632,8 @@ public static class TypeSymbolExtensions
                              // public int Foo { get { return 42; } }
                              // public int Foo { get => 42; }
                              // public int Foo { get => _foo; }
-                             // If we have 'init' then continue checks
-                             if (!IsDefaultImplementation(getter) && init is null)
+                             // If we have 'init' or use the keyword "field" ({ get => field; }) then continue checks
+                             if (!IsDefaultAccessorOrWithFieldKeyword(getter) && init is null)
                                 return null;
 
                              if (property.SetMethod is not null)
@@ -650,7 +649,7 @@ public static class TypeSymbolExtensions
                                 }
                                 else if (setter is not null)
                                 {
-                                   if (!IsDefaultImplementation(setter))
+                                   if (!IsDefaultAccessorOrWithFieldKeyword(setter))
                                       return null;
 
                                    ReportPropertyMustBeReadOnly(property);
@@ -669,12 +668,13 @@ public static class TypeSymbolExtensions
                  .Select(m => m!.Value);
    }
 
-   private static bool IsDefaultImplementation(AccessorDeclarationSyntax? accessor)
+   private static bool IsDefaultAccessorOrWithFieldKeyword(AccessorDeclarationSyntax? accessor)
    {
       if (accessor is null)
          return false;
 
-      return accessor.Body is null && accessor.ExpressionBody is null;
+      return (accessor.Body is null || accessor.Body.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword)))
+             && (accessor.ExpressionBody is null || accessor.ExpressionBody.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword)));
    }
 
    public static bool HasCreateInvalidItemImplementation(
