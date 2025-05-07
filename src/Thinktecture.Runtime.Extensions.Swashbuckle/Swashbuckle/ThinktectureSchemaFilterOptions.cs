@@ -7,15 +7,16 @@ public class ThinktectureSchemaFilterOptions
 {
    /// <summary>
    /// Gets or sets the schema filter for Smart Enums.
-   ///
-   /// Default is <see cref="SmartEnumSchemaFilter.Default"/>.
    /// </summary>
-   public SmartEnumSchemaFilter SmartEnumSchemaFilter { get; set; } = SmartEnumSchemaFilter.Default;
+   public SmartEnumSchemaFilter SmartEnumSchemaFilter { get; set; } = SmartEnumSchemaFilter.FromDependencyInjection;
 
    /// <summary>
    /// Gets or sets the schema extension for Smart Enums.
-   ///
-   /// Default is <see cref="SmartEnumSchemaExtension.None"/>.
    /// </summary>
-   public SmartEnumSchemaExtension SmartEnumSchemaExtension { get; set; } = SmartEnumSchemaExtension.None;
+   public SmartEnumSchemaExtension SmartEnumSchemaExtension { get; set; } = SmartEnumSchemaExtension.FromDependencyInjection;
+
+   /// <summary>
+   /// Gets or sets the required member evaluator.
+   /// </summary>
+   public RequiredMemberEvaluator RequiredMemberEvaluator { get; set; } = RequiredMemberEvaluator.FromDependencyInjection;
 }

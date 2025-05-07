@@ -14,38 +14,37 @@ public partial class SmartEnumSchemaFilter
    /// </summary>
    public static readonly SmartEnumSchemaFilter Default = new(
       nameof(Default),
-      (p, e) => ActivatorUtilities.CreateInstance<DefaultSmartEnumSchemaFilter>(p, e.CreateSchemaExtension(p)));
+      p => ActivatorUtilities.CreateInstance<DefaultSmartEnumSchemaFilter>(p));
 
    /// <summary>
    /// Schema filter using "oneOf".
    /// </summary>
    public static readonly SmartEnumSchemaFilter OneOf = new(
       nameof(OneOf),
-      (p, e) => ActivatorUtilities.CreateInstance<OneOfSmartEnumSchemaFilter>(p, e.CreateSchemaExtension(p)));
+      p => ActivatorUtilities.CreateInstance<OneOfSmartEnumSchemaFilter>(p));
 
    /// <summary>
    /// Schema filter using "anyOf".
    /// </summary>
    public static readonly SmartEnumSchemaFilter AnyOf = new(
       nameof(AnyOf),
-      (p, e) => ActivatorUtilities.CreateInstance<AnyOfSmartEnumSchemaFilter>(p, e.CreateSchemaExtension(p)));
+      p => ActivatorUtilities.CreateInstance<AnyOfSmartEnumSchemaFilter>(p));
 
    /// <summary>
    /// Schema filter using "allOf".
    /// </summary>
    public static readonly SmartEnumSchemaFilter AllOf = new(
       nameof(AllOf),
-      (p, e) => ActivatorUtilities.CreateInstance<AllOfSmartEnumSchemaFilter>(p, e.CreateSchemaExtension(p)));
+      p => ActivatorUtilities.CreateInstance<AllOfSmartEnumSchemaFilter>(p));
 
    /// <summary>
    /// Schema filter is resolved via dependency injection.
    /// </summary>
    public static readonly SmartEnumSchemaFilter FromDependencyInjection = new(
       nameof(FromDependencyInjection),
-      (p, _) => p.GetRequiredService<ISmartEnumSchemaFilter>());
+      p => p.GetRequiredService<ISmartEnumSchemaFilter>());
 
    [UseDelegateFromConstructor]
    internal partial ISmartEnumSchemaFilter CreateSchemaFilter(
-      IServiceProvider serviceProvider,
-      SmartEnumSchemaExtension schemaExtension);
+      IServiceProvider serviceProvider);
 }

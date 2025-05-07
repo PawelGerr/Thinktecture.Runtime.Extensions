@@ -62,7 +62,7 @@ public static class NamedTypeSymbolExtensions
       this INamedTypeSymbol type)
    {
       if (type.ContainingType is null)
-         return Array.Empty<ContainingTypeState>();
+         return [];
 
       var types = new List<ContainingTypeState>();
       var containingType = type.ContainingType;

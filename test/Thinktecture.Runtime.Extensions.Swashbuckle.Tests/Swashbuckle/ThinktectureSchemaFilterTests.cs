@@ -26,6 +26,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
 
    private SmartEnumSchemaFilter _smartEnumFilter = SmartEnumSchemaFilter.Default;
    private SmartEnumSchemaExtension _smartEnumExtension = SmartEnumSchemaExtension.None;
+   private RequiredMemberEvaluator _requiredMemberEvaluator = RequiredMemberEvaluator.Default;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -52,6 +53,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
                 {
                    filterOptions.SmartEnumSchemaFilter = _smartEnumFilter;
                    filterOptions.SmartEnumSchemaExtension = _smartEnumExtension;
+                   filterOptions.RequiredMemberEvaluator = _requiredMemberEvaluator;
                 });
 
       if (_controllerType is not null)

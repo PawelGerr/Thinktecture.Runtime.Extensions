@@ -169,6 +169,8 @@ public class Program
 
       var app = builder.Build();
 
+      app.MapSwagger();
+
       var routeGroup = app.MapGroup("/api");
 
       routeGroup.MapGet("category/{category}", (ProductCategory category) => new { Value = category, category.IsValid });

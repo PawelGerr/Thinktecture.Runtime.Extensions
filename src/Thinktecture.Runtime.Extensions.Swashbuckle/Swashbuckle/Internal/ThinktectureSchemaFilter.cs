@@ -37,7 +37,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       IOptions<ThinktectureSchemaFilterOptions> options,
       SwaggerGenOptions swaggerGenOptions)
    {
-      _smartEnumSchemaFilter = options.Value.SmartEnumSchemaFilter.CreateSchemaFilter(serviceProvider, options.Value.SmartEnumSchemaExtension);
+      _smartEnumSchemaFilter = options.Value.SmartEnumSchemaFilter.CreateSchemaFilter(serviceProvider);
       _keyedValueObjectSchemaFilter = keyedValueObjectSchemaFilter;
       _complexValueObjectSchemaFilter = complexValueObjectSchemaFilter;
       _adHocUnionSchemaFilter = adHocUnionSchemaFilter;

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
@@ -22,11 +23,12 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
    protected SmartEnumSchemaFilterBase(
+      IServiceProvider serviceProvider,
       IOpenApiValueFactoryProvider valueFactoryProvider,
-      ISmartEnumSchemaExtension extension)
+      IOptions<ThinktectureSchemaFilterOptions> options)
    {
       _valueFactoryProvider = valueFactoryProvider;
-      _extension = extension;
+      _extension = options.Value.SmartEnumSchemaExtension.CreateSchemaExtension(serviceProvider);
    }
 
    /// <inheritdoc />

@@ -1,3 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
@@ -13,6 +18,7 @@ namespace Thinktecture.Swashbuckle.Internal.ComplexValueObjects;
 public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaFilter
 {
    private readonly IRequiredMemberEvaluator _requiredMemberEvaluator;
+   private readonly JsonSerializerOptions _jsonSerializerOptions;
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -20,9 +26,13 @@ public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaF
    /// any release. You should only use it directly in your code with extreme caution and knowing that
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
-   public ComplexValueObjectSchemaFilter(IRequiredMemberEvaluator requiredMemberEvaluator)
+   public ComplexValueObjectSchemaFilter(
+      IServiceProvider serviceProvider,
+      JsonSerializerOptionsResolver jsonSerializerOptionsResolver,
+      IOptions<ThinktectureSchemaFilterOptions> options)
    {
-      _requiredMemberEvaluator = requiredMemberEvaluator;
+      _requiredMemberEvaluator = options.Value.RequiredMemberEvaluator.CreateEvaluator(serviceProvider);
+      _jsonSerializerOptions = jsonSerializerOptionsResolver.JsonSerializerOptions;
    }
 
    /// <inheritdoc />
@@ -39,8 +49,14 @@ public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaF
    {
       foreach (var memberInfo in metadata.AssignableMembers)
       {
-         if (_requiredMemberEvaluator.IsRequired(schema, context, memberInfo))
-            schema.Required.Add(memberInfo.Name);
+         if (memberInfo.GetCustomAttribute<RequiredAttribute>() is null && _requiredMemberEvaluator.IsRequired(schema, context, memberInfo))
+         {
+            var name = memberInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+                       ?? _jsonSerializerOptions.PropertyNamingPolicy?.ConvertName(memberInfo.Name)
+                       ?? memberInfo.Name;
+
+            schema.Required.Add(name);
+         }
       }
    }
 }

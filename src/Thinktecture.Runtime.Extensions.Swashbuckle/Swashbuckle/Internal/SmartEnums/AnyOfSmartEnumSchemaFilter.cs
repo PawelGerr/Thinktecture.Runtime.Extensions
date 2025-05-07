@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
@@ -17,9 +18,10 @@ public class AnyOfSmartEnumSchemaFilter : SmartEnumSchemaFilterBase
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
    public AnyOfSmartEnumSchemaFilter(
+      IServiceProvider serviceProvider,
       IOpenApiValueFactoryProvider valueFactoryProvider,
-      ISmartEnumSchemaExtension extension)
-      : base(valueFactoryProvider, extension)
+      IOptions<ThinktectureSchemaFilterOptions> options)
+      : base(serviceProvider, valueFactoryProvider, options)
    {
    }
 

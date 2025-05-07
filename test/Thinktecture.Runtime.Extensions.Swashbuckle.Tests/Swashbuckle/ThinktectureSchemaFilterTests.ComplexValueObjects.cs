@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Runtime.Tests.TestValueObjects;
+using Thinktecture.Swashbuckle;
 using Xunit.Abstractions;
 using static VerifyXunit.Verifier;
 
@@ -23,6 +24,12 @@ public partial class ThinktectureSchemaFilterTests
          EndpointKind.Items
                      .CrossJoin([true, false])
                      .Select(i => new object[] { i.Item1, i.Item2 });
+
+      public static IEnumerable<object[]> TestDataWithRequiredMemberEvaluator =
+         EndpointKind.Items
+                     .CrossJoin([true, false])
+                     .CrossJoin(RequiredMemberEvaluator.Items)
+                     .Select(i => new object[] { i.Item1, i.Item2, i.Item3 });
 
       [Theory]
       [MemberData(nameof(TestData))]
@@ -119,11 +126,14 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Theory]
-      [MemberData(nameof(TestData))]
+      [MemberData(nameof(TestDataWithRequiredMemberEvaluator))]
       public async Task Should_handle_required_properties_as_body_parameter(
          EndpointKind endpointKind,
-         bool nullable)
+         bool nullable,
+         RequiredMemberEvaluator requiredMemberEvaluator)
       {
+         _requiredMemberEvaluator = requiredMemberEvaluator;
+
          if (endpointKind == EndpointKind.MinimalApi)
          {
             if (nullable)
@@ -145,7 +155,7 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable);
+            .UseParameters(endpointKind, nullable, requiredMemberEvaluator);
       }
 
       [Theory]
