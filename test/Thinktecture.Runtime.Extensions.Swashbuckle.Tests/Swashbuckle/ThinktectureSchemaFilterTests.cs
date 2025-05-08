@@ -27,6 +27,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
    private SmartEnumSchemaFilter _smartEnumFilter = SmartEnumSchemaFilter.Default;
    private SmartEnumSchemaExtension _smartEnumExtension = SmartEnumSchemaExtension.None;
    private RequiredMemberEvaluator _requiredMemberEvaluator = RequiredMemberEvaluator.Default;
+   private bool _nonNullableReferenceTypesAsRequired = false;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -48,6 +49,9 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
                    options.TagActionsBy(_ => ["Tests"]);
                    options.SupportNonNullableReferenceTypes();
                    options.UseAllOfToExtendReferenceSchemas();
+
+                   if (_nonNullableReferenceTypesAsRequired)
+                      options.NonNullableReferenceTypesAsRequired();
                 })
                 .AddThinktectureOpenApiFilters(filterOptions =>
                 {

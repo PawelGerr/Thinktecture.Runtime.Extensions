@@ -25,6 +25,7 @@ public class AdHocUnionSchemaFilter : IInternalAdHocUnionSchemaFilter
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.AdHocUnion metadata)
    {
       schema.Properties.Clear();
+      schema.Required.Clear();
 
       schema.Type = null;
       schema.OneOf = metadata.MemberTypes

@@ -28,6 +28,9 @@
     <Content Include="Swashbuckle/ThinktectureSchemaFilterTests.ComplexValueObjects.*.verified.txt">
       <DependentUpon>ThinktectureSchemaFilterTests.ComplexValueObjects.cs</DependentUpon>
     </Content>
+    <Content Include="Swashbuckle/ThinktectureSchemaFilterTests.AdHocUnions.*.verified.txt">
+      <DependentUpon>ThinktectureSchemaFilterTests.AdHocUnions.cs</DependentUpon>
+    </Content>
     <Content Include="Swashbuckle/ThinktectureSchemaFilterTests.Objects.*.verified.txt">
       <DependentUpon>ThinktectureSchemaFilterTests.Objects.cs</DependentUpon>
     </Content>

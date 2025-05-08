@@ -29,7 +29,8 @@ public partial class ThinktectureSchemaFilterTests
          EndpointKind.Items
                      .CrossJoin([true, false])
                      .CrossJoin(RequiredMemberEvaluator.Items)
-                     .Select(i => new object[] { i.Item1, i.Item2, i.Item3 });
+                     .CrossJoin([true, false])
+                     .Select(i => new object[] { i.Item1, i.Item2, i.Item3, i.Item4 });
 
       [Theory]
       [MemberData(nameof(TestData))]
@@ -130,9 +131,11 @@ public partial class ThinktectureSchemaFilterTests
       public async Task Should_handle_required_properties_as_body_parameter(
          EndpointKind endpointKind,
          bool nullable,
-         RequiredMemberEvaluator requiredMemberEvaluator)
+         RequiredMemberEvaluator requiredMemberEvaluator,
+         bool nonNullableReferenceTypesAsRequired)
       {
          _requiredMemberEvaluator = requiredMemberEvaluator;
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
 
          if (endpointKind == EndpointKind.MinimalApi)
          {
@@ -155,7 +158,7 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable, requiredMemberEvaluator);
+            .UseParameters(endpointKind, nullable, requiredMemberEvaluator, nonNullableReferenceTypesAsRequired);
       }
 
       [Theory]

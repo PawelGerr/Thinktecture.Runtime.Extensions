@@ -44,6 +44,8 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.Keyed.SmartEnum metadata)
    {
       schema.Properties.Clear();
+      schema.Required.Clear();
+
       var items = GetItems(metadata.Type, metadata.KeyType, metadata.GetItems());
 
       SetItems(schema, items);

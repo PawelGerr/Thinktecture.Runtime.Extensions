@@ -41,6 +41,9 @@
   "components": {
     "schemas": {
       "ComplexValueObjectDoesNotAllowDefaultStructsWithInt": {
+        "required": [
+          "property"
+        ],
         "type": "object",
         "properties": {
           "property": {
@@ -57,9 +60,16 @@
       },
       "ValueObjectWithRequiredProperties": {
         "required": [
-          "ComplexStruct",
-          "KeyedStruct",
-          "NonNullableReferenceType"
+          "complexStruct",
+          "complexStructWithRequiredAttribute",
+          "keyedStruct",
+          "keyedStructWithRequiredAttribute",
+          "nonNullableReferenceType",
+          "nonNullableReferenceTypeWithRequiredAttribute",
+          "nullableReferenceTypeWithRequiredAttribute",
+          "nullableValueTypeWithRequiredAttribute",
+          "valueType",
+          "valueTypeWithRequiredAttribute"
         ],
         "type": "object",
         "properties": {
@@ -97,6 +107,42 @@
             "type": "integer",
             "format": "int32",
             "nullable": true,
+            "readOnly": true
+          },
+          "keyedStructWithRequiredAttribute": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IntBasedStructValueObjectDoesNotAllowDefaultStructs"
+              }
+            ],
+            "readOnly": true
+          },
+          "complexStructWithRequiredAttribute": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ComplexValueObjectDoesNotAllowDefaultStructsWithInt"
+              }
+            ],
+            "readOnly": true
+          },
+          "nonNullableReferenceTypeWithRequiredAttribute": {
+            "minLength": 1,
+            "type": "string",
+            "readOnly": true
+          },
+          "nullableReferenceTypeWithRequiredAttribute": {
+            "minLength": 1,
+            "type": "string",
+            "readOnly": true
+          },
+          "valueTypeWithRequiredAttribute": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "nullableValueTypeWithRequiredAttribute": {
+            "type": "integer",
+            "format": "int32",
             "readOnly": true
           }
         },

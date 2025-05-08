@@ -22,14 +22,18 @@ public partial class ThinktectureSchemaFilterTests
       public static IEnumerable<object[]> TestData =
          EndpointKind.Items
                      .CrossJoin([true, false])
-                     .Select(i => new object[] { i.Item1, i.Item2 });
+                     .CrossJoin([true, false])
+                     .Select(i => new object[] { i.Item1, i.Item2, i.Item3 });
 
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_route_parameter(
          EndpointKind endpointKind,
-         bool nullable)
+         bool nullable,
+         bool nonNullableReferenceTypesAsRequired)
       {
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
+
          // TextOrNumberSerializable is IParsable
 
          if (endpointKind == EndpointKind.MinimalApi)
@@ -53,15 +57,18 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable);
+            .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
       }
 
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_query_parameter(
          EndpointKind endpointKind,
-         bool nullable)
+         bool nullable,
+         bool nonNullableReferenceTypesAsRequired)
       {
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
+
          // TextOrNumberSerializable is IParsable
 
          if (endpointKind == EndpointKind.MinimalApi)
@@ -85,15 +92,18 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable);
+            .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
       }
 
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_body_parameter(
          EndpointKind endpointKind,
-         bool nullable)
+         bool nullable,
+         bool nonNullableReferenceTypesAsRequired)
       {
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
+
          if (endpointKind == EndpointKind.MinimalApi)
          {
             if (nullable)
@@ -115,15 +125,18 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable);
+            .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
       }
 
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_form_parameter(
          EndpointKind endpointKind,
-         bool nullable)
+         bool nullable,
+         bool nonNullableReferenceTypesAsRequired)
       {
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
+
          if (endpointKind == EndpointKind.MinimalApi)
          {
             if (nullable)
@@ -145,7 +158,7 @@ public partial class ThinktectureSchemaFilterTests
          var openApi = GetOpenApiJsonAsync();
 
          await Verify(openApi)
-            .UseParameters(endpointKind, nullable);
+            .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
       }
    }
 }

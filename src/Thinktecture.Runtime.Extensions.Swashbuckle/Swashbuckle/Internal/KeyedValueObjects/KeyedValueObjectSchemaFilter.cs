@@ -25,6 +25,7 @@ public class KeyedValueObjectSchemaFilter : IInternalKeyedValueObjectSchemaFilte
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.Keyed.ValueObject metadata)
    {
       schema.Properties.Clear();
+      schema.Required.Clear();
 
       var keySchema = context.SchemaGenerator.GenerateSchema(metadata.KeyType, context.SchemaRepository);
 

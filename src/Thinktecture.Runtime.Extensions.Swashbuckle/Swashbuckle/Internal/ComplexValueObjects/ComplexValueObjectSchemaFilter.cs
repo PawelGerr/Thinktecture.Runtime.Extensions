@@ -49,14 +49,15 @@ public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaF
    {
       foreach (var memberInfo in metadata.AssignableMembers)
       {
-         if (memberInfo.GetCustomAttribute<RequiredAttribute>() is null && _requiredMemberEvaluator.IsRequired(schema, context, memberInfo))
-         {
-            var name = memberInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
-                       ?? _jsonSerializerOptions.PropertyNamingPolicy?.ConvertName(memberInfo.Name)
-                       ?? memberInfo.Name;
+         if (memberInfo.GetCustomAttribute<RequiredAttribute>() is not null
+             || !_requiredMemberEvaluator.IsRequired(schema, context, memberInfo))
+            continue;
 
-            schema.Required.Add(name);
-         }
+         var name = memberInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+                    ?? _jsonSerializerOptions.PropertyNamingPolicy?.ConvertName(memberInfo.Name)
+                    ?? memberInfo.Name;
+
+         schema.Required.Add(name);
       }
    }
 }
