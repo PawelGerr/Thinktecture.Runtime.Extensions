@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Thinktecture.Swashbuckle.Internal.ComplexValueObjects;
+namespace Thinktecture.Swashbuckle;
 
 /// <summary>
 /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
