@@ -12,7 +12,7 @@ namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 public class NoSmartEnumSchemaExtension : ISmartEnumSchemaExtension
 {
    /// <inheritdoc />
-   public void Apply(OpenApiSchema schema, SchemaFilterContext context, IEnumerable<object> items)
+   public void Apply(OpenApiSchema schema, SchemaFilterContext context, IReadOnlyList<ISmartEnumItem> items)
    {
    }
 }

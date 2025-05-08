@@ -24,6 +24,13 @@ public partial class SmartEnumSchemaExtension
       p => ActivatorUtilities.CreateInstance<VarNamesFromStringRepresentationSchemaExtension>(p));
 
    /// <summary>
+   /// Extends the schema with "x-enum-varnames" using the .NET identifiers of the items.
+   /// </summary>
+   public static readonly SmartEnumSchemaExtension VarNamesFromDotnetIdentifiers = new(
+      nameof(VarNamesFromDotnetIdentifiers),
+      p => ActivatorUtilities.CreateInstance<VarNamesFromDotnetIdentifiersSchemaExtension>(p));
+
+   /// <summary>
    /// Schema extension is resolved via dependency injection.
    /// </summary>
    public static readonly SmartEnumSchemaExtension FromDependencyInjection = new(

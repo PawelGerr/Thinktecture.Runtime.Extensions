@@ -11,7 +11,7 @@ namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 /// any release. You should only use it directly in your code with extreme caution and knowing that
 /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
 /// </summary>
-public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaExtension
+public class VarNamesFromDotnetIdentifiersSchemaExtension : ISmartEnumSchemaExtension
 {
    private readonly ILogger<VarNamesFromStringRepresentationSchemaExtension> _logger;
    private readonly string _extensionName;
@@ -22,7 +22,7 @@ public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaE
    /// any release. You should only use it directly in your code with extreme caution and knowing that
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
-   public VarNamesFromStringRepresentationSchemaExtension(
+   public VarNamesFromDotnetIdentifiersSchemaExtension(
       ILogger<VarNamesFromStringRepresentationSchemaExtension> logger,
       string extensionName = "x-enum-varnames")
    {
@@ -33,23 +33,8 @@ public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaE
    /// <inheritdoc />
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, IReadOnlyList<ISmartEnumItem> items)
    {
-      var duplicates = items.Select(i => i.Item.ToString())
-                            .GroupBy(n => n, StringComparer.Ordinal)
-                            .Where(g => g.Count() > 1)
-                            .Select(g => g.Key)
-                            .ToList();
-
-      if (duplicates.Count > 0)
-      {
-         _logger.LogWarning("The string representation of enum items of '{Type}' contains duplicates. The 'x-enum-varnames' extension will not be set. Duplicates: {Duplicates}.",
-                            context.Type.FullName,
-                            String.Join(", ", duplicates.Select(d => d)));
-
-         return;
-      }
-
       var names = new OpenApiArray();
-      names.AddRange(items.Select(item => new OpenApiString(item.Item.ToString())));
+      names.AddRange(items.Select(item => new OpenApiString(item.Identifier.ToString())));
 
       schema.Extensions[_extensionName] = names;
    }

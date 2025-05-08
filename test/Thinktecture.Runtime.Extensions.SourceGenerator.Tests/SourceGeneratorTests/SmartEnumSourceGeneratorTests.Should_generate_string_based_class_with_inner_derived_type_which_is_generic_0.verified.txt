@@ -19,7 +19,29 @@ namespace Thinktecture.Tests
          KeyType = typeof(string),
          ValidationErrorType = typeof(global::Thinktecture.ValidationError),
          IsValidatable = false,
-         GetItems = () => global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.TestEnum.Items, i => (object)i),
+         Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
+                  () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
+                     global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.TestEnum.Items, (item, index) =>
+                     {
+                        string identifier = index switch
+                        {
+                           0 => "Item_1", 
+                           1 => "Item_2", 
+                           2 => "Item_int_1", 
+                           3 => "Item_decimal_1", 
+                           4 => "Item_decimal_2", 
+                           5 => "Item_derived_1", 
+                           6 => "Item_derived_2", 
+                           _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                        };
+
+                        return new global::Thinktecture.Internal.SmartEnumItemMetadata
+                        {
+                           Key = item.Key,
+                           Item = item,
+                           Identifier = identifier
+                        };
+                     })).AsReadOnly()),
          ConvertToKey = static string (global::Thinktecture.Tests.TestEnum item) => item.Key,
          ConvertToKeyExpression = static string (global::Thinktecture.Tests.TestEnum item) => item.Key,
          GetKey = static object (object item) => ((global::Thinktecture.Tests.TestEnum)item).Key,

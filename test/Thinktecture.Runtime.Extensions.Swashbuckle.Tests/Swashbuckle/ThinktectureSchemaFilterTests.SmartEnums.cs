@@ -158,6 +158,19 @@ public partial class ThinktectureSchemaFilterTests
          await Verify(openApi);
       }
 
+      [Fact]
+      public async Task Should_handle_SmartEnumClass_StringBased_as_body_parameter_with_varnames_from_dotnet_identifiers()
+      {
+         _smartEnumFilter = SmartEnumSchemaFilter.Default;
+         _smartEnumExtension = SmartEnumSchemaExtension.VarNamesFromDotnetIdentifiers;
+
+         App.MapPost("/test", ([FromBody] TestEnumWithName value) => value);
+
+         var openApi = GetOpenApiJsonAsync();
+
+         await Verify(openApi);
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_SmartEnumClass_StringBased_as_form_parameter(

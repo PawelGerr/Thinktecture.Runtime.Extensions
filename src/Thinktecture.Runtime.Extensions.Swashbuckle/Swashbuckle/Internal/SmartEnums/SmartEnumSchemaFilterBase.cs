@@ -46,14 +46,14 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
       schema.Properties.Clear();
       schema.Required.Clear();
 
-      var items = GetItems(metadata.Type, metadata.KeyType, metadata.GetItems());
+      var items = GetItems(metadata.Type, metadata.KeyType, metadata.Items.Value);
 
       SetItems(schema, items);
 
       var keySchema = context.SchemaGenerator.GenerateSchema(metadata.KeyType, context.SchemaRepository);
       CopyPropertiesFromKeyTypeSchema(schema, context, keySchema);
 
-      _extension.Apply(schema, context, metadata.GetItems());
+      _extension.Apply(schema, context, items);
    }
 
    /// <summary>
@@ -75,16 +75,16 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    protected virtual IReadOnlyList<SmartEnumItem> GetItems(
       Type type,
       Type keyType,
-      IEnumerable<object> items)
+      IReadOnlyList<SmartEnumItemMetadata> items)
    {
       var (valueFactory, keySelector) = DetermineValueFactoryAndKeySelector(type, keyType);
 
       return items.Select(item =>
                   {
-                     var key = keySelector(item);
+                     var key = keySelector(item.Item);
                      var value = valueFactory.CreateOpenApiValue(key);
 
-                     return new SmartEnumItem(item, value);
+                     return new SmartEnumItem(item.Key, item.Item, item.Identifier, value);
                   })
                   .ToList();
    }

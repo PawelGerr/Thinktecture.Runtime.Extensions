@@ -109,7 +109,32 @@ namespace ").Append(_state.Namespace).Append(@"
          KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
          ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
          IsValidatable = ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@",
-         GetItems = () => global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, i => (object)i),
+         Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
+                  () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
+                     global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
+                     {
+                        string identifier = index switch
+                        {");
+
+         for (var i = 0; i < _state.Items.Count; i++)
+         {
+            var item = _state.Items[i];
+
+            _sb.Append(@"
+                           ").Append(i).Append(" => \"").Append(item.Name).Append("\", ");
+         }
+
+         _sb.Append(@"
+                           _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
+                        };
+
+                        return new global::Thinktecture.Internal.SmartEnumItemMetadata
+                        {
+                           Key = item.").Append(_state.KeyMember.Name).Append(@",
+                           Item = item,
+                           Identifier = identifier
+                        };
+                     })).AsReadOnly()),
          ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
          ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
          GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",

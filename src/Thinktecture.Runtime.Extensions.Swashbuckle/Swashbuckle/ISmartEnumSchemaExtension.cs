@@ -14,5 +14,5 @@ public interface ISmartEnumSchemaExtension
    /// <param name="schema">The OpenAPI schema to which extensions will be added.</param>
    /// <param name="context">The schema filter context containing type information.</param>
    /// <param name="items">The collection of Smart Enum items.</param>
-   void Apply(OpenApiSchema schema, SchemaFilterContext context, IEnumerable<object> items);
+   void Apply(OpenApiSchema schema, SchemaFilterContext context, IReadOnlyList<ISmartEnumItem> items);
 }

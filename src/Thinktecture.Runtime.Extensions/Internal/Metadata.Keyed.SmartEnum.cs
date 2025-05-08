@@ -22,7 +22,7 @@ public abstract partial class Metadata
          /// <summary>
          /// A collection of items available in the current Smart Enum.
          /// </summary>
-         public required Func<IEnumerable<object>> GetItems { get; init; }
+         public required Lazy<IReadOnlyList<SmartEnumItemMetadata>> Items { get; init; }
 
          /// <summary>
          /// Typed delegate for conversion of values of type <see cref="KeyType"/> to type <see cref="Type"/>.
