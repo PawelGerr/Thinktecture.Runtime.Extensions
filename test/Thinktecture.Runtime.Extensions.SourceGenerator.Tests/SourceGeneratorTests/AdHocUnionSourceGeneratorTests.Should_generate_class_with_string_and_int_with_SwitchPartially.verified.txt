@@ -85,6 +85,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          global::System.Action<string> @string,
          global::System.Action<int> @int32)
@@ -108,6 +109,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no value-specific action is provided.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
          global::System.Action<object?>? @default = null,
          global::System.Action<string>? @string = null,
@@ -140,6 +142,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          global::System.Action<TState, string> @string,
@@ -168,6 +171,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no value-specific action is provided.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
          global::System.Action<TState, object?>? @default = null,
@@ -203,6 +207,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          global::System.Func<string, TResult> @string,
          global::System.Func<int, TResult> @int32)
@@ -227,6 +232,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no value-specific action is provided.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
          global::System.Func<object?, TResult> @default,
          global::System.Func<string, TResult>? @string = null,
@@ -260,6 +266,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          global::System.Func<TState, string, TResult> @string,
@@ -287,6 +294,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no value-specific action is provided.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
          global::System.Func<TState, object?, TResult> @default,
@@ -321,6 +329,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @string,
          TResult @int32)

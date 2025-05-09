@@ -14,6 +14,7 @@ abstract partial class TestUnion
    /// Executes an action depending on the current type.
    /// </summary>
    /// <param name="test">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Test"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       global::System.Action<global::Thinktecture.Tests.TestUnion.Test> @test)
    {
@@ -32,6 +33,7 @@ abstract partial class TestUnion
    /// </summary>
    /// <param name="context">State to be passed to the callbacks.</param>
    /// <param name="test">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Test"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @context,
       global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Test> @test)
@@ -53,6 +55,7 @@ abstract partial class TestUnion
    /// Executes a function depending on the current type.
    /// </summary>
    /// <param name="test">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Test"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       global::System.Func<global::Thinktecture.Tests.TestUnion.Test, TResult> @test)
 #if NET9_0_OR_GREATER
@@ -73,6 +76,7 @@ abstract partial class TestUnion
    /// </summary>
    /// <param name="context">State to be passed to the callbacks.</param>
    /// <param name="test">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Test"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @context,
       global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Test, TResult> @test)
@@ -94,6 +98,7 @@ abstract partial class TestUnion
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
    /// <param name="test">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Test"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @test)
 #if NET9_0_OR_GREATER

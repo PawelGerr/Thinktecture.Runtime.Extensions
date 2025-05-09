@@ -195,6 +195,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          global::System.Action @item1,
          global::System.Action @item2)
@@ -218,6 +219,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no item-specific action is provided.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
          global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
          global::System.Action? @item1 = null,
@@ -250,6 +252,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          global::System.Action<TState> @item1,
@@ -278,6 +281,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no item-specific action is provided.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
          global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
@@ -313,6 +317,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          global::System.Func<TResult> @item1,
          global::System.Func<TResult> @item2)
@@ -337,6 +342,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no item-specific action is provided.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
          global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
          global::System.Func<TResult>? @item1 = null,
@@ -370,6 +376,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          global::System.Func<TState, TResult> @item1,
@@ -397,6 +404,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no item-specific action is provided.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
          global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
@@ -431,6 +439,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1,
          TResult @item2)
@@ -455,6 +464,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The instance to return if no value is provided for current item.</param>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult MapPartially<TResult>(
          TResult @default,
          global::Thinktecture.Argument<TResult> @item1 = default,

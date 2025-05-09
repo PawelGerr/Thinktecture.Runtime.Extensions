@@ -16,6 +16,7 @@ abstract partial class TestUnion
    /// <param name="child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
    /// <param name="child2Child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2.Child1"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       global::System.Action<global::Thinktecture.Tests.TestUnion.Child1> @child1,
       global::System.Action<global::Thinktecture.Tests.TestUnion.Child2> @child2,
@@ -44,6 +45,7 @@ abstract partial class TestUnion
    /// <param name="child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
    /// <param name="child2Child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2.Child1"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
       global::System.Action<TState, global::Thinktecture.Tests.TestUnion.Child1> @child1,
@@ -75,6 +77,7 @@ abstract partial class TestUnion
    /// <param name="child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
    /// <param name="child2Child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2.Child1"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       global::System.Func<global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
       global::System.Func<global::Thinktecture.Tests.TestUnion.Child2, TResult> @child2,
@@ -103,6 +106,7 @@ abstract partial class TestUnion
    /// <param name="child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
    /// <param name="child2Child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2.Child1"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
       global::System.Func<TState, global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
@@ -132,6 +136,7 @@ abstract partial class TestUnion
    /// <param name="child1">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
    /// <param name="child2Child1">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2.Child1"/>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @child1,
       TResult @child2,

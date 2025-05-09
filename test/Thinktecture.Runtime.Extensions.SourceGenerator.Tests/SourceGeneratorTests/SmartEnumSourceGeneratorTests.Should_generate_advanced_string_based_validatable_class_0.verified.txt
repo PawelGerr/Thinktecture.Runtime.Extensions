@@ -355,6 +355,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          global::System.Action<global::Thinktecture.Tests.TestEnum> invalid,
          global::System.Action @item1,
@@ -386,6 +387,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
          global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
          global::System.Action<global::Thinktecture.Tests.TestEnum>? invalid = null,
@@ -432,6 +434,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          global::System.Action<TState, global::Thinktecture.Tests.TestEnum> invalid,
@@ -468,6 +471,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The action to execute if the current item is an invalid item.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
          global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
@@ -517,6 +521,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> invalid,
          global::System.Func<TResult> @item1,
@@ -548,6 +553,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
          global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
          global::System.Func<global::Thinktecture.Tests.TestEnum, TResult>? invalid = null,
@@ -591,6 +597,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> invalid,
@@ -625,6 +632,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The function to execute if the current item is an invalid item.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
          global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
@@ -669,6 +677,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The instance to return if the current item is an invalid item.</param>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult invalid,
          TResult @item1,
@@ -698,6 +707,7 @@ namespace Thinktecture.Tests
       /// <param name="invalid">The instance to return if the current item is an invalid item.</param>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult MapPartially<TResult>(
          TResult @default,
          global::Thinktecture.Argument<TResult> invalid = default,

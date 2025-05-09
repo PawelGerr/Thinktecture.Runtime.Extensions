@@ -223,10 +223,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The action to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
       }
 
-      var methodName = isPartially ? "SwitchPartially" : "Switch";
-
       _sb.Append(@"
-   public void ").Append(methodName);
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
+   public void ").Append(isPartially ? "SwitchPartially" : "Switch");
 
       if (withState)
       {
@@ -369,10 +368,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The function to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
       }
 
-      var methodName = isPartially ? "SwitchPartially" : "Switch";
-
       _sb.Append(@"
-   public TResult ").Append(methodName);
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
+   public TResult ").Append(isPartially ? "SwitchPartially" : "Switch");
 
       if (withState)
       {
@@ -509,10 +507,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The instance to return if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
       }
 
-      var methodName = isPartially ? "MapPartially" : "Map";
-
       _sb.Append(@"
-   public TResult ").Append(methodName).Append("<TResult>(");
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
+   public TResult ").Append(isPartially ? "MapPartially" : "Map").Append("<TResult>(");
 
       if (isPartially)
       {

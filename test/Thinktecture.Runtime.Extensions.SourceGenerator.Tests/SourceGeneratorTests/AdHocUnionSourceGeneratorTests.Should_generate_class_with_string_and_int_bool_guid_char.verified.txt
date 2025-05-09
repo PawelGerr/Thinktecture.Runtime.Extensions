@@ -160,6 +160,7 @@ namespace Thinktecture.Tests
       /// <param name="boolean">The action to execute if the current value is of type <see cref="bool"/>.</param>
       /// <param name="guid">The action to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
       /// <param name="char">The action to execute if the current value is of type <see cref="char"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          global::System.Action<string> @string,
          global::System.Action<int> @int32,
@@ -198,6 +199,7 @@ namespace Thinktecture.Tests
       /// <param name="boolean">The action to execute if the current value is of type <see cref="bool"/>.</param>
       /// <param name="guid">The action to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
       /// <param name="char">The action to execute if the current value is of type <see cref="char"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          global::System.Action<TState, string> @string,
@@ -239,6 +241,7 @@ namespace Thinktecture.Tests
       /// <param name="boolean">The function to execute if the current value is of type <see cref="bool"/>.</param>
       /// <param name="guid">The function to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
       /// <param name="char">The function to execute if the current value is of type <see cref="char"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          global::System.Func<string, TResult> @string,
          global::System.Func<int, TResult> @int32,
@@ -275,6 +278,7 @@ namespace Thinktecture.Tests
       /// <param name="boolean">The function to execute if the current value is of type <see cref="bool"/>.</param>
       /// <param name="guid">The function to execute if the current value is of type <see cref="global::System.Guid"/>.</param>
       /// <param name="char">The function to execute if the current value is of type <see cref="char"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          global::System.Func<TState, string, TResult> @string,
@@ -312,6 +316,7 @@ namespace Thinktecture.Tests
       /// <param name="boolean">The instance to return if the current value is of type <see cref="bool"/>.</param>
       /// <param name="guid">The instance to return if the current value is of type <see cref="global::System.Guid"/>.</param>
       /// <param name="char">The instance to return if the current value is of type <see cref="char"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @string,
          TResult @int32,

@@ -261,6 +261,7 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current item.
       /// </summary>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          global::System.Action @item1)
       {
@@ -279,6 +280,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          global::System.Action<TState> @item1)
@@ -300,6 +302,7 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          global::System.Func<TResult> @item1)
 #if NET9_0_OR_GREATER
@@ -320,6 +323,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          global::System.Func<TState, TResult> @item1)
@@ -341,6 +345,7 @@ namespace Thinktecture.Tests
       /// Maps an item to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1)
 #if NET9_0_OR_GREATER

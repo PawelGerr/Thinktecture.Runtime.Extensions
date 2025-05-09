@@ -426,18 +426,18 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@""">The action to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
-      var methodName = isPartially ? "SwitchPartially" : "Switch";
+      _sb.Append(@"
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
+      public void ").Append(isPartially ? "SwitchPartially" : "Switch");
 
       if (withState)
       {
-         _sb.Append(@"
-      public void ").Append(methodName).Append(@"<TState>(
+         _sb.Append(@"<TState>(
          TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
       }
       else
       {
-         _sb.Append(@"
-      public void ").Append(methodName).Append("(");
+         _sb.Append("(");
       }
 
       if (isPartially)
@@ -631,18 +631,18 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@""">The function to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
-      var methodName = isPartially ? "SwitchPartially" : "Switch";
+      _sb.Append(@"
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
+      public TResult ").Append(isPartially ? "SwitchPartially" : "Switch");
 
       if (withState)
       {
-         _sb.Append(@"
-      public TResult ").Append(methodName).Append(@"<TState, TResult>(
+         _sb.Append(@"<TState, TResult>(
          TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
       }
       else
       {
-         _sb.Append(@"
-      public TResult ").Append(methodName).Append("<TResult>(");
+         _sb.Append("<TResult>(");
       }
 
       if (isPartially)
@@ -828,10 +828,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(item.ArgumentName).Append(@""">The instance to return if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
-      var methodName = isPartially ? "MapPartially" : "Map";
-
       _sb.Append(@"
-      public TResult ").Append(methodName).Append("<TResult>(");
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
+      public TResult ").Append(isPartially ? "MapPartially" : "Map").Append("<TResult>(");
 
       if (isPartially)
       {
@@ -1586,7 +1585,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                .Select(ctor =>
                                {
                                   if (ctor.Arguments.Length == 0)
-                                     return (IReadOnlyList<ConstructorArgument>)[];
+                                     return (IReadOnlyList<ConstructorArgument>) [];
 
                                   return ctor.Arguments
                                              .Select(a =>

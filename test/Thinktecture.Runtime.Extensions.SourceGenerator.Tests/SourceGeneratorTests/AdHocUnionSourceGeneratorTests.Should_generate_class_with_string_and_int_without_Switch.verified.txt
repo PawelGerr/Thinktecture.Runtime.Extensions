@@ -85,6 +85,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @string,
          TResult @int32)

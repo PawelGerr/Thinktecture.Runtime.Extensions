@@ -263,6 +263,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1,
          TResult @item2)
@@ -287,6 +288,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The instance to return if no value is provided for current item.</param>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult MapPartially<TResult>(
          TResult @default,
          global::Thinktecture.Argument<TResult> @item1 = default,

@@ -16,6 +16,7 @@ abstract partial record Result<T>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="success2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       global::System.Action<global::Thinktecture.Tests.Result<T>.Success> @success,
       global::System.Action<global::Thinktecture.Tests.Result<T>.Success2> @success2,
@@ -44,6 +45,7 @@ abstract partial record Result<T>
    /// <param name="success">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="success2">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The action to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
       global::System.Action<TState, global::Thinktecture.Tests.Result<T>.Success> @success,
@@ -75,6 +77,7 @@ abstract partial record Result<T>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="success2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       global::System.Func<global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
       global::System.Func<global::Thinktecture.Tests.Result<T>.Success2, TResult> @success2,
@@ -103,6 +106,7 @@ abstract partial record Result<T>
    /// <param name="success">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="success2">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The function to execute if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
       global::System.Func<TState, global::Thinktecture.Tests.Result<T>.Success, TResult> @success,
@@ -132,6 +136,7 @@ abstract partial record Result<T>
    /// <param name="success">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success</c>.</param>
    /// <param name="success2">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Success2</c>.</param>
    /// <param name="failure">The instance to return if the current type is <c>global::Thinktecture.Tests.Result&lt;T&gt;.Failure</c>.</param>
+   [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @success,
       TResult @success2,
