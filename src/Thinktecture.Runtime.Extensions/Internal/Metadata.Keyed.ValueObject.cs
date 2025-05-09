@@ -33,7 +33,7 @@ public abstract partial class Metadata
          /// <summary>
          /// Converts a key to a Value Object item and validates the key.
          /// </summary>
-         public required TryGetFromKey TryGetFromKey { get; init; }
+         public required TryGetFromKey? TryGetFromKey { get; init; }
       }
    }
 }
