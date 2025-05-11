@@ -4,13 +4,13 @@ namespace Thinktecture.Runtime.Tests.Text.Json.Serialization.ThinktectureJsonCon
 
 public class ClassWithStringBasedEnum
 {
-   public TestEnum Enum { get; set; }
+   public SmartEnum_StringBased Enum { get; set; }
 
    public ClassWithStringBasedEnum()
    {
    }
 
-   public ClassWithStringBasedEnum(TestEnum value)
+   public ClassWithStringBasedEnum(SmartEnum_StringBased value)
    {
       Enum = value;
    }

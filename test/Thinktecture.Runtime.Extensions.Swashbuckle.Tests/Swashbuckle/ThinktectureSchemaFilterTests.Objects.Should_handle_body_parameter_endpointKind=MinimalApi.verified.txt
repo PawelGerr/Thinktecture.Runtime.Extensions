@@ -73,54 +73,38 @@
         },
         "additionalProperties": false
       },
+      "SmartEnum_StringBased": {
+        "enum": [
+          "Item1",
+          "Item2"
+        ],
+        "type": "string"
+      },
       "StringBasedReferenceValueObject": {
         "type": "string"
       },
       "StringBasedStructValueObject": {
         "type": "string"
       },
-      "StructStringEnum": {
-        "enum": [
-          "",
-          "item2"
-        ],
-        "type": "string"
-      },
       "TestClass": {
         "required": [
           "adHocUnion_Class",
           "complexValueObject_Struct",
-          "keyedValueObject_Struct_StringBased",
-          "smartEnum_Struct_StringBased"
+          "keyedValueObject_Struct_StringBased"
         ],
         "type": "object",
         "properties": {
           "smartEnum_Class_StringBased": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/TestEnum"
+                "$ref": "#/components/schemas/SmartEnum_StringBased"
               }
             ]
           },
           "smartEnum_Class_StringBased_Nullable": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/TestEnum"
-              }
-            ],
-            "nullable": true
-          },
-          "smartEnum_Struct_StringBased": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StructStringEnum"
-              }
-            ]
-          },
-          "smartEnum_Struct_StringBased_Nullable": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StructStringEnum"
+                "$ref": "#/components/schemas/SmartEnum_StringBased"
               }
             ],
             "nullable": true
@@ -202,13 +186,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "TestEnum": {
-        "enum": [
-          "item1",
-          "item2"
-        ],
-        "type": "string"
       },
       "TestUnion_class_string_int": {
         "oneOf": [

@@ -9,54 +9,45 @@ public class Items
    [Fact]
    public void Should_return_empty_collection_if_enum_has_no_items()
    {
-      EmptyEnum.Items.Should().BeEmpty();
+      SmartEnum_Empty.Items.Should().BeEmpty();
    }
 
    [Fact]
    public void Should_return_public_fields_only()
    {
-      var enums = TestEnum.Items;
+      var enums = SmartEnum_StringBased.Items;
       enums.Should().HaveCount(2);
-      enums.Should().Contain(TestEnum.Item1);
-      enums.Should().Contain(TestEnum.Item2);
-   }
-
-   [Fact]
-   public void Should_return_fields_of_a_struct()
-   {
-      var enums = StructIntegerEnum.Items;
-      enums.Should().HaveCount(2);
-      enums.Should().Contain(StructIntegerEnum.Item1);
-      enums.Should().Contain(StructIntegerEnum.Item2);
+      enums.Should().Contain(SmartEnum_StringBased.Item1);
+      enums.Should().Contain(SmartEnum_StringBased.Item2);
    }
 
    [Fact]
    public void Should_return_fields_of_a_valid_enum()
    {
-      var enums = ValidTestEnum.Items;
+      var enums = SmartEnum_StringBased.Items;
       enums.Should().HaveCount(2);
-      enums.Should().Contain(ValidTestEnum.Item1);
-      enums.Should().Contain(ValidTestEnum.Item2);
+      enums.Should().Contain(SmartEnum_StringBased.Item1);
+      enums.Should().Contain(SmartEnum_StringBased.Item2);
    }
 
    [Fact]
    public void Should_return_public_fields_only_via_reflection()
    {
-      var enums = (IReadOnlyList<TestEnum>)typeof(TestEnum).GetProperty("Items", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+      var enums = (IReadOnlyList<SmartEnum_StringBased>)typeof(SmartEnum_StringBased).GetProperty("Items", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
                                                            ?.GetValue(null);
 
       enums.Should().HaveCount(2);
-      enums.Should().Contain(TestEnum.Item1);
-      enums.Should().Contain(TestEnum.Item2);
+      enums.Should().Contain(SmartEnum_StringBased.Item1);
+      enums.Should().Contain(SmartEnum_StringBased.Item2);
    }
 
    [Fact]
    public void Should_return_items_of_keyless_enum()
    {
-      var enums = KeylessTestEnum.Items;
+      var enums = SmartEnum_Keyless.Items;
 
       enums.Should().HaveCount(2);
-      enums.Should().Contain(KeylessTestEnum.Item1);
-      enums.Should().Contain(KeylessTestEnum.Item2);
+      enums.Should().Contain(SmartEnum_Keyless.Item1);
+      enums.Should().Contain(SmartEnum_Keyless.Item2);
    }
 }

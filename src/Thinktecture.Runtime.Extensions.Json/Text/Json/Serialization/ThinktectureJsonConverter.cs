@@ -58,7 +58,6 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
    where TKey : notnull
    where TValidationError : class, IValidationError<TValidationError>
 {
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    private readonly JsonConverter<TKey> _keyConverter;
@@ -89,7 +88,7 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
 
       var validationError = T.Validate(key, null, out var obj);
 
-      if (validationError is not null && !_mayReturnInvalidObjects)
+      if (validationError is not null)
          throw new JsonException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;
@@ -115,7 +114,6 @@ public class ThinktectureJsonConverter<T, TValidationError> : JsonConverter<T>
    where T : IObjectFactory<T, string, TValidationError>, IConvertible<string>
    where TValidationError : class, IValidationError<TValidationError>
 {
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
    /// <summary>
@@ -142,7 +140,7 @@ public class ThinktectureJsonConverter<T, TValidationError> : JsonConverter<T>
 
       var validationError = T.Validate(key, null, out var obj);
 
-      if (validationError is not null && !_mayReturnInvalidObjects)
+      if (validationError is not null)
          throw new JsonException(validationError.ToString() ?? "JSON deserialization failed.");
 
       return obj;

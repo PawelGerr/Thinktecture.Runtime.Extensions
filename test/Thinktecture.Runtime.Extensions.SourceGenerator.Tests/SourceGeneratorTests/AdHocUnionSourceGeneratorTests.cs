@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public AdHocUnionSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 24_000)
    {
    }
 

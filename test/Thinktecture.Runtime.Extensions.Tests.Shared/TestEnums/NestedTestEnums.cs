@@ -1,6 +1,7 @@
 namespace Thinktecture.Runtime.Tests.TestEnums;
 
-public partial class ParentClass
+// ReSharper disable once InconsistentNaming
+public partial class SmartEnums_Nested
 {
    [SmartEnum]
    public sealed partial class NestedKeylessClassTestEnum
@@ -36,32 +37,26 @@ public partial class ParentClass
       }
    }
 
-   [SmartEnum<int>(IsValidatable = true)]
-   public sealed partial class NestedIntBasedClassValidatableTestEnum
+   [SmartEnum<int>]
+   public sealed partial class NestedIntBasedSmartEnum
    {
-      public static readonly NestedIntBasedClassValidatableTestEnum Item = new(1);
-   }
-
-   [SmartEnum<int>(IsValidatable = true)]
-   public readonly partial struct NestedIntBasedStructValidatableTestEnum
-   {
-      public static readonly NestedIntBasedStructValidatableTestEnum Item = new(1);
+      public static readonly NestedIntBasedSmartEnum Item = new(1);
    }
 
    public partial class ChildClass
    {
       [SmartEnum]
-      public sealed partial class NestedKeylessClassTestEnum2
+      public sealed partial class NestedKeylessSmartEnum2
       {
-         public static readonly NestedKeylessClassTestEnum2 Item = new();
+         public static readonly NestedKeylessSmartEnum2 Item = new();
       }
 
       [SmartEnum]
-      public partial class NestedKeylessClassTestEnumWithDerivedType2
+      public partial class NestedKeylessSmartEnumWithDerivedType2
       {
-         public static readonly NestedKeylessClassTestEnumWithDerivedType2 Item = new();
+         public static readonly NestedKeylessSmartEnumWithDerivedType2 Item = new();
 
-         private sealed class DerivedType : NestedKeylessClassTestEnumWithDerivedType2;
+         private sealed class DerivedType : NestedKeylessSmartEnumWithDerivedType2;
       }
 
       [SmartEnum<int>]
@@ -84,16 +79,10 @@ public partial class ParentClass
          }
       }
 
-      [SmartEnum<int>(IsValidatable = true)]
-      public sealed partial class NestedIntBasedClassValidatableTestEnum2
+      [SmartEnum<int>]
+      public sealed partial class NestedIntBasedSmartEnum2
       {
-         public static readonly NestedIntBasedClassValidatableTestEnum2 Item = new(1);
-      }
-
-      [SmartEnum<int>(IsValidatable = true)]
-      public readonly partial struct NestedIntBasedStructValidatableTestEnum2
-      {
-         public static readonly NestedIntBasedStructValidatableTestEnum2 Item = new(1);
+         public static readonly NestedIntBasedSmartEnum2 Item = new(1);
       }
    }
 }
@@ -134,16 +123,10 @@ public partial struct ParentStruct
       }
    }
 
-   [SmartEnum<int>(IsValidatable = true)]
-   public sealed partial class NestedIntBasedClassValidatableTestEnum
+   [SmartEnum<int>]
+   public sealed partial class NestedIntBasedSmartEnum
    {
-      public static readonly NestedIntBasedClassValidatableTestEnum Item = new(1);
-   }
-
-   [SmartEnum<int>(IsValidatable = true)]
-   public readonly partial struct NestedIntBasedStructValidatableTestEnum
-   {
-      public static readonly NestedIntBasedStructValidatableTestEnum Item = new(1);
+      public static readonly NestedIntBasedSmartEnum Item = new(1);
    }
 
    public partial class ChildClass
@@ -182,16 +165,10 @@ public partial struct ParentStruct
          }
       }
 
-      [SmartEnum<int>(IsValidatable = true)]
-      public sealed partial class NestedIntBasedClassValidatableTestEnum2
+      [SmartEnum<int>]
+      public sealed partial class NestedIntBasedSmartEnum2
       {
-         public static readonly NestedIntBasedClassValidatableTestEnum2 Item = new(1);
-      }
-
-      [SmartEnum<int>(IsValidatable = true)]
-      public readonly partial struct NestedIntBasedStructValidatableTestEnum2
-      {
-         public static readonly NestedIntBasedStructValidatableTestEnum2 Item = new(1);
+         public static readonly NestedIntBasedSmartEnum2 Item = new(1);
       }
    }
 }
@@ -232,16 +209,10 @@ public partial record struct ParentRecordStruct
       }
    }
 
-   [SmartEnum<int>(IsValidatable = true)]
-   public sealed partial class NestedIntBasedClassValidatableTestEnum
+   [SmartEnum<int>]
+   public sealed partial class NestedIntBasedSmartEnum
    {
-      public static readonly NestedIntBasedClassValidatableTestEnum Item = new(1);
-   }
-
-   [SmartEnum<int>(IsValidatable = true)]
-   public readonly partial struct NestedIntBasedStructValidatableTestEnum
-   {
-      public static readonly NestedIntBasedStructValidatableTestEnum Item = new(1);
+      public static readonly NestedIntBasedSmartEnum Item = new(1);
    }
 
    public partial class ChildClass
@@ -280,16 +251,10 @@ public partial record struct ParentRecordStruct
          }
       }
 
-      [SmartEnum<int>(IsValidatable = true)]
-      public sealed partial class NestedIntBasedClassValidatableTestEnum2
+      [SmartEnum<int>]
+      public sealed partial class NestedIntBasedSmartEnum2
       {
-         public static readonly NestedIntBasedClassValidatableTestEnum2 Item = new(1);
-      }
-
-      [SmartEnum<int>(IsValidatable = true)]
-      public readonly partial struct NestedIntBasedStructValidatableTestEnum2
-      {
-         public static readonly NestedIntBasedStructValidatableTestEnum2 Item = new(1);
+         public static readonly NestedIntBasedSmartEnum2 Item = new(1);
       }
    }
 }
@@ -330,16 +295,10 @@ public partial record ParentRecord
       }
    }
 
-   [SmartEnum<int>(IsValidatable = true)]
-   public sealed partial class NestedIntBasedClassValidatableTestEnum
+   [SmartEnum<int>]
+   public sealed partial class NestedIntBasedSmartEnum
    {
-      public static readonly NestedIntBasedClassValidatableTestEnum Item = new(1);
-   }
-
-   [SmartEnum<int>(IsValidatable = true)]
-   public readonly partial struct NestedIntBasedStructValidatableTestEnum
-   {
-      public static readonly NestedIntBasedStructValidatableTestEnum Item = new(1);
+      public static readonly NestedIntBasedSmartEnum Item = new(1);
    }
 
    public partial class ChildClass
@@ -378,16 +337,10 @@ public partial record ParentRecord
          }
       }
 
-      [SmartEnum<int>(IsValidatable = true)]
-      public sealed partial class NestedIntBasedClassValidatableTestEnum2
+      [SmartEnum<int>]
+      public sealed partial class NestedIntBasedSmartEnum2
       {
-         public static readonly NestedIntBasedClassValidatableTestEnum2 Item = new(1);
-      }
-
-      [SmartEnum<int>(IsValidatable = true)]
-      public readonly partial struct NestedIntBasedStructValidatableTestEnum2
-      {
-         public static readonly NestedIntBasedStructValidatableTestEnum2 Item = new(1);
+         public static readonly NestedIntBasedSmartEnum2 Item = new(1);
       }
    }
 }

@@ -17,16 +17,15 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
 
    public ThinktectureDbContextOptionsExtension()
    {
-      Settings = new ThinktectureValueConverterSettings(true, true, true, null);
+      Settings = new ThinktectureValueConverterSettings(true, true, null);
    }
 
    public ThinktectureDbContextOptionsExtension UseThinktectureValueConverters(
       bool useThinktectureConverters,
-      bool validateOnWrite = true,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      Settings = new ThinktectureValueConverterSettings(useThinktectureConverters, validateOnWrite, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      Settings = new ThinktectureValueConverterSettings(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects);
 
       return this;
    }
@@ -68,7 +67,7 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
          if (!_extension.Settings.IsEnabled)
             return String.Empty;
 
-         return $"ThinktectureValueConverters(validateOnWrite={_extension.Settings.ValidateOnWrite}) ";
+         return $"ThinktectureValueConverters(IsEnabled={_extension.Settings.IsEnabled}, UseConstructorForRead={_extension.Settings.UseConstructorForRead}) ";
       }
 
       public ThinktectureDbContextOptionsExtensionInfo(ThinktectureDbContextOptionsExtension extension)
@@ -90,7 +89,7 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
 
       public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
       {
-         debugInfo["Thinktecture:ValueConverters"] = $"ThinktectureValueConverters(Enabled={_extension.Settings.IsEnabled}, ValidateOnWrite={_extension.Settings.ValidateOnWrite})";
+         debugInfo["Thinktecture:ValueConverters"] = $"ThinktectureValueConverters(Enabled={_extension.Settings.IsEnabled}, UseConstructorForRead={_extension.Settings.UseConstructorForRead})";
       }
    }
 }

@@ -11,7 +11,7 @@ var config = ManualConfig.CreateMinimumViable()
 
 // BenchmarkRunner.Run<LoadingSmartEnums>(config);
 // BenchmarkRunner.Run<LoadingValueObjects>(config);
-// BenchmarkRunner.Run<SingleItemCollectionBenchmarks>(config);
 // BenchmarkRunner.Run<SingleItemSetBenchmarks>(config);
+// BenchmarkRunner.Run<SingleItemDictionaryBenchmarks>(config);
 // BenchmarkRunner.Run<ItemSearch>(config);
 BenchmarkRunner.Run<TypedIdBenchmarks>(config);

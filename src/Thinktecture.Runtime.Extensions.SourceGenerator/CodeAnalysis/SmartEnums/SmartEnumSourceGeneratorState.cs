@@ -9,8 +9,6 @@ public sealed class SmartEnumSourceGeneratorState
    public string Name { get; }
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
-   public bool IsEqualWithReferenceEquality => !Settings.IsValidatable;
-   public bool DisallowsDefaultValue => !IsReferenceType && KeyMember is { IsReferenceType: true }; // Only Validatable Smart Enums can be structs
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
 
    public KeyMemberState? KeyMember { get; }
@@ -18,13 +16,14 @@ public sealed class SmartEnumSourceGeneratorState
    public SmartEnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
 
-   public bool HasCreateInvalidItemImplementation { get; }
    public bool HasDerivedTypes { get; }
-   public bool IsReferenceType { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
    public bool IsAbstract { get; }
 
+   public bool IsReferenceType => true; // Smart Enums cannot be structs
+   public bool DisallowsDefaultValue => false; // Smart Enums cannot be structs
+   public bool IsEqualWithReferenceEquality => true;
    public bool IsRecord => false;
    public int NumberOfGenerics => 0;
 
@@ -38,13 +37,11 @@ public sealed class SmartEnumSourceGeneratorState
       KeyMemberState? keyMember,
       ValidationErrorState validationError,
       SmartEnumSettings settings,
-      bool hasCreateInvalidItemImplementation,
       bool hasDerivedTypes,
       CancellationToken cancellationToken)
    {
       KeyMember = keyMember;
       Settings = settings;
-      HasCreateInvalidItemImplementation = hasCreateInvalidItemImplementation;
       HasDerivedTypes = hasDerivedTypes;
       ValidationError = validationError;
 
@@ -53,7 +50,6 @@ public sealed class SmartEnumSourceGeneratorState
       ContainingTypes = type.GetContainingTypes();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-      IsReferenceType = type.IsReferenceType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
       IsAbstract = type.IsAbstract;
@@ -77,9 +73,7 @@ public sealed class SmartEnumSourceGeneratorState
          return true;
 
       return TypeFullyQualified == other.TypeFullyQualified
-             && HasCreateInvalidItemImplementation == other.HasCreateInvalidItemImplementation
              && HasDerivedTypes == other.HasDerivedTypes
-             && IsReferenceType == other.IsReferenceType
              && NullableAnnotation == other.NullableAnnotation
              && IsAbstract == other.IsAbstract
              && Equals(KeyMember, other.KeyMember)
@@ -97,9 +91,7 @@ public sealed class SmartEnumSourceGeneratorState
       unchecked
       {
          var hashCode = TypeFullyQualified.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasCreateInvalidItemImplementation.GetHashCode();
          hashCode = (hashCode * 397) ^ HasDerivedTypes.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMember?.GetHashCode() ?? 0);

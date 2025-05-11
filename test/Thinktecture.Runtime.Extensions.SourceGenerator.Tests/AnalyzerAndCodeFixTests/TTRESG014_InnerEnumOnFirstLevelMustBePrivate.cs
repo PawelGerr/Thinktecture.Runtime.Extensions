@@ -18,7 +18,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -37,7 +37,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -63,7 +63,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;
@@ -88,7 +88,7 @@ public class TTRESG014_InnerEnumOnFirstLevelMustBePrivate
 
          namespace TestNamespace
          {
-            [SmartEnum<string>(IsValidatable = true)]
+            [SmartEnum<string>]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = default;

@@ -208,7 +208,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                             state.Left.Type.NumberOfGenerics,
                                                                                             state.Left,
                                                                                             state.Right,
-                                                                                            InterfaceCodeGeneratorFactory.Parsable(state.Left.IsEnum, state.Left.IsValidatableEnum)));
+                                                                                            InterfaceCodeGeneratorFactory.Parsable(state.Left.IsEnum)));
    }
 
    protected void InitializeComparisonOperatorsCodeGenerator(

@@ -26,41 +26,14 @@ public class ReadJson : JsonTestsBase
    public void Should_try_deserialize_enum_when_value_is_null_or_default()
    {
       // class - int
-      Deserialize<TestSmartEnum_Class_IntBased>("null").Should().Be(null);
-      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Class_IntBased>("0")).Should().Throw<JsonException>().WithMessage("There is no item of type 'TestSmartEnum_Class_IntBased' with the identifier '0'.");
-
-      // [validateable] class - int
-      Deserialize<TestSmartEnum_Class_IntBased_Validatable>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Class_IntBased_Validatable>("0").Should().Be(TestSmartEnum_Class_IntBased_Validatable.Get(0)); // invalid item "0"
+      Deserialize<SmartEnum_IntBased>("null").Should().Be(null);
+      FluentActions.Invoking(() => Deserialize<SmartEnum_IntBased>("0")).Should().Throw<JsonException>().WithMessage("There is no item of type 'SmartEnum_IntBased' with the identifier '0'.");
 
       // class - string
-      Deserialize<TestSmartEnum_Class_StringBased>("null").Should().Be(null);
-
-      // [validateable] class - string
-      Deserialize<TestSmartEnum_Class_StringBased_Validatable>("null").Should().Be(null);
+      Deserialize<SmartEnum_StringBased>("null").Should().Be(null);
 
       // class - class
-      Deserialize<TestSmartEnum_Class_ClassBased>("null").Should().Be(null);
-
-      // [validateable] nullable struct - int
-      Deserialize<TestSmartEnum_Struct_IntBased_Validatable?>("null").Should().Be(null);
-      Deserialize<TestSmartEnum_Struct_IntBased_Validatable?>("0").Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] struct - int
-      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_IntBased_Validatable>("null"))
-                   .Should().Throw<JsonException>().WithMessage("Error converting value {null} to type 'System.Int32'. Path '', line 1, position 4.");
-      Deserialize<TestSmartEnum_Struct_IntBased_Validatable>("0").Should().Be(TestSmartEnum_Struct_IntBased_Validatable.Get(0));
-
-      // [validateable] nullable struct - string
-      Deserialize<TestSmartEnum_Struct_StringBased_Validatable?>("null").Should().Be(null);
-
-      // [validateable] struct - string
-      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_StringBased_Validatable>("null")) // AllowDefaultStructs = false
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_StringBased_Validatable\" because it doesn't allow default values.");
-
-      // [validateable] struct - class
-      FluentActions.Invoking(() => Deserialize<TestSmartEnum_Struct_ClassBased>("null")) // AllowDefaultStructs = false
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"TestSmartEnum_Struct_ClassBased\" because it doesn't allow default values.");
+      Deserialize<SmartEnum_ClassBased>("null").Should().Be(null);
    }
 
    [Fact]
@@ -143,18 +116,18 @@ public class ReadJson : JsonTestsBase
 
    [Theory]
    [MemberData(nameof(DataForStringBasedEnumTest))]
-   public void Should_deserialize_string_based_enum(TestEnum expectedValue, string json)
+   public void Should_deserialize_string_based_enum(SmartEnum_StringBased expectedValue, string json)
    {
-      var value = Deserialize<TestEnum>(json);
+      var value = Deserialize<SmartEnum_StringBased>(json);
 
       value.Should().Be(expectedValue);
    }
 
    [Theory]
    [MemberData(nameof(DataForIntBasedEnumTest))]
-   public void Should_deserialize_int_based_enum(IntegerEnum expectedValue, string json)
+   public void Should_deserialize_int_based_enum(SmartEnum_IntBased expectedValue, string json)
    {
-      var value = Deserialize<IntegerEnum>(json);
+      var value = Deserialize<SmartEnum_IntBased>(json);
 
       value.Should().Be(expectedValue);
    }
@@ -170,9 +143,9 @@ public class ReadJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_enum_with_ValidationErrorAttribute()
    {
-      var value = Deserialize<TestEnumWithCustomError>("\"item1\"");
+      var value = Deserialize<TestSmartEnum_CustomError>("\"item1\"");
 
-      value.Should().BeEquivalentTo(TestEnumWithCustomError.Item1);
+      value.Should().BeEquivalentTo(TestSmartEnum_CustomError.Item1);
    }
 
    [Fact]
@@ -222,8 +195,8 @@ public class ReadJson : JsonTestsBase
    [Fact]
    public void Should_throw_JsonException_if_enum_parsing_throws_UnknownSmartEnumIdentifierException()
    {
-      FluentActions.Invoking(() => Deserialize<ValidTestEnum>("\"invalid\""))
-                   .Should().Throw<JsonException>().WithMessage("There is no item of type 'ValidTestEnum' with the identifier 'invalid'.");
+      FluentActions.Invoking(() => Deserialize<SmartEnum_StringBased>("\"invalid\""))
+                   .Should().Throw<JsonException>().WithMessage("There is no item of type 'SmartEnum_StringBased' with the identifier 'invalid'.");
    }
 
    [Fact]

@@ -9,15 +9,15 @@ namespace Thinktecture.Benchmarks;
 
 /*
 
-15.04.2025
+29.04.2025
 
 .NET 9.0.4
 
 | Method                         | Mean     | Error   | StdDev   | Gen0      | Gen1      | Allocated |
 |------------------------------- |---------:|--------:|---------:|----------:|----------:|----------:|
-| Entity_with_ValueObjects       | 180.7 ms | 6.46 ms | 18.53 ms | 4000.0000 | 3000.0000 |  84.38 MB |
-| Entity_without_ValueObjects    | 143.0 ms | 5.76 ms | 16.97 ms | 3000.0000 | 2000.0000 |   79.8 MB |
-| Entity_with_StructValueObjects | 134.2 ms | 4.16 ms | 12.26 ms | 3000.0000 | 2000.0000 |  87.86 MB |
+| Entity_without_ValueObjects    | 148.3 ms | 4.80 ms | 13.46 ms | 3000.0000 | 2000.0000 |   79.8 MB |
+| Entity_with_StructValueObjects | 158.2 ms | 5.80 ms | 16.56 ms | 3000.0000 | 2000.0000 |  87.86 MB |
+| Entity_with_ClassValueObjects  | 195.2 ms | 8.42 ms | 23.89 ms | 4000.0000 | 3000.0000 |  84.38 MB |
 
  */
 
@@ -82,12 +82,6 @@ public class LoadingValueObjects
    }
 
    [Benchmark]
-   public async Task Entity_with_ValueObjects()
-   {
-      await _dbContext!.Entity_with_ValueObjects.ToListAsync();
-   }
-
-   [Benchmark]
    public async Task Entity_without_ValueObjects()
    {
       await _dbContext!.Entity_without_ValueObjects.ToListAsync();
@@ -97,5 +91,11 @@ public class LoadingValueObjects
    public async Task Entity_with_StructValueObjects()
    {
       await _dbContext!.Entity_with_StructValueObjects.ToListAsync();
+   }
+
+   [Benchmark]
+   public async Task Entity_with_ClassValueObjects()
+   {
+      await _dbContext!.Entity_with_ValueObjects.ToListAsync();
    }
 }

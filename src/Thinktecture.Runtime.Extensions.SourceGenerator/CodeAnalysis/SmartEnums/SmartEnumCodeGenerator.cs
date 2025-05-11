@@ -48,10 +48,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum(CancellationToken cancellationToken)
    {
-      var needCreateInvalidItemImplementation = _state is { Settings.IsValidatable: true, HasCreateInvalidItemImplementation: false };
-
-      _sb.GenerateStructLayoutAttributeIfRequired(_state.IsReferenceType, _state.Settings.HasStructLayoutAttribute);
-
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
@@ -63,7 +59,7 @@ namespace ").Append(_state.Namespace).Append(@"
    ");
 
       if (!_state.HasDerivedTypes)
-         _sb.Append(_state.IsReferenceType ? "sealed " : "readonly ");
+         _sb.Append("sealed ");
 
       _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
 
@@ -82,18 +78,6 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-      global::Thinktecture.IValidatableEnum,");
-      }
-
-      if (_state.DisallowsDefaultValue)
-      {
-         _sb.Append(@"
-      global::Thinktecture.IDisallowDefaultValue,");
-      }
-
       _sb.Append(@"
       global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">
    {");
@@ -108,7 +92,6 @@ namespace ").Append(_state.Namespace).Append(@"
          Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
          KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
          ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
-         IsValidatable = ").Append(_state.Settings.IsValidatable ? "true" : "false").Append(@",
          Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
                   () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
                      global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
@@ -148,9 +131,7 @@ namespace ").Append(_state.Namespace).Append(@"
                error = ").AppendTypeFullyQualified(_state).Append(".Validate(key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item)!;
                obj = item;
 
-               return ").Append(_state.Settings.IsValidatable
-                                   ? _state.IsReferenceType ? "item is not null" : (_state.KeyMember.IsReferenceType ? "key is not null" : "true")
-                                   : "error is null").Append(@";
+               return error is null;
             }
       };
 
@@ -175,28 +156,10 @@ namespace ").Append(_state.Namespace).Append(@"
       public static global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append("> Items => _items.Value;");
       }
 
-      if (_state.KeyMember is not null && _state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-
-      /// <inheritdoc />
-      public bool IsValid { get; }");
-
-         GenerateEnsureValid(_state.KeyMember);
-      }
-
       _sb.Append(@"
 
-      private readonly int _hashCode;");
-
-      // Keyless structs cannot be compared properly thus no switch/map
-      var generateIndexBasedSwitchMap = _state.KeyMember is not null || _state.IsReferenceType;
-
-      if (generateIndexBasedSwitchMap)
-      {
-         _sb.Append(@"
+      private readonly int _hashCode;
       private readonly global::System.Lazy<int> _itemIndex;");
-      }
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -215,12 +178,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (_state.KeyMember.IsString())
             GenerateGetForReadOnlySpanOfChar(_state.KeyMember);
-
-         if (_state.Settings.IsValidatable)
-            GenerateCreateAndCheckInvalidItem(_state.KeyMember, needCreateInvalidItemImplementation);
-
-         if (needCreateInvalidItemImplementation && !_state.IsAbstract)
-            GenerateCreateInvalidItem(_state.KeyMember);
 
          cancellationToken.ThrowIfCancellationRequested();
 
@@ -263,7 +220,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var hasSaneNumberOfItems = _state.Items.Count < 1000;
 
-      if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None && generateIndexBasedSwitchMap && hasSaneNumberOfItems)
+      if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None && hasSaneNumberOfItems)
       {
          GenerateSwitchForAction(false, false);
 
@@ -286,7 +243,7 @@ namespace ").Append(_state.Namespace).Append(@"
             GenerateSwitchForFunc(true, true);
       }
 
-      if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None && generateIndexBasedSwitchMap && hasSaneNumberOfItems)
+      if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None && hasSaneNumberOfItems)
       {
          GenerateMap(false);
 
@@ -410,12 +367,6 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The action to execute if no item-specific action is provided.</param>");
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-      /// <param name=""invalid"">The action to execute if the current item is an invalid item.</param>");
-      }
-
       for (var i = 0; i < _state.Items.Count; i++)
       {
          _sb.Append(@"
@@ -451,27 +402,6 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.AppendTypeFullyQualified(_state).Append(">? @default = null,");
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         global::System.Action<");
-
-         if (withState)
-            _sb.Append("TState, ");
-
-         _sb.AppendTypeFullyQualified(_state).Append(">");
-
-         if (isPartially)
-            _sb.Append('?');
-
-         _sb.Append(" invalid");
-
-         if (isPartially)
-            _sb.Append(" = null");
-
-         _sb.Append(',');
-      }
-
       for (var i = 0; i < _state.Items.Count; i++)
       {
          if (i != 0)
@@ -504,40 +434,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         if (!this.IsValid)
-         {");
-
-         if (isPartially)
-         {
-            _sb.Append(@"
-            if(invalid is null)
-            {
-               @default?.Invoke(");
-
-            if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
-
-            _sb.Append(@"this);
-               return;
-            }
-");
-         }
-
-         _sb.Append(@"
-            invalid(");
-
-         if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
-
-         _sb.Append(@"this);
-            return;
-         }
-");
-      }
 
       GenerateIndexBasedActionSwitchBody(withState, isPartially);
 
@@ -615,12 +511,6 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The function to execute if no item-specific action is provided.</param>");
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-      /// <param name=""invalid"">The function to execute if the current item is an invalid item.</param>");
-      }
-
       for (var i = 0; i < _state.Items.Count; i++)
       {
          _sb.Append(@"
@@ -654,27 +544,6 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append("TState, ");
 
          _sb.AppendTypeFullyQualified(_state).Append(", TResult> @default,");
-      }
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         global::System.Func<");
-
-         if (withState)
-            _sb.Append("TState, ");
-
-         _sb.AppendTypeFullyQualified(_state).Append(", TResult>");
-
-         if (isPartially)
-            _sb.Append('?');
-
-         _sb.Append(" invalid");
-
-         if (isPartially)
-            _sb.Append(" = null");
-
-         _sb.Append(',');
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -714,36 +583,6 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 #endif
       {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         if (!this.IsValid)
-         {");
-
-         if (isPartially)
-         {
-            _sb.Append(@"
-            if(invalid is null)
-               return @default(");
-
-            if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
-
-            _sb.Append(@"this);
-");
-         }
-
-         _sb.Append(@"
-            return invalid(");
-
-         if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
-
-         _sb.Append(@"this);
-         }
-");
-      }
 
       GenerateIndexBasedFuncSwitchBody(withState, isPartially);
 
@@ -814,12 +653,6 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The instance to return if no value is provided for current item.</param>");
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-      /// <param name=""invalid"">The instance to return if the current item is an invalid item.</param>");
-      }
-
       for (var i = 0; i < _state.Items.Count; i++)
       {
          var item = _state.Items[i];
@@ -836,27 +669,6 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
          TResult @default,");
-      }
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         ");
-
-         if (isPartially)
-            _sb.Append("global::Thinktecture.Argument<");
-
-         _sb.Append("TResult");
-
-         if (isPartially)
-            _sb.Append(">");
-
-         _sb.Append(" invalid");
-
-         if (isPartially)
-            _sb.Append(" = default");
-
-         _sb.Append(",");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -886,19 +698,6 @@ namespace ").Append(_state.Namespace).Append(@"
 		   where TResult : allows ref struct
 #endif
       {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         if (!this.IsValid)
-            return invalid");
-
-         if (isPartially)
-            _sb.Append(".IsSet ? invalid.Value : @default");
-
-         _sb.Append(@";
-");
-      }
 
       GenerateIndexBasedMapSwitchBody(isPartially);
 
@@ -971,20 +770,8 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         if(_lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
-            return true;
-
-         item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(@");
-         return false;");
-      }
-      else
-      {
-         _sb.Append(@"
+      _sb.Append(@"
          return _lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out item);");
-      }
 
       _sb.Append(@"
       }");
@@ -1002,24 +789,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       public static bool TryGet(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
-      {");
-
-      if (_state.Settings.IsValidatable)
       {
-         _sb.Append(@"
-         if(_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
-            return true;
-
-         item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(@".ToString());
-         return false;");
-      }
-      else
-      {
-         _sb.Append(@"
-         return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out item);");
-      }
-
-      _sb.Append(@"
+         return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item);
       }
 #endif");
    }
@@ -1044,24 +815,7 @@ namespace ").Append(_state.Namespace).Append(@"
             return null;
          }
          else
-         {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         if (keyProperty.IsReferenceType)
          {
-            _sb.Append(@"
-            if(").AppendEscaped(keyProperty.ArgumentName).Append(@" is not null)
-               item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(");");
-         }
-         else
-         {
-            _sb.Append(@"
-            item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(");");
-         }
-      }
-
-      _sb.Append(@"
             return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">($""There is no item of type '").AppendTypeMinimallyQualified(_state).Append("' with the identifier '{").AppendEscaped(keyProperty.ArgumentName).Append(@"}'."");
          }
       }");
@@ -1088,15 +842,7 @@ namespace ").Append(_state.Namespace).Append(@"
             return null;
          }
          else
-         {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-            item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(".ToString());");
-      }
-
-      _sb.Append(@"
+         {
             return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">($""There is no item of type '").AppendTypeMinimallyQualified(_state).Append("' with the identifier '{").AppendEscaped(keyProperty.ArgumentName).Append(@"}'."");
          }
       }
@@ -1117,20 +863,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>The ").AppendTypeForXmlComment(_state, (keyProperty.Name, ".")).Append(@" of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
-      {");
-
-      if (_state.IsReferenceType)
       {
-         _sb.Append(@"
-         return item is null ? default : item.").Append(keyProperty.Name).Append(";");
-      }
-      else
-      {
-         _sb.Append(@"
-         return item.").Append(keyProperty.Name).Append(";");
-      }
-
-      _sb.Append(@"
+         return item is null ? default : item.").Append(keyProperty.Name).Append(@";
       }");
    }
 
@@ -1145,7 +879,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is a known item or implements <see cref=""Thinktecture.IValidatableEnum""/>.</returns>
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName).Append(@""")]
       public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
@@ -1159,56 +893,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       /// <inheritdoc />
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
-      {");
-
-      if (_state.Settings.IsValidatable)
       {
-         if (_state.IsReferenceType)
-         {
-            _sb.Append(@"
-         if (other is null)
-            return false;
-
-         if (!global::System.Object.ReferenceEquals(GetType(), other.GetType()))
-            return false;
-
-         if (global::System.Object.ReferenceEquals(this, other))
-            return true;
-");
-         }
-
-         _sb.Append(@"
-         if (this.IsValid != other.IsValid)
-            return false;
-");
-
-         if (_state.KeyMember is not null)
-         {
-            GenerateKeyMemberEqualityComparison(_sb, _state.KeyMember, _state.Settings.KeyMemberEqualityComparerAccessor);
-         }
-         else
-         {
-            if (_state.IsReferenceType)
-            {
-               _sb.Append(@"
-         return global::System.Object.ReferenceEquals(this, other);");
-            }
-            else
-            {
-               // structs without key-member are always evaluate to false, because there is nothing to compare on.
-               _sb.Append(@"
-         return false;");
-            }
-         }
-      }
-      else
-      {
-         // ReferenceEquals is ok because non-validatable smart enums are classes only
-         _sb.Append(@"
-         return global::System.Object.ReferenceEquals(this, other);");
-      }
-
-      _sb.Append(@"
+         return global::System.Object.ReferenceEquals(this, other);
       }");
    }
 
@@ -1239,29 +925,16 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
          void AddItem(").AppendTypeFullyQualified(_state).Append(@" item, string itemName)
-         {");
-
-         if (_state.IsReferenceType)
          {
-            _sb.Append(@"
             if (item is null)
                throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 ");
-         }
 
          if (keyMember.IsReferenceType)
          {
             _sb.Append(@"
             if (item.").Append(keyMember.Name).Append(@" is null)
                throw new global::System.ArgumentException($""The \""").Append(keyMember.Name).Append(@"\"" of the item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
-");
-         }
-
-         if (_state.Settings.IsValidatable)
-         {
-            _sb.Append(@"
-            if (!item.IsValid)
-               throw new global::System.ArgumentException($""All \""public static readonly\"" fields of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must be valid but the item \""{itemName}\"" with the identifier \""{item.").Append(keyMember.Name).Append(@"}\"" is not."");
 ");
          }
 
@@ -1410,24 +1083,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets an enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
-
-      if (!_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
       /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
-      }
 
-      var returnTypeMayBeNull = _state.IsReferenceType && keyProperty.IsReferenceType;
-
-      if (returnTypeMayBeNull)
+      if (keyProperty.IsReferenceType)
       {
          _sb.Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
-      public static ").AppendTypeFullyQualified(_state, nullable: returnTypeMayBeNull).Append(" ").Append(Constants.Methods.GET).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      public static ").AppendTypeFullyQualified(_state, nullable: keyProperty.IsReferenceType).Append(" ").Append(Constants.Methods.GET).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {");
 
       if (keyProperty.IsReferenceType)
@@ -1440,20 +1106,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
          if (!_lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
-         {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-            item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(");");
-      }
-      else
-      {
-         _sb.Append(@"
-            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(");");
-      }
-
-      _sb.Append(@"
+         {
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(@");
          }
 
          return item;
@@ -1469,103 +1123,18 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets an enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.
       /// </summary>
       /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>");
-
-      if (!_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
-      }
-
-      _sb.Append(@"
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(Constants.Methods.GET).Append("(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          if (!_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
-         {");
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-            item = CreateAndCheckInvalidItem(").AppendEscaped(keyProperty.ArgumentName).Append(".ToString());");
-      }
-      else
-      {
-         _sb.Append(@"
-            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(".ToString());");
-      }
-
-      _sb.Append(@"
+         {
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(@".ToString());
          }
 
          return item;
       }
 #endif");
-   }
-
-   private void GenerateCreateAndCheckInvalidItem(IMemberState keyProperty, bool needsCreateInvalidItemImplementation)
-   {
-      _sb.Append(@"
-
-      private static ").AppendTypeFullyQualified(_state).Append(" CreateAndCheckInvalidItem(").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
-      {
-         var item = ");
-
-      if (needsCreateInvalidItemImplementation && _state.IsAbstract)
-      {
-         _sb.Append("null");
-      }
-      else
-      {
-         _sb.Append(Constants.Methods.CREATE_INVALID_ITEM).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(")");
-      }
-
-      _sb.Append(@";
-");
-
-      if (_state.IsReferenceType)
-      {
-         _sb.Append(@"
-         if (item is null)
-            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must not return 'null'."");
-");
-      }
-
-      _sb.Append(@"
-         if (item.IsValid)
-            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append(@"' must return an instance with property 'IsValid' equals to 'false'."");");
-
-      if (!needsCreateInvalidItemImplementation)
-      {
-         _sb.Append(@"
-
-         if (_lookups.Value.Lookup.ContainsKey(item.").Append(keyProperty.Name).Append(@"))
-            throw new global::System.Exception(""The implementation of method '").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("' must not return an instance with property '").Append(keyProperty.Name).Append(@"' equals to one of a valid item."");");
-      }
-
-      _sb.Append(@"
-
-         return item;
-      }");
-   }
-
-   private void GenerateCreateInvalidItem(IMemberState keyProperty)
-   {
-      _sb.Append(@"
-
-      private static ").AppendTypeFullyQualified(_state).Append(" ").Append(Constants.Methods.CREATE_INVALID_ITEM).Append("(").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
-      {
-         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(", false");
-
-      foreach (var member in _state.AssignableInstanceFieldsAndProperties)
-      {
-         _sb.Append(", default");
-
-         if (member.IsReferenceType)
-            _sb.Append('!');
-      }
-
-      _sb.Append(@");
-      }");
    }
 
    private void GenerateConstructors()
@@ -1629,81 +1198,6 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       bool hasArguments;
 
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-
-      private ").Append(_state.Name).Append("(");
-
-         if (_state.KeyMember is not null)
-         {
-            hasArguments = true;
-            _sb.Append(@"
-         ").AppendTypeFullyQualified(_state.KeyMember).Append(" ").AppendEscaped(_state.KeyMember.ArgumentName);
-         }
-         else
-         {
-            hasArguments = false;
-         }
-
-         for (var i = 0; i < ctorArgs.Count; i++)
-         {
-            if (hasArguments || i != 0)
-               _sb.Append(",");
-
-            hasArguments = true;
-            var member = ctorArgs[i];
-
-            _sb.Append(@"
-         ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
-         }
-
-         if (_state.DelegateMethods.Count > 0)
-         {
-            for (var i = 0; i < _state.DelegateMethods.Count; i++)
-            {
-               var method = _state.DelegateMethods[i];
-
-               if (hasArguments || i != 0)
-                  _sb.Append(",");
-
-               hasArguments = true;
-
-               _sb.Append(@"
-         ").AppendDelegateType(method).Append(" ").AppendEscaped(method.ArgumentName);
-            }
-         }
-
-         _sb.Append(@")
-         : this(");
-
-         if (_state.KeyMember is not null)
-         {
-            _sb.AppendEscaped(_state.KeyMember.ArgumentName).Append(", true");
-         }
-         else
-         {
-            _sb.Append("true");
-         }
-
-         for (var i = 0; i < ctorArgs.Count; i++)
-         {
-            _sb.Append(", ").AppendEscaped(ctorArgs[i].ArgumentName);
-         }
-
-         if (_state.DelegateMethods.Count > 0)
-         {
-            foreach (var method in _state.DelegateMethods)
-            {
-               _sb.Append(", ").AppendEscaped(method.ArgumentName);
-            }
-         }
-
-         _sb.Append(@")
-      {
-      }");
-      }
-
       _sb.Append(@"
 
       private ").Append(_state.Name).Append("(");
@@ -1719,18 +1213,9 @@ namespace ").Append(_state.Namespace).Append(@"
          hasArguments = false;
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         if (hasArguments)
-            _sb.Append(",");
-
-         _sb.Append(@"
-         bool isValid");
-      }
-
       for (var i = 0; i < ctorArgs.Count; i++)
       {
-         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
+         if (hasArguments || i != 0)
             _sb.Append(",");
 
          var member = ctorArgs[i];
@@ -1775,44 +1260,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       {");
 
+      GeneratedValidateConstructorArgumentsCall(ctorArgs);
+
       _sb.Append(@"
-         ValidateConstructorArguments(");
-
-      if (_state.KeyMember is not null)
-      {
-         hasArguments = true;
-         _sb.Append(@"
-            ref ").AppendEscaped(_state.KeyMember.ArgumentName);
-      }
-      else
-      {
-         hasArguments = false;
-      }
-
-      if (_state.Settings.IsValidatable)
-      {
-         if (hasArguments)
-            _sb.Append(",");
-
-         hasArguments = true;
-
-         _sb.Append(@"
-            isValid");
-      }
-
-      for (var i = 0; i < ctorArgs.Count; i++)
-      {
-         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
-            _sb.Append(",");
-
-         var members = ctorArgs[i];
-         hasArguments = true;
-
-         _sb.Append(@"
-            ref ").AppendEscaped(members.ArgumentName);
-      }
-
-      _sb.Append(@");
 ");
 
       if (_state.KeyMember is not null)
@@ -1827,12 +1277,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
          this.").Append(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(";");
-      }
-
-      if (_state.Settings.IsValidatable)
-      {
-         _sb.Append(@"
-         this.IsValid = isValid;");
       }
 
       foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties.Where(p => !p.IsAbstract))
@@ -1876,53 +1320,28 @@ namespace ").Append(_state.Namespace).Append(@"
          this._hashCode = base.GetHashCode();");
       }
 
-      if (_state.KeyMember is not null || _state.IsReferenceType)
-      {
-         _sb.Append(@"
+      _sb.Append(@"
          this._itemIndex = new global::System.Lazy<int>(() =>
                                                         {
                                                            for (var i = 0; i < Items.Count; i++)
                                                            {
-                                                              if (");
-
-         if (_state.IsReferenceType)
-         {
-            _sb.Append("this == Items[i]");
-         }
-         else if (_state.KeyMember is not null)
-         {
-            if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
-            {
-               _sb.Append(_state.Settings.KeyMemberEqualityComparerAccessor).Append(".EqualityComparer.Equals(").AppendEscaped(_state.KeyMember.ArgumentName).Append(", Items[i].").Append(_state.KeyMember.Name).Append(")");
-            }
-            else if (_state.KeyMember.IsString())
-            {
-               _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(").AppendEscaped(_state.KeyMember.ArgumentName).Append(", Items[i].").Append(_state.KeyMember.Name).Append(")");
-            }
-            else
-            {
-               _sb.AppendEscaped(_state.KeyMember.ArgumentName).Append(".Equals(").Append("Items[i].").Append(_state.KeyMember.Name).Append(")");
-            }
-         }
-
-         _sb.Append(@")
+                                                              if (this == Items[i])
                                                                  return i;
                                                            }
 
                                                            throw new global::System.Exception($""Current item '{");
 
-         if (_state.KeyMember is null)
-         {
-            _sb.Append("this");
-         }
-         else
-         {
-            _sb.AppendEscaped(_state.KeyMember.ArgumentName);
-         }
-
-         _sb.Append(@"}' not found in 'Items'."");
-                                                        }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);");
+      if (_state.KeyMember is null)
+      {
+         _sb.Append("this");
       }
+      else
+      {
+         _sb.AppendEscaped(_state.KeyMember.ArgumentName);
+      }
+
+      _sb.Append(@"}' not found in 'Items'."");
+                                                        }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);");
 
       _sb.Append(@"
       }
@@ -1940,18 +1359,9 @@ namespace ").Append(_state.Namespace).Append(@"
          hasArguments = false;
       }
 
-      if (_state.Settings.IsValidatable)
-      {
-         if (hasArguments)
-            _sb.Append(",");
-
-         _sb.Append(@"
-         bool isValid");
-      }
-
       for (var i = 0; i < ctorArgs.Count; i++)
       {
-         if (hasArguments || i != 0 || _state.Settings.IsValidatable)
+         if (hasArguments || i != 0)
             _sb.Append(",");
 
          var members = ctorArgs[i];
@@ -1959,6 +1369,39 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@"
          ref ").AppendTypeFullyQualified(members).Append(" ").AppendEscaped(members.ArgumentName);
+      }
+
+      _sb.Append(");");
+   }
+
+   private void GeneratedValidateConstructorArgumentsCall(IReadOnlyList<ConstructorArgument> ctorArgs)
+   {
+      bool hasArguments;
+
+      _sb.Append(@"
+         ValidateConstructorArguments(");
+
+      if (_state.KeyMember is not null)
+      {
+         hasArguments = true;
+         _sb.Append(@"
+            ref ").AppendEscaped(_state.KeyMember.ArgumentName);
+      }
+      else
+      {
+         hasArguments = false;
+      }
+
+      for (var i = 0; i < ctorArgs.Count; i++)
+      {
+         if (hasArguments || i != 0)
+            _sb.Append(",");
+
+         var members = ctorArgs[i];
+         hasArguments = true;
+
+         _sb.Append(@"
+            ref ").AppendEscaped(members.ArgumentName);
       }
 
       _sb.Append(");");

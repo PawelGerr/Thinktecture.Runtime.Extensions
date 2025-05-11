@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public SmartEnumSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 42_000)
    {
    }
 
@@ -66,9 +66,9 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-           [SmartEnum]
-         	[SmartEnum<string>]
-           [ValueObject]
+            [SmartEnum]
+            [SmartEnum<string>]
+            [ValueObject]
          	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = new("Item1");
@@ -350,126 +350,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
 
-         """;
-
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
-
-      await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
-                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
-                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
-   }
-
-   [Fact]
-   public async Task Should_generate_string_based_validatable_class()
-   {
-      var source = """
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-           [SmartEnum<string>(IsValidatable = true,
-                              SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
-                              MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-         	public partial class TestEnum
-         	{
-               public static readonly TestEnum Item1 = new("Item1");
-               public static readonly TestEnum Item2 = new("Item2");
-            }
-         }
-         """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
-
-      await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
-                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
-                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
-   }
-
-   [Fact]
-   public async Task Should_generate_string_based_validatable_struct()
-   {
-      var source = """
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-           [SmartEnum<string>(IsValidatable = true,
-                              SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
-                              MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-         	public partial struct TestEnum
-         	{
-               public static readonly TestEnum Item1 = new("Item1");
-               public static readonly TestEnum Item2 = new("Item2");
-            }
-         }
-         """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
-
-      await VerifyAsync(outputs,
-                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
-                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
-                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
-   }
-
-   [Fact]
-   public async Task Should_generate_advanced_string_based_validatable_class()
-   {
-      var source = """
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-           [SmartEnum<string>(IsValidatable = true,
-                              KeyMemberName = "Name",
-                              SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
-                              MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
-           [KeyMemberComparer<ComparerAccessors.StringOrdinal, string>]
-           [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
-         	public partial class TestEnum
-         	{
-         		 public static readonly TestEnum Item1 = new("Item1", 1, -1, "ReferenceProperty1", "NullableReferenceProperty1", 11, "ReferenceField1");
-               public static readonly TestEnum Item2 = new DerivedEnum("Item2", 2, 2, "ReferenceProperty2", "NullableReferenceProperty2", 22, "ReferenceField2");
-
-               public int StructProperty { get; }
-               public int? NullableStructProperty { get; }
-               public string ReferenceProperty { get; }
-               public string? NullableReferenceProperty { get; }
-               public readonly int StructField;
-               public readonly string ReferenceField;
-
-               static partial void ValidateConstructorArguments(
-                  int name, bool isValid,
-                  int structProperty, int? nullableStructProperty,
-                  string referenceProperty, string? nullableReferenceProperty,
-                  int structField, string referenceField)
-               {
-               }
-
-               private static ProductCategory CreateInvalidItem(string name)
-               {
-                  return new(name, false, 0, null, String.Empty, null, 0, null);
-               }
-
-               private class DerivedEnum : EnumWithDerivedType
-               {
-                  public DerivedEnum(
-                     int name, bool isValid,
-                     int structProperty, int? nullableStructProperty,
-                     string referenceProperty, string? nullableReferenceProperty,
-                     int structField, string referenceField)
-                     : base(name, isValid, structProperty, nullableStructProperty, referenceProperty, nullableReferenceProperty, structField, referenceField)
-                  {
-                  }
-               }
-            }
-         }
          """;
 
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);

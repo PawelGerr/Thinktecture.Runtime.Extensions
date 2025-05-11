@@ -10,17 +10,13 @@ namespace Thinktecture.EntityFrameworkCore.Conventions;
 
 internal sealed class ThinktectureConventionsPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention
 {
-   private readonly bool _validateOnWrite;
    private readonly bool _useConstructorForRead;
    private readonly Action<IConventionProperty> _configureEnumsAndKeyedValueObjects;
-   private readonly Dictionary<Type, ValueConverter> _converterLookup;
 
-   public ThinktectureConventionsPlugin(bool validateOnWrite, bool useConstructorForRead, Action<IConventionProperty>? configureEnumsAndKeyedValueObjects)
+   public ThinktectureConventionsPlugin(bool useConstructorForRead, Action<IConventionProperty>? configureEnumsAndKeyedValueObjects)
    {
-      _validateOnWrite = validateOnWrite;
       _useConstructorForRead = useConstructorForRead;
       _configureEnumsAndKeyedValueObjects = configureEnumsAndKeyedValueObjects ?? Empty.Action;
-      _converterLookup = new Dictionary<Type, ValueConverter>();
    }
 
    public void ProcessEntityTypeAdded(IConventionEntityTypeBuilder entityTypeBuilder, IConventionContext<IConventionEntityTypeBuilder> context)
@@ -141,12 +137,6 @@ internal sealed class ThinktectureConventionsPlugin : INavigationAddedConvention
 
    private ValueConverter GetValueConverter(Metadata.Keyed metadata)
    {
-      if (_converterLookup.TryGetValue(metadata.Type, out var valueConverter))
-         return valueConverter;
-
-      valueConverter = ThinktectureValueConverterFactory.Create(metadata, _validateOnWrite, _useConstructorForRead);
-      _converterLookup.Add(metadata.Type, valueConverter);
-
-      return valueConverter;
+      return ThinktectureValueConverterFactory.Create(metadata, _useConstructorForRead);
    }
 }

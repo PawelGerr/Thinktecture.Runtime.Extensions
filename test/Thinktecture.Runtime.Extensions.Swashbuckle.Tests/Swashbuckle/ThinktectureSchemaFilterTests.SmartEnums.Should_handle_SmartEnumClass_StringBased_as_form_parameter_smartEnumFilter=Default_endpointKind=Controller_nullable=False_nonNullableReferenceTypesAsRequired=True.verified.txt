@@ -19,7 +19,7 @@
                   "value": {
                     "allOf": [
                       {
-                        "$ref": "#/components/schemas/TestEnum"
+                        "$ref": "#/components/schemas/SmartEnum_StringBased"
                       }
                     ]
                   }
@@ -39,7 +39,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TestEnum"
+                  "$ref": "#/components/schemas/SmartEnum_StringBased"
                 }
               }
             }
@@ -50,10 +50,10 @@
   },
   "components": {
     "schemas": {
-      "TestEnum": {
+      "SmartEnum_StringBased": {
         "enum": [
-          "item1",
-          "item2"
+          "Item1",
+          "Item2"
         ],
         "type": "string"
       }

@@ -26,7 +26,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductCategoryBoolean<>f__AnonymousType0"
+                  "$ref": "#/components/schemas/ProductCategory"
                 }
               }
             }
@@ -55,7 +55,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductGroupBoolean<>f__AnonymousType0"
+                  "$ref": "#/components/schemas/ProductGroup"
                 }
               }
             }
@@ -575,18 +575,6 @@
           "Dairy"
         ]
       },
-      "ProductCategoryBoolean<>f__AnonymousType0": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/ProductCategory"
-          },
-          "isValid": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "ProductGroup": {
         "enum": [
           1,
@@ -598,18 +586,6 @@
           "Apple",
           "Orange"
         ]
-      },
-      "ProductGroupBoolean<>f__AnonymousType0": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "$ref": "#/components/schemas/ProductGroup"
-          },
-          "isValid": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
       },
       "ProductName": {
         "type": "string"

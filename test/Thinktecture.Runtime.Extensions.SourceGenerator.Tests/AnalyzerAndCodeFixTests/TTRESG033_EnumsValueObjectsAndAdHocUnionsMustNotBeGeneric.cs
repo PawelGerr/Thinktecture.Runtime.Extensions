@@ -22,30 +22,8 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class {|#0:TestEnum|}<T>
-            	{
-                  public static readonly TestEnum<T> Item1 = default;
-               }
-            }
-            """;
-
-         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum<T>");
-         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
-      }
-
-      [Fact]
-      public async Task Should_trigger_on_generic_struct()
-      {
-         var code = """
-
-            using System;
-            using Thinktecture;
-
-            namespace TestNamespace
-            {
-               [SmartEnum<string>(IsValidatable = true)]
-            	public partial struct {|#0:TestEnum|}<T>
             	{
                   public static readonly TestEnum<T> Item1 = default;
                }

@@ -10,33 +10,32 @@ namespace Thinktecture.Benchmarks;
 
 /*
 
-22.01.2025
+29.04.2025
 
-.NET 9.0.1
+.NET 9.0.4
 
-| Method                    | SearchTerm | Mean      | Error     | StdDev    | Median    | Allocated |
-|-------------------------- |----------- |----------:|----------:|----------:|----------:|----------:|
-| Dictionary                | aaaaAaaaaa | 16.693 ns | 1.1213 ns | 3.3061 ns | 17.322 ns |         - |
-| FrozenDictionary          | aaaaAaaaaa |  6.703 ns | 0.1758 ns | 0.1644 ns |  6.683 ns |         - |
-| ReadOnlyDictionary        | aaaaAaaaaa | 12.893 ns | 0.3104 ns | 0.6341 ns | 12.690 ns |         - |
-| ImmutableDictionary       | aaaaAaaaaa | 17.369 ns | 0.2967 ns | 0.2478 ns | 17.365 ns |         - |
-| ImmutableSortedDictionary | aaaaAaaaaa | 17.929 ns | 0.4007 ns | 0.9601 ns | 17.715 ns |         - |
-| ArrayIteration            | aaaaAaaaaa |  2.973 ns | 0.1116 ns | 0.1044 ns |  2.937 ns |         - |
+| Method                    | SearchTerm | Mean      | Error     | StdDev    | Allocated |
+|-------------------------- |----------- |----------:|----------:|----------:|----------:|
+| Dictionary                | aaaaAaaaaa |  9.662 ns | 0.2411 ns | 0.3380 ns |         - |
+| FrozenDictionary          | aaaaAaaaaa |  6.492 ns | 0.1784 ns | 0.2615 ns |         - |
+| ReadOnlyDictionary        | aaaaAaaaaa | 11.174 ns | 0.0698 ns | 0.0583 ns |         - |
+| ImmutableDictionary       | aaaaAaaaaa | 15.708 ns | 0.1943 ns | 0.1817 ns |         - |
+| ImmutableSortedDictionary | aaaaAaaaaa | 17.891 ns | 0.4092 ns | 0.8078 ns |         - |
+| ArrayIteration            | aaaaAaaaaa |  2.658 ns | 0.1031 ns | 0.1666 ns |         - |
 
-| Dictionary                | iiiiIiiiii |  9.904 ns | 0.2482 ns | 0.2438 ns |  9.821 ns |         - |
-| FrozenDictionary          | iiiiIiiiii |  7.024 ns | 0.1959 ns | 0.5363 ns |  6.867 ns |         - |
-| ReadOnlyDictionary        | iiiiIiiiii | 12.080 ns | 0.2953 ns | 0.6544 ns | 11.967 ns |         - |
-| ImmutableDictionary       | iiiiIiiiii | 17.562 ns | 0.3981 ns | 0.7280 ns | 17.336 ns |         - |
-| ImmutableSortedDictionary | iiiiIiiiii | 22.474 ns | 0.4374 ns | 0.7064 ns | 22.262 ns |         - |
-| ArrayIteration            | iiiiIiiiii | 21.703 ns | 0.4796 ns | 0.6402 ns | 21.619 ns |         - |
+| Dictionary                | iiiiIiiiii |  9.338 ns | 0.2343 ns | 0.2406 ns |         - |
+| FrozenDictionary          | iiiiIiiiii |  6.558 ns | 0.1823 ns | 0.2238 ns |         - |
+| ReadOnlyDictionary        | iiiiIiiiii | 10.186 ns | 0.2542 ns | 0.2927 ns |         - |
+| ImmutableDictionary       | iiiiIiiiii | 15.271 ns | 0.3567 ns | 0.3663 ns |         - |
+| ImmutableSortedDictionary | iiiiIiiiii | 20.448 ns | 0.4550 ns | 0.7217 ns |         - |
+| ArrayIteration            | iiiiIiiiii | 19.685 ns | 0.4388 ns | 0.5706 ns |         - |
 
-| Dictionary                | tttttTtttt |  9.533 ns | 0.2432 ns | 0.3928 ns |  9.524 ns |         - |
-| FrozenDictionary          | tttttTtttt |  6.943 ns | 0.1874 ns | 0.2370 ns |  6.945 ns |         - |
-| ReadOnlyDictionary        | tttttTtttt | 11.460 ns | 0.2830 ns | 0.4570 ns | 11.473 ns |         - |
-| ImmutableDictionary       | tttttTtttt | 17.708 ns | 0.3967 ns | 0.4245 ns | 17.626 ns |         - |
-| ImmutableSortedDictionary | tttttTtttt | 23.327 ns | 0.5152 ns | 1.5030 ns | 22.802 ns |         - |
-| ArrayIteration            | tttttTtttt | 47.615 ns | 0.9459 ns | 0.9714 ns | 47.931 ns |         - |
-
+| Dictionary                | tttttTtttt |  9.221 ns | 0.2357 ns | 0.3670 ns |         - |
+| FrozenDictionary          | tttttTtttt |  6.200 ns | 0.1754 ns | 0.4464 ns |         - |
+| ReadOnlyDictionary        | tttttTtttt | 10.563 ns | 0.1320 ns | 0.1235 ns |         - |
+| ImmutableDictionary       | tttttTtttt | 17.622 ns | 0.4002 ns | 0.7899 ns |         - |
+| ImmutableSortedDictionary | tttttTtttt | 21.024 ns | 0.2958 ns | 0.2470 ns |         - |
+| ArrayIteration            | tttttTtttt | 44.569 ns | 0.9428 ns | 1.7708 ns |         - |
 
  */
 

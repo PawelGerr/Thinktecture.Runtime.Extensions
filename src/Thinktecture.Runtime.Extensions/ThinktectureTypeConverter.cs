@@ -32,7 +32,6 @@ public class ThinktectureTypeConverter<T, TKey, TValidationError> : TypeConverte
    private static readonly Type _keyType = typeof(TKey);
    private static readonly Type? _nullableKeyType = !typeof(TKey).IsClass ? typeof(Nullable<>).MakeGenericType(typeof(TKey)) : null;
    private static readonly TypeConverter? _keyConverter = typeof(TKey) != typeof(T) ? TypeDescriptor.GetConverter(typeof(TKey)) : null;
-   private static readonly bool _mayReturnInvalidObjects = typeof(IValidatableEnum).IsAssignableFrom(typeof(T));
 
    /// <inheritdoc />
    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
@@ -86,7 +85,7 @@ public class ThinktectureTypeConverter<T, TKey, TValidationError> : TypeConverte
    {
       var validationError = T.Validate(key, culture, out var item);
 
-      if (validationError is null || _mayReturnInvalidObjects)
+      if (validationError is null)
          return item;
 
       throw new FormatException(validationError.ToString());

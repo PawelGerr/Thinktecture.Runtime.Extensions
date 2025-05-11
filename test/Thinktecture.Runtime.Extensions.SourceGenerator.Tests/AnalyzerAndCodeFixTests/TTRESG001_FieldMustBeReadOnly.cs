@@ -20,7 +20,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static TestEnum {|#0:Item1|} = default;
@@ -36,7 +36,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -59,7 +59,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -76,7 +76,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -100,7 +100,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -117,7 +117,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;
@@ -141,7 +141,7 @@ public class TTRESG001_FieldMustBeReadOnly
 
             namespace TestNamespace
             {
-               [SmartEnum<string>(IsValidatable = true)]
+               [SmartEnum<string>]
             	public partial class TestEnum
             	{
                   public static readonly TestEnum Item1 = default;

@@ -66,11 +66,8 @@ public partial class ThinktectureSchemaFilterTests
 
       public class TestClass
       {
-         public TestEnum SmartEnum_Class_StringBased { get; set; }
-         public TestEnum? SmartEnum_Class_StringBased_Nullable { get; set; }
-
-         public required StructStringEnum SmartEnum_Struct_StringBased { get; set; }
-         public StructStringEnum? SmartEnum_Struct_StringBased_Nullable { get; set; }
+         public SmartEnum_StringBased SmartEnum_Class_StringBased { get; set; }
+         public SmartEnum_StringBased? SmartEnum_Class_StringBased_Nullable { get; set; }
 
          public StringBasedReferenceValueObject KeyedValueObject_Class_StringBased { get; set; }
          public StringBasedReferenceValueObject? KeyedValueObject_Class_StringBased_Nullable { get; set; }
@@ -89,7 +86,7 @@ public partial class ThinktectureSchemaFilterTests
 
          public TestClass()
          {
-            SmartEnum_Class_StringBased = TestEnum.Item1;
+            SmartEnum_Class_StringBased = SmartEnum_StringBased.Item1;
             KeyedValueObject_Class_StringBased = StringBasedReferenceValueObject.Create("Test");
             ComplexValueObject_Class = Boundary.Create(0, 0);
             AdHocUnion_Class = "Test";

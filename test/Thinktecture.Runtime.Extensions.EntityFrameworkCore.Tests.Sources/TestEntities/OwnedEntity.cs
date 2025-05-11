@@ -4,5 +4,5 @@ namespace Thinktecture.Runtime.Tests.TestEntities;
 
 public class OwnedEntity
 {
-   public TestEnum TestEnum { get; set; }
+   public SmartEnum_StringBased TestEnum { get; set; }
 }

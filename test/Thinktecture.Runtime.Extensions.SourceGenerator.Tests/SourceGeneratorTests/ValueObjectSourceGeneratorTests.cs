@@ -10,7 +10,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public ValueObjectSourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 13_000)
    {
    }
 

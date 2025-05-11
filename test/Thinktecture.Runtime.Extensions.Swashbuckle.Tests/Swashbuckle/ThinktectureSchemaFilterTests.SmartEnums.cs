@@ -42,11 +42,11 @@ public partial class ThinktectureSchemaFilterTests
          {
             if (nullable)
             {
-               App.MapGet("/test/{value}", (TestEnum? value = null) => value);
+               App.MapGet("/test/{value}", (SmartEnum_StringBased? value = null) => value);
             }
             else
             {
-               App.MapGet("/test/{value}", (TestEnum value) => value);
+               App.MapGet("/test/{value}", (SmartEnum_StringBased value) => value);
             }
          }
          else
@@ -77,11 +77,11 @@ public partial class ThinktectureSchemaFilterTests
          {
             if (nullable)
             {
-               App.MapGet("/test", (TestEnum? value = null) => value);
+               App.MapGet("/test", (SmartEnum_StringBased? value = null) => value);
             }
             else
             {
-               App.MapGet("/test", (TestEnum value) => value);
+               App.MapGet("/test", (SmartEnum_StringBased value) => value);
             }
          }
          else
@@ -112,11 +112,11 @@ public partial class ThinktectureSchemaFilterTests
          {
             if (nullable)
             {
-               App.MapPost("/test", ([FromBody] TestEnum? value = null) => value);
+               App.MapPost("/test", ([FromBody] SmartEnum_StringBased? value = null) => value);
             }
             else
             {
-               App.MapPost("/test", ([FromBody] TestEnum value) => value);
+               App.MapPost("/test", ([FromBody] SmartEnum_StringBased value) => value);
             }
          }
          else
@@ -138,7 +138,7 @@ public partial class ThinktectureSchemaFilterTests
          _smartEnumFilter = SmartEnumSchemaFilter.Default;
          _smartEnumExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation;
 
-         App.MapPost("/test", ([FromBody] TestEnumWithName value) => value);
+         App.MapPost("/test", ([FromBody] SmartEnum_CustomToString value) => value);
 
          var openApi = GetOpenApiJsonAsync();
 
@@ -151,7 +151,7 @@ public partial class ThinktectureSchemaFilterTests
          _smartEnumFilter = SmartEnumSchemaFilter.Default;
          _smartEnumExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation;
 
-         App.MapPost("/test", ([FromBody] TestEnumWithNameDuplicates value) => value);
+         App.MapPost("/test", ([FromBody] SmartEnum_NameDuplicates value) => value);
 
          var openApi = GetOpenApiJsonAsync();
 
@@ -164,7 +164,7 @@ public partial class ThinktectureSchemaFilterTests
          _smartEnumFilter = SmartEnumSchemaFilter.Default;
          _smartEnumExtension = SmartEnumSchemaExtension.VarNamesFromDotnetIdentifiers;
 
-         App.MapPost("/test", ([FromBody] TestEnumWithName value) => value);
+         App.MapPost("/test", ([FromBody] SmartEnum_NameDuplicates value) => value);
 
          var openApi = GetOpenApiJsonAsync();
 
@@ -186,11 +186,11 @@ public partial class ThinktectureSchemaFilterTests
          {
             if (nullable)
             {
-               App.MapPost("/test", ([FromForm] TestEnum? value = null) => value);
+               App.MapPost("/test", ([FromForm] SmartEnum_StringBased? value = null) => value);
             }
             else
             {
-               App.MapPost("/test", ([FromForm] TestEnum value) => value);
+               App.MapPost("/test", ([FromForm] SmartEnum_StringBased value) => value);
             }
          }
          else
@@ -198,79 +198,6 @@ public partial class ThinktectureSchemaFilterTests
             _controllerType = nullable
                                  ? typeof(TestController.SmartEnumClass.StringBased.Form.Nullable)
                                  : typeof(TestController.SmartEnumClass.StringBased.Form);
-         }
-
-         var openApi = GetOpenApiJsonAsync();
-
-         await Verify(openApi)
-            .UseParameters(smartEnumFilter, endpointKind, nullable, nonNullableReferenceTypesAsRequired);
-      }
-
-      [Theory]
-      [MemberData(nameof(TestData))]
-      public async Task Should_handle_SmartEnumStruct_StringBased_as_route_parameter(
-         SmartEnumSchemaFilter smartEnumFilter,
-         EndpointKind endpointKind,
-         bool nullable,
-         bool nonNullableReferenceTypesAsRequired)
-      {
-         _smartEnumFilter = smartEnumFilter;
-         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
-
-         if (endpointKind == EndpointKind.MinimalApi)
-         {
-            static StructStringEnum? GetNullable(StructStringEnum? value = null) => value;
-            static StructStringEnum Get(StructStringEnum value) => value;
-
-            if (nullable)
-            {
-               App.MapGet("/test/{value}", GetNullable);
-            }
-            else
-            {
-               App.MapGet("/test/{value}", Get);
-            }
-         }
-         else
-         {
-            _controllerType = nullable
-                                 ? typeof(TestController.SmartEnumStruct.StringBased.Route.Nullable)
-                                 : typeof(TestController.SmartEnumStruct.StringBased.Route);
-         }
-
-         var openApi = GetOpenApiJsonAsync();
-
-         await Verify(openApi)
-            .UseParameters(smartEnumFilter, endpointKind, nullable, nonNullableReferenceTypesAsRequired);
-      }
-
-      [Theory]
-      [MemberData(nameof(TestData))]
-      public async Task Should_handle_SmartEnumStruct_StringBased_as_query_parameter(
-         SmartEnumSchemaFilter smartEnumFilter,
-         EndpointKind endpointKind,
-         bool nullable,
-         bool nonNullableReferenceTypesAsRequired)
-      {
-         _smartEnumFilter = smartEnumFilter;
-         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
-
-         if (endpointKind == EndpointKind.MinimalApi)
-         {
-            if (nullable)
-            {
-               App.MapGet("/test", (StructStringEnum? value = null) => value);
-            }
-            else
-            {
-               App.MapGet("/test", (StructStringEnum value) => value);
-            }
-         }
-         else
-         {
-            _controllerType = nullable
-                                 ? typeof(TestController.SmartEnumStruct.StringBased.QueryString.Nullable)
-                                 : typeof(TestController.SmartEnumStruct.StringBased.QueryString);
          }
 
          var openApi = GetOpenApiJsonAsync();

@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
 {
    public ObjectFactorySourceGeneratorTests(ITestOutputHelper output)
-      : base(output)
+      : base(output, 2_000)
    {
    }
 
