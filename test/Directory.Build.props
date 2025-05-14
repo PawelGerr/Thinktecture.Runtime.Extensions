@@ -29,6 +29,10 @@
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+    <PackageReference Update="xunit.runner.visualstudio" PrivateAssets="all" VersionOverride="3.0.2" />
+  </ItemGroup>
+
   <ItemGroup>
     <Using Include="FluentAssertions" />
     <Using Include="Xunit" />
