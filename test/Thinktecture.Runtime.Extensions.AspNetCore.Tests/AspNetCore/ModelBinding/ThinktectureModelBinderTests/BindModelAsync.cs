@@ -22,49 +22,46 @@ public class BindModelAsync
    public void Should_try_bind_enum_when_value_is_null_or_default()
    {
       // class - int
-      Bind<SmartEnum_IntBased>(null).Should().Be(null);
+      BindNot<SmartEnum_IntBased>(null);
       FluentActions.Invoking(() => Bind<SmartEnum_IntBased>("0")).Should().Throw<Exception>().WithMessage("There is no item of type 'SmartEnum_IntBased' with the identifier '0'.");
 
       // class - string
-      Bind<SmartEnum_StringBased>(null).Should().Be(null);
+      BindNot<SmartEnum_StringBased>(null);
 
       // class - class
-      Bind<SmartEnum_ClassBased>(null).Should().Be(null);
+      BindNot<SmartEnum_ClassBased>(null);
    }
 
    [Fact]
    public void Should_try_bind_keyed_value_object_when_value_is_null_or_default()
    {
       // class - int
-      Bind<IntBasedReferenceValueObject>(null).Should().Be(null);
+      BindNot<IntBasedReferenceValueObject>(null);
 
       // class - string
-      Bind<StringBasedReferenceValueObject>(null).Should().Be(null);
+      BindNot<StringBasedReferenceValueObject>(null);
 
       // class - class
-      Bind<ClassBasedReferenceValueObject>(null).Should().Be(null);
+      BindNot<ClassBasedReferenceValueObject>(null);
 
       // nullable struct - int
-      Bind<IntBasedStructValueObject?>(null).Should().Be(null);
+      BindNot<IntBasedStructValueObject?>(null);
       Bind<IntBasedStructValueObject?>("0").Should().Be(IntBasedStructValueObject.Create(0));
 
       // struct - int
       Bind<IntBasedStructValueObject>("0").Should().Be(IntBasedStructValueObject.Create(0)); // AllowDefaultStructs = true
-      FluentActions.Invoking(() => Bind<IntBasedStructValueObject>(null))
-                   .Should().Throw<Exception>().WithMessage("Cannot convert null to type \"IntBasedStructValueObject\".");
+      BindNot<IntBasedStructValueObject>(null);
 
       Bind<IntBasedStructValueObjectDoesNotAllowDefaultStructs>("0").Should().Be(IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(0)); // AllowDefaultStructs = true
 
       // nullable struct - string
-      Bind<StringBasedStructValueObject?>(null).Should().Be(null);
+      BindNot<StringBasedStructValueObject?>(null);
 
       // struct - string
-      FluentActions.Invoking(() => Bind<StringBasedStructValueObject>(null)) // AllowDefaultStructs = false
-                   .Should().Throw<Exception>().WithMessage("Cannot convert null to type \"StringBasedStructValueObject\" because it doesn't allow default values.");
+      BindNot<StringBasedStructValueObject>(null); // AllowDefaultStructs = false;
 
       // struct - class
-      FluentActions.Invoking(() => Bind<ReferenceTypeBasedStructValueObjectDoesNotAllowDefaultStructs>(null)) // AllowDefaultStructs = false
-                   .Should().Throw<Exception>().WithMessage("Cannot convert a string to type \"ReferenceTypeBasedStructValueObjectDoesNotAllowDefaultStructs\".");
+      BindNot<ReferenceTypeBasedStructValueObjectDoesNotAllowDefaultStructs>(null); // AllowDefaultStructs = false
    }
 
    [Fact]
@@ -137,12 +134,13 @@ public class BindModelAsync
    }
 
    [Fact]
-   public async Task Should_bind_null_with_NullInFactoryMethodsYieldsNull()
+   public async Task Should_not_set_model_when_trying_to_bind_null()
    {
+      // ASP.NET or rather IQueryCollection doesn't distinguish between null and none
       var ctx = await BindAsync<StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull>(null);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.IsModelSet.Should().BeFalse();
       ctx.Result.Model.Should().BeNull();
    }
 
@@ -179,10 +177,11 @@ public class BindModelAsync
    [Fact]
    public async Task Should_bind_null_with_StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull()
    {
+      // ASP.NET or rather IQueryCollection doesn't distinguish between null and none
       var ctx = await BindAsync<StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull>(null);
 
       ctx.ModelState.ErrorCount.Should().Be(0);
-      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.IsModelSet.Should().BeFalse();
       ctx.Result.Model.Should().BeNull();
    }
 
@@ -297,6 +296,21 @@ public class BindModelAsync
          throw new Exception("Model is not set");
 
       return (T)context.Result.Model;
+   }
+
+   private static void BindNot<T>(string value)
+   {
+      // ASP.NET or rather IQueryCollection doesn't distinguish between null and none
+      var context = BindAsync<T>(value).GetAwaiter().GetResult();
+
+      if (!context.ModelState.IsValid)
+         throw new Exception(context.ModelState["name"]!.Errors[0].ErrorMessage);
+
+      if (context.Result.IsModelSet)
+         throw new Exception("Model msut not be set");
+
+      if (context.Result.Model is not null)
+         throw new Exception("Model must be null");
    }
 
    private static async Task<DefaultModelBindingContext> BindAsync<T>(string value)

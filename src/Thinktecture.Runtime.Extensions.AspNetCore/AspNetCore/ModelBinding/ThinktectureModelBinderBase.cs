@@ -37,6 +37,10 @@ public abstract class ThinktectureModelBinderBase<T, TKey, TValidationError> : I
       ArgumentNullException.ThrowIfNull(bindingContext);
 
       var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+
+      if (valueProviderResult == ValueProviderResult.None)
+         return Task.CompletedTask;
+
       bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
 
       try
