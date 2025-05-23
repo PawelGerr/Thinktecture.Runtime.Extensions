@@ -378,7 +378,7 @@ public static class EntityTypeBuilderExtensions
       if (entity.IsIgnored(propertyInfo.Name))
          return;
 
-      // wil be handled by AddConverterForScalarProperties
+      // will be handled by AddConverterForScalarProperties
       if (entity.FindProperty(propertyInfo) is not null)
          return;
 
@@ -508,12 +508,42 @@ public static class EntityTypeBuilderExtensions
          if (valueConverter is not null)
             continue;
 
+#if PRIMITIVE_COLLECTIONS
+         if (property.IsPrimitiveCollection)
+         {
+            AddConverterForPrimitiveCollections(property, validateOnWrite, useConstructorForRead, converterLookup, configure);
+            return;
+         }
+#endif
+
          if (MetadataLookup.Find(property.ClrType) is not Metadata.Keyed metadata)
             continue;
 
          SetConverterAndExecuteCallback(validateOnWrite, useConstructorForRead, converterLookup, configure, property, metadata);
       }
    }
+
+#if PRIMITIVE_COLLECTIONS
+   private static void AddConverterForPrimitiveCollections(
+      IMutableProperty property,
+      bool validateOnWrite,
+      bool useConstructorForRead,
+      Dictionary<Type, ValueConverter>? converterLookup,
+      Action<IMutableProperty> configure)
+   {
+      var elementType = property.GetElementType();
+
+      if (elementType is null)
+         return;
+
+      if (MetadataLookup.Find(elementType.ClrType) is not Metadata.Keyed metadata)
+         return;
+
+      var valueConverter = GetValueConverter(validateOnWrite, useConstructorForRead, converterLookup, metadata);
+      elementType.SetValueConverter(valueConverter);
+      configure(property);
+   }
+#endif
 
 #if COMPLEX_TYPES
    private static void AddConverterForComplexProperties(

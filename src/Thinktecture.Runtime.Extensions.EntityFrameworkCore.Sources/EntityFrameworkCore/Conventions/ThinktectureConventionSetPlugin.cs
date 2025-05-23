@@ -22,6 +22,10 @@ internal sealed class ThinktectureConventionSetPlugin : IConventionSetPlugin
          conventionSet.NavigationAddedConventions.Add(convention);
          conventionSet.PropertyAddedConventions.Add(convention);
          conventionSet.EntityTypeAddedConventions.Add(convention);
+
+#if PRIMITIVE_COLLECTIONS
+         conventionSet.PropertyElementTypeChangedConventions.Add(convention);
+#endif
       }
 
       return conventionSet;

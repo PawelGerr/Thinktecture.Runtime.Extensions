@@ -42,7 +42,14 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       Boundary = Boundary.Create(10, 20),
                       BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21),
                       BoundaryWithCustomFactoryNames = BoundaryWithCustomFactoryNames.Get(11, 21),
-                      IntBasedReferenceValueObjectWitCustomFactoryName = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1)
+                      IntBasedReferenceValueObjectWitCustomFactoryName = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1),
+#if PRIMITIVE_COLLECTIONS
+                      CollectionOfIntBasedReferenceValueObject =
+                      [
+                         IntBasedReferenceValueObject.Create(1),
+                         IntBasedReferenceValueObject.Create(2)
+                      ]
+#endif
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync();
