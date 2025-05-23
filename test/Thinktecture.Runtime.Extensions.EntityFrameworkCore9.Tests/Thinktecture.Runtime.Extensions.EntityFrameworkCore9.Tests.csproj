@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);COMPLEX_TYPES</DefineConstants>
+    <DefineConstants>$(DefineConstants);COMPLEX_TYPES;PRIMITIVE_COLLECTIONS;</DefineConstants>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
   </PropertyGroup>
 

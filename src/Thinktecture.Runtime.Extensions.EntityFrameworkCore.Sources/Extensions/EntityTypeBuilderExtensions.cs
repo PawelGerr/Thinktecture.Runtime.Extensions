@@ -337,7 +337,7 @@ public static class EntityTypeBuilderExtensions
       if (entity.IsIgnored(propertyInfo.Name))
          return;
 
-      // wil be handled by AddConverterForScalarProperties
+      // will be handled by AddConverterForScalarProperties
       if (entity.FindProperty(propertyInfo) is not null)
          return;
 
@@ -459,12 +459,40 @@ public static class EntityTypeBuilderExtensions
          if (valueConverter is not null)
             continue;
 
+#if PRIMITIVE_COLLECTIONS
+         if (property.IsPrimitiveCollection)
+         {
+            AddConverterForPrimitiveCollections(property, useConstructorForRead, configure);
+            return;
+         }
+#endif
+
          if (MetadataLookup.Find(property.ClrType) is not Metadata.Keyed metadata)
             continue;
 
          SetConverterAndExecuteCallback(useConstructorForRead, configure, property, metadata);
       }
    }
+
+#if PRIMITIVE_COLLECTIONS
+   private static void AddConverterForPrimitiveCollections(
+      IMutableProperty property,
+      bool useConstructorForRead,
+      Action<IMutableProperty> configure)
+   {
+      var elementType = property.GetElementType();
+
+      if (elementType is null)
+         return;
+
+      if (MetadataLookup.Find(elementType.ClrType) is not Metadata.Keyed metadata)
+         return;
+
+      var valueConverter = ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead);
+      elementType.SetValueConverter(valueConverter);
+      configure(property);
+   }
+#endif
 
 #if COMPLEX_TYPES
    private static void AddConverterForComplexProperties(

@@ -8,7 +8,13 @@ using Thinktecture.Internal;
 
 namespace Thinktecture.EntityFrameworkCore.Conventions;
 
-internal sealed class ThinktectureConventionsPlugin : INavigationAddedConvention, IPropertyAddedConvention, IEntityTypeAddedConvention
+internal sealed class ThinktectureConventionsPlugin
+   : INavigationAddedConvention,
+     IPropertyAddedConvention,
+     IEntityTypeAddedConvention
+#if PRIMITIVE_COLLECTIONS
+     , IPropertyElementTypeChangedConvention
+#endif
 {
    private readonly bool _useConstructorForRead;
    private readonly Action<IConventionProperty> _configureEnumsAndKeyedValueObjects;
@@ -98,6 +104,31 @@ internal sealed class ThinktectureConventionsPlugin : INavigationAddedConvention
    {
       ProcessProperty(propertyBuilder.Metadata);
    }
+
+#if PRIMITIVE_COLLECTIONS
+   public void ProcessPropertyElementTypeChanged(
+      IConventionPropertyBuilder propertyBuilder,
+      IElementType? newElementType,
+      IElementType? oldElementType,
+      IConventionContext<IElementType> context)
+   {
+      var elementType = propertyBuilder.Metadata.GetElementType();
+
+      if (elementType is null)
+         return;
+
+      var valueConverter = elementType.GetValueConverter();
+
+      if (valueConverter is not null)
+         return;
+
+      if (MetadataLookup.Find(elementType.ClrType) is not Metadata.Keyed metadata)
+         return;
+
+      elementType.SetValueConverter(GetValueConverter(metadata));
+      _configureEnumsAndKeyedValueObjects(propertyBuilder.Metadata);
+   }
+#endif
 
    private void ProcessNavigation(IConventionNavigation navigation)
    {

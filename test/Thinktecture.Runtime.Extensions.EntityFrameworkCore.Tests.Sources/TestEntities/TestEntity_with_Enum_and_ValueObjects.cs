@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -22,6 +23,10 @@ public class TestEntity_with_Enum_and_ValueObjects
    public required StringBasedStructValueObject StringBasedStructValueObject { get; set; }
    public StringBasedReferenceValueObjectWithCustomError? StringBasedReferenceValueObjectWithCustomError { get; set; }
 
+#if PRIMITIVE_COLLECTIONS
+   public List<IntBasedReferenceValueObject> CollectionOfIntBasedReferenceValueObject { get; set; } = [];
+#endif
+
    public Boundary? Boundary { get; set; }
    public BoundaryWithCustomError? BoundaryWithCustomError { get; set; }
    public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
@@ -37,6 +42,10 @@ public class TestEntity_with_Enum_and_ValueObjects
 
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
       {
+#if PRIMITIVE_COLLECTIONS
+         var primitiveCollectionBuilder = builder.PrimitiveCollection(e => e.CollectionOfIntBasedReferenceValueObject);
+#endif
+
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
             builder.Property(e => e.SmartEnum_IntBased).HasThinktectureValueConverter();
@@ -50,6 +59,10 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasThinktectureValueConverter();
 
             builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter();
+
+#if PRIMITIVE_COLLECTIONS
+            primitiveCollectionBuilder.HasThinktectureValueConverter(true);
+#endif
          }
 
          builder.OwnsOne(e => e.Boundary, navigationBuilder =>
