@@ -1,6 +1,6 @@
 namespace Thinktecture.Validation;
 
-public interface IBoundParam
+public interface IMaybeBound
 {
    public string? Error { get; }
 }

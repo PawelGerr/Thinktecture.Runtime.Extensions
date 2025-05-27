@@ -177,15 +177,14 @@ public class Program
       routeGroup.MapGet("group/{group}", (ProductGroup group) => group);
       routeGroup.MapGet("productType/{productType}", (ProductType productType) => productType);
       routeGroup.MapGet("productType", (ProductType productType) => productType);
-      routeGroup.MapGet("productTypeWithFilter", (BoundValueObject<ProductType, ProductTypeValidationError> productType) => ValueTask.FromResult(productType.Value))
-                .AddEndpointFilter((context, next) =>
+      routeGroup.MapGet("productTypeWithFilter", (MaybeBound<ProductType, string, ProductTypeValidationError> productType) => ValueTask.FromResult(productType.Value))
+                .AddEndpointFilter(async (context, next) =>
                 {
-                   var value = context.GetArgument<IBoundParam>(0);
+                   var maybeBound = context.GetArgument<IMaybeBound>(0);
 
-                   if (value.Error is not null)
-                      return new ValueTask<object?>(Results.BadRequest(value.Error));
-
-                   return next(context);
+                   return maybeBound.Error is not null
+                             ? Results.BadRequest(maybeBound.Error)
+                             : await next(context);
                 });
       routeGroup.MapGet("boundaryWithFactories/{boundary}", (BoundaryWithFactories boundary) => boundary);
       routeGroup.MapPost("productType", ([FromBody] ProductType productType) => productType);
