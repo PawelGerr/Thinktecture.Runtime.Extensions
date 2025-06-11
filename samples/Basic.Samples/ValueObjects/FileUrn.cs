@@ -25,6 +25,12 @@ public partial class FileUrn
          return;
       }
 
+      if (fileStore.Contains(':'))
+      {
+         validationError = new ValidationError("FileStore must not contain ':'");
+         return;
+      }
+
       if (string.IsNullOrWhiteSpace(urn))
       {
          validationError = new ValidationError("Urn cannot be empty");

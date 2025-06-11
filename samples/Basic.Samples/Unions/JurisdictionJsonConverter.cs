@@ -38,7 +38,9 @@ public partial class JurisdictionJsonConverter : JsonConverter<Jurisdiction>
          district: static (state, district) =>
             WriteJurisdiction(state.writer, state.options, district, Discriminator.District),
          unknown: static (state, unknown) =>
-            WriteJurisdiction(state.writer, state.options, unknown, Discriminator.Unknown)
+            WriteJurisdiction(state.writer, state.options, unknown, Discriminator.Unknown),
+         continent: static (state, continent) =>
+            WriteJurisdiction(state.writer, state.options, continent, Discriminator.Unknown)
       );
    }
 
@@ -67,6 +69,7 @@ public partial class JurisdictionJsonConverter : JsonConverter<Jurisdiction>
       public static readonly Discriminator FederalState = new("FederalState", ReadJurisdiction<Jurisdiction.FederalState>);
       public static readonly Discriminator District = new("District", ReadJurisdiction<Jurisdiction.District>);
       public static readonly Discriminator Unknown = new("Unknown", ReadJurisdiction<Jurisdiction.Unknown>);
+      public static readonly Discriminator Continent = new("Continent ", ReadJurisdiction<Jurisdiction.Continent>);
 
       [UseDelegateFromConstructor]
       public partial Jurisdiction? ReadJurisdiction(ref Utf8JsonReader reader, JsonSerializerOptions options);

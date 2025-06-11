@@ -89,7 +89,7 @@ public class DiscriminatedUnionsDemos
       TextOrNumberSerializable textOrNumberFromString = "text";
       TextOrNumberSerializable textOrNumberFromInt = 42;
 
-      var jsonOptions = new JsonSerializerOptions{ Converters = { new ThinktectureJsonConverterFactory() }};
+      var jsonOptions = new JsonSerializerOptions { Converters = { new ThinktectureJsonConverterFactory() } };
 
       var json = JsonSerializer.Serialize(textOrNumberFromString, jsonOptions);
       var deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json, jsonOptions);
@@ -238,7 +238,8 @@ public class DiscriminatedUnionsDemos
          country: c => $"Country: {c}",
          federalState: s => $"Federal state: {s}",
          district: d => $"District: {d}",
-         unknown: _ => "Unknown"
+         unknown: _ => "Unknown",
+         continent: c => $"Continent: {c}"
       );
 
       logger.Information(description);
