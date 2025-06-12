@@ -19,4 +19,9 @@ public class ThinktectureSchemaFilterOptions
    /// Gets or sets the required member evaluator.
    /// </summary>
    public RequiredMemberEvaluator RequiredMemberEvaluator { get; set; } = RequiredMemberEvaluator.FromDependencyInjection;
+
+   /// <summary>
+   /// Clears 'allOf' from the schema if there is any.
+   /// </summary>
+   public bool ClearAllOf { get; set; }
 }

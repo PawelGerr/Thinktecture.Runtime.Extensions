@@ -27,7 +27,8 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
    private SmartEnumSchemaFilter _smartEnumFilter = SmartEnumSchemaFilter.Default;
    private SmartEnumSchemaExtension _smartEnumExtension = SmartEnumSchemaExtension.None;
    private RequiredMemberEvaluator _requiredMemberEvaluator = RequiredMemberEvaluator.Default;
-   private bool _nonNullableReferenceTypesAsRequired = false;
+   private bool _nonNullableReferenceTypesAsRequired;
+   private bool _useOneOfForPolymorphism;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -52,6 +53,9 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
 
                    if (_nonNullableReferenceTypesAsRequired)
                       options.NonNullableReferenceTypesAsRequired();
+
+                   if (_useOneOfForPolymorphism)
+                      options.UseOneOfForPolymorphism();
                 })
                 .AddThinktectureOpenApiFilters(filterOptions =>
                 {

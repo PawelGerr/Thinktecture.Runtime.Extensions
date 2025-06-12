@@ -15,6 +15,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
 {
    private readonly IOpenApiValueFactoryProvider _valueFactoryProvider;
    private readonly ISmartEnumSchemaExtension _extension;
+   private readonly bool _clearAllOf;
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -29,6 +30,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    {
       _valueFactoryProvider = valueFactoryProvider;
       _extension = options.Value.SmartEnumSchemaExtension.CreateSchemaExtension(serviceProvider);
+      _clearAllOf = options.Value.ClearAllOf;
    }
 
    /// <inheritdoc />
@@ -45,6 +47,9 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    {
       schema.Properties.Clear();
       schema.Required.Clear();
+
+      if(_clearAllOf)
+         schema.AllOf.Clear();
 
       var items = GetItems(metadata.Type, metadata.KeyType, metadata.Items.Value);
 

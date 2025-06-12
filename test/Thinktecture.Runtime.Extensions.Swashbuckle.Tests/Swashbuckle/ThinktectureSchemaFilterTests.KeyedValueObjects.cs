@@ -32,6 +32,8 @@ public partial class ThinktectureSchemaFilterTests
          bool nullable,
          bool nonNullableReferenceTypesAsRequired)
       {
+         _nonNullableReferenceTypesAsRequired = nonNullableReferenceTypesAsRequired;
+
          if (endpointKind == EndpointKind.MinimalApi)
          {
             if (nullable)

@@ -47,7 +47,8 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    /// <inheritdoc />
    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
    {
-      if (_swaggerGenOptions.SchemaGeneratorOptions.UseAllOfToExtendReferenceSchemas && schema.AllOf.Count > 0)
+      // Wrapper made by UseAllOfToExtendReferenceSchemas
+      if (schema.Type is null)
          return;
 
       var metadata = MetadataLookup.Find(context.Type);
