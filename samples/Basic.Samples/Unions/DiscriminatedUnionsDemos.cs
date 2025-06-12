@@ -89,14 +89,12 @@ public class DiscriminatedUnionsDemos
       TextOrNumberSerializable textOrNumberFromString = "text";
       TextOrNumberSerializable textOrNumberFromInt = 42;
 
-      var jsonOptions = new JsonSerializerOptions { Converters = { new ThinktectureJsonConverterFactory() } };
-
-      var json = JsonSerializer.Serialize(textOrNumberFromString, jsonOptions);
-      var deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json, jsonOptions);
+      var json = JsonSerializer.Serialize(textOrNumberFromString);
+      var deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json);
       logger.Information("TextOrNumberSerializable (de)serialization: {Json} -> {TextOrNumber}", json, deserializedTextOrNumber);
 
-      json = JsonSerializer.Serialize(textOrNumberFromInt, jsonOptions);
-      deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json, jsonOptions);
+      json = JsonSerializer.Serialize(textOrNumberFromInt);
+      deserializedTextOrNumber = JsonSerializer.Deserialize<TextOrNumberSerializable>(json);
       logger.Information("TextOrNumberSerializable (de)serialization: {Json} -> {TextOrNumber}", json, deserializedTextOrNumber);
    }
 

@@ -47,9 +47,43 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
                                                                             : ImmutableArray<AdHocUnionSourceGenState>.Empty);
 
       InitializeUnionTypeGeneration(context, validStates, options);
+      InitializeSerializerGenerators(context, validStates, options);
 
       InitializeErrorReporting(context, unionTypeOrError);
       InitializeExceptionReporting(context, unionTypeOrError);
+   }
+
+   private ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
+   {
+      var factories = ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty;
+
+      try
+      {
+         foreach (var module in reference.GetModules())
+         {
+            switch (module.Name)
+            {
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
+                  Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
+                  factories = factories.Add(JsonAdHocUnionCodeGeneratorFactory.Instance);
+                  break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
+                  Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
+                  factories = factories.Add(NewtonsoftJsonAdHocUnionCodeGeneratorFactory.Instance);
+                  break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
+                  Logger.LogInformation("Code generator for MessagePack will participate in code generation");
+                  factories = factories.Add(MessagePackAdHocUnionCodeGeneratorFactory.Instance);
+                  break;
+            }
+         }
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during checking referenced modules", exception: ex);
+      }
+
+      return factories;
    }
 
    private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
@@ -146,8 +180,7 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               attributeType.Arity,
-                                               attributeInfo);
+                                               attributeType.Arity);
          var memberTypeStates = attributeType.Arity == 0 ? [] : new AdHocUnionMemberTypeState[attributeType.Arity];
 
          for (var i = 0; i < attributeType.TypeArguments.Length; i++)
@@ -203,7 +236,8 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
 
          var unionState = new AdHocUnionSourceGenState(type,
                                                        memberTypeStates,
-                                                       settings);
+                                                       settings,
+                                                       attributeInfo);
 
          Logger.LogDebug("The type declaration is a valid union", null, unionState);
 
@@ -235,6 +269,38 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
                        .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, AdHocUnionCodeGeneratorFactory.Instance));
+   }
+
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<AdHocUnionSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var serializerGeneratorFactories = context.MetadataReferencesProvider
+                                                .SelectMany((reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .Collect()
+                                                .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                                 ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
+                                                                                 : states.Distinct())
+                                                .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
+
+      var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(
+                                                            state,
+                                                            null,
+                                                            state.AttributeInfo,
+                                                            state.Settings.SerializationFrameworks))
+                                                 .Combine(serializerGeneratorFactories)
+                                                 .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                                 .Where(tuple =>
+                                                 {
+                                                    if (tuple.Factory.MustGenerateCode(tuple.State))
+                                                    {
+                                                       Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
+                                                       return true;
+                                                    }
+
+                                                    Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
+                                                    return false;
+                                                 });
+
+      context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
 
    private void InitializeErrorReporting(

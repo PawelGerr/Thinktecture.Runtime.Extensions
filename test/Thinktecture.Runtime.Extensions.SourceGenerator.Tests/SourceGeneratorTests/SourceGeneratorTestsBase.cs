@@ -85,7 +85,7 @@ public abstract class SourceGeneratorTestsBase
    protected async Task VerifyAsync(
       string output)
    {
-      if (output.Length > _maxOutputSize)
+      if (output?.Length > _maxOutputSize)
          throw new Exception($"Output file is too big. Actual size: {output.Length}. Max size: {_maxOutputSize}.");
 
       await Verifier.Verify(output);

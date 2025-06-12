@@ -2,8 +2,6 @@ namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
 public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
 {
-   private readonly AttributeInfo _attributeInfo;
-
    public bool SkipToString { get; }
    public SwitchMapMethodsGeneration SwitchMethods { get; }
    public SwitchMapMethodsGeneration MapMethods { get; }
@@ -13,12 +11,11 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public ConversionOperatorsGeneration ConversionFromValue { get; }
    public ConversionOperatorsGeneration ConversionToValue { get; }
    public string SwitchMapStateParameterName { get; }
-   public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
+   public SerializationFrameworks SerializationFrameworks { get; }
 
    public AdHocUnionSettings(
       AttributeData attribute,
-      int numberOfMemberTypes,
-      AttributeInfo attributeInfo)
+      int numberOfMemberTypes)
    {
       SkipToString = attribute.FindSkipToString() ?? false;
       SwitchMethods = attribute.FindSwitchMethods();
@@ -28,7 +25,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
       ConversionToValue = attribute.FindConversionToValue() ?? ConversionOperatorsGeneration.Explicit;
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
-      _attributeInfo = attributeInfo;
+      SerializationFrameworks = attribute.FindSerializationFrameworks();
 
       var memberTypeSettings = new AdHocUnionMemberTypeSetting[numberOfMemberTypes];
       MemberTypeSettings = memberTypeSettings;
@@ -60,7 +57,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && ConversionFromValue == other.ConversionFromValue
              && ConversionToValue == other.ConversionToValue
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName
-             && HasStructLayoutAttribute == other.HasStructLayoutAttribute
+             && SerializationFrameworks == other.SerializationFrameworks
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
 
@@ -76,7 +73,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
          hashCode = (hashCode * 397) ^ (int)ConversionToValue;
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 
          return hashCode;

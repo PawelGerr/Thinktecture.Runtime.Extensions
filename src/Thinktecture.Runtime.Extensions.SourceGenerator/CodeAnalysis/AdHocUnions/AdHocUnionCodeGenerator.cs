@@ -49,7 +49,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateUnion(CancellationToken cancellationToken)
    {
-      _sb.GenerateStructLayoutAttributeIfRequired(_state.IsReferenceType, _state.Settings.HasStructLayoutAttribute);
+      _sb.GenerateStructLayoutAttributeIfRequired(_state.IsReferenceType, _state.AttributeInfo.HasStructLayoutAttribute);
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
