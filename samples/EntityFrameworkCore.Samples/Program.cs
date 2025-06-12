@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 using Thinktecture.SmartEnums;
+using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture;
@@ -58,7 +59,9 @@ public class Program
             ProductCategory.Fruits,
             ProductType.Groceries,
             DayMonth.Create(1, 15),
-            Boundary.Create(1, 2), today));
+            Boundary.Create(1, 2),
+            "text",
+            today));
 
       var products = await ctx.Products.AsNoTracking().Where(p => p.Category == ProductCategory.Fruits).ToListAsync();
       logger.LogInformation("Loaded products: {@Products}", products);
@@ -148,6 +151,7 @@ public class Program
                                     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
                                     .Destructure.AsScalar<ProductCategory>()
                                     .Destructure.AsScalar<ProductName>()
+                                    .Destructure.AsScalar<TextOrNumberSerializable>()
                                     .MinimumLevel.ControlledBy(loggingLevelSwitch)
                                     .CreateLogger();
 

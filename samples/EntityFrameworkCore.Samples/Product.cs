@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Thinktecture.SmartEnums;
+using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
 
 namespace Thinktecture;
@@ -13,6 +14,7 @@ public class Product
    public ProductType ProductType { get; private set; }
    public OpenEndDate EndDate { get; set; }
    public required DayMonth ScheduledDeliveryDate { get; set; }
+   public required TextOrNumberSerializable TextOrNumber { get; set; }
 
    private Boundary? _boundary;
    public Boundary Boundary => _boundary ?? throw new InvalidOperationException("Boundary is not loaded.");
@@ -24,7 +26,8 @@ public class Product
       ProductCategory category,
       ProductType productType,
       OpenEndDate endDate,
-      DayMonth scheduledDeliveryDate)
+      DayMonth scheduledDeliveryDate,
+      TextOrNumberSerializable textOrNumber)
    {
       Id = id;
       Name = name;
@@ -32,6 +35,7 @@ public class Product
       ProductType = productType;
       EndDate = endDate;
       ScheduledDeliveryDate = scheduledDeliveryDate;
+      TextOrNumber = textOrNumber;
    }
 
    [SetsRequiredMembers]
@@ -42,8 +46,9 @@ public class Product
       ProductType productType,
       DayMonth scheduledDeliveryDate,
       Boundary boundary,
+      TextOrNumberSerializable textOrNumber,
       OpenEndDate endDate = default)
-      : this(id, name, category, productType, endDate, scheduledDeliveryDate)
+      : this(id, name, category, productType, endDate, scheduledDeliveryDate, textOrNumber)
    {
       _boundary = boundary;
    }

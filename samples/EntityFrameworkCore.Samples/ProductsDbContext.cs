@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.Unions;
+using Thinktecture.ValueConversion;
 
 namespace Thinktecture;
 
@@ -19,6 +21,10 @@ public class ProductsDbContext : DbContext
       modelBuilder.Entity<Product>(builder =>
       {
          builder.HasKey(p => p.Id);
+
+         builder.Property(p => p.TextOrNumber)
+                .HasConversion<ObjectFactoryValueConverter<TextOrNumberSerializable, string>>()
+                .HasMaxLength(500);
 
          builder.ComplexProperty(p => p.Boundary,
                                  boundaryBuilder =>
