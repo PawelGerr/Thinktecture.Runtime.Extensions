@@ -89,6 +89,90 @@ public static partial class TestController
             }
          }
       }
+
+      // ReSharper disable once InconsistentNaming
+      public static class StringBased_with_BaseClass
+      {
+         [Route("/")]
+         public class Route : ControllerBase
+         {
+            [HttpGet("/test/{value}")]
+            public StringBasedReferenceValueObject_with_BaseClass Get(StringBasedReferenceValueObject_with_BaseClass value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpGet("/test/{value}")]
+               public StringBasedReferenceValueObject_with_BaseClass? Get(StringBasedReferenceValueObject_with_BaseClass? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+
+         [Route("/")]
+         public class QueryString : ControllerBase
+         {
+            [HttpGet("/test")]
+            public StringBasedReferenceValueObject_with_BaseClass Get(StringBasedReferenceValueObject_with_BaseClass value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpGet("/test")]
+               public StringBasedReferenceValueObject_with_BaseClass? Get(StringBasedReferenceValueObject_with_BaseClass? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+
+         [Route("/")]
+         public class Body : ControllerBase
+         {
+            [HttpPost("/test")]
+            public StringBasedReferenceValueObject_with_BaseClass Get([FromBody] StringBasedReferenceValueObject_with_BaseClass value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpPost("/test")]
+               public StringBasedReferenceValueObject_with_BaseClass? Get([FromBody] StringBasedReferenceValueObject_with_BaseClass? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+
+         [Route("/")]
+         public class Form : ControllerBase
+         {
+            [HttpPost("/test")]
+            public StringBasedReferenceValueObject_with_BaseClass Get([FromForm] StringBasedReferenceValueObject_with_BaseClass value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpPost("/test")]
+               public StringBasedReferenceValueObject_with_BaseClass? Get([FromForm] StringBasedReferenceValueObject_with_BaseClass? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+      }
    }
 
    public static class KeyedValueObjectStruct

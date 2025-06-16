@@ -89,5 +89,29 @@ public static partial class TestController
             }
          }
       }
+
+      // ReSharper disable once InconsistentNaming
+      public static class Class_with_BaseClass
+      {
+         [Route("/")]
+         public class Body : ControllerBase
+         {
+            [HttpPost("/test")]
+            public TestUnion_class_string_int_with_base_class Get([FromBody] TestUnion_class_string_int_with_base_class value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpPost("/test")]
+               public TestUnion_class_string_int_with_base_class? Get([FromBody] TestUnion_class_string_int_with_base_class? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+      }
    }
 }

@@ -21,7 +21,7 @@ public class ThinktectureSchemaFilterOptions
    public RequiredMemberEvaluator RequiredMemberEvaluator { get; set; } = RequiredMemberEvaluator.FromDependencyInjection;
 
    /// <summary>
-   /// Clears 'allOf' from the schema if there is any.
+   /// Clears 'allOf' from the schema of Smart Enums and keyed Value Objects, which is usually used for inheritance.
    /// </summary>
-   public bool ClearAllOf { get; set; }
+   public bool ClearAllOfOnKeyedTypes { get; set; }
 }

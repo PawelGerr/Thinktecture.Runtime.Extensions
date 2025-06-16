@@ -110,6 +110,30 @@ public static partial class TestController
          }
       }
 
+      // ReSharper disable once InconsistentNaming
+      public static class Class_with_BaseClass
+      {
+         [Route("/")]
+         public class Body : ControllerBase
+         {
+            [HttpPost("/test")]
+            public Boundary_with_BaseClass Get([FromBody] Boundary_with_BaseClass value)
+            {
+               return value;
+            }
+
+            [Route("/")]
+            public class Nullable : ControllerBase
+            {
+               [HttpPost("/test")]
+               public Boundary_with_BaseClass? Get([FromBody] Boundary_with_BaseClass? value = null)
+               {
+                  return value;
+               }
+            }
+         }
+      }
+
       public static class Struct
       {
          [Route("/")]

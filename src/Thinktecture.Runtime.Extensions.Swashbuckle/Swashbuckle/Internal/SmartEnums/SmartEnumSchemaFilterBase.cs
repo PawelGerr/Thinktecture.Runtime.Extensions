@@ -30,7 +30,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    {
       _valueFactoryProvider = valueFactoryProvider;
       _extension = options.Value.SmartEnumSchemaExtension.CreateSchemaExtension(serviceProvider);
-      _clearAllOf = options.Value.ClearAllOf;
+      _clearAllOf = options.Value.ClearAllOfOnKeyedTypes;
    }
 
    /// <inheritdoc />
@@ -48,7 +48,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
       schema.Properties.Clear();
       schema.Required.Clear();
 
-      if(_clearAllOf)
+      if (_clearAllOf)
          schema.AllOf.Clear();
 
       var items = GetItems(metadata.Type, metadata.KeyType, metadata.Items.Value);

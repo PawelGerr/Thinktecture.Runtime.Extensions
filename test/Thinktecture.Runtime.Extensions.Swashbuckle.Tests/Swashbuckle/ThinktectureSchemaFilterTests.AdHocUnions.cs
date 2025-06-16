@@ -25,6 +25,13 @@ public partial class ThinktectureSchemaFilterTests
                      .CrossJoin([true, false])
                      .Select(i => new object[] { i.Item1, i.Item2, i.Item3 });
 
+      public static IEnumerable<object[]> TestDataWithPolymorphism =
+         EndpointKind.Items
+                     .CrossJoin([true, false])
+                     .CrossJoin([true, false])
+                     .CrossJoin([true, false])
+                     .Select(i => new object[] { i.Item1, i.Item2, i.Item3, i.Item4 });
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Class_as_route_parameter(
@@ -126,6 +133,41 @@ public partial class ThinktectureSchemaFilterTests
 
          await Verify(openApi)
             .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
+      }
+
+      [Theory]
+      [MemberData(nameof(TestDataWithPolymorphism))]
+      public async Task Should_handle_Class_with_BaseClass_as_body_parameter(
+         EndpointKind endpointKind,
+         bool nullable,
+         bool nonNrtAsRequired,
+         bool polymorphism)
+      {
+         _nonNullableReferenceTypesAsRequired = nonNrtAsRequired;
+         _useOneOfForPolymorphism = polymorphism;
+
+         if (endpointKind == EndpointKind.MinimalApi)
+         {
+            if (nullable)
+            {
+               App.MapPost("/test", ([FromBody] TestUnion_class_string_int_with_base_class? value = null) => value);
+            }
+            else
+            {
+               App.MapPost("/test", ([FromBody] TestUnion_class_string_int_with_base_class value) => value);
+            }
+         }
+         else
+         {
+            _controllerType = nullable
+                                 ? typeof(TestController.AdHocUnion.Class_with_BaseClass.Body.Nullable)
+                                 : typeof(TestController.AdHocUnion.Class_with_BaseClass.Body);
+         }
+
+         var openApi = GetOpenApiJsonAsync();
+
+         await Verify(openApi)
+            .UseParameters(endpointKind, nullable, nonNrtAsRequired, polymorphism);
       }
 
       [Theory]

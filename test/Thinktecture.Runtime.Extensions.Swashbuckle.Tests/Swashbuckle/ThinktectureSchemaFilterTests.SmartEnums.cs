@@ -27,6 +27,14 @@ public partial class ThinktectureSchemaFilterTests
                               .CrossJoin([true, false])
                               .Select(i => new object[] { i.Item1, i.Item2, i.Item3, i.Item4 });
 
+      public static IEnumerable<object[]> TestDataWithPolymorphism =
+         SmartEnumSchemaFilter.Items.Where(f => f != SmartEnumSchemaFilter.FromDependencyInjection)
+                              .CrossJoin(EndpointKind.Items)
+                              .CrossJoin([true, false])
+                              .CrossJoin([true, false])
+                              .CrossJoin([true, false])
+                              .Select(i => new object[] { i.Item1, i.Item2, i.Item3, i.Item4, i.Item5 });
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_SmartEnumClass_StringBased_as_route_parameter(
@@ -130,6 +138,43 @@ public partial class ThinktectureSchemaFilterTests
 
          await Verify(openApi)
             .UseParameters(smartEnumFilter, endpointKind, nullable, nonNullableReferenceTypesAsRequired);
+      }
+
+      [Theory]
+      [MemberData(nameof(TestDataWithPolymorphism))]
+      public async Task Should_handle_SmartEnumClass_with_BaseClass_as_body_parameter(
+         SmartEnumSchemaFilter smartEnumFilter,
+         EndpointKind endpointKind,
+         bool nullable,
+         bool nonNrtAsRequired,
+         bool polymorphism)
+      {
+         _smartEnumFilter = smartEnumFilter;
+         _nonNullableReferenceTypesAsRequired = nonNrtAsRequired;
+         _useOneOfForPolymorphism = polymorphism;
+
+         if (endpointKind == EndpointKind.MinimalApi)
+         {
+            if (nullable)
+            {
+               App.MapPost("/test", ([FromBody] SmartEnum_StringBased_with_BaseClass? value = null) => value);
+            }
+            else
+            {
+               App.MapPost("/test", ([FromBody] SmartEnum_StringBased_with_BaseClass value) => value);
+            }
+         }
+         else
+         {
+            _controllerType = nullable
+                                 ? typeof(TestController.SmartEnumClass.StringBased_with_BaseClass.Body.Nullable)
+                                 : typeof(TestController.SmartEnumClass.StringBased_with_BaseClass.Body);
+         }
+
+         var openApi = GetOpenApiJsonAsync();
+
+         await Verify(openApi)
+            .UseParameters(smartEnumFilter, endpointKind, nullable, nonNrtAsRequired, polymorphism);
       }
 
       [Fact]
