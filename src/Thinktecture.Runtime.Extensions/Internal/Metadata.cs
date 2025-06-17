@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Thinktecture.Internal;
 
@@ -15,6 +16,34 @@ public abstract partial class Metadata
    /// The type of the metadata belongs to.
    /// </summary>
    public required Type Type { get; init; }
+
+   private readonly Lazy<IReadOnlyList<ObjectFactoryMetadata>> _objectFactories;
+
+   /// <summary>
+   /// Gets the object factories metadata.
+   /// </summary>
+   public IReadOnlyList<ObjectFactoryMetadata> ObjectFactories => _objectFactories.Value;
+
+   private Metadata()
+   {
+      _objectFactories = new(() =>
+      {
+         if (!typeof(IObjectFactoryOwner).IsAssignableFrom(Type))
+            return [];
+
+         var objectFactoriesProperty = Type.GetProperty(
+            "global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories",
+            BindingFlags.Static | BindingFlags.NonPublic);
+
+         if (objectFactoriesProperty is not null)
+         {
+            return (IReadOnlyList<ObjectFactoryMetadata>?)objectFactoriesProperty.GetValue(null)
+                   ?? throw new InvalidOperationException($"Could not retrieve object factories for type '{Type.FullName}'.");
+         }
+
+         return [];
+      });
+   }
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to

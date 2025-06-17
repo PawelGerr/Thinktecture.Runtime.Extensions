@@ -16,6 +16,11 @@ public abstract class ObjectFactoryAttribute : Attribute
    public SerializationFrameworks UseForSerialization { get; set; }
 
    /// <summary>
+   /// Indication whether to use the corresponding factory with Entity Framework Core or not.
+   /// </summary>
+   public bool UseWithEntityFramework { get; set; }
+
+   /// <summary>
    /// Initializes new instance of type <see cref="ObjectFactoryAttribute"/>.
    /// </summary>
    /// <param name="type">Type of the value to create value objects from.</param>

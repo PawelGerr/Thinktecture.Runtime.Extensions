@@ -43,16 +43,13 @@ namespace ").Append(_state.Namespace).Append(@";
    {
       _sb.Append(@"
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" :");
+partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" : global::Thinktecture.Internal.IObjectFactoryOwner");
 
       for (var i = 0; i < _state.ObjectFactories.Length; i++)
       {
          var factory = _state.ObjectFactories[i];
 
-         if (i != 0)
-            _sb.Append(",");
-
-         _sb.Append(@"
+         _sb.Append(@",
       global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(factory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
 
          if (factory.UseForSerialization != SerializationFrameworks.None)
@@ -63,7 +60,39 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
       }
 
       _sb.Append(@"
-{
+{");
+
+      GenerateMetadata();
+
+      _sb.Append(@"
 }");
+   }
+
+   private void GenerateMetadata()
+   {
+      _sb.Append(@"
+   static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.ObjectFactoryMetadata> global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories { get; } =
+      new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
+      {");
+
+      for (var i = 0; i < _state.ObjectFactories.Length; i++)
+      {
+         var objectFactory = _state.ObjectFactories[i];
+
+         if (i != 0)
+            _sb.Append(",");
+
+         _sb.Append(@"
+         new global::Thinktecture.Internal.ObjectFactoryMetadata()
+         {
+            ValueType = typeof(").AppendTypeFullyQualified(objectFactory).Append(@"),
+            ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+            UseForSerialization = global::Thinktecture.SerializationFrameworks.").Append(objectFactory.UseForSerialization).Append(@",
+            UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@"
+         }");
+      }
+
+      _sb.Append(@"
+      }.AsReadOnly();");
    }
 }

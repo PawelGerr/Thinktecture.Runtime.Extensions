@@ -200,6 +200,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, $"T{index}IsNullableReferenceType") ?? false;
    }
 
+   public static bool FindUseWithEntityFramework(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "UseWithEntityFramework") ?? false;
+   }
+
    public static string? FindTxName(this AttributeData attributeData, int index)
    {
       return GetStringParameterValue(attributeData, $"T{index}Name");
