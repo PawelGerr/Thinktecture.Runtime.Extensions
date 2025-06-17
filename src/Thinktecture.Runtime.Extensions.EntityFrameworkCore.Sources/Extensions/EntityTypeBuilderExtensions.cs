@@ -462,7 +462,7 @@ public static class EntityTypeBuilderExtensions
          if (property.IsPrimitiveCollection)
          {
             AddConverterForPrimitiveCollections(property, useConstructorForRead, configure);
-            return;
+            continue;
          }
 #endif
 
