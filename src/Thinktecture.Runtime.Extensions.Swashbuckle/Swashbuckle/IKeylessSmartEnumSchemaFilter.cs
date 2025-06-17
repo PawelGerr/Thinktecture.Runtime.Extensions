@@ -4,12 +4,12 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace Thinktecture.Swashbuckle;
 
 /// <summary>
-/// Interface for custom schema filters that specifically handle Ad hoc Unions.
+/// Interface for custom schema filters that specifically handle Smart Enums.
 /// </summary>
-public interface IAdHocUnionSchemaFilter
+public interface IKeylessSmartEnumSchemaFilter
 {
    /// <summary>
-   /// Applies customizations to the OpenAPI schema for an Ad hoc Union.
+   /// Applies customizations to the OpenAPI schema for a Smart Enum.
    /// </summary>
    /// <param name="schema">The OpenAPI schema to modify.</param>
    /// <param name="context">The schema filter context containing type information.</param>

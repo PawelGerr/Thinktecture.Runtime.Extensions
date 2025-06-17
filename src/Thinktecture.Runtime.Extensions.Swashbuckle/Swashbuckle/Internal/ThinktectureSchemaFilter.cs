@@ -17,10 +17,12 @@ namespace Thinktecture.Swashbuckle.Internal;
 /// </summary>
 public class ThinktectureSchemaFilter : ISchemaFilter
 {
+   private readonly IKeylessSmartEnumSchemaFilter _keylessSmartEnumSchemaFilter;
    private readonly ISmartEnumSchemaFilter _smartEnumSchemaFilter;
    private readonly IKeyedValueObjectSchemaFilter _keyedValueObjectSchemaFilter;
    private readonly IComplexValueObjectSchemaFilter _complexValueObjectSchemaFilter;
    private readonly IAdHocUnionSchemaFilter _adHocUnionSchemaFilter;
+   private readonly IRegularUnionSchemaFilter _regularUnionSchemaFilter;
    private readonly SwaggerGenOptions _swaggerGenOptions;
 
    /// <summary>
@@ -31,16 +33,20 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    /// </summary>
    public ThinktectureSchemaFilter(
       IServiceProvider serviceProvider,
+      IKeylessSmartEnumSchemaFilter keylessSmartEnumSchemaFilter,
       IKeyedValueObjectSchemaFilter keyedValueObjectSchemaFilter,
       IComplexValueObjectSchemaFilter complexValueObjectSchemaFilter,
       IAdHocUnionSchemaFilter adHocUnionSchemaFilter,
+      IRegularUnionSchemaFilter regularUnionSchemaFilter,
       IOptions<ThinktectureSchemaFilterOptions> options,
       SwaggerGenOptions swaggerGenOptions)
    {
       _smartEnumSchemaFilter = options.Value.SmartEnumSchemaFilter.CreateSchemaFilter(serviceProvider);
+      _keylessSmartEnumSchemaFilter = keylessSmartEnumSchemaFilter;
       _keyedValueObjectSchemaFilter = keyedValueObjectSchemaFilter;
       _complexValueObjectSchemaFilter = complexValueObjectSchemaFilter;
       _adHocUnionSchemaFilter = adHocUnionSchemaFilter;
+      _regularUnionSchemaFilter = regularUnionSchemaFilter;
       _swaggerGenOptions = swaggerGenOptions;
    }
 
@@ -55,10 +61,20 @@ public class ThinktectureSchemaFilter : ISchemaFilter
 
       metadata?.Switch(
          (Filter: this, schema, context),
+         keylessSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.schema, state.context, smartEnumMetadata),
          keyedSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.schema, state.context, smartEnumMetadata),
          keyedValueObject: static (state, keyedValueObjectMetadata) => state.Filter.Apply(state.schema, state.context, keyedValueObjectMetadata),
          complexValueObject: static (state, complexValueObjectMetadata) => state.Filter.Apply(state.schema, state.context, complexValueObjectMetadata),
-         adHocUnion: static (state, adHocUnionMetadata) => state.Filter.Apply(state.schema, state.context, adHocUnionMetadata));
+         adHocUnion: static (state, adHocUnionMetadata) => state.Filter.Apply(state.schema, state.context, adHocUnionMetadata),
+         regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.schema, state.context, regularUnionMetadata));
+   }
+
+   private void Apply(
+      OpenApiSchema schema,
+      SchemaFilterContext context,
+      Metadata.KeylessSmartEnum metadata)
+   {
+      _keylessSmartEnumSchemaFilter.Apply(schema, context);
    }
 
    private void Apply(
@@ -119,5 +135,13 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       {
          _adHocUnionSchemaFilter.Apply(schema, context);
       }
+   }
+
+   private void Apply(
+      OpenApiSchema schema,
+      SchemaFilterContext context,
+      Metadata.RegularUnion metadata)
+   {
+      _regularUnionSchemaFilter.Apply(schema, context);
    }
 }

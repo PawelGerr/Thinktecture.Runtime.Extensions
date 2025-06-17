@@ -23,10 +23,21 @@ public class ThinktectureParameterFilter : IParameterFilter
 
       metadata?.Switch(
          (Filter: this, parameter, context),
+         keylessSmartEnum: static (state, smartEnumMetadata) => Apply(state.parameter, state.context, smartEnumMetadata),
          keyedSmartEnum: static (state, smartEnumMetadata) => Apply(state.parameter, state.context, smartEnumMetadata),
          keyedValueObject: static (state, keyedValueObjectMetadata) => Apply(state.parameter, state.context, keyedValueObjectMetadata),
          complexValueObject: static (state, complexValueObjectMetadata) => Apply(state.parameter, state.context, complexValueObjectMetadata),
-         adHocUnion: static (state, adHocUnionMetadata) => Apply(state.parameter, state.context, adHocUnionMetadata));
+         adHocUnion: static (state, adHocUnionMetadata) => Apply(state.parameter, state.context, adHocUnionMetadata),
+         regularUnion: static (state, regularUnionMetadata) => Apply(state.parameter, state.context, regularUnionMetadata));
+   }
+
+   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.KeylessSmartEnum metadata)
+   {
+      // IParsable
+      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
+      {
+         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
+      }
    }
 
    private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.Keyed.SmartEnum metadata)
@@ -42,7 +53,7 @@ public class ThinktectureParameterFilter : IParameterFilter
    private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.ComplexValueObject metadata)
    {
       // IParsable
-      if (typeof(IObjectFactory<string>).IsAssignableFrom(metadata.Type))
+      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
       {
          parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
       }
@@ -51,7 +62,16 @@ public class ThinktectureParameterFilter : IParameterFilter
    private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.AdHocUnion metadata)
    {
       // IParsable
-      if (typeof(IObjectFactory<string>).IsAssignableFrom(metadata.Type))
+      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
+      {
+         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
+      }
+   }
+
+   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.RegularUnion metadata)
+   {
+      // IParsable
+      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
       {
          parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
       }

@@ -88,7 +88,8 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
             ValueType = typeof(").AppendTypeFullyQualified(objectFactory).Append(@"),
             ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
             UseForSerialization = global::Thinktecture.SerializationFrameworks.").Append(objectFactory.UseForSerialization).Append(@",
-            UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@"
+            UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@",
+            UseForModelBinding = ").Append(objectFactory.UseForModelBinding ? "true" : "false").Append(@"
          }");
       }
 

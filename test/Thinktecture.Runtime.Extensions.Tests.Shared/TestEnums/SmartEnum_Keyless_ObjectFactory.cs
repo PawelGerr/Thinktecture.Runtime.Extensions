@@ -4,7 +4,7 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable once InconsistentNaming
 [SmartEnum]
-[ObjectFactory<string>]
+[ObjectFactory<string>(UseForModelBinding = true)]
 public partial class SmartEnum_Keyless_ObjectFactory
 {
    public static readonly SmartEnum_Keyless_ObjectFactory Item1 = new(1);

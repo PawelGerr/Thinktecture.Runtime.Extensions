@@ -80,12 +80,14 @@ public class ThinktectureValueConverterFactory
          throw new InvalidOperationException($"No metadata for provided type '{typeof(T).Name}' found.");
 
       var factoryMethod = metadata.Switch(
+         keylessSmartEnum: m => throw new NotSupportedException($"Keyless Smart Enums are not supported. Type: '{m.Type.FullName}'."),
          keyedSmartEnum: m => m.ConvertFromKeyExpression,
          keyedValueObject: m => useConstructor
                                    ? m.ConvertFromKeyExpressionViaConstructor
                                    : m.ConvertFromKeyExpression ?? m.ConvertFromKeyExpressionViaConstructor,
          complexValueObject: m => throw new NotSupportedException($"Complex value objects are not supported. Type: '{m.Type.FullName}'."),
-         adHocUnion: m => throw new NotSupportedException($"Ad hoc unions are not supported. Type: '{m.Type.FullName}'."));
+         adHocUnion: m => throw new NotSupportedException($"Ad hoc unions are not supported. Type: '{m.Type.FullName}'."),
+         regularUnion: m => throw new NotSupportedException($"Regular unions are not supported. Type: '{m.Type.FullName}'."));
 
       return (Expression<Func<TKey, T>>)factoryMethod;
    }

@@ -8,16 +8,19 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public string TypeFullyQualified { get; }
    public SerializationFrameworks UseForSerialization { get; }
    public bool UseWithEntityFramework { get; }
+   public bool UseForModelBinding { get; }
 
    public ObjectFactoryState(
       ITypeSymbol type,
       SerializationFrameworks useForSerialization,
-      bool useWithEntityFramework)
+      bool useWithEntityFramework,
+      bool useForModelBinding)
    {
       SpecialType = type.SpecialType;
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       UseForSerialization = useForSerialization;
       UseWithEntityFramework = useWithEntityFramework;
+      UseForModelBinding = useForModelBinding;
    }
 
    public override bool Equals(object? obj)
@@ -29,7 +32,8 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    {
       return Equals((ITypeFullyQualified?)other)
              && (int)UseForSerialization == (int)other.UseForSerialization
-             && UseWithEntityFramework == other.UseWithEntityFramework;
+             && UseWithEntityFramework == other.UseWithEntityFramework
+             && UseForModelBinding == other.UseForModelBinding;
    }
 
    public bool Equals([NotNullWhen(true)] ITypeFullyQualified? other)
@@ -47,6 +51,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)UseForSerialization;
          hashCode = (hashCode * 397) ^ UseWithEntityFramework.GetHashCode();
+         hashCode = (hashCode * 397) ^ UseForModelBinding.GetHashCode();
 
          return hashCode;
       }

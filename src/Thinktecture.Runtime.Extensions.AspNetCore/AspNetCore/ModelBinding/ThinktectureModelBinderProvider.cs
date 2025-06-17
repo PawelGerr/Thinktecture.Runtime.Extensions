@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Thinktecture.Internal;
 
@@ -59,27 +58,15 @@ public class ThinktectureModelBinderProvider : IModelBinderProvider
          return null;
 
       // ModelType could be a derived type (like nested Smart Enum)
-      var metadata = MetadataLookup.Find(context.Metadata.ModelType) as Metadata.Keyed;
+      var metadata = MetadataLookup.FindMetadataForConversion(
+         context.Metadata.ModelType,
+         f => f.UseForModelBinding,
+         _ => true);
 
-      var type = metadata?.Type ?? context.Metadata.ModelType;
-      Type keyType;
-
-      if (typeof(IObjectFactory<string>).IsAssignableFrom(type))
-      {
-         keyType = typeof(string);
-      }
-      else if (metadata is not null)
-      {
-         keyType = metadata.KeyType;
-      }
-      else
-      {
+      if (metadata is null)
          return null;
-      }
 
-      var validationErrorType = metadata?.ValidationErrorType ?? type.GetCustomAttribute<ValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
-
-      var modelBinderType = typeof(ThinktectureModelBinder<,,>).MakeGenericType(type, keyType, validationErrorType);
+      var modelBinderType = typeof(ThinktectureModelBinder<,,>).MakeGenericType(metadata.Value.Type, metadata.Value.KeyType, metadata.Value.ValidationErrorType);
       var modelBinder = Activator.CreateInstance(modelBinderType)
                         ?? throw new Exception($"Could not create an instance of type '{modelBinderType.Name}'.");
 

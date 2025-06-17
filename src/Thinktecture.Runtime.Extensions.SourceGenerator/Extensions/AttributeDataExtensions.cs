@@ -205,6 +205,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "UseWithEntityFramework") ?? false;
    }
 
+   public static bool FindUseForModelBinding(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "UseForModelBinding") ?? false;
+   }
+
    public static string? FindTxName(this AttributeData attributeData, int index)
    {
       return GetStringParameterValue(attributeData, $"T{index}Name");

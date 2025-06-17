@@ -71,41 +71,18 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
 
       static Cache()
       {
-         // T could be derived type (like nested Smart Enum)
-         var type = typeof(T);
+         var metadata = MetadataLookup.FindMetadataForConversion(
+            typeof(T),
+            f => f.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack),
+            _ => true);
 
-         var metadata = MetadataLookup.Find(type) as Metadata.Keyed;
-
-         if (metadata is not null)
-            type = metadata.Type;
-
-         var customFactory = type.GetCustomAttributes<ObjectFactoryAttribute>()
-                                 .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack));
-
-         Type keyType;
-
-         if (customFactory is not null)
-         {
-            keyType = customFactory.Type;
-         }
-         else if (metadata is not null)
-         {
-            keyType = metadata.KeyType;
-         }
-         else
-         {
+         if (metadata is null)
             return;
-         }
 
-         var validationErrorType = metadata?.ValidationErrorType
-                                   ?? type.GetCustomAttribute<ValidationErrorAttribute>()?.Type
-                                   ?? typeof(ValidationError);
-
-         var formatterTypeDefinition = type.IsClass
+         var formatterTypeDefinition = metadata.Value.Type.IsClass
                                           ? typeof(ThinktectureMessagePackFormatter<,,>)
                                           : typeof(ThinktectureStructMessagePackFormatter<,,>);
-         var formatterType = formatterTypeDefinition.MakeGenericType(type, keyType, validationErrorType);
-
+         var formatterType = formatterTypeDefinition.MakeGenericType(metadata.Value.Type, metadata.Value.KeyType, metadata.Value.ValidationErrorType);
          var formatter = Activator.CreateInstance(formatterType);
 
          if (formatter is null)
@@ -115,7 +92,7 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
          }
 
          Formatter = (IMessagePackFormatter<T>)formatter;
-         HasMessagePackFormatterAttribute = type.GetCustomAttribute<MessagePackFormatterAttribute>() is not null;
+         HasMessagePackFormatterAttribute = metadata.Value.Type.GetCustomAttribute<MessagePackFormatterAttribute>() is not null;
       }
    }
 }

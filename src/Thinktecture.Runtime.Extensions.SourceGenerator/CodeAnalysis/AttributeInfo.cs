@@ -79,7 +79,13 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          {
             var useForSerialization = attribute.FindUseForSerialization();
             var useWithEntityFramework = attribute.FindUseWithEntityFramework();
-            var desiredFactory = new ObjectFactoryState(attribute.AttributeClass.TypeArguments[0], useForSerialization, useWithEntityFramework);
+            var useForModelBinding = attribute.FindUseForModelBinding();
+
+            var desiredFactory = new ObjectFactoryState(
+               attribute.AttributeClass.TypeArguments[0],
+               useForSerialization,
+               useWithEntityFramework,
+               useForModelBinding);
 
             valueObjectFactories = valueObjectFactories.RemoveAll(static (f, fullTypeName) => f.TypeFullyQualified == fullTypeName, desiredFactory.TypeFullyQualified);
             valueObjectFactories = valueObjectFactories.Add(desiredFactory);

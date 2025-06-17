@@ -15,7 +15,7 @@ public abstract partial class Metadata
    /// <summary>
    /// The type of the metadata belongs to.
    /// </summary>
-   public required Type Type { get; init; }
+   public Type Type { get; }
 
    private readonly Lazy<IReadOnlyList<ObjectFactoryMetadata>> _objectFactories;
 
@@ -24,25 +24,10 @@ public abstract partial class Metadata
    /// </summary>
    public IReadOnlyList<ObjectFactoryMetadata> ObjectFactories => _objectFactories.Value;
 
-   private Metadata()
+   private Metadata(Type type)
    {
-      _objectFactories = new(() =>
-      {
-         if (!typeof(IObjectFactoryOwner).IsAssignableFrom(Type))
-            return [];
-
-         var objectFactoriesProperty = Type.GetProperty(
-            "global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories",
-            BindingFlags.Static | BindingFlags.NonPublic);
-
-         if (objectFactoriesProperty is not null)
-         {
-            return (IReadOnlyList<ObjectFactoryMetadata>?)objectFactoriesProperty.GetValue(null)
-                   ?? throw new InvalidOperationException($"Could not retrieve object factories for type '{Type.FullName}'.");
-         }
-
-         return [];
-      });
+      Type = type;
+      _objectFactories = new(type.FindObjectFactoryMetadata);
    }
 
    /// <summary>
@@ -78,5 +63,10 @@ public abstract partial class Metadata
       /// Gets the key of a keyed object.
       /// </summary>
       public required Func<object, object> GetKey { get; init; }
+
+      private Keyed(Type type)
+         : base(type)
+      {
+      }
    }
 }

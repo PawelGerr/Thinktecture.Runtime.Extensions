@@ -21,6 +21,11 @@ public abstract class ObjectFactoryAttribute : Attribute
    public bool UseWithEntityFramework { get; set; }
 
    /// <summary>
+   /// Indication whether to use the corresponding factory with ASP.NET Core model binding or not.
+   /// </summary>
+   public bool UseForModelBinding { get; init; }
+
+   /// <summary>
    /// Initializes new instance of type <see cref="ObjectFactoryAttribute"/>.
    /// </summary>
    /// <param name="type">Type of the value to create value objects from.</param>

@@ -64,20 +64,20 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.ComplexValueObject
-      {
-         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
-         AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
-               global::System.Linq.Enumerable.Select(
-                  ((global::System.Linq.Expressions.NewExpression)
-                     ((global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(@", object>>)
-                        (object (").AppendTypeFullyQualified(_state).Append(@" o) => new
-                           {").AppendAssignableMembersBody(_state.AssignableInstanceFieldsAndProperties).Append(@"
-                           })).Body).Arguments,
-                  arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
-            )
-            .AsReadOnly()
-      };
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(").AppendTypeFullyQualified(_state).Append(@"))
+         {
+            AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
+                  global::System.Linq.Enumerable.Select(
+                     ((global::System.Linq.Expressions.NewExpression)
+                        ((global::System.Linq.Expressions.Expression<global::System.Func<").AppendTypeFullyQualified(_state).Append(@", object>>)
+                           (object (").AppendTypeFullyQualified(_state).Append(@" o) => new
+                              {").AppendAssignableMembersBody(_state.AssignableInstanceFieldsAndProperties).Append(@"
+                              })).Body).Arguments,
+                     arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
+               )
+               .AsReadOnly()
+         };
 
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 

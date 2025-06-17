@@ -27,4 +27,9 @@ public sealed class ObjectFactoryMetadata
    /// Indication whether to use the corresponding factory with Entity Framework Core or not.
    /// </summary>
    public required bool UseWithEntityFramework { get; init; }
+
+   /// <summary>
+   /// Indication whether to use the corresponding factory with ASP.NET Core model binding or not.
+   /// </summary>
+   public required bool UseForModelBinding { get; init; }
 }

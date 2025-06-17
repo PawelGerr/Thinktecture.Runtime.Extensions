@@ -4,7 +4,9 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 
 // ReSharper disable once InconsistentNaming
 [SmartEnum<int>]
-[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<string>(
+   UseForSerialization = SerializationFrameworks.All,
+   UseForModelBinding = true)]
 public partial class SmartEnum_Factory
 {
    public static readonly SmartEnum_Factory Item1 = new(1);

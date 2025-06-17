@@ -83,19 +83,19 @@ namespace ").Append(_state.Namespace).Append(@"
    {");
 
       _sb.Append(@"
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
-      {
-         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
-         KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
-         ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
-         ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-         ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-         GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
-         ConvertFromKey = ").GenerateDelegateConvertFromKey(_state).Append(@",
-         ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
-         ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
-         TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
-      };
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(").AppendTypeFullyQualified(_state).Append(@"))
+         {
+            KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
+            ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
+            ConvertFromKey = ").GenerateDelegateConvertFromKey(_state).Append(@",
+            ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
+            ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
+            TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
+         };
 
       private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
 

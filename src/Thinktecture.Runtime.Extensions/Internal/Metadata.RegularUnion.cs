@@ -14,7 +14,7 @@ public abstract partial class Metadata
    /// any release. You should only use it directly in your code with extreme caution and knowing that
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
-   public sealed class AdHocUnion : Metadata
+   public sealed class RegularUnion : Metadata
    {
       /// <summary>
       /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -22,7 +22,7 @@ public abstract partial class Metadata
       /// any release. You should only use it directly in your code with extreme caution and knowing that
       /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
       /// </summary>
-      public required IReadOnlyList<Type> MemberTypes { get; init; }
+      public required IReadOnlyList<Type> TypeMembers { get; init; }
 
       /// <summary>
       /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -30,7 +30,7 @@ public abstract partial class Metadata
       /// any release. You should only use it directly in your code with extreme caution and knowing that
       /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
       /// </summary>
-      public AdHocUnion(Type type)
+      public RegularUnion(Type type)
          : base(type)
       {
       }

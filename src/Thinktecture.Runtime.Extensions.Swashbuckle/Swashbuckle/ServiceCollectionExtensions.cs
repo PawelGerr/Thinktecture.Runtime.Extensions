@@ -5,6 +5,8 @@ using Thinktecture.Swashbuckle.Internal;
 using Thinktecture.Swashbuckle.Internal.AdHocUnions;
 using Thinktecture.Swashbuckle.Internal.ComplexValueObjects;
 using Thinktecture.Swashbuckle.Internal.KeyedValueObjects;
+using Thinktecture.Swashbuckle.Internal.KeylessSmartEnums;
+using Thinktecture.Swashbuckle.Internal.RegularUnions;
 using Thinktecture.Swashbuckle.Internal.SmartEnums;
 
 namespace Thinktecture.Swashbuckle;
@@ -25,10 +27,12 @@ public static class ServiceCollectionExtensions
       Action<ThinktectureSchemaFilterOptions>? configureOptions = null)
    {
       services.TryAddSingleton<IOpenApiValueFactoryProvider, JsonSerializerOpenApiValueFactoryProvider>();
+      services.TryAddSingleton<IKeylessSmartEnumSchemaFilter, KeylessSmartEnumSchemaFilter>();
       services.TryAddSingleton<IKeyedValueObjectSchemaFilter, KeyedValueObjectSchemaFilter>();
       services.TryAddSingleton<IComplexValueObjectSchemaFilter, ComplexValueObjectSchemaFilter>();
       services.TryAddSingleton<IRequiredMemberEvaluator, DefaultRequiredMemberEvaluator>();
       services.TryAddSingleton<IAdHocUnionSchemaFilter, AdHocUnionSchemaFilter>();
+      services.TryAddSingleton<IRegularUnionSchemaFilter, RegularUnionSchemaFilter>();
       services.TryAddSingleton<ISmartEnumSchemaFilter, DefaultSmartEnumSchemaFilter>();
       services.TryAddSingleton<ISmartEnumSchemaExtension, NoSmartEnumSchemaExtension>();
 
