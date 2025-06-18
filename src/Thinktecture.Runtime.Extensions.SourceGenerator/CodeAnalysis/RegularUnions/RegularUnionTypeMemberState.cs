@@ -7,6 +7,7 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
    public string Name { get; }
    public bool IsAbstract { get; }
    public bool IsInterface { get; }
+   public SpecialType SpecialType { get; }
    public bool HasRequiredMembers { get; }
    public string BaseTypeFullyQualified { get; }
    public string BaseTypeDefinitionFullyQualified { get; }
@@ -28,6 +29,7 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
       BaseTypeDefinitionFullyQualified = type.BaseType.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
       IsAbstract = type.IsAbstract;
       IsInterface = type.TypeKind == TypeKind.Interface;
+      SpecialType = type.SpecialType;
       UniqueSingleArgumentConstructors = uniqueSingleArgumentConstructors;
       HasRequiredMembers = type.HasRequiredMembers();
 
@@ -45,6 +47,7 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
              && BaseTypeFullyQualified == other.BaseTypeFullyQualified
              && IsAbstract == other.IsAbstract
              && IsInterface == other.IsInterface
+             && SpecialType == other.SpecialType
              && HasRequiredMembers == other.HasRequiredMembers
              && UniqueSingleArgumentConstructors.SequenceEqual(other.UniqueSingleArgumentConstructors)
              && ContainingTypes.SequenceEqual(other.ContainingTypes);
@@ -58,6 +61,7 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
          hashCode = (hashCode * 397) ^ BaseTypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
+         hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
          hashCode = (hashCode * 397) ^ HasRequiredMembers.GetHashCode();
          hashCode = (hashCode * 397) ^ UniqueSingleArgumentConstructors.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();

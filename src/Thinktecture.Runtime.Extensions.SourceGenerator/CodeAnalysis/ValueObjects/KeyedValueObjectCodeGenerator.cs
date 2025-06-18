@@ -161,7 +161,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
-      if (_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface)
+      if (keyMember.IsInterface
+          || keyMember.SpecialType == SpecialType.System_Object
+          || _state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
@@ -199,7 +201,11 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
-      if (_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface || keyMember.IsReferenceType || !_state.IsReferenceType)
+      if (keyMember.IsInterface
+          || keyMember.SpecialType == SpecialType.System_Object
+          || keyMember.IsReferenceType
+          || !_state.IsReferenceType
+          || _state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
@@ -224,7 +230,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var keyMember = _state.KeyMember;
 
-      if (_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None || keyMember.IsInterface)
+      if (keyMember.IsInterface
+          || keyMember.SpecialType == SpecialType.System_Object
+          || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       var bothAreReferenceTypes = _state.IsReferenceType && keyMember.IsReferenceType;

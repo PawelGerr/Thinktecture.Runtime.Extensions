@@ -1105,7 +1105,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConversionToKeyType(KeyMemberState keyProperty)
    {
-      if (keyProperty.IsInterface || _state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None)
+      if (keyProperty.IsInterface
+          || keyProperty.SpecialType == SpecialType.System_Object
+          || _state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
@@ -1136,7 +1138,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConversionFromKeyType(KeyMemberState keyProperty)
    {
-      if (keyProperty.IsInterface || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
+      if (keyProperty.IsInterface
+          || keyProperty.SpecialType == SpecialType.System_Object
+          || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
       _sb.Append(@"
