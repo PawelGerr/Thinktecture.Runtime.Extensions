@@ -348,4 +348,22 @@ public class ReadJson : JsonTestsBase
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectWithPropertyWithoutNullableAnnotation>("{ \"Property\": null }"))
                    .Should().NotThrow();
    }
+
+   [Fact]
+   public void Should_serialize_value_object_with_object_key()
+   {
+      var deserialized = Deserialize<ObjectBaseValueObject>("{\"Test\":1}");
+
+      deserialized.Value.Should().BeOfType<JsonElement>()
+                  .Subject.ToString().Should().Be("{\"Test\":1}");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_object_property()
+   {
+      var deserialized = Deserialize<ComplexValueObjectWithObjectProperty>("{\"Property\":{\"Test\":1}}");
+
+      deserialized.Property.Should().BeOfType<JsonElement>()
+                  .Subject.ToString().Should().Be("{\"Test\":1}");
+   }
 }

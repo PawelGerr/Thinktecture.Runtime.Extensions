@@ -180,20 +180,69 @@ public partial class RoundTripSerialize
       _serializeRoundTripMethodInfo.MakeGenericMethod(value.GetType()).Invoke(this, [value]);
    }
 
-   private void RoundTrip<T>(T value)
+   [Fact]
+   public void Should_roundtrip_serialize_value_object_with_object_key()
+   {
+      var obj = ObjectBaseValueObject.Create(new { Test = 1 });
+
+      RoundTrip(obj, o =>
+      {
+         o.Value.Should().BeOfType<Dictionary<object, object>>()
+          .Subject.Should().Contain("Test", (byte)1);
+      });
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_object_property()
+   {
+      var obj = ComplexValueObjectWithObjectProperty.Create(new { Test = 1 });
+
+      RoundTrip(obj, o =>
+      {
+         o.Property.Should().BeOfType<Dictionary<object, object>>()
+          .Subject.Should().Contain("Test", (byte)1);
+      });
+   }
+
+   private void RoundTrip<T>(
+      T value)
+   {
+      RoundTrip(value, null);
+   }
+
+   private void RoundTrip<T>(
+      T value,
+      Action<T> assert)
    {
       var bytes = MessagePackSerializer.Serialize(value, _options, CancellationToken.None);
       var deserializedValue = MessagePackSerializer.Deserialize<T>(bytes, _options, CancellationToken.None);
 
-      deserializedValue.Should().Be(value);
+      if (assert is not null)
+      {
+         assert(deserializedValue);
+      }
+      else
+      {
+         deserializedValue.Should().Be(value);
+      }
    }
 
-   private void RoundTrip<TIn, TOut>(TIn serialize, TOut expected)
+   private void RoundTrip<TIn, TOut>(
+      TIn serialize,
+      TOut expected,
+      Action<TOut> assert = null)
    {
       var bytes = MessagePackSerializer.Serialize(serialize, _options, CancellationToken.None);
       var deserializedValue = MessagePackSerializer.Deserialize<TOut>(bytes, _options, CancellationToken.None);
 
-      deserializedValue.Should().Be(expected);
+      if (assert is not null)
+      {
+         assert(deserializedValue);
+      }
+      else
+      {
+         deserializedValue.Should().Be(expected);
+      }
    }
 
    public static IEnumerable<object[]> DataForValueObjectWithMultipleProperties =>

@@ -149,4 +149,22 @@ public class WriteJson : JsonTestsBase
       FluentActions.Invoking(() => JsonSerializer.Serialize(dictionary, options))
                    .Should().Throw<NotSupportedException>();
    }
+
+   [Fact]
+   public void Should_serialize_value_object_with_object_key()
+   {
+      var obj = ObjectBaseValueObject.Create(new { Test = 1 });
+      var value = Serialize<ObjectBaseValueObject, object, ValidationError>(obj);
+
+      value.Should().BeEquivalentTo("{\"Test\":1}");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_object_property()
+   {
+      var obj = ComplexValueObjectWithObjectProperty.Create(new { Test = 1 });
+      var value = SerializeWithConverter<ComplexValueObjectWithObjectProperty, ComplexValueObjectWithObjectProperty.JsonConverterFactory>(obj);
+
+      value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
+   }
 }

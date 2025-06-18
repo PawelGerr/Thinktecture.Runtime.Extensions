@@ -46,8 +46,13 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
+         if (memberInfo.SpecialType != SpecialType.System_Object)
+         {
+            _sb.Append(@"
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append("Converter;");
+         }
+
          _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append(@"Converter;
       private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
       }
 
@@ -67,8 +72,13 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
+         if (memberInfo.SpecialType != SpecialType.System_Object)
+         {
+            _sb.Append(@"
+         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append("));");
+         }
+
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
          this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
@@ -151,7 +161,18 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 
          _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
             {
-               ").AppendEscaped(memberInfo.ArgumentName).Append(" = this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);
+               ").AppendEscaped(memberInfo.ArgumentName).Append(" = ");
+
+         if (memberInfo.SpecialType == SpecialType.System_Object)
+         {
+            _sb.Append("global::System.Text.Json.JsonSerializer.Deserialize<object>(ref reader, options);");
+         }
+         else
+         {
+            _sb.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);");
+         }
+
+         _sb.Append(@"
             }");
       }
 
@@ -237,10 +258,20 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
             ");
          }
 
-         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append(@"PropertyName);
-         ");
+         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append("PropertyName);");
 
-         _sb.Append("   this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue, options);
+         if (memberInfo.SpecialType == SpecialType.System_Object)
+         {
+            _sb.Append(@"
+            global::System.Text.Json.JsonSerializer.Serialize(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
+         }
+         else
+         {
+            _sb.Append(@"
+            this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
+         }
+
+         _sb.Append(@"
          }");
       }
 
