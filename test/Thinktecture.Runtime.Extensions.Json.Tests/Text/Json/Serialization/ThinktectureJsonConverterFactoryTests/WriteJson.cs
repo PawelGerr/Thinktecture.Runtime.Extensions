@@ -167,4 +167,17 @@ public class WriteJson : JsonTestsBase
 
       value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
    }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_JsonIgnoreAttribute()
+   {
+      var obj = ComplexValueObjectWithJsonIgnore.Create(
+         null, null, null, null, null, null,
+         0, 0, 0, 0, 0,
+         null, null, null, null, null, null);
+
+       var value = SerializeWithConverter<ComplexValueObjectWithJsonIgnore, ComplexValueObjectWithJsonIgnore.JsonConverterFactory>(obj);
+
+       value.Should().BeEquivalentTo("{\"StringProperty_Ignore_Never\":null,\"StringProperty\":null,\"IntProperty_Ignore_Never\":0,\"IntProperty\":0,\"NullableIntProperty_Ignore_Never\":null,\"NullableIntProperty\":null}");
+   }
 }
