@@ -143,7 +143,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
+         if (memberType.IsInterface
+             || memberType.SpecialType == SpecialType.System_Object
+             || memberType.TypeDuplicateCounter != 0)
             continue;
 
          _sb.Append(@"
@@ -167,7 +169,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       foreach (var memberType in _state.MemberTypes)
       {
-         if (memberType.IsInterface || memberType.TypeDuplicateCounter != 0)
+         if (memberType.IsInterface
+             || memberType.SpecialType == SpecialType.System_Object
+             || memberType.TypeDuplicateCounter != 0)
             continue;
 
          _sb.Append(@"
@@ -982,7 +986,6 @@ namespace ").Append(_state.Namespace).Append(@"
       };");
    }
 }
-
 
 file static class Extensions
 {

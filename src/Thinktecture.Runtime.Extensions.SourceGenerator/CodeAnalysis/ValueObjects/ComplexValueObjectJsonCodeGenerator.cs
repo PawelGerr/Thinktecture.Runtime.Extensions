@@ -1,4 +1,5 @@
 using System.Text;
+using Thinktecture.Json;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
@@ -46,8 +47,14 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
+         if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Always
+             && memberInfo.SpecialType != SpecialType.System_Object)
+         {
+            _sb.Append(@"
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append("Converter;");
+         }
+
          _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append(@"Converter;
       private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
       }
 
@@ -67,8 +74,14 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
+         if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Always
+             && memberInfo.SpecialType != SpecialType.System_Object)
+         {
+            _sb.Append(@"
+         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append("));");
+         }
+
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"));
          this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
@@ -101,6 +114,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         // Prepare variables for properties with "JsonIgnoreCondition.Always" as well
 
          if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
          {
@@ -150,8 +165,30 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
          }
 
          _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
+            {");
+
+         // Although empty, keep the condition; otherwise we end up in "else" and throw an exception
+         if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Always)
+         {
+            _sb.Append(@"
+               ").AppendEscaped(memberInfo.ArgumentName).Append(" = ");
+
+            if (memberInfo.SpecialType == SpecialType.System_Object)
             {
-               ").AppendEscaped(memberInfo.ArgumentName).Append(" = this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);
+               _sb.Append("global::System.Text.Json.JsonSerializer.Deserialize<object>(ref reader, options);");
+            }
+            else
+            {
+               _sb.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);");
+            }
+         }
+         else
+         {
+            _sb.Append(@"
+               // ").Append(memberInfo.Name).Append(" has JsonIgnoreCondition.Always, so we do not deserialize it.");
+         }
+
+         _sb.Append(@"
             }");
       }
 
@@ -218,30 +255,55 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
+         if (memberInfo.JsonIgnoreCondition == JsonIgnoreCondition.Always)
+            continue;
+
          _sb.Append(@"
          var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = value.").Append(memberInfo.Name).Append(@";
 ");
 
-         if (memberInfo.IsReferenceTypeOrNullableStruct)
+         if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Never)
+         {
+            if (memberInfo.IsReferenceTypeOrNullableStruct)
+            {
+               var ignoreNullValuesCondition = memberInfo.JsonIgnoreCondition is JsonIgnoreCondition.WhenWritingNull or JsonIgnoreCondition.WhenWritingDefault
+                                                  ? null
+                                                  : "!ignoreNullValues || ";
+
+               _sb.Append(@"
+         if(").Append(ignoreNullValuesCondition).AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
+         {");
+            }
+            else
+            {
+               var ignoreDefaultValuesCondition = memberInfo.JsonIgnoreCondition is JsonIgnoreCondition.WhenWritingDefault
+                                                     ? null
+                                                     : "!ignoreDefaultValues || ";
+               _sb.Append(@"
+         if(").Append(ignoreDefaultValuesCondition).Append("!").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue.Equals(default(").AppendTypeFullyQualified(memberInfo).Append(@")))
+         {");
+            }
+         }
+
+         _sb.Append(@"
+            writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append("PropertyName);");
+
+         if (memberInfo.SpecialType == SpecialType.System_Object)
          {
             _sb.Append(@"
-         if(!ignoreNullValues || ").AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue is not null)
-         {
-            ");
+            global::System.Text.Json.JsonSerializer.Serialize(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
          }
          else
          {
             _sb.Append(@"
-         if(!ignoreDefaultValues || !").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue.Equals(default(").AppendTypeFullyQualified(memberInfo).Append(@")))
-         {
-            ");
+            this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
          }
 
-         _sb.Append("writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append(@"PropertyName);
-         ");
-
-         _sb.Append("   this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append(@"PropertyValue, options);
+         if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Never)
+         {
+            _sb.Append(@"
          }");
+         }
       }
 
       _sb.Append(@"

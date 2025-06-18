@@ -1,4 +1,5 @@
 using Thinktecture.CodeAnalysis;
+using Thinktecture.Json;
 
 namespace Thinktecture;
 
@@ -213,6 +214,11 @@ public static class AttributeDataExtensions
    {
       return (UnionConstructorAccessModifier?)GetIntegerParameterValue(attributeData, "ConstructorAccessModifier")
              ?? UnionConstructorAccessModifier.Public;
+   }
+
+   public static JsonIgnoreCondition? FindJsonIgnoreCondition(this AttributeData attributeData)
+   {
+      return (JsonIgnoreCondition?)GetIntegerParameterValue(attributeData, "Condition");
    }
 
    public static bool FindAllowDefaultStructs(this AttributeData attributeData)

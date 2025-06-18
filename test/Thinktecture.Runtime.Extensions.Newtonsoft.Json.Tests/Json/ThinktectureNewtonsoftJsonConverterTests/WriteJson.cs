@@ -111,6 +111,24 @@ public class WriteJson : JsonTestsBase
       value.Should().BeEquivalentTo("{\"lower\":1.0,\"upper\":2.0}");
    }
 
+   [Fact]
+   public void Should_serialize_value_object_with_object_key()
+   {
+      var obj = ObjectBaseValueObject.Create(new { Test = 1 });
+      var value = Serialize<ObjectBaseValueObject, object, ValidationError>(obj);
+
+      value.Should().BeEquivalentTo("{\"Test\":1}");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_with_object_property()
+   {
+      var obj = ComplexValueObjectWithObjectProperty.Create(new { Test = 1 });
+      var value = SerializeWithConverter<ComplexValueObjectWithObjectProperty, ComplexValueObjectWithObjectProperty.ValueObjectNewtonsoftJsonConverter>(obj);
+
+      value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
+   }
+
    private static string Serialize<T, TKey>(
       T value,
       NamingStrategy namingStrategy = null,

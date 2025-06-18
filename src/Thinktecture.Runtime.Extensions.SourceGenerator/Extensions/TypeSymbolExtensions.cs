@@ -117,6 +117,34 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: "KeyAttribute", ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsJsonIgnoreAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is
+      {
+         Name: "JsonIgnoreAttribute",
+         ContainingNamespace:
+         {
+            Name: "Serialization",
+            ContainingNamespace:
+            {
+               Name: "Json",
+               ContainingNamespace:
+               {
+                  Name: "Text",
+                  ContainingNamespace:
+                  {
+                     Name: "System",
+                     ContainingNamespace.IsGlobalNamespace: true
+                  }
+               }
+            }
+         }
+      };
+   }
+
    public static bool IsAdHocUnionType(
       [NotNullWhen(true)] this ITypeSymbol? unionType,
       [NotNullWhen(true)] out AttributeData? unionAttribute)

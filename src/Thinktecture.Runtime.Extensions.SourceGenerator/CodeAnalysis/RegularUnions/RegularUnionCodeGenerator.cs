@@ -170,14 +170,17 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       {
          var memberType = _state.TypeMembers[i];
 
-         if (memberType.IsInterface || memberType.IsAbstract || memberType.HasRequiredMembers)
+         if (memberType.IsInterface
+             || memberType.SpecialType == SpecialType.System_Object
+             || memberType.IsAbstract
+             || memberType.HasRequiredMembers)
             continue;
 
          for (var j = 0; j < memberType.UniqueSingleArgumentConstructors.Count; j++)
          {
             var ctorArg = memberType.UniqueSingleArgumentConstructors[j];
 
-            if (ctorArg.IsInterface)
+            if (ctorArg.IsInterface || ctorArg.SpecialType == SpecialType.System_Object)
                continue;
 
             _sb.Append(@"

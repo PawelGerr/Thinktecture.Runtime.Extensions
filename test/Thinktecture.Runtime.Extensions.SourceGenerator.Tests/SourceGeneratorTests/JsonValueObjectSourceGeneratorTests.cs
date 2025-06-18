@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public JsonValueObjectSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 11_000)
+      : base(output, 24_000)
    {
    }
 
@@ -386,6 +386,83 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             public readonly ClassDisallowingDefaultValues? _nullableReferenceType;
             public readonly StructDisallowingDefaultValues _nonNullableStruct;
             public readonly StructDisallowingDefaultValues? _nullableStruct;
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_JsonIgnoreAttribute()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+         using System.Text.Json.Serialization;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject]
+         public partial class ComplexValueObjectWithJsonIgnore
+         {
+            [JsonIgnore]
+            public string? StringProperty_Ignore { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+            public string? StringProperty_Ignore_Always { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public string? StringProperty_Ignore_WhenWritingDefault { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public string? StringProperty_Ignore_WhenWritingNull { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+            public string? StringProperty_Ignore_Never { get; }
+
+            public string? StringProperty { get; }
+
+            [JsonIgnore]
+            public int IntProperty_Ignore { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+            public int IntProperty_Ignore_Always { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int IntProperty_Ignore_WhenWritingDefault { get; }
+
+            // WhenWritingNull on structs is not valid
+            // [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            // public int IntProperty_Ignore_WhenWritingNull { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+            public int IntProperty_Ignore_Never { get; }
+
+            public int IntProperty { get; }
+
+            [JsonIgnore]
+            public int? NullableIntProperty_Ignore { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+            public int? NullableIntProperty_Ignore_Always { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int? NullableIntProperty_Ignore_WhenWritingDefault { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? NullableIntProperty_Ignore_WhenWritingNull { get; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+            public int? NullableIntProperty_Ignore_Never { get; }
+
+            public int? NullableIntProperty { get; }
          }
 
          """;

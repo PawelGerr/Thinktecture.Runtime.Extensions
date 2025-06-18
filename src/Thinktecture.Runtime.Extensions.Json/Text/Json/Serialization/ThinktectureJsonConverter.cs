@@ -60,7 +60,7 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
 {
    private static readonly bool _disallowDefaultValues = typeof(IDisallowDefaultValue).IsAssignableFrom(typeof(T));
 
-   private readonly JsonConverter<TKey> _keyConverter;
+   private readonly JsonConverter<TKey>? _keyConverter;
 
    /// <summary>
    /// Initializes a new instance of <see cref="ThinktectureJsonConverter{T,TKey,TValidationError}"/>.
@@ -70,13 +70,17 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
    {
       ArgumentNullException.ThrowIfNull(options);
 
-      _keyConverter = (JsonConverter<TKey>)options.GetCustomMemberConverter(typeof(TKey));
+      _keyConverter = typeof(TKey) == typeof(object)
+                         ? null
+                         : (JsonConverter<TKey>)options.GetCustomMemberConverter(typeof(TKey));
    }
 
    /// <inheritdoc />
    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
    {
-      var key = _keyConverter.Read(ref reader, typeof(TKey), options);
+      var key = _keyConverter is null
+                   ? JsonSerializer.Deserialize<TKey>(ref reader, options)
+                   : _keyConverter.Read(ref reader, typeof(TKey), options);
 
       if (key is null)
       {
@@ -100,7 +104,14 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
       if (value is null)
          throw new ArgumentNullException(nameof(value));
 
-      _keyConverter.Write(writer, value.ToValue(), options);
+      if (_keyConverter is null)
+      {
+         JsonSerializer.Serialize(writer, value.ToValue(), options);
+      }
+      else
+      {
+         _keyConverter.Write(writer, value.ToValue(), options);
+      }
    }
 }
 

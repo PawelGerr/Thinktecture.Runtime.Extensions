@@ -321,4 +321,71 @@ public class ReadJson : JsonTestsBase
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectWithPropertyWithoutNullableAnnotation>("{ \"Property\": null }"))
                    .Should().NotThrow();
    }
+
+   [Fact]
+   public void Should_deserialize_value_object_with_object_key()
+   {
+      var deserialized = Deserialize<ObjectBaseValueObject>("{\"Test\":1}");
+
+      deserialized.Value.Should().BeOfType<JsonElement>()
+                  .Subject.ToString().Should().Be("{\"Test\":1}");
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_object_property()
+   {
+      var deserialized = Deserialize<ComplexValueObjectWithObjectProperty>("{\"Property\":{\"Test\":1}}");
+
+      deserialized.Property.Should().BeOfType<JsonElement>()
+                  .Subject.ToString().Should().Be("{\"Test\":1}");
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_with_JsonIgnoreAttribute()
+   {
+      var deserialized = Deserialize<ComplexValueObjectWithJsonIgnore>(
+         """
+            {
+               "StringProperty_Ignore":"StringProperty_Ignore",
+               "StringProperty_Ignore_Always":"StringProperty_Ignore_Always",
+               "StringProperty_Ignore_WhenWritingDefault":"StringProperty_Ignore_WhenWritingDefault",
+               "StringProperty_Ignore_WhenWritingNull":"StringProperty_Ignore_WhenWritingNull",
+               "StringProperty_Ignore_Never":"StringProperty_Ignore_Never",
+               "StringProperty":"StringProperty",
+               "IntProperty_Ignore":1,
+               "IntProperty_Ignore_Always":2,
+               "IntProperty_Ignore_WhenWritingDefault":3,
+               "IntProperty_Ignore_Never":4,
+               "IntProperty":5,
+               "NullableIntProperty_Ignore":6,
+               "NullableIntProperty_Ignore_Always":7,
+               "NullableIntProperty_Ignore_WhenWritingDefault":8,
+               "NullableIntProperty_Ignore_WhenWritingNull":9,
+               "NullableIntProperty_Ignore_Never":10,
+               "NullableIntProperty":11
+            }
+         """);
+
+      var expected = ComplexValueObjectWithJsonIgnore.Create(
+         stringProperty_Ignore: null,        // ignored
+         stringProperty_Ignore_Always: null, // ignored
+         stringProperty_Ignore_WhenWritingDefault: "StringProperty_Ignore_WhenWritingDefault",
+         stringProperty_Ignore_WhenWritingNull: "StringProperty_Ignore_WhenWritingNull",
+         stringProperty_Ignore_Never: "StringProperty_Ignore_Never",
+         stringProperty: "StringProperty",
+         intProperty_Ignore: 0,        // ignored
+         intProperty_Ignore_Always: 0, // ignored
+         intProperty_Ignore_WhenWritingDefault: 3,
+         intProperty_Ignore_Never: 4,
+         intProperty: 5,
+         nullableIntProperty_Ignore: null,        // ignored
+         nullableIntProperty_Ignore_Always: null, // ignored
+         nullableIntProperty_Ignore_WhenWritingDefault: 8,
+         nullableIntProperty_Ignore_WhenWritingNull: 9,
+         nullableIntProperty_Ignore_Never: 10,
+         nullableIntProperty: 11
+      );
+
+      deserialized.Should().Be(expected);
+   }
 }
