@@ -1,4 +1,5 @@
 using Thinktecture.CodeAnalysis.ValueObjects;
+using Thinktecture.Json;
 
 namespace Thinktecture.CodeAnalysis;
 
@@ -29,6 +30,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public NullableAnnotation NullableAnnotation { get; }
    public bool DisallowsDefaultValue { get; }
    public int? MessagePackKey { get; }
+   public JsonIgnoreCondition? JsonIgnoreCondition { get; }
 
    private InstanceMemberInfo(
       ITypedMemberState typedMemberState,
@@ -41,7 +43,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       bool disallowsDefaultValue,
       SymbolKind kind,
       NullableAnnotation nullableAnnotation,
-      int? messagePackKey)
+      int? messagePackKey,
+      JsonIgnoreCondition? jsonIgnoreCondition)
    {
       _typedMemberState = typedMemberState;
       _symbol = symbol;
@@ -54,6 +57,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       Kind = kind;
       NullableAnnotation = nullableAnnotation;
       MessagePackKey = messagePackKey;
+      JsonIgnoreCondition = jsonIgnoreCondition;
       ValueObjectMemberSettings = settings;
    }
 
@@ -80,7 +84,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          IsDisallowingDefaultValue(field.Type),
          field.Kind,
          field.NullableAnnotation,
-         GetMessagePackKey(field));
+         GetMessagePackKey(field),
+         GetJsonIgnoreCondition(field));
    }
 
    public static InstanceMemberInfo? CreateOrNull(
@@ -106,7 +111,8 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          IsDisallowingDefaultValue(property.Type),
          property.Kind,
          property.NullableAnnotation,
-         GetMessagePackKey(property));
+         GetMessagePackKey(property),
+         GetJsonIgnoreCondition(property));
    }
 
    private static int? GetMessagePackKey(ISymbol member)
@@ -125,6 +131,16 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && ctorArg.Value is int value
                 ? value
                 : null;
+   }
+
+   private static JsonIgnoreCondition? GetJsonIgnoreCondition(ISymbol member)
+   {
+      var jsonIgnoreAttribute = member.FindAttribute(a => a.IsJsonIgnoreAttribute());
+
+      if (jsonIgnoreAttribute is null)
+         return null;
+
+      return jsonIgnoreAttribute.FindJsonIgnoreCondition() ?? Json.JsonIgnoreCondition.Always;
    }
 
    private static bool IsDisallowingDefaultValue(ITypeSymbol type)
@@ -189,6 +205,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
              && Kind == other.Kind
              && NullableAnnotation == other.NullableAnnotation
              && MessagePackKey == other.MessagePackKey
+             && JsonIgnoreCondition == other.JsonIgnoreCondition
              && ValueObjectMemberSettings.Equals(other.ValueObjectMemberSettings);
    }
 
@@ -205,6 +222,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          hashCode = (hashCode * 397) ^ (int)Kind;
          hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ MessagePackKey.GetHashCode();
+         hashCode = (hashCode * 397) ^ JsonIgnoreCondition.GetHashCode();
          hashCode = (hashCode * 397) ^ ValueObjectMemberSettings.GetHashCode();
 
          return hashCode;
