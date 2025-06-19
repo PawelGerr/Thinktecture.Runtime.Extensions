@@ -9,6 +9,7 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : NewtonsoftJs
    public override string CodeGeneratorName => "NewtonsoftJson-ValueObject-CodeGenerator";
 
    private NewtonsoftJsonValueObjectCodeGeneratorFactory()
+      : base(false)
    {
    }
 

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MessagePack;
 using Thinktecture.CodeAnalysis.AdHocUnions;
+using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.Formatters;
 using Xunit.Abstractions;
 
@@ -28,9 +29,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -48,9 +49,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }
@@ -74,9 +75,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -102,9 +103,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -122,9 +123,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       output.Should().BeNull();
    }
@@ -142,9 +143,9 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".MessagePack",
-                                                                 typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(UnionAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
 
       await VerifyAsync(output);
    }

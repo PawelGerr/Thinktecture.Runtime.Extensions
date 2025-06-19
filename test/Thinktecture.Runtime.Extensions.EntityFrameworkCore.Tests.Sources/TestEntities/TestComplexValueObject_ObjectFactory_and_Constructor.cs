@@ -38,7 +38,7 @@ public partial class TestComplexValueObject_ObjectFactory_and_Constructor
       if (value is null)
       {
          item = null;
-         return new ValidationError("Value cannot be null.");
+         return null;
       }
 
       var values = SplitValue(value);

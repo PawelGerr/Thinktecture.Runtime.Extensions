@@ -46,6 +46,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
 
       InitializeFactoryGeneration(context, validStates, options);
       InitializeParsableCodeGenerator(context, validStates, options);
+      InitializeSerializerGenerators(context, validStates, options);
 
       InitializeErrorReporting(context, typeOrError);
       InitializeExceptionReporting(context, typeOrError);
@@ -59,6 +60,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
          {
             ClassDeclarationSyntax => true,
             StructDeclarationSyntax => true,
+            RecordDeclarationSyntax => true,
             _ => false
          };
       }
@@ -146,13 +148,79 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
          {
             return new ParsableGeneratorState(state,
                                               null,
-                                              state.ValidationError,
+                                              state.AttributeInfo.ValidationError,
                                               state.SkipIParsable,
                                               false,
                                               false,
-                                              state.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String));
+                                              state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String));
          });
       base.InitializeParsableCodeGenerator(context, parsables, options);
+   }
+
+   private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ObjectFactorySourceGeneratorState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var serializerGeneratorFactories = context.MetadataReferencesProvider
+                                                .SelectMany((reference, _) => GetSerializerCodeGeneratorFactories(reference))
+                                                .Collect()
+                                                .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                                 ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
+                                                                                 : states.Distinct())
+                                                .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
+
+      var serializerGeneratorStates = validStates
+                                      .Select((state, _) => new KeyedSerializerGeneratorState(
+                                                 state,
+                                                 null,
+                                                 state.AttributeInfo,
+                                                 SerializationFrameworks.All))
+                                      .Combine(serializerGeneratorFactories)
+                                      .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                      .Where(tuple =>
+                                      {
+                                         if (tuple.Factory.MustGenerateCode(tuple.State))
+                                         {
+                                            Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
+                                            return true;
+                                         }
+
+                                         Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
+                                         return false;
+                                      });
+
+      context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
+   }
+
+   private ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
+   {
+      var factories = ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty;
+
+      try
+      {
+         foreach (var module in reference.GetModules())
+         {
+            switch (module.Name)
+            {
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
+                  Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
+                  factories = factories.Add(JsonObjectFactoryCodeGeneratorFactory.Instance);
+                  break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
+                  Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
+                  factories = factories.Add(NewtonsoftJsonObjectFactoryCodeGeneratorFactory.Instance);
+                  break;
+               case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
+                  Logger.LogInformation("Code generator for MessagePack will participate in code generation");
+                  factories = factories.Add(MessagePackObjectFactoryCodeGeneratorFactory.Instance);
+                  break;
+            }
+         }
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during checking referenced modules", exception: ex);
+      }
+
+      return factories;
    }
 
    private void InitializeErrorReporting(

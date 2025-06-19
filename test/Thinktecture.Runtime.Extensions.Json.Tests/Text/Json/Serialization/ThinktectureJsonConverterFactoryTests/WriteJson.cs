@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ThinktectureJsonConverterFactoryTests.TestClasses;
 using Thinktecture.Text.Json.Serialization;
@@ -176,5 +177,29 @@ public class WriteJson : JsonTestsBase
        var value = SerializeWithConverter<ComplexValueObjectWithJsonIgnore, ComplexValueObjectWithJsonIgnore.JsonConverterFactory>(obj);
 
        value.Should().BeEquivalentTo("{\"StringProperty_Ignore_Never\":null,\"StringProperty\":null,\"IntProperty_Ignore_Never\":0,\"IntProperty\":0,\"NullableIntProperty_Ignore_Never\":null,\"NullableIntProperty\":null}");
+   }
+
+   [Theory]
+   [InlineData("2025", 2025, null, null)]
+   [InlineData("2025-06", 2025, 6, null)]
+   [InlineData("2025-06-19", 2025, 6, 19)]
+   public void Should_serialize_regular_union_with_factory(string expectedJson, int year, int? month, int? day)
+   {
+      PartiallyKnownDateSerializable obj = expectedJson.Split('-').Length switch
+      {
+         1 => new PartiallyKnownDateSerializable.YearOnly(year),
+         2 => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         3 => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         _ => throw new Exception("Invalid test data")
+      };
+      var json = Serialize<PartiallyKnownDateSerializable, string>(obj);
+      json.Should().Be($"\"{expectedJson}\"");
+   }
+
+   [Fact]
+   public void Should_serialize_PartiallyKnownDateSerializable_null()
+   {
+      var json = Serialize<PartiallyKnownDateSerializable, string>(null);
+      json.Should().Be("null");
    }
 }

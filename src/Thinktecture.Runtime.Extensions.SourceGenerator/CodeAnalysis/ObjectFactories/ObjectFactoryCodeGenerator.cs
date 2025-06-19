@@ -45,12 +45,12 @@ namespace ").Append(_state.Namespace).Append(@";
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
 partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" : global::Thinktecture.Internal.IObjectFactoryOwner");
 
-      for (var i = 0; i < _state.ObjectFactories.Length; i++)
+      for (var i = 0; i < _state.AttributeInfo.ObjectFactories.Length; i++)
       {
-         var factory = _state.ObjectFactories[i];
+         var factory = _state.AttributeInfo.ObjectFactories[i];
 
          _sb.Append(@",
-      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(factory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
+      global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(factory).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(">");
 
          if (factory.UseForSerialization != SerializationFrameworks.None
              || factory.UseWithEntityFramework)
@@ -76,9 +76,9 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
       new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
       {");
 
-      for (var i = 0; i < _state.ObjectFactories.Length; i++)
+      for (var i = 0; i < _state.AttributeInfo.ObjectFactories.Length; i++)
       {
-         var objectFactory = _state.ObjectFactories[i];
+         var objectFactory = _state.AttributeInfo.ObjectFactories[i];
 
          if (i != 0)
             _sb.Append(",");
@@ -87,7 +87,7 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
          new global::Thinktecture.Internal.ObjectFactoryMetadata()
          {
             ValueType = typeof(").AppendTypeFullyQualified(objectFactory).Append(@"),
-            ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+            ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"),
             UseForSerialization = global::Thinktecture.SerializationFrameworks.").Append(objectFactory.UseForSerialization).Append(@",
             UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@",
             UseForModelBinding = ").Append(objectFactory.UseForModelBinding ? "true" : "false").Append(@",

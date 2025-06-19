@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Text.Json.Serialization;
 
@@ -272,5 +273,36 @@ public class RoundTrip : JsonTestsBase
       {
          Prop = prop;
       }
+   }
+
+   [Theory]
+   [InlineData("2025", 2025, null, null)]
+   [InlineData("2025-06", 2025, 6, null)]
+   [InlineData("2025-06-19", 2025, 6, 19)]
+   public void Should_roundtrip_regular_union_with_factory(string value, int year, int? month, int? day)
+   {
+      var obj = value.Split('-').Length switch
+      {
+         1 => (PartiallyKnownDateSerializable)new PartiallyKnownDateSerializable.YearOnly(year),
+         2 => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         3 => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         _ => throw new System.Exception("Invalid test data")
+      };
+
+      var json = Serialize<PartiallyKnownDateSerializable, string>(obj);
+      json.Should().Be($"\"{value}\"");
+
+      var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
+      deserialized.Should().Be(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_regular_union_with_factory_null()
+   {
+      var json = Serialize<PartiallyKnownDateSerializable, string>(null);
+      json.Should().Be("null");
+
+      var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
+      deserialized.Should().BeNull();
    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Runtime.Tests.Text.Json.Serialization.ThinktectureJsonConverterFactoryTests.TestClasses;
 
@@ -386,6 +387,25 @@ public class ReadJson : JsonTestsBase
          nullableIntProperty: 11
       );
 
+      deserialized.Should().Be(expected);
+   }
+
+   [Theory]
+   [InlineData("2025", 2025, null, null)]
+   [InlineData("2025-06", 2025, 6, null)]
+   [InlineData("2025-06-19", 2025, 6, 19)]
+   public void Should_deserialize_regular_union_with_factory(string value, int year, int? month, int? day)
+   {
+      var json = $"\"{value}\"";
+
+      PartiallyKnownDateSerializable expected = value.Split('-').Length switch
+      {
+         1 => new PartiallyKnownDateSerializable.YearOnly(year),
+         2 => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         3 => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         _ => throw new Exception("Invalid test data")
+      };
+      var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
       deserialized.Should().Be(expected);
    }
 }

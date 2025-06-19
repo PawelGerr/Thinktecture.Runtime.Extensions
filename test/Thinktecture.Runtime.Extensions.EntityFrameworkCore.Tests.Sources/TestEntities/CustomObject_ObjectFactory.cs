@@ -26,7 +26,7 @@ public partial class CustomObject_ObjectFactory
       if (value is null)
       {
          item = null;
-         return new ValidationError("Value cannot be null.");
+         return null;
       }
 
       var parts = value.Split('|');

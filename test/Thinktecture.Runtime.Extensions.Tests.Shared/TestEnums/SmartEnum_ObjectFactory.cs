@@ -14,6 +14,12 @@ public partial class SmartEnum_Factory
 
    public static ValidationError? Validate(string? value, IFormatProvider? provider, out SmartEnum_Factory? item)
    {
+      if (value is null)
+      {
+         item = null;
+         return null;
+      }
+
       switch (value)
       {
          case "=1=":

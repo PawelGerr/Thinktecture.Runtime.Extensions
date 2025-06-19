@@ -7,6 +7,7 @@ public sealed class NewtonsoftJsonSmartEnumCodeGeneratorFactory : NewtonsoftJson
    public override string CodeGeneratorName => "NewtonsoftJson-SmartEnum-CodeGenerator";
 
    private NewtonsoftJsonSmartEnumCodeGeneratorFactory()
+      : base(false)
    {
    }
 }

@@ -14,6 +14,12 @@ public partial class SmartEnum_Keyless_ObjectFactory
 
    public static ValidationError? Validate(string? value, IFormatProvider? provider, out SmartEnum_Keyless_ObjectFactory? item)
    {
+      if (value is null)
+      {
+         item = null;
+         return null;
+      }
+
       switch (value)
       {
          case "1":

@@ -3,6 +3,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ComplexValueObjectSourceGeneratorState
    : ITypeInformation,
      IParsableTypeInformation,
+     IKeyedSerializerGeneratorTypeInformation,
      IEquatable<ComplexValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }

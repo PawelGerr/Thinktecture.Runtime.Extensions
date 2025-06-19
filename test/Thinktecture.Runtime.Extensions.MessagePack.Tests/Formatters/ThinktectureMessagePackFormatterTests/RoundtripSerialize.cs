@@ -8,6 +8,7 @@ using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests;
@@ -133,6 +134,23 @@ public partial class RoundTripSerialize
       var value = MessagePackSerializer.Deserialize<IntBasedEnumWithFormatter>(bytes, StandardResolver.Options, CancellationToken.None);
 
       value.Should().Be(IntBasedEnumWithFormatter.Value1);
+   }
+
+   [Theory]
+   [InlineData(2025, null, null)]
+   [InlineData(2025, 6, null)]
+   [InlineData(2025, 6, 19)]
+   public void Should_roundtrip_regular_union_with_factory(int year, int? month, int? day)
+   {
+      var obj = (year, month, day) switch
+      {
+         (_, { }, { }) => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         (_, { }, null) => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         (_, null, null) => (PartiallyKnownDateSerializable)new PartiallyKnownDateSerializable.YearOnly(year),
+         _ => throw new Exception("Invalid test data")
+      };
+
+      RoundTrip(obj);
    }
 
    public static IEnumerable<object[]> DataForValueObject =>

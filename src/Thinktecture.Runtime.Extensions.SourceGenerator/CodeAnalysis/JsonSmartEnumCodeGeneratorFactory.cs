@@ -4,13 +4,28 @@ namespace Thinktecture.CodeAnalysis;
 
 public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase : IKeyedSerializerCodeGeneratorFactory
 {
+   private readonly bool _isForObjectFactories;
+
    public abstract string CodeGeneratorName { get; }
+
+   protected JsonKeyedSerializerCodeGeneratorFactoryBase(
+      bool isForObjectFactories)
+   {
+      _isForObjectFactories = isForObjectFactories;
+   }
 
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
-      return !state.AttributeInfo.HasJsonConverterAttribute
-             && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
-             && (state.KeyMember is not null || state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson)));
+      if (state.AttributeInfo.HasJsonConverterAttribute
+          || !state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson))
+         return false;
+
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+
+      if (_isForObjectFactories)
+         return hasObjectFactory;
+
+      return state.KeyMember is not null && !hasObjectFactory;
    }
 
    public CodeGeneratorBase Create(KeyedSerializerGeneratorState state, StringBuilder stringBuilder)

@@ -66,6 +66,55 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_object_factory_for_ad_hoc_union()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [Union<string, int>]
+            [ObjectFactory<string>]
+            public partial class TestUnion;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestUnion.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_regular_union()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [ObjectFactory<string>]
+            public partial record Result<T>
+            {
+               public partial record Success(T Value) : Result<T>;
+
+               public partial record Failure(string Error) : Result<T>;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.Result`1.Parsable.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_constructor_call_when_HasCorrespondingConstructor_is_true()
    {
       var source = """

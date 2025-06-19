@@ -45,7 +45,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
          _sb.Append(keyType).Append(", ");
 
       _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
-partial ").Append(_state.Type.IsReferenceType ? "class " : "struct ").Append(_state.Type.Name).Append(@"
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).Append(@"
 {
 }");
 

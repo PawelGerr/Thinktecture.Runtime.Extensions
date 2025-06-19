@@ -7,6 +7,7 @@ public sealed class MessagePackSmartEnumCodeGeneratorFactory : MessagePackKeyedS
    public override string CodeGeneratorName => "MessagePack-SmartEnum-CodeGenerator";
 
    private MessagePackSmartEnumCodeGeneratorFactory()
+      : base(false)
    {
    }
 }

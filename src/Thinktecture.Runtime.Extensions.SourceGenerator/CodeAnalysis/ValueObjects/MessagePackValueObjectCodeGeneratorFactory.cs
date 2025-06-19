@@ -9,6 +9,7 @@ public sealed class MessagePackValueObjectCodeGeneratorFactory : MessagePackKeye
    public override string CodeGeneratorName => "MessagePack-ValueObject-CodeGenerator";
 
    private MessagePackValueObjectCodeGeneratorFactory()
+      : base(false)
    {
    }
 
