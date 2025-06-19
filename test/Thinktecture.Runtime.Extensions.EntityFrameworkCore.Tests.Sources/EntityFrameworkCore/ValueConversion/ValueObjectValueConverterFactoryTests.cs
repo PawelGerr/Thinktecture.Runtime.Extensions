@@ -40,12 +40,16 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21),
                       BoundaryWithCustomFactoryNames = BoundaryWithCustomFactoryNames.Get(11, 21),
                       IntBasedReferenceValueObjectWitCustomFactoryName = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1),
+                      TestComplexValueObject_ObjectFactory = TestComplexValueObject_ObjectFactory.Create("value 4", "value 5"),
+                      TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("value 6", "value 7"),
+                      CustomObject_ObjectFactory = new CustomObject_ObjectFactory("value 8", "value 9"),
+                      SmartEnum_IntBased = SmartEnum_IntBased.Item2,
 #if PRIMITIVE_COLLECTIONS
                       CollectionOfIntBasedReferenceValueObject =
                       [
                          IntBasedReferenceValueObject.Create(1),
                          IntBasedReferenceValueObject.Create(2)
-                      ]
+                      ],
 #endif
                    };
       _ctx.Add(entity);
@@ -62,9 +66,10 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
       var entity = new TestEntity_with_Enum_and_ValueObjects
                    {
                       Id = new Guid("A53F60CD-B53E-40E3-B16F-05E9A223E238"),
-                      StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value"),
-                      StringBasedStructValueObject = StringBasedStructValueObject.Create("other value"),
-                      Boundary = Boundary.Create(10, 20)
+                      StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value 1"),
+                      StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
+                      Boundary = Boundary.Create(10, 20),
+                      TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("value 3", "value 4"),
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync();
@@ -74,7 +79,8 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
 UPDATE TestEntities_with_Enum_and_ValueObjects
 SET
     StringBasedStructValueObject = '',
-    Boundary_Lower = 30
+    Boundary_Lower = 30,
+    TestComplexValueObject_ObjectFactory_and_Constructor = ''
 ";
       await command.ExecuteNonQueryAsync();
 
@@ -83,6 +89,8 @@ SET
       loadedEntity.StringBasedStructValueObject.Property.Should().Be(String.Empty);
       loadedEntity.Boundary.Lower.Should().Be(30);
       loadedEntity.Boundary.Upper.Should().Be(20);
+      loadedEntity.TestComplexValueObject_ObjectFactory_and_Constructor.Property1.Should().BeEmpty();
+      loadedEntity.TestComplexValueObject_ObjectFactory_and_Constructor.Property2.Should().BeEmpty();
    }
 
    [Fact]

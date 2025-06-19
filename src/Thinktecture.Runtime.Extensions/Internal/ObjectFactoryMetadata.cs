@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Thinktecture.Internal;
 
 /// <summary>
@@ -32,4 +34,10 @@ public sealed class ObjectFactoryMetadata
    /// Indication whether to use the corresponding factory with ASP.NET Core model binding or not.
    /// </summary>
    public required bool UseForModelBinding { get; init; }
+
+   /// <summary>
+   /// An expression for conversion of values of type <see cref="ValueType"/> to type <see cref="Type"/> using the constructor.
+   /// This delegate is for use with types when the value comes from a valid source.
+   /// </summary>
+   public required LambdaExpression? ConvertFromKeyExpressionViaConstructor { get; init; }
 }

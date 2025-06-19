@@ -17,7 +17,8 @@ partial class TestValueObject : global::Thinktecture.Internal.IObjectFactoryOwne
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
             UseForSerialization = global::Thinktecture.SerializationFrameworks.All,
             UseWithEntityFramework = false,
-            UseForModelBinding = false
+            UseForModelBinding = false,
+            ConvertFromKeyExpressionViaConstructor = null,
          }
       }.AsReadOnly();
 }

@@ -50,6 +50,11 @@ public class UseThinktectureValueConverters : IDisposable
 
       ValidateConverter(
          entityType,
+         nameof(TestEntity_with_Types_having_ObjectFactories.TestComplexValueObject_ObjectFactory_and_Constructor),
+         _converterType.MakeGenericType(typeof(TestComplexValueObject_ObjectFactory_and_Constructor), typeof(string), typeof(ValidationError)));
+
+      ValidateConverter(
+         entityType,
          nameof(TestEntity_with_Types_having_ObjectFactories.CustomObject_ObjectFactory),
          _converterType.MakeGenericType(typeof(CustomObject_ObjectFactory), typeof(string), typeof(ValidationError)));
    }

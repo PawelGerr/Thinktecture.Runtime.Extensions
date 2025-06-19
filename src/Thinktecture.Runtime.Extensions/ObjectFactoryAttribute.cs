@@ -26,6 +26,11 @@ public abstract class ObjectFactoryAttribute : Attribute
    public bool UseForModelBinding { get; init; }
 
    /// <summary>
+   /// Indicates whether there is a corresponding constructor that takes single parameter of type <see cref="Type"/>.
+   /// </summary>
+   public bool HasCorrespondingConstructor { get; init; }
+
+   /// <summary>
    /// Initializes new instance of type <see cref="ObjectFactoryAttribute"/>.
    /// </summary>
    /// <param name="type">Type of the value to create value objects from.</param>

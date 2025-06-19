@@ -4,9 +4,8 @@
 namespace Thinktecture.Tests;
 
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-partial class TestEnum : global::Thinktecture.Internal.IObjectFactoryOwner,
-      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
-      global::Thinktecture.IConvertible<string>
+partial class TestClass : global::Thinktecture.Internal.IObjectFactoryOwner,
+      global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestClass, string, global::Thinktecture.ValidationError>
 {
    static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.ObjectFactoryMetadata> global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories { get; } =
       new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
@@ -15,10 +14,10 @@ partial class TestEnum : global::Thinktecture.Internal.IObjectFactoryOwner,
          {
             ValueType = typeof(string),
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
-            UseForSerialization = global::Thinktecture.SerializationFrameworks.All,
+            UseForSerialization = global::Thinktecture.SerializationFrameworks.None,
             UseWithEntityFramework = false,
             UseForModelBinding = false,
-            ConvertFromKeyExpressionViaConstructor = null,
+            ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestClass (string @value) => new global::Thinktecture.Tests.TestClass(@value),
          }
       }.AsReadOnly();
 }

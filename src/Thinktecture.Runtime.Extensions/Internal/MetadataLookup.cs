@@ -129,7 +129,12 @@ public static class MetadataLookup
                                        ? GetFromExpressions(keyedObject)
                                        : (null, null);
 
-      return new ConversionMetadata(type, objectFactory.ValueType, objectFactory.ValidationErrorType, fromCtor, fromFactory);
+      return new ConversionMetadata(
+         type,
+         objectFactory.ValueType,
+         objectFactory.ValidationErrorType,
+         objectFactory.ConvertFromKeyExpressionViaConstructor ?? fromCtor,
+         fromFactory);
    }
 
    private static Type UnwrapNullable(Type type)

@@ -9,6 +9,7 @@ public class TestEntity_with_Types_having_ObjectFactories
 {
    public Guid Id { get; set; }
    public TestComplexValueObject_ObjectFactory TestComplexValueObject_ObjectFactory { get; set; }
+   public TestComplexValueObject_ObjectFactory_and_Constructor TestComplexValueObject_ObjectFactory_and_Constructor { get; set; }
    public CustomObject_ObjectFactory CustomObject_ObjectFactory { get; set; }
 
    public static void Configure(
@@ -24,6 +25,7 @@ public class TestEntity_with_Types_having_ObjectFactories
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
             builder.Property(e => e.TestComplexValueObject_ObjectFactory).HasThinktectureValueConverter();
+            builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter();
             builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter();
          }
 

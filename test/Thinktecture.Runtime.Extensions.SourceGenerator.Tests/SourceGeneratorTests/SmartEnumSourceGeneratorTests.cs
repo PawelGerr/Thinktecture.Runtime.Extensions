@@ -1067,3 +1067,4 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
    }
 }
+

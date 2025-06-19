@@ -16,7 +16,8 @@ partial class TestEnum : global::Thinktecture.Internal.IObjectFactoryOwner,
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
             UseForSerialization = global::Thinktecture.SerializationFrameworks.None,
             UseWithEntityFramework = false,
-            UseForModelBinding = false
+            UseForModelBinding = false,
+            ConvertFromKeyExpressionViaConstructor = null,
          }
       }.AsReadOnly();
 }

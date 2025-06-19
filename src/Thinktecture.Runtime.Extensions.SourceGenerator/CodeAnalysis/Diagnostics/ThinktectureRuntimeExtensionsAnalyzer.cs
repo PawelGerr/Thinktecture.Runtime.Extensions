@@ -56,6 +56,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
+      DiagnosticsDescriptors.ObjectFactoryMustHaveCorrespondingConstructor,
+      DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor,
    ];
 
    /// <inheritdoc />
@@ -69,6 +71,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.RegisterOperationAction(AnalyzeAdHocUnion, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeUnion, OperationKind.Attribute);
       context.RegisterOperationAction(AnalyzeMethodWithUseDelegateFromConstructor, OperationKind.Attribute);
+      context.RegisterOperationAction(AnalyzeObjectFactory, OperationKind.Attribute);
 
       context.RegisterOperationAction(AnalyzeMethodCall, OperationKind.Invocation);
       context.RegisterOperationAction(AnalyzeDefaultValueAssignment, OperationKind.DefaultValue);
@@ -171,6 +174,33 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
                                                     Location.None,
                                                     method.ToDisplayString(), ex.ToString()));
+      }
+   }
+
+   private static void AnalyzeObjectFactory(OperationAnalysisContext context)
+   {
+      if (context.ContainingSymbol.Kind != SymbolKind.NamedType
+          || context.Operation is not IAttributeOperation { Operation: IObjectCreationOperation attrCreation }
+          || !attrCreation.Type.IsObjectFactoryAttribute()
+          || attrCreation.Type is not INamedTypeSymbol { Arity: 1 } attributeType
+          || context.ContainingSymbol is not INamedTypeSymbol type
+          || type.TypeKind == TypeKind.Error)
+      {
+         return;
+      }
+
+      try
+      {
+         if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
+            return;
+
+         ValidateObjectFactory(context, type, attrCreation, attributeType);
+      }
+      catch (Exception ex)
+      {
+         context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
+                                                    Location.None,
+                                                    type.ToFullyQualifiedDisplayString(), ex.ToString()));
       }
    }
 
@@ -343,7 +373,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (type.DeclaringSyntaxReferences.IsDefaultOrEmpty)
             return;
 
-         ValidateEnum(context, type, attrCreation);
+         ValidateSmartEnum(context, type, attrCreation);
       }
       catch (Exception ex)
       {
@@ -744,7 +774,30 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static void ValidateEnum(
+   private static void ValidateObjectFactory(
+      OperationAnalysisContext context,
+      INamedTypeSymbol objectType,
+      IObjectCreationOperation attribute,
+      INamedTypeSymbol attributeType)
+   {
+      if (attribute.FindHasCorrespondingConstructor() == true)
+      {
+         var valueType = attributeType.TypeArguments[0];
+
+         if (objectType.IsSmartEnumType(out _))
+         {
+            var location = objectType.Locations.IsDefaultOrEmpty ? Location.None : objectType.Locations[0];
+
+            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor, location, objectType, valueType);
+         }
+         else
+         {
+            CheckForConstructorWithArgument(context, objectType, valueType);
+         }
+      }
+   }
+
+   private static void ValidateSmartEnum(
       OperationAnalysisContext context,
       INamedTypeSymbol enumType,
       IObjectCreationOperation attribute)
@@ -880,7 +933,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var derivedType = derivedTypes[i];
 
-         if (!derivedType.Type.IsSealed && !derivedType.Type.IsAbstract && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
+         if (derivedType.Type is { IsSealed: false, IsAbstract: false } && !typesToLeaveOpen.Contains(derivedType.Type, SymbolEqualityComparer.Default))
             ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumWithoutDerivedTypesMustBeSealed, GetDerivedTypeLocation(context, derivedType.Type), derivedType.Type);
       }
    }
@@ -1036,6 +1089,30 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             }
          }
       }
+   }
+
+   private static void CheckForConstructorWithArgument(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      ITypeSymbol argumentType)
+   {
+      if (type.Constructors.IsDefaultOrEmpty)
+         return;
+
+      for (var i = 0; i < type.Constructors.Length; i++)
+      {
+         var ctor = type.Constructors[i];
+
+         if (ctor.Parameters.IsDefaultOrEmpty || ctor.Parameters.Length != 1)
+            continue;
+
+         if (SymbolEqualityComparer.Default.Equals(ctor.Parameters[0].Type, argumentType))
+            return;
+      }
+
+      var location = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0];
+
+      ReportDiagnostic(context, DiagnosticsDescriptors.ObjectFactoryMustHaveCorrespondingConstructor, location, type, argumentType);
    }
 
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0)

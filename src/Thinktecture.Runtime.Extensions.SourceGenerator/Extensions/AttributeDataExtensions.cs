@@ -210,6 +210,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, "UseForModelBinding") ?? false;
    }
 
+   public static bool FindHasCorrespondingConstructor(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.HAS_CORRESPONDING_CONSTRUCTOR) ?? false;
+   }
+
    public static string? FindTxName(this AttributeData attributeData, int index)
    {
       return GetStringParameterValue(attributeData, $"T{index}Name");

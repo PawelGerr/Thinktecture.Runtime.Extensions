@@ -66,6 +66,27 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_constructor_call_when_HasCorrespondingConstructor_is_true()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ObjectFactory<string>(HasCorrespondingConstructor = true)]
+         	public partial class TestClass;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestClass.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestClass.Parsable.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_complex_class_with_8_members_and_ObjectFactoryAttribute()
    {
       var source = """

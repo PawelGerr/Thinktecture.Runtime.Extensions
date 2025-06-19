@@ -65,6 +65,7 @@ public static class Constants
          public const string DEFAULT_STRING_COMPARISON = "DefaultStringComparison";
          public const string SKIP_ICOMPARABLE = "SkipIComparable";
          public const string ALLOW_DEFAULT_STRUCTS = "AllowDefaultStructs";
+         public const string HAS_CORRESPONDING_CONSTRUCTOR = "HasCorrespondingConstructor";
       }
 
       public static class ValueObject

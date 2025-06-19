@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
@@ -9,6 +10,13 @@ public partial class CustomObject_ObjectFactory
 {
    public required string Property1 { get; init; }
    public required string Property2 { get; init; }
+
+   [SetsRequiredMembers]
+   public CustomObject_ObjectFactory(string property1, string property2)
+   {
+      Property1 = property1;
+      Property2 = property2;
+   }
 
    public static ValidationError? Validate(
       string? value,
@@ -23,11 +31,7 @@ public partial class CustomObject_ObjectFactory
 
       var parts = value.Split('|');
 
-      item = new()
-             {
-                Property1 = parts[0],
-                Property2 = parts[1]
-             };
+      item = new(parts[0], parts[1]);
       return null;
    }
 

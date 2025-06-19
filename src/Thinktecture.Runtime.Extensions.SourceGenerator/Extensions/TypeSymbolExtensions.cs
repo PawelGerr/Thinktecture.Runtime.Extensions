@@ -40,6 +40,24 @@ public static class TypeSymbolExtensions
       return valueObjectAttributeBase is not null;
    }
 
+   /// <summary>
+   /// Keyed or keyless Smart Enum.
+   /// </summary>
+   public static bool IsSmartEnumType(
+      [NotNullWhen(true)] this ITypeSymbol? type,
+      [NotNullWhen(true)] out AttributeData? smartEnumAttribute)
+   {
+      if (type is null || type.SpecialType != SpecialType.None)
+      {
+         smartEnumAttribute = null;
+         return false;
+      }
+
+      smartEnumAttribute = type.FindAttribute(static attributeClass => attributeClass.IsSmartEnumAttribute());
+
+      return smartEnumAttribute is not null;
+   }
+
    public static bool IsKeyedValueObjectAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
@@ -62,6 +80,14 @@ public static class TypeSymbolExtensions
          return false;
 
       return attributeType is { Name: Constants.Attributes.SmartEnum.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
+   public static bool IsObjectFactoryAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.ObjectFactory.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsAdHocUnionAttribute(this ITypeSymbol? attributeType)
@@ -453,7 +479,7 @@ public static class TypeSymbolExtensions
          (baseType, baseType.GetGenericTypeDefinition()),
          ref derivedTypes);
 
-      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)[];
+      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>) [];
    }
 
    private static void FindDerivedInnerTypes(

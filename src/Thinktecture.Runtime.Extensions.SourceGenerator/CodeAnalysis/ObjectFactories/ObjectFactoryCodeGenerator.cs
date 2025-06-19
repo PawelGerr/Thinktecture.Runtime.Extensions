@@ -90,11 +90,29 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
             ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
             UseForSerialization = global::Thinktecture.SerializationFrameworks.").Append(objectFactory.UseForSerialization).Append(@",
             UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@",
-            UseForModelBinding = ").Append(objectFactory.UseForModelBinding ? "true" : "false").Append(@"
+            UseForModelBinding = ").Append(objectFactory.UseForModelBinding ? "true" : "false").Append(@",
+            ConvertFromKeyExpressionViaConstructor = ").AppendConvertFromKeyExpressionViaConstructor(_state, objectFactory).Append(@",
          }");
       }
 
       _sb.Append(@"
       }.AsReadOnly();");
+   }
+}
+
+file static class StringBuilderExtensions
+{
+   public static StringBuilder AppendConvertFromKeyExpressionViaConstructor(
+      this StringBuilder sb,
+      ObjectFactorySourceGeneratorState state,
+      ObjectFactoryState factoryState)
+   {
+      if (!factoryState.HasCorrespondingConstructor)
+      {
+         sb.Append("null");
+         return sb;
+      }
+
+      return sb.Append("static ").AppendTypeFullyQualified(state).Append(" (").AppendTypeFullyQualified(factoryState).Append(" @value) => new ").AppendTypeFullyQualified(state).Append("(@value)");
    }
 }
