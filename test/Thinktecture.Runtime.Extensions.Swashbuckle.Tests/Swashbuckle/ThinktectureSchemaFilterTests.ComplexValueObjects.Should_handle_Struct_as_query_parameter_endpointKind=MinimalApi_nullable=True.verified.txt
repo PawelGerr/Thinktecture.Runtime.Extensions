@@ -15,7 +15,11 @@
             "name": "value",
             "in": "query",
             "schema": {
-              "type": "string"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/BoundaryStructWithFactoriesNullableAsString"
+                }
+              ]
             }
           }
         ],
@@ -51,6 +55,9 @@
           }
         },
         "additionalProperties": false
+      },
+      "BoundaryStructWithFactoriesNullableAsString": {
+        "type": "string"
       }
     }
   }

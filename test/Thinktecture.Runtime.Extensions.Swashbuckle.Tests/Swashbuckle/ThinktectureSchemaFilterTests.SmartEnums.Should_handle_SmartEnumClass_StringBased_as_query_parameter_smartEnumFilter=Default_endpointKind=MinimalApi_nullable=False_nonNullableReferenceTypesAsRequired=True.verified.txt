@@ -16,7 +16,11 @@
             "in": "query",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/SmartEnum_StringBased"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SmartEnum_StringBased"
+                }
+              ]
             }
           }
         ],

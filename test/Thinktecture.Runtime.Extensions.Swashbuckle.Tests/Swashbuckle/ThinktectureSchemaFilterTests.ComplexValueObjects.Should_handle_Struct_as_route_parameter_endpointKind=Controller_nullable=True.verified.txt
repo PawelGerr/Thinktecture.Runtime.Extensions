@@ -16,7 +16,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/BoundaryStructWithFactoriesNullableAsString"
+                }
+              ]
             }
           }
         ],
@@ -52,6 +56,9 @@
           }
         },
         "additionalProperties": false
+      },
+      "BoundaryStructWithFactoriesNullableAsString": {
+        "type": "string"
       }
     }
   }

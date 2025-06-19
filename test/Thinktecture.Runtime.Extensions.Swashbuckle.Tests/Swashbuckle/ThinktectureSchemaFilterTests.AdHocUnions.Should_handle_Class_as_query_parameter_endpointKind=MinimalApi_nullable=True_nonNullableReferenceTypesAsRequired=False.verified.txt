@@ -15,7 +15,11 @@
             "name": "value",
             "in": "query",
             "schema": {
-              "type": "string"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TextOrNumberSerializableAsString"
+                }
+              ]
             }
           }
         ],
@@ -46,6 +50,9 @@
             "format": "int32"
           }
         ]
+      },
+      "TextOrNumberSerializableAsString": {
+        "type": "string"
       }
     }
   }

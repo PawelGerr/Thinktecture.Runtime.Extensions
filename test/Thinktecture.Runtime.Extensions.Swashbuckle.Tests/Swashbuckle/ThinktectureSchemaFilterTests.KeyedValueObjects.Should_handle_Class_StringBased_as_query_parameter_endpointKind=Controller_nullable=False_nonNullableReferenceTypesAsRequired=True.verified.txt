@@ -15,7 +15,11 @@
             "name": "value",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+                }
+              ]
             }
           }
         ],

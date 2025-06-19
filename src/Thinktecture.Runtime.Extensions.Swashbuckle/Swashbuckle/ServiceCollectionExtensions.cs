@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Swashbuckle.Internal;
 using Thinktecture.Swashbuckle.Internal.AdHocUnions;
@@ -47,11 +48,42 @@ public static class ServiceCollectionExtensions
             var parameterFilter = ActivatorUtilities.CreateInstance<ThinktectureParameterFilter>(serviceProvider);
             var requestBodyFilter = ActivatorUtilities.CreateInstance<ThinktectureRequestBodyFilter>(serviceProvider, options);
 
+            var ttOptions = serviceProvider.GetRequiredService<IOptions<ThinktectureSchemaFilterOptions>>().Value;
+
+            if (ttOptions.ExtendSchemaIdSelector)
+               ExtendSchemaIdSelector(options);
+
             options.AddSchemaFilterInstance(schemaFilter);
             options.AddParameterFilterInstance(parameterFilter);
             options.AddRequestBodyFilterInstance(requestBodyFilter);
          });
 
       return services;
+   }
+
+   private static void ExtendSchemaIdSelector(SwaggerGenOptions options)
+   {
+      var originalSchemaIdSelector = options.SchemaGeneratorOptions.SchemaIdSelector;
+
+      options.SchemaGeneratorOptions.SchemaIdSelector = type =>
+      {
+         if (type.IsGenericType)
+         {
+            var typeDefinition = type;
+
+            if (!typeDefinition.IsGenericTypeDefinition)
+               typeDefinition = typeDefinition.GetGenericTypeDefinition();
+
+            if (typeDefinition == typeof(BoundParameter<,>))
+            {
+               var originalType = type.GetGenericArguments()[0];
+               var boundType = type.GetGenericArguments()[1];
+
+               return $"{originalSchemaIdSelector(originalType)}As{originalSchemaIdSelector(boundType)}";
+            }
+         }
+
+         return originalSchemaIdSelector(type);
+      };
    }
 }

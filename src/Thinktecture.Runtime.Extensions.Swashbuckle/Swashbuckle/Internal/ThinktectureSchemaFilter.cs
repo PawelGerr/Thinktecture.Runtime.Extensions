@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
@@ -57,7 +59,10 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       if (schema.Type is null)
          return;
 
-      var metadata = MetadataLookup.Find(context.Type);
+      if (TryHandleModelBoundType(schema, context, out var type))
+         return;
+
+      var metadata = MetadataLookup.Find(type);
 
       metadata?.Switch(
          (Filter: this, schema, context),
@@ -67,6 +72,75 @@ public class ThinktectureSchemaFilter : ISchemaFilter
          complexValueObject: static (state, complexValueObjectMetadata) => state.Filter.Apply(state.schema, state.context, complexValueObjectMetadata),
          adHocUnion: static (state, adHocUnionMetadata) => state.Filter.Apply(state.schema, state.context, adHocUnionMetadata),
          regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.schema, state.context, regularUnionMetadata));
+   }
+
+   private bool TryHandleModelBoundType(OpenApiSchema schema, SchemaFilterContext context, out Type type)
+   {
+      type = context.Type;
+
+      if (!type.IsGenericType)
+         return false;
+
+      var genericTypeDefinition = type.IsGenericTypeDefinition
+                                     ? type
+                                     : type.GetGenericTypeDefinition();
+
+      if (genericTypeDefinition != typeof(BoundParameter<,>))
+         return false;
+
+      type = type.GetGenericArguments()[1];
+
+      if (type == context.Type)
+         return false;
+
+      var underlyingTypeSchema = context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
+      CopyProperties(underlyingTypeSchema, schema);
+
+      return true;
+   }
+
+   private void CopyProperties(OpenApiSchema sourceSchema, OpenApiSchema targetSchema)
+   {
+      targetSchema.Title = sourceSchema.Title;
+      targetSchema.Type = sourceSchema.Type;
+      targetSchema.Format = sourceSchema.Format;
+      targetSchema.Description = sourceSchema.Description;
+      targetSchema.Maximum = sourceSchema.Maximum;
+      targetSchema.ExclusiveMaximum = sourceSchema.ExclusiveMaximum;
+      targetSchema.Minimum = sourceSchema.Minimum;
+      targetSchema.ExclusiveMinimum = sourceSchema.ExclusiveMinimum;
+      targetSchema.MaxLength = sourceSchema.MaxLength;
+      targetSchema.MinLength = sourceSchema.MinLength;
+      targetSchema.Pattern = sourceSchema.Pattern;
+      targetSchema.MultipleOf = sourceSchema.MultipleOf;
+      targetSchema.Default = sourceSchema.Default;
+      targetSchema.ReadOnly = sourceSchema.ReadOnly;
+      targetSchema.WriteOnly = sourceSchema.WriteOnly;
+      targetSchema.AllOf = sourceSchema.AllOf != null ? new List<OpenApiSchema>(sourceSchema.AllOf) : null;
+      targetSchema.OneOf = sourceSchema.OneOf != null ? new List<OpenApiSchema>(sourceSchema.OneOf) : null;
+      targetSchema.AnyOf = sourceSchema.AnyOf != null ? new List<OpenApiSchema>(sourceSchema.AnyOf) : null;
+      targetSchema.Not = sourceSchema.Not;
+      targetSchema.Required = sourceSchema.Required != null ? new HashSet<string>(sourceSchema.Required) : null;
+      targetSchema.Items = sourceSchema.Items;
+      targetSchema.MaxItems = sourceSchema.MaxItems;
+      targetSchema.MinItems = sourceSchema.MinItems;
+      targetSchema.UniqueItems = sourceSchema.UniqueItems;
+      targetSchema.Properties = sourceSchema.Properties != null ? new Dictionary<string, OpenApiSchema>(sourceSchema.Properties) : null;
+      targetSchema.MaxProperties = sourceSchema.MaxProperties;
+      targetSchema.MinProperties = sourceSchema.MinProperties;
+      targetSchema.AdditionalPropertiesAllowed = sourceSchema.AdditionalPropertiesAllowed;
+      targetSchema.AdditionalProperties = sourceSchema.AdditionalProperties;
+      targetSchema.Discriminator = sourceSchema.Discriminator;
+      targetSchema.Example = sourceSchema.Example;
+      targetSchema.Enum = sourceSchema.Enum != null ? new List<IOpenApiAny>(sourceSchema.Enum) : null;
+      targetSchema.Nullable = sourceSchema.Nullable;
+      targetSchema.ExternalDocs = sourceSchema.ExternalDocs;
+      targetSchema.Deprecated = sourceSchema.Deprecated;
+      targetSchema.Xml = sourceSchema.Xml;
+      targetSchema.Extensions = sourceSchema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(sourceSchema.Extensions) : null;
+      targetSchema.UnresolvedReference = sourceSchema.UnresolvedReference;
+      targetSchema.Reference = sourceSchema.Reference;
+      targetSchema.Annotations = sourceSchema.Annotations != null ? new Dictionary<string, object>(sourceSchema.Annotations) : null;
    }
 
    private void Apply(

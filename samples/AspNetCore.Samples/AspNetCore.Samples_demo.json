@@ -188,7 +188,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/BoundaryWithFactoriesAsString"
             }
           }
         ],
@@ -449,7 +449,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/TextOrNumberSerializableAsString"
             }
           }
         ],
@@ -546,6 +546,9 @@
         },
         "additionalProperties": false
       },
+      "BoundaryWithFactoriesAsString": {
+        "type": "string"
+      },
       "NotificationChannelTypeDto": {
         "enum": [
           "email",
@@ -620,6 +623,9 @@
             "format": "int32"
           }
         ]
+      },
+      "TextOrNumberSerializableAsString": {
+        "type": "string"
       }
     }
   }
