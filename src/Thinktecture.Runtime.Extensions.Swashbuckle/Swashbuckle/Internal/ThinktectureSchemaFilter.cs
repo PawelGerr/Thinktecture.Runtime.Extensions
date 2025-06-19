@@ -59,10 +59,13 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       if (schema.Type is null)
          return;
 
-      if (TryHandleModelBoundType(schema, context, out var type))
+      if (TryHandleModelBoundType(schema, context))
          return;
 
-      var metadata = MetadataLookup.Find(type);
+      if (TryHandleTypeWithObjectFactory(schema, context))
+         return;
+
+      var metadata = MetadataLookup.Find(context.Type);
 
       metadata?.Switch(
          (Filter: this, schema, context),
@@ -74,9 +77,37 @@ public class ThinktectureSchemaFilter : ISchemaFilter
          regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.schema, state.context, regularUnionMetadata));
    }
 
-   private bool TryHandleModelBoundType(OpenApiSchema schema, SchemaFilterContext context, out Type type)
+   internal static Type GetSerializationType(Type type)
    {
-      type = context.Type;
+      var metadata = MetadataLookup.FindMetadataForConversion(
+         type,
+         f => f.UseForSerialization.HasFlag(SerializationFrameworks.Json),
+         _ => false);
+
+      return metadata is null ? type : type.NormalizeStructType(metadata.Value.KeyType);
+   }
+
+   private bool TryHandleTypeWithObjectFactory(
+      OpenApiSchema schema,
+      SchemaFilterContext context)
+   {
+      var serializationType = GetSerializationType(context.Type);
+
+      // Return to prevent infinite recursion
+      if (context.Type == serializationType)
+         return false;
+
+      var newSchema = context.SchemaGenerator.GenerateSchema(serializationType, context.SchemaRepository);
+      CopyProperties(newSchema, schema);
+
+      return true;
+   }
+
+   private bool TryHandleModelBoundType(
+      OpenApiSchema schema,
+      SchemaFilterContext context)
+   {
+      var type = context.Type;
 
       if (!type.IsGenericType)
          return false;
@@ -88,6 +119,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       if (genericTypeDefinition != typeof(BoundParameter<,>))
          return false;
 
+      var originalType = type.GetGenericArguments()[0];
       type = type.GetGenericArguments()[1];
 
       if (type == context.Type)
@@ -96,15 +128,27 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       var underlyingTypeSchema = context.SchemaGenerator.GenerateSchema(type, context.SchemaRepository);
       CopyProperties(underlyingTypeSchema, schema);
 
+      var originalTypeSchema = context.SchemaGenerator.GenerateSchema(originalType, context.SchemaRepository);
+
+      if (originalTypeSchema.Reference is null
+          || context.SchemaRepository.Schemas.TryGetValue(originalTypeSchema.Reference.Id, out originalTypeSchema))
+      {
+         // We want to keep the original schema's title and description
+         schema.Title = String.IsNullOrWhiteSpace(originalTypeSchema.Title) ? schema.Title : originalTypeSchema.Title;
+         schema.Description = String.IsNullOrWhiteSpace(originalTypeSchema.Description) ? schema.Description : originalTypeSchema.Description;
+      }
+
       return true;
    }
 
    private void CopyProperties(OpenApiSchema sourceSchema, OpenApiSchema targetSchema)
    {
-      targetSchema.Title = sourceSchema.Title;
+      // We want to keep the original schema's title and description
+      targetSchema.Title = String.IsNullOrWhiteSpace(targetSchema.Title) ? sourceSchema.Title : targetSchema.Title;
+      targetSchema.Description = String.IsNullOrWhiteSpace(targetSchema.Description) ? sourceSchema.Description : targetSchema.Description;
+
       targetSchema.Type = sourceSchema.Type;
       targetSchema.Format = sourceSchema.Format;
-      targetSchema.Description = sourceSchema.Description;
       targetSchema.Maximum = sourceSchema.Maximum;
       targetSchema.ExclusiveMaximum = sourceSchema.ExclusiveMaximum;
       targetSchema.Minimum = sourceSchema.Minimum;

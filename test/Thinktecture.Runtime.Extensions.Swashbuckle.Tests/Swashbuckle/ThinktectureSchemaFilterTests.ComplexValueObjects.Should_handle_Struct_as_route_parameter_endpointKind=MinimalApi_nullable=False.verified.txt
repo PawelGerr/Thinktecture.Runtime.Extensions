@@ -42,20 +42,7 @@
   "components": {
     "schemas": {
       "BoundaryStructWithFactories": {
-        "type": "object",
-        "properties": {
-          "lower": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "upper": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
+        "type": "string"
       },
       "BoundaryStructWithFactoriesAsString": {
         "type": "string"

@@ -84,12 +84,15 @@ public partial class ThinktectureSchemaFilterTests
          public required TestUnion_class_string_int AdHocUnion_Class { get; set; }
          public TestUnion_class_string_int? AdHocUnion_Class_Nullable { get; set; }
 
+         public ComplexValueObjectWithObjectFactoryForJsonAndModelBinding ComplexValueObjectWithObjectFactoryForJsonAndModelBinding { get; set; }
+
          public TestClass()
          {
             SmartEnum_Class_StringBased = SmartEnum_StringBased.Item1;
             KeyedValueObject_Class_StringBased = StringBasedReferenceValueObject.Create("Test");
             ComplexValueObject_Class = Boundary.Create(0, 0);
             AdHocUnion_Class = "Test";
+            ComplexValueObjectWithObjectFactoryForJsonAndModelBinding = ComplexValueObjectWithObjectFactoryForJsonAndModelBinding.Create("Value1", "Value2");
          }
       }
    }

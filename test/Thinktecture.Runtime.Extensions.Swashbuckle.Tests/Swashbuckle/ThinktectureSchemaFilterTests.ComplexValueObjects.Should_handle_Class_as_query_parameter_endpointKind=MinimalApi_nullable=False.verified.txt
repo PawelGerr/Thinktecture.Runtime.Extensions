@@ -18,7 +18,7 @@
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/BoundaryWithFactoriesAsString"
+                  "$ref": "#/components/schemas/BoundaryWithFactories"
                 }
               ]
             }
@@ -42,22 +42,6 @@
   "components": {
     "schemas": {
       "BoundaryWithFactories": {
-        "type": "object",
-        "properties": {
-          "lower": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "upper": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BoundaryWithFactoriesAsString": {
         "type": "string"
       }
     }

@@ -531,23 +531,12 @@
         "additionalProperties": false
       },
       "BoundaryWithFactories": {
-        "type": "object",
-        "properties": {
-          "lower": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "upper": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
+        "type": "string",
+        "description": "Represents a boundary with lower and upper decimal values, supporting custom object factories for string and tuple inputs."
       },
       "BoundaryWithFactoriesAsString": {
-        "type": "string"
+        "type": "string",
+        "description": "Represents a boundary with lower and upper decimal values, supporting custom object factories for string and tuple inputs."
       },
       "NotificationChannelTypeDto": {
         "enum": [
@@ -599,6 +588,7 @@
           "Housewares"
         ],
         "type": "string",
+        "description": "Represents a product type.",
         "x-enum-varnames": [
           "Groceries",
           "Housewares"
@@ -611,18 +601,11 @@
             "$ref": "#/components/schemas/ProductType"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a wrapper around the Thinktecture.ProductTypeWrapper.ProductType entity."
       },
       "TextOrNumberSerializable": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer",
-            "format": "int32"
-          }
-        ]
+        "type": "string"
       },
       "TextOrNumberSerializableAsString": {
         "type": "string"

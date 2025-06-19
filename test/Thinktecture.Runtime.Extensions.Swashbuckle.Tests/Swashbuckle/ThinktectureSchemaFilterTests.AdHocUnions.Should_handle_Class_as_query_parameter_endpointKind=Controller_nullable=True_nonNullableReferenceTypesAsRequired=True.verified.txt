@@ -17,7 +17,7 @@
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/TextOrNumberSerializableAsString"
+                  "$ref": "#/components/schemas/TextOrNumberSerializable"
                 }
               ]
             }
@@ -41,17 +41,6 @@
   "components": {
     "schemas": {
       "TextOrNumberSerializable": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer",
-            "format": "int32"
-          }
-        ]
-      },
-      "TextOrNumberSerializableAsString": {
         "type": "string"
       }
     }

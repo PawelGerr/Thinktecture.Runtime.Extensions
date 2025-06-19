@@ -18,7 +18,7 @@
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/BoundaryStructWithFactoriesNullableAsString"
+                  "$ref": "#/components/schemas/BoundaryStructWithFactories"
                 }
               ]
             }
@@ -42,22 +42,6 @@
   "components": {
     "schemas": {
       "BoundaryStructWithFactories": {
-        "type": "object",
-        "properties": {
-          "lower": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "upper": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BoundaryStructWithFactoriesNullableAsString": {
         "type": "string"
       }
     }

@@ -73,6 +73,9 @@
         },
         "additionalProperties": false
       },
+      "ComplexValueObjectWithObjectFactoryForJsonAndModelBinding": {
+        "type": "string"
+      },
       "SmartEnum_StringBased": {
         "enum": [
           "Item1",
@@ -183,6 +186,13 @@
               }
             ],
             "nullable": true
+          },
+          "complexValueObjectWithObjectFactoryForJsonAndModelBinding": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ComplexValueObjectWithObjectFactoryForJsonAndModelBinding"
+              }
+            ]
           }
         },
         "additionalProperties": false

@@ -2,6 +2,9 @@ using System;
 
 namespace Thinktecture.ValueObjects;
 
+/// <summary>
+/// Represents a boundary with lower and upper decimal values, supporting custom object factories for string and tuple inputs.
+/// </summary>
 [ComplexValueObject]
 [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
 [ObjectFactory<ValueTuple<int, int>>]

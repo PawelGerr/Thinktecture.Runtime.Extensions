@@ -148,6 +148,8 @@ public class Program
                                {
                                   options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" });
                                   options.TagActionsBy(_ => ["demo"]);
+                                  options.IncludeXmlComments(typeof(ProductName).Assembly);
+                                  options.IncludeXmlComments(typeof(Program).Assembly);
                                })
                                .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
                     })
@@ -195,6 +197,8 @@ public class Program
              {
                 options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" });
                 options.TagActionsBy(_ => ["demo"]);
+                options.IncludeXmlComments(typeof(ProductName).Assembly);
+                options.IncludeXmlComments(typeof(Program).Assembly);
              })
              .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
 

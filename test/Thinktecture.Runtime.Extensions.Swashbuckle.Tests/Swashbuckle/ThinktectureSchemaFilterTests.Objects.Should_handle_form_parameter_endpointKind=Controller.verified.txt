@@ -106,6 +106,13 @@
                         "$ref": "#/components/schemas/TestUnion_class_string_int"
                       }
                     ]
+                  },
+                  "ComplexValueObjectWithObjectFactoryForJsonAndModelBinding": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/ComplexValueObjectWithObjectFactoryForJsonAndModelBinding"
+                      }
+                    ]
                   }
                 }
               },
@@ -156,6 +163,9 @@
                   "style": "form"
                 },
                 "AdHocUnion_Class_Nullable": {
+                  "style": "form"
+                },
+                "ComplexValueObjectWithObjectFactoryForJsonAndModelBinding": {
                   "style": "form"
                 }
               }
@@ -210,6 +220,9 @@
           }
         },
         "additionalProperties": false
+      },
+      "ComplexValueObjectWithObjectFactoryForJsonAndModelBinding": {
+        "type": "string"
       },
       "SmartEnum_StringBased": {
         "enum": [
@@ -321,6 +334,13 @@
               }
             ],
             "nullable": true
+          },
+          "complexValueObjectWithObjectFactoryForJsonAndModelBinding": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ComplexValueObjectWithObjectFactoryForJsonAndModelBinding"
+              }
+            ]
           }
         },
         "additionalProperties": false

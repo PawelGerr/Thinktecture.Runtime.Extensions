@@ -40,18 +40,11 @@ public class ThinktectureParameterFilter : IParameterFilter
       if (modelBindingType is null)
          return;
 
-      // Make Nullable<modelBindingType> if it is a struct and the parameter is a nullable struct as well.
-      if (context.ParameterInfo.ParameterType.IsValueType && modelBindingType.IsValueType)
-      {
-         if (Nullable.GetUnderlyingType(context.ParameterInfo.ParameterType) is not null)
-         {
-            if (Nullable.GetUnderlyingType(modelBindingType) is null)
-               modelBindingType = typeof(Nullable<>).MakeGenericType(modelBindingType);
-         }
-      }
+      modelBindingType = context.ParameterInfo.ParameterType.NormalizeStructType(modelBindingType);
+      var serializationType = ThinktectureSchemaFilter.GetSerializationType(context.ParameterInfo.ParameterType);
 
-      if (parameter.Schema.Type is null                               // Wrapper made by UseAllOfToExtendReferenceSchemas.
-          && context.ParameterInfo.ParameterType == modelBindingType) // We keep the reference if the types are equal.
+      if (parameter.Schema.Type is null             // Wrapper made by UseAllOfToExtendReferenceSchemas.
+          && modelBindingType == serializationType) // We keep the reference if the types are equal.
          return;
 
       // We need a new schema, something like MyComplexTypeAsString
