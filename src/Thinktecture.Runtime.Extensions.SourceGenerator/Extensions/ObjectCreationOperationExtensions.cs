@@ -25,6 +25,11 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS);
    }
 
+   public static bool? FindHasCorrespondingConstructor(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.HAS_CORRESPONDING_CONSTRUCTOR);
+   }
+
    public static AccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
    {
       var modifier = (AccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);

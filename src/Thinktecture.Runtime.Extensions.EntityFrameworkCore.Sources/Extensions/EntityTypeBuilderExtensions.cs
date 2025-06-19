@@ -346,7 +346,7 @@ public static class EntityTypeBuilderExtensions
 #else
       var complexProperty = entity.FindComplexProperty(propertyInfo);
 #endif
-      // will be handled by AddConverterForScalarProperties
+      // will be handled by AddConverterForComplexProperties
       if (complexProperty is not null)
          return;
 #endif
@@ -354,7 +354,7 @@ public static class EntityTypeBuilderExtensions
       if (!propertyInfo.IsCandidateProperty())
          return;
 
-      if (MetadataLookup.Find(propertyInfo.PropertyType) is not Metadata.Keyed metadata)
+      if (propertyInfo.PropertyType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
       var property = entity.AddProperty(propertyInfo);
@@ -384,6 +384,7 @@ public static class EntityTypeBuilderExtensions
 #else
          var complexProperty = entity.FindComplexProperty(memberName);
 #endif
+         // will be handled by AddConverterForComplexProperties
          if (complexProperty is not null)
             continue;
 #endif
@@ -400,14 +401,14 @@ public static class EntityTypeBuilderExtensions
       bool useConstructorForRead,
       Action<IMutableProperty> configure)
    {
-      List<(IMutableNavigation, Metadata.Keyed)>? navigationsToConvert = null;
+      List<(IMutableNavigation, ConversionMetadata)>? navigationsToConvert = null;
 
       foreach (var navigation in entity.GetNavigations())
       {
-         if (MetadataLookup.Find(navigation.ClrType) is not Metadata.Keyed metadata)
+         if (navigation.ClrType.FindMetadataForValueConverter() is not { } metadata)
             continue;
 
-         (navigationsToConvert ??= new List<(IMutableNavigation, Metadata.Keyed)>()).Add((navigation, metadata));
+         (navigationsToConvert ??= new List<(IMutableNavigation, ConversionMetadata)>()).Add((navigation, metadata));
       }
 
       if (navigationsToConvert is null)
@@ -466,7 +467,7 @@ public static class EntityTypeBuilderExtensions
          }
 #endif
 
-         if (MetadataLookup.Find(property.ClrType) is not Metadata.Keyed metadata)
+         if (property.ClrType.FindMetadataForValueConverter() is not { } metadata)
             continue;
 
          SetConverterAndExecuteCallback(useConstructorForRead, configure, property, metadata);
@@ -484,7 +485,7 @@ public static class EntityTypeBuilderExtensions
       if (elementType is null)
          return;
 
-      if (MetadataLookup.Find(elementType.ClrType) is not Metadata.Keyed metadata)
+      if (elementType.ClrType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
       var valueConverter = ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead);
@@ -559,7 +560,7 @@ public static class EntityTypeBuilderExtensions
       bool useConstructorForRead,
       Action<IMutableProperty> configure,
       IMutableProperty property,
-      Metadata.Keyed metadata)
+      ConversionMetadata metadata)
    {
       var valueConverter = ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead);
       property.SetValueConverter(valueConverter);

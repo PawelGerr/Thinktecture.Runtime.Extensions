@@ -32,6 +32,10 @@ public class TestEntity_with_Enum_and_ValueObjects
    public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
    public IntBasedReferenceValueObjectWithCustomFactoryNames? IntBasedReferenceValueObjectWitCustomFactoryName { get; set; }
 
+   public TestComplexValueObject_ObjectFactory? TestComplexValueObject_ObjectFactory { get; set; }
+   public required TestComplexValueObject_ObjectFactory_and_Constructor TestComplexValueObject_ObjectFactory_and_Constructor { get; set; }
+   public CustomObject_ObjectFactory? CustomObject_ObjectFactory { get; set; }
+
    public static void Configure(
       ModelBuilder modelBuilder,
       ValueConverterRegistration valueConverterRegistration)
@@ -60,8 +64,12 @@ public class TestEntity_with_Enum_and_ValueObjects
 
             builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter();
 
+            builder.Property(e => e.TestComplexValueObject_ObjectFactory).HasThinktectureValueConverter();
+            builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter();
+            builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter();
+
 #if PRIMITIVE_COLLECTIONS
-            primitiveCollectionBuilder.HasThinktectureValueConverter(true);
+            primitiveCollectionBuilder.HasThinktectureValueConverter();
 #endif
          }
 

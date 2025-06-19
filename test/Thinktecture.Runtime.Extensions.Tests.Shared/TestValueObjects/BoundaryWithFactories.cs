@@ -3,7 +3,9 @@ using System;
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 [ComplexValueObject]
-[ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+[ObjectFactory<string>(
+   UseForSerialization = SerializationFrameworks.All,
+   UseForModelBinding = true)]
 [ObjectFactory<ValueTuple<int, int>>]
 public partial class BoundaryWithFactories
 {

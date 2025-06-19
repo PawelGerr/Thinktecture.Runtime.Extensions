@@ -2,6 +2,7 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 public sealed class SmartEnumSourceGeneratorState
    : ITypeInformation,
+     IKeyedSerializerGeneratorTypeInformation,
      IParsableTypeInformation,
      IEquatable<SmartEnumSourceGeneratorState>
 {

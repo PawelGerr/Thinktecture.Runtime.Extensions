@@ -9,7 +9,7 @@ namespace Thinktecture.Swashbuckle;
 public interface IAdHocUnionSchemaFilter
 {
    /// <summary>
-   /// Applies customizations to the OpenAPI schema for an Ad hoc Unions.
+   /// Applies customizations to the OpenAPI schema for an Ad hoc Union.
    /// </summary>
    /// <param name="schema">The OpenAPI schema to modify.</param>
    /// <param name="context">The schema filter context containing type information.</param>

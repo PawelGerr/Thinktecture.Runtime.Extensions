@@ -111,12 +111,22 @@ namespace ").Append(_state.Namespace).Append(@";
    {
       _sb.Append(@"
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@"
-{");
+abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@" :
+   global::Thinktecture.Internal.IMetadataOwner
+{
+   static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+      = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(").AppendTypeFullyQualified(_state).Append(@"))
+      {
+         TypeMembers = new global::System.Collections.Generic.List<global::System.Type>
+                       {").AppendTypeMembers(_state.TypeMembers).Append(@"
+                       }
+                       .AsReadOnly()
+      };");
 
       if (!_state.HasNonDefaultConstructor)
       {
          _sb.Append(@"
+
    private ").Append(_state.Name).Append(@"()
    {
    }");
@@ -595,5 +605,24 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
          return @default;");
       }
+   }
+}
+
+file static class Extensions
+{
+   public static StringBuilder AppendTypeMembers(this StringBuilder sb, IReadOnlyList<RegularUnionTypeMemberState> typeMembers)
+   {
+      for (var i = 0; i < typeMembers.Count; i++)
+      {
+         var member = typeMembers[i];
+
+         if (i > 0)
+            sb.Append(",");
+
+         sb.Append(@"
+                           typeof(").AppendTypeFullyQualified(member).Append(")");
+      }
+
+      return sb;
    }
 }

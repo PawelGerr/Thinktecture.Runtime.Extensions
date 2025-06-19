@@ -2,6 +2,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class KeyedValueObjectSourceGeneratorState
    : ITypeInformation,
+     IKeyedSerializerGeneratorTypeInformation,
      IParsableTypeInformation,
      IEquatable<KeyedValueObjectSourceGeneratorState>
 {

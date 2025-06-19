@@ -61,13 +61,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.HasDerivedTypes)
          _sb.Append("sealed ");
 
-      _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
+      _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(@" :
+      global::Thinktecture.Internal.IMetadataOwner,");
 
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-      global::Thinktecture.ISmartEnum<").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
-      global::Thinktecture.Internal.IMetadataOwner,");
+      global::Thinktecture.ISmartEnum<").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">,");
 
          if (_state.KeyMember.IsString())
          {
@@ -87,53 +87,53 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum
-      {
-         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
-         KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
-         ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
-         Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
-                  () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
-                     global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
-                     {
-                        string identifier = index switch
-                        {");
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum(typeof(").AppendTypeFullyQualified(_state).Append(@"))
+         {
+            KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
+            ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+            Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
+                     () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
+                        global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
+                        {
+                           string identifier = index switch
+                           {");
 
          for (var i = 0; i < _state.Items.Count; i++)
          {
             var item = _state.Items[i];
 
             _sb.Append(@"
-                           ").Append(i).Append(" => \"").Append(item.Name).Append("\", ");
+                              ").Append(i).Append(" => \"").Append(item.Name).Append("\", ");
          }
 
          _sb.Append(@"
-                           _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
-                        };
+                              _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
+                           };
 
-                        return new global::Thinktecture.Internal.SmartEnumItemMetadata
-                        {
-                           Key = item.").Append(_state.KeyMember.Name).Append(@",
-                           Item = item,
-                           Identifier = identifier
-                        };
-                     })).AsReadOnly()),
-         ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-         ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-         GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
-         ConvertFromKey = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
-         ConvertFromKeyExpression = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
-         TryGetFromKey =
-            (object? key,
-             out object? obj,
-             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
-            {
-               error = ").AppendTypeFullyQualified(_state).Append(".Validate(key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item)!;
-               obj = item;
+                           return new global::Thinktecture.Internal.SmartEnumItemMetadata
+                           {
+                              Key = item.").Append(_state.KeyMember.Name).Append(@",
+                              Item = item,
+                              Identifier = identifier
+                           };
+                        })).AsReadOnly()),
+            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
+            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
+            ConvertFromKey = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
+            ConvertFromKeyExpression = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
+            TryGetFromKey =
+               (object? key,
+                out object? obj,
+                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+               {
+                  error = ").AppendTypeFullyQualified(_state).Append(".Validate(key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item)!;
+                  obj = item;
 
-               return error is null;
-            }
-      };
+                  return error is null;
+               }
+         };
 
       private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
@@ -147,6 +147,36 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.KeylessSmartEnum(typeof(").AppendTypeFullyQualified(_state).Append(@"))
+         {
+            Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.KeylessSmartEnumItemMetadata>>(
+                     () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.KeylessSmartEnumItemMetadata>(
+                        global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
+                        {
+                           string identifier = index switch
+                           {");
+
+         for (var i = 0; i < _state.Items.Count; i++)
+         {
+            var item = _state.Items[i];
+
+            _sb.Append(@"
+                              ").Append(i).Append(" => \"").Append(item.Name).Append("\", ");
+         }
+
+         _sb.Append(@"
+                              _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
+                           };
+
+                           return new global::Thinktecture.Internal.KeylessSmartEnumItemMetadata
+                           {
+                              Item = item,
+                              Identifier = identifier
+                           };
+                        })).AsReadOnly()),
+         };
+
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@">> _items
                                              = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@">>(GetItems, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 

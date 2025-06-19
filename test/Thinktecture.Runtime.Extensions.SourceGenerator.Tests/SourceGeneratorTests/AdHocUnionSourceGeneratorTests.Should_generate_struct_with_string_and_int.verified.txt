@@ -11,9 +11,9 @@ namespace Thinktecture.Tests
       global::Thinktecture.IDisallowDefaultValue,
       global::Thinktecture.Internal.IMetadataOwner
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.AdHocUnion
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(global::Thinktecture.Tests.TestUnion))
       {
-         Type = typeof(global::Thinktecture.Tests.TestUnion),
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {
                            typeof(string),

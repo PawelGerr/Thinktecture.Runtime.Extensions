@@ -22,14 +22,14 @@ public class TestEntityWithComplexValueObjectAsComplexType
                                     var propertyBuilder = b.Property(t => t.TestEnum);
 
                                     if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                       propertyBuilder.HasThinktectureValueConverter(true);
+                                       propertyBuilder.HasThinktectureValueConverter();
 
                                     if (valueConverterRegistration == ValueConverterRegistration.ComplexTypeConfiguration)
-                                       b.AddThinktectureValueConverters(true);
+                                       b.AddThinktectureValueConverters();
                                  });
 
          if (valueConverterRegistration == ValueConverterRegistration.EntityConfiguration)
-            builder.AddThinktectureValueConverters(true);
+            builder.AddThinktectureValueConverters();
       });
    }
 }

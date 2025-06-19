@@ -2,11 +2,11 @@ namespace Thinktecture.CodeAnalysis.ObjectFactories;
 
 public sealed class ObjectFactorySourceGeneratorState :
    IParsableTypeInformation,
+   IKeyedSerializerGeneratorTypeInformation,
    IHasGenerics,
    IEquatable<ObjectFactorySourceGeneratorState>
 {
-   private readonly AttributeInfo _attributeInfo;
-
+   public AttributeInfo AttributeInfo { get; }
    public string? Namespace { get; }
    public string Name { get; }
    public string TypeFullyQualified { get; }
@@ -18,8 +18,6 @@ public sealed class ObjectFactorySourceGeneratorState :
    public bool SkipIParsable { get; }
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
    public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
-   public ImmutableArray<ObjectFactoryState> ObjectFactories => _attributeInfo.ObjectFactories;
-   public ValidationErrorState ValidationError => _attributeInfo.ValidationError;
 
    public int NumberOfGenerics => GenericParameters.Count;
 
@@ -28,7 +26,7 @@ public sealed class ObjectFactorySourceGeneratorState :
       AttributeInfo attributeInfo,
       AttributeData? thinktectureComponentAttribute)
    {
-      _attributeInfo = attributeInfo;
+      AttributeInfo = attributeInfo;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
@@ -54,10 +52,9 @@ public sealed class ObjectFactorySourceGeneratorState :
              && IsRecord == other.IsRecord
              && IsReferenceType == other.IsReferenceType
              && IsRefStruct == other.IsRefStruct
-             && ValidationError.Equals(other.ValidationError)
+             && AttributeInfo.Equals(other.AttributeInfo)
              && GenericParameters.SequenceEqual(other.GenericParameters)
-             && ContainingTypes.SequenceEqual(other.ContainingTypes)
-             && ObjectFactories.SequenceEqual(other.ObjectFactories);
+             && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
    public override int GetHashCode()
@@ -68,10 +65,9 @@ public sealed class ObjectFactorySourceGeneratorState :
          hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
-         hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
+         hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
-         hashCode = (hashCode * 397) ^ ObjectFactories.ComputeHashCode();
 
          return hashCode;
       }

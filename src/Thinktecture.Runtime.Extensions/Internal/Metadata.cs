@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Thinktecture.Internal;
 
@@ -14,7 +15,20 @@ public abstract partial class Metadata
    /// <summary>
    /// The type of the metadata belongs to.
    /// </summary>
-   public required Type Type { get; init; }
+   public Type Type { get; }
+
+   private readonly Lazy<IReadOnlyList<ObjectFactoryMetadata>> _objectFactories;
+
+   /// <summary>
+   /// Gets the object factories metadata.
+   /// </summary>
+   public IReadOnlyList<ObjectFactoryMetadata> ObjectFactories => _objectFactories.Value;
+
+   private Metadata(Type type)
+   {
+      Type = type;
+      _objectFactories = new(type.FindObjectFactoryMetadata);
+   }
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -49,5 +63,10 @@ public abstract partial class Metadata
       /// Gets the key of a keyed object.
       /// </summary>
       public required Func<object, object> GetKey { get; init; }
+
+      private Keyed(Type type)
+         : base(type)
+      {
+      }
    }
 }

@@ -6,20 +6,20 @@
       global::System.Numerics.IEqualityOperators<global::TestValueObject, global::TestValueObject, bool>,
       global::Thinktecture.Internal.IMetadataOwner
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.ComplexValueObject
-      {
-         Type = typeof(global::TestValueObject),
-         AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
-               global::System.Linq.Enumerable.Select(
-                  ((global::System.Linq.Expressions.NewExpression)
-                     ((global::System.Linq.Expressions.Expression<global::System.Func<global::TestValueObject, object>>)
-                        (object (global::TestValueObject o) => new
-                           {
-                           })).Body).Arguments,
-                  arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
-            )
-            .AsReadOnly()
-      };
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(global::TestValueObject))
+         {
+            AssignableMembers = new global::System.Collections.Generic.List<global::System.Reflection.MemberInfo>(
+                  global::System.Linq.Enumerable.Select(
+                     ((global::System.Linq.Expressions.NewExpression)
+                        ((global::System.Linq.Expressions.Expression<global::System.Func<global::TestValueObject, object>>)
+                           (object (global::TestValueObject o) => new
+                              {
+                              })).Body).Arguments,
+                     arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
+               )
+               .AsReadOnly()
+         };
 
       private static readonly int _typeHashCode = typeof(global::TestValueObject).GetHashCode();
 

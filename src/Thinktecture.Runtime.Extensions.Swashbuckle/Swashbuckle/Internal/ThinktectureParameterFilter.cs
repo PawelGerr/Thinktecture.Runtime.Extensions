@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
@@ -12,48 +13,73 @@ namespace Thinktecture.Swashbuckle.Internal;
 /// </summary>
 public class ThinktectureParameterFilter : IParameterFilter
 {
+   private readonly bool _createExtraSchemasForParameters;
+
+   /// <summary>
+   /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
+   /// the same compatibility standards as public APIs. It may be changed or removed without notice in
+   /// any release. You should only use it directly in your code with extreme caution and knowing that
+   /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
+   /// </summary>
+   public ThinktectureParameterFilter(
+      IOptions<ThinktectureSchemaFilterOptions> options)
+   {
+      _createExtraSchemasForParameters = options.Value.CreateExtraSchemasForParameters;
+   }
+
    /// <inheritdoc />
    public void Apply(
       OpenApiParameter parameter,
       ParameterFilterContext context)
    {
-      var metadata = context.ParameterInfo is null
-                        ? null
-                        : MetadataLookup.Find(context.ParameterInfo.ParameterType);
+      if (context.ParameterInfo is null)
+         return;
 
-      metadata?.Switch(
-         (Filter: this, parameter, context),
-         keyedSmartEnum: static (state, smartEnumMetadata) => Apply(state.parameter, state.context, smartEnumMetadata),
-         keyedValueObject: static (state, keyedValueObjectMetadata) => Apply(state.parameter, state.context, keyedValueObjectMetadata),
-         complexValueObject: static (state, complexValueObjectMetadata) => Apply(state.parameter, state.context, complexValueObjectMetadata),
-         adHocUnion: static (state, adHocUnionMetadata) => Apply(state.parameter, state.context, adHocUnionMetadata));
+      var modelBindingType = GetModelBindingType(context.ParameterInfo.ParameterType);
+
+      if (modelBindingType is null)
+         return;
+
+      modelBindingType = context.ParameterInfo.ParameterType.NormalizeStructType(modelBindingType);
+      var serializationType = ThinktectureSchemaFilter.GetSerializationType(context.ParameterInfo.ParameterType);
+
+      if (parameter.Schema.Type is null             // Wrapper made by UseAllOfToExtendReferenceSchemas.
+          && modelBindingType == serializationType) // We keep the reference if the types are equal.
+         return;
+
+      // We need a new schema, something like MyComplexTypeAsString
+      if (_createExtraSchemasForParameters && context.ParameterInfo.ParameterType != modelBindingType)
+         modelBindingType = typeof(BoundParameter<,>).MakeGenericType(context.ParameterInfo.ParameterType, modelBindingType);
+
+      parameter.Schema = context.SchemaGenerator.GenerateSchema(
+         modelBindingType,
+         context.SchemaRepository,
+         parameterInfo: context.ParameterInfo);
    }
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.Keyed.SmartEnum metadata)
+   private Type? GetModelBindingType(Type parameterType)
    {
-      parameter.Schema = context.SchemaGenerator.GenerateSchema(metadata.Type, context.SchemaRepository);
-   }
+      // 1) Object factory with UseForModelBinding has precedence over metadata
+      var metadataForModelBinding = MetadataLookup.FindMetadataForConversion(
+         parameterType,
+         f => f.UseForModelBinding,
+         _ => false);
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.Keyed.ValueObject metadata)
-   {
-      parameter.Schema = context.SchemaGenerator.GenerateSchema(metadata.Type, context.SchemaRepository);
-   }
+      if (metadataForModelBinding is not null)
+         return metadataForModelBinding.Value.KeyType;
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.ComplexValueObject metadata)
-   {
-      // IParsable
-      if (typeof(IObjectFactory<string>).IsAssignableFrom(metadata.Type))
+      // 2) It is assumed that keyed objects are bindable by default
+      if (MetadataLookup.Find(parameterType) is Metadata.Keyed keyedMetadata)
       {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
+         return keyedMetadata.Type;
       }
-   }
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.AdHocUnion metadata)
-   {
-      // IParsable
-      if (typeof(IObjectFactory<string>).IsAssignableFrom(metadata.Type))
-      {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
-      }
+      // 3) IParsable is our last resort
+      var parsableMetadata = MetadataLookup.FindMetadataForConversion(
+         parameterType,
+         f => f.ValueType == typeof(string),
+         _ => false);
+
+      return parsableMetadata?.KeyType;
    }
 }

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Thinktecture.CodeAnalysis.AdHocUnions;
+using Thinktecture.CodeAnalysis.ObjectFactories;
 using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
@@ -26,9 +26,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -46,9 +46,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }
@@ -72,9 +72,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -100,9 +100,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          }
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -120,9 +120,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       output.Should().BeNull();
    }
@@ -140,9 +140,9 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          public partial class TestUnion;
 
          """;
-      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source,
-                                                                 ".NewtonsoftJson",
-                                                                 typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(UnionAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
 
       await VerifyAsync(output);
    }

@@ -7,12 +7,23 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public SpecialType SpecialType { get; }
    public string TypeFullyQualified { get; }
    public SerializationFrameworks UseForSerialization { get; }
+   public bool UseWithEntityFramework { get; }
+   public bool UseForModelBinding { get; }
+   public bool HasCorrespondingConstructor { get; }
 
-   public ObjectFactoryState(ITypeSymbol type, SerializationFrameworks useForSerialization)
+   public ObjectFactoryState(
+      ITypeSymbol type,
+      SerializationFrameworks useForSerialization,
+      bool useWithEntityFramework,
+      bool useForModelBinding,
+      bool hasCorrespondingConstructor)
    {
       SpecialType = type.SpecialType;
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       UseForSerialization = useForSerialization;
+      UseWithEntityFramework = useWithEntityFramework;
+      UseForModelBinding = useForModelBinding;
+      HasCorrespondingConstructor = hasCorrespondingConstructor;
    }
 
    public override bool Equals(object? obj)
@@ -23,7 +34,10 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public bool Equals(ObjectFactoryState? other)
    {
       return Equals((ITypeFullyQualified?)other)
-             && (int)UseForSerialization == (int)other.UseForSerialization;
+             && (int)UseForSerialization == (int)other.UseForSerialization
+             && UseWithEntityFramework == other.UseWithEntityFramework
+             && UseForModelBinding == other.UseForModelBinding
+             && HasCorrespondingConstructor == other.HasCorrespondingConstructor;
    }
 
    public bool Equals([NotNullWhen(true)] ITypeFullyQualified? other)
@@ -40,6 +54,9 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)UseForSerialization;
+         hashCode = (hashCode * 397) ^ UseWithEntityFramework.GetHashCode();
+         hashCode = (hashCode * 397) ^ UseForModelBinding.GetHashCode();
+         hashCode = (hashCode * 397) ^ HasCorrespondingConstructor.GetHashCode();
 
          return hashCode;
       }

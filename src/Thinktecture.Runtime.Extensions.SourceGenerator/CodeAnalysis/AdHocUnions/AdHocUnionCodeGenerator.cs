@@ -71,9 +71,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       global::Thinktecture.Internal.IMetadataOwner
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.AdHocUnion
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(").AppendTypeFullyQualified(_state).Append(@"))
       {
-         Type = typeof(").AppendTypeFullyQualified(_state).Append(@"),
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {").AppendMemberTypes(_state.MemberTypes).Append(@"
                        }

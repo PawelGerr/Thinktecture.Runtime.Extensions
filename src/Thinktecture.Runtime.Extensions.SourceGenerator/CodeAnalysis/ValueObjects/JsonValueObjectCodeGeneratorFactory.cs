@@ -9,6 +9,7 @@ public sealed class JsonValueObjectCodeGeneratorFactory : JsonKeyedSerializerCod
    public override string CodeGeneratorName => "SystemTextJson-ValueObject-CodeGenerator";
 
    private JsonValueObjectCodeGeneratorFactory()
+      : base(false)
    {
    }
 

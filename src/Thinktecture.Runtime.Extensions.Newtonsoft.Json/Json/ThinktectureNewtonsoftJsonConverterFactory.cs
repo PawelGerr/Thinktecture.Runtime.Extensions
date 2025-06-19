@@ -46,15 +46,15 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
       if (_cache.ContainsKey(objectType))
          return true;
 
-      var type = GetObjectType(objectType);
+      var metadata = FindMetadataForConversion(objectType);
 
-      if (type is null)
+      if (metadata is null)
          return false;
 
       if (!_skipObjectsWithJsonConverterAttribute)
          return true;
 
-      var jsonConverterAttribute = type.GetCustomAttribute<JsonConverterAttribute>();
+      var jsonConverterAttribute = metadata.Value.Type.GetCustomAttribute<JsonConverterAttribute>();
 
       if (jsonConverterAttribute is null)
          return true;
@@ -63,20 +63,6 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
          return true;
 
       return false;
-   }
-
-   private static Type? GetObjectType(Type objectType)
-   {
-      // objectType could be derived type (like nested Smart Enum)
-      var metadata = MetadataLookup.Find(objectType);
-
-      if (metadata is Metadata.Keyed)
-         return metadata.Type;
-
-      if (objectType.GetCustomAttributes<ObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson)))
-         return objectType;
-
-      return null;
    }
 
    /// <inheritdoc />
@@ -103,35 +89,25 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
       return converter.ReadJson(reader, objectType, existingValue, serializer);
    }
 
-   private static JsonConverter CreateConverter(Type type)
+   private static JsonConverter CreateConverter(Type typeToConvert)
    {
       // type could be a derived type (like nested Smart Enum)
-      var metadata = MetadataLookup.Find(type) as Metadata.Keyed;
-      var modelType = metadata?.Type ?? type;
+      var metadata = FindMetadataForConversion(typeToConvert);
 
-      var customFactory = modelType.GetCustomAttributes<ObjectFactoryAttribute>()
-                                   .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson));
+      if (metadata is null)
+         throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
 
-      Type keyType;
-
-      if (customFactory is not null)
-      {
-         keyType = customFactory.Type;
-      }
-      else if (metadata is not null)
-      {
-         keyType = metadata.KeyType;
-      }
-      else
-      {
-         throw new NotSupportedException($"The type '{type.FullName}' is not supported by the '{nameof(ThinktectureNewtonsoftJsonConverterFactory)}'.");
-      }
-
-      var validationErrorType = metadata?.ValidationErrorType ?? modelType.GetCustomAttribute<ValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
-
-      var converterType = typeof(ThinktectureNewtonsoftJsonConverter<,,>).MakeGenericType(modelType, keyType, validationErrorType);
+      var converterType = typeof(ThinktectureNewtonsoftJsonConverter<,,>).MakeGenericType(metadata.Value.Type, metadata.Value.KeyType, metadata.Value.ValidationErrorType);
       var converter = Activator.CreateInstance(converterType);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));
+   }
+
+   private static ConversionMetadata? FindMetadataForConversion(Type objectType)
+   {
+      return MetadataLookup.FindMetadataForConversion(
+         objectType,
+         f => f.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson),
+         _ => true);
    }
 }

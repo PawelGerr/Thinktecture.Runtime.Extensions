@@ -132,15 +132,15 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       if (typeToConvert.IsValueType && Nullable.GetUnderlyingType(typeToConvert) is not null)
          return false;
 
-      var type = GetObjectType(typeToConvert);
+      var metadata = FindMetadataForConversion(typeToConvert);
 
-      if (type is null)
+      if (metadata is null)
          return false;
 
       if (!_skipObjectsWithJsonConverterAttribute)
          return true;
 
-      var jsonConverterAttribute = type.GetCustomAttribute<JsonConverterAttribute>();
+      var jsonConverterAttribute = metadata.Value.Type.GetCustomAttribute<JsonConverterAttribute>();
 
       if (jsonConverterAttribute is null)
          return true;
@@ -151,55 +151,30 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       return false;
    }
 
-   private static Type? GetObjectType(Type typeToConvert)
-   {
-      // typeToConvert could be derived type (like nested Smart Enum)
-      var metadata = MetadataLookup.Find(typeToConvert);
-
-      if (metadata is Metadata.Keyed)
-         return metadata.Type;
-
-      if (typeToConvert.GetCustomAttributes<ObjectFactoryAttribute>().Any(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson)))
-         return typeToConvert;
-
-      return null;
-   }
-
    /// <inheritdoc />
    public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
    {
       ArgumentNullException.ThrowIfNull(typeToConvert);
       ArgumentNullException.ThrowIfNull(options);
 
-      // typeToConvert could be derived type (like nested Smart Enum)
-      var metadata = MetadataLookup.Find(typeToConvert) as Metadata.Keyed;
-      var type = metadata?.Type ?? typeToConvert;
+      var metadata = FindMetadataForConversion(typeToConvert);
 
-      var customFactory = type.GetCustomAttributes<ObjectFactoryAttribute>()
-                              .LastOrDefault(a => a.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson));
-
-      Type keyType;
-
-      if (customFactory is not null)
-      {
-         keyType = customFactory.Type;
-      }
-      else if (metadata is not null)
-      {
-         keyType = metadata.KeyType;
-      }
-      else
-      {
+      if (metadata is null)
          throw new InvalidOperationException($"No metadata for provided type '{typeToConvert.Name}' found.");
-      }
 
-      var validationErrorType = metadata?.ValidationErrorType ?? type.GetCustomAttribute<ValidationErrorAttribute>()?.Type ?? typeof(ValidationError);
-
-      var converterType = keyType == typeof(string)
-                             ? typeof(ThinktectureJsonConverter<,>).MakeGenericType(type, validationErrorType)
-                             : typeof(ThinktectureJsonConverter<,,>).MakeGenericType(type, keyType, validationErrorType);
+      var converterType = metadata.Value.KeyType == typeof(string)
+                             ? typeof(ThinktectureJsonConverter<,>).MakeGenericType(metadata.Value.Type, metadata.Value.ValidationErrorType)
+                             : typeof(ThinktectureJsonConverter<,,>).MakeGenericType(metadata.Value.Type, metadata.Value.KeyType, metadata.Value.ValidationErrorType);
       var converter = Activator.CreateInstance(converterType, options);
 
       return (JsonConverter)(converter ?? throw new Exception($"Could not create converter of type '{converterType.Name}'."));
+   }
+
+   private static ConversionMetadata? FindMetadataForConversion(Type typeToConvert)
+   {
+      return MetadataLookup.FindMetadataForConversion(
+         typeToConvert,
+         f => f.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson),
+         _ => true);
    }
 }

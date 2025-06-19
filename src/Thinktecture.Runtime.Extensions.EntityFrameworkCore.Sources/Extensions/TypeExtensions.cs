@@ -12,4 +12,12 @@ internal static class TypeExtensions
       members = metadata?.AssignableMembers ?? [];
       return metadata is not null;
    }
+
+   public static ConversionMetadata? FindMetadataForValueConverter(this Type type)
+   {
+      return MetadataLookup.FindMetadataForConversion(
+         type,
+         f => f.UseWithEntityFramework,
+         _ => true);
+   }
 }

@@ -14,7 +14,7 @@ public class UseThinktectureValueConverters : IDisposable
 {
    private static readonly Type _converterType = typeof(ThinktectureValueConverterFactory).GetNestedTypes(BindingFlags.NonPublic)
                                                                                           .Single(t => t.Name.StartsWith("ThinktectureValueConverter", StringComparison.Ordinal));
-   private static readonly Type _stringSmartEnumConverterType = _converterType.MakeGenericType(typeof(SmartEnum_StringBased), typeof(string));
+   private static readonly Type _stringSmartEnumConverterType = _converterType.MakeGenericType(typeof(SmartEnum_StringBased), typeof(string), typeof(ValidationError));
 
    private readonly TestDbContext _ctx;
 
@@ -34,8 +34,29 @@ public class UseThinktectureValueConverters : IDisposable
    {
       var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
 
-      ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_IntBased), _converterType.MakeGenericType(typeof(SmartEnum_IntBased), typeof(int)));
+      ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_IntBased), _converterType.MakeGenericType(typeof(SmartEnum_IntBased), typeof(int), typeof(ValidationError)));
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+   }
+
+   [Fact]
+   public void Should_add_converters_for_type_with_object_factories()
+   {
+      var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Types_having_ObjectFactories));
+
+      ValidateConverter(
+         entityType,
+         nameof(TestEntity_with_Types_having_ObjectFactories.TestComplexValueObject_ObjectFactory),
+         _converterType.MakeGenericType(typeof(TestComplexValueObject_ObjectFactory), typeof(string), typeof(ValidationError)));
+
+      ValidateConverter(
+         entityType,
+         nameof(TestEntity_with_Types_having_ObjectFactories.TestComplexValueObject_ObjectFactory_and_Constructor),
+         _converterType.MakeGenericType(typeof(TestComplexValueObject_ObjectFactory_and_Constructor), typeof(string), typeof(ValidationError)));
+
+      ValidateConverter(
+         entityType,
+         nameof(TestEntity_with_Types_having_ObjectFactories.CustomObject_ObjectFactory),
+         _converterType.MakeGenericType(typeof(CustomObject_ObjectFactory), typeof(string), typeof(ValidationError)));
    }
 
 #if COMPLEX_TYPES

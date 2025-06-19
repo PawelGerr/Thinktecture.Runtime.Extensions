@@ -7,6 +7,7 @@ public sealed class JsonSmartEnumCodeGeneratorFactory : JsonKeyedSerializerCodeG
    public override string CodeGeneratorName => "SystemTextJson-SmartEnum-CodeGenerator";
 
    private JsonSmartEnumCodeGeneratorFactory()
+      : base(false)
    {
    }
 }

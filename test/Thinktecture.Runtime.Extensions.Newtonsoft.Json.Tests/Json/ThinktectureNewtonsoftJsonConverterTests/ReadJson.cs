@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests;
@@ -303,6 +304,25 @@ public class ReadJson : JsonTestsBase
       var deserialized = Deserialize<ComplexValueObjectWithObjectProperty>("{\"Property\":{\"Test\":1}}");
 
       deserialized.Property.Should().BeEquivalentTo(JObject.FromObject(new { Test = 1 }));
+   }
+
+   [Theory]
+   [InlineData("2025", 2025, null, null)]
+   [InlineData("2025-06", 2025, 6, null)]
+   [InlineData("2025-06-19", 2025, 6, 19)]
+   public void Should_deserialize_regular_union_with_factory(string value, int year, int? month, int? day)
+   {
+      var json = $"\"{value}\"";
+
+      PartiallyKnownDateSerializable expected = value.Split('-').Length switch
+      {
+         1 => new PartiallyKnownDateSerializable.YearOnly(year),
+         2 => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         3 => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         _ => throw new Exception("Invalid test data")
+      };
+      var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
+      deserialized.Should().Be(expected);
    }
 
    private static T Deserialize<T>(

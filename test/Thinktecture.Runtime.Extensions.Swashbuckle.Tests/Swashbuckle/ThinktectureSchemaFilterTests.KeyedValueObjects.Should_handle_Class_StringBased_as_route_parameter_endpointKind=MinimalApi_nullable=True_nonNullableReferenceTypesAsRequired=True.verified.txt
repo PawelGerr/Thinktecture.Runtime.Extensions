@@ -16,7 +16,11 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StringBasedReferenceValueObject"
+                }
+              ]
             }
           }
         ],

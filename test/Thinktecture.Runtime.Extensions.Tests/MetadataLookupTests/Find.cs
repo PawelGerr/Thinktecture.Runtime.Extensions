@@ -22,10 +22,10 @@ public class Find
    }
 
    [Fact]
-   public void Should_not_find_metadata_of_keyless_enum()
+   public void Should_find_metadata_of_keyless_enum()
    {
       var keylessMetadata = MetadataLookup.Find(SmartEnum_Keyless.Item1.GetType());
 
-      keylessMetadata.Should().BeNull();
+      keylessMetadata.Should().NotBeNull();
    }
 }

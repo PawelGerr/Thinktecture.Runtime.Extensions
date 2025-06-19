@@ -4,8 +4,21 @@
 namespace Thinktecture.Tests;
 
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-abstract partial record Result<T>
+abstract partial record Result<T> :
+   global::Thinktecture.Internal.IMetadataOwner
 {
+   static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+      = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(global::Thinktecture.Tests.Result<T>))
+      {
+         TypeMembers = new global::System.Collections.Generic.List<global::System.Type>
+                       {
+                           typeof(global::Thinktecture.Tests.Result<T>.Success),
+                           typeof(global::Thinktecture.Tests.Result<T>.Success2),
+                           typeof(global::Thinktecture.Tests.Result<T>.Failure)
+                       }
+                       .AsReadOnly()
+      };
+
    private Result()
    {
    }

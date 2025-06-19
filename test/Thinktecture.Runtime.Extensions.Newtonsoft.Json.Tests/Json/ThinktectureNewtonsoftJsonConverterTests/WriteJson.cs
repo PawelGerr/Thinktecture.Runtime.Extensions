@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using Thinktecture.Json;
 using Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
@@ -127,6 +128,30 @@ public class WriteJson : JsonTestsBase
       var value = SerializeWithConverter<ComplexValueObjectWithObjectProperty, ComplexValueObjectWithObjectProperty.ValueObjectNewtonsoftJsonConverter>(obj);
 
       value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
+   }
+
+   [Theory]
+   [InlineData("2025", 2025, null, null)]
+   [InlineData("2025-06", 2025, 6, null)]
+   [InlineData("2025-06-19", 2025, 6, 19)]
+   public void Should_serialize_regular_union_with_factory(string expectedJson, int year, int? month, int? day)
+   {
+      PartiallyKnownDateSerializable obj = expectedJson.Split('-').Length switch
+      {
+         1 => new PartiallyKnownDateSerializable.YearOnly(year),
+         2 => new PartiallyKnownDateSerializable.YearMonth(year, month!.Value),
+         3 => new PartiallyKnownDateSerializable.Date(year, month!.Value, day!.Value),
+         _ => throw new Exception("Invalid test data")
+      };
+      var json = Serialize<PartiallyKnownDateSerializable, string>(obj);
+      json.Should().Be($"\"{expectedJson}\"");
+   }
+
+   [Fact]
+   public void Should_serialize_regular_union_with_factory_null()
+   {
+      var json = Serialize<PartiallyKnownDateSerializable, string>(null);
+      json.Should().Be("null");
    }
 
    private static string Serialize<T, TKey>(

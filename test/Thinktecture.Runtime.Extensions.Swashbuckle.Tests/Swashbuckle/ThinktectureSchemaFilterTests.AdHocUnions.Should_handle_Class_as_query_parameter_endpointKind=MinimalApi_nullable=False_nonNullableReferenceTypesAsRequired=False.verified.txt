@@ -16,7 +16,11 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TextOrNumberSerializable"
+                }
+              ]
             }
           }
         ],
@@ -38,15 +42,7 @@
   "components": {
     "schemas": {
       "TextOrNumberSerializable": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer",
-            "format": "int32"
-          }
-        ]
+        "type": "string"
       }
     }
   }

@@ -11,28 +11,28 @@ namespace Thinktecture.Tests
       global::Thinktecture.Internal.IMetadataOwner,
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests._1TestValueObject, int, global::Thinktecture.ValidationError>
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
-      {
-         Type = typeof(global::Thinktecture.Tests._1TestValueObject),
-         KeyType = typeof(int),
-         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
-         ConvertToKey = static int (global::Thinktecture.Tests._1TestValueObject item) => item._1Key,
-         ConvertToKeyExpression = static int (global::Thinktecture.Tests._1TestValueObject item) => item._1Key,
-         GetKey = static object (object item) => ((global::Thinktecture.Tests._1TestValueObject)item)._1Key,
-         ConvertFromKey = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => global::Thinktecture.Tests._1TestValueObject.Create(@_1Key),
-         ConvertFromKeyExpression = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => global::Thinktecture.Tests._1TestValueObject.Create(@_1Key),
-         ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => new global::Thinktecture.Tests._1TestValueObject(@_1Key),
-         TryGetFromKey = 
-            (object? key,
-             out object? obj,
-             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
-            {
-               error = global::Thinktecture.Tests._1TestValueObject.Validate(key is int typedKey ? typedKey : default, null, out var item);
-               obj = item;
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(global::Thinktecture.Tests._1TestValueObject))
+         {
+            KeyType = typeof(int),
+            ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            ConvertToKey = static int (global::Thinktecture.Tests._1TestValueObject item) => item._1Key,
+            ConvertToKeyExpression = static int (global::Thinktecture.Tests._1TestValueObject item) => item._1Key,
+            GetKey = static object (object item) => ((global::Thinktecture.Tests._1TestValueObject)item)._1Key,
+            ConvertFromKey = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => global::Thinktecture.Tests._1TestValueObject.Create(@_1Key),
+            ConvertFromKeyExpression = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => global::Thinktecture.Tests._1TestValueObject.Create(@_1Key),
+            ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests._1TestValueObject (int @_1Key) => new global::Thinktecture.Tests._1TestValueObject(@_1Key),
+            TryGetFromKey = 
+               (object? key,
+                out object? obj,
+                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+               {
+                  error = global::Thinktecture.Tests._1TestValueObject.Validate(key is int typedKey ? typedKey : default, null, out var item);
+                  obj = item;
 
-               return error is null;
-            }
-      };
+                  return error is null;
+               }
+         };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests._1TestValueObject).GetHashCode();
 
