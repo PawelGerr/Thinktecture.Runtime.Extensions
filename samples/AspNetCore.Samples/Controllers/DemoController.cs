@@ -20,31 +20,31 @@ public class DemoController : Controller
    }
 
    [HttpGet("category/{category}")]
-   public IActionResult RoundTrip(ProductCategory category)
+   public ActionResult<ProductCategory> RoundTrip(ProductCategory category)
    {
       return RoundTripInternal(category);
    }
 
    [HttpGet("group/{group}")]
-   public IActionResult RoundTrip(ProductGroup group)
+   public ActionResult<ProductGroup> RoundTrip(ProductGroup group)
    {
       return RoundTripInternal(group);
    }
 
    [HttpGet("productType/{productType}")]
-   public IActionResult RoundTrip(ProductType productType)
+   public ActionResult<ProductType> RoundTrip(ProductType productType)
    {
       return RoundTripInternal(productType);
    }
 
    [HttpGet("productType")]
-   public IActionResult RoundTripWithQueryString(ProductType productType)
+   public ActionResult<ProductType> RoundTripWithQueryString(ProductType productType)
    {
       return RoundTripInternal(productType);
    }
 
    [HttpGet("boundaryWithFactories/{boundary}")]
-   public IActionResult RoundTrip(BoundaryWithFactories boundary)
+   public ActionResult<BoundaryWithFactories> RoundTrip(BoundaryWithFactories boundary)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -55,19 +55,19 @@ public class DemoController : Controller
    }
 
    [HttpPost("productType")]
-   public IActionResult RoundTripPost([FromBody] ProductType productType)
+   public ActionResult<ProductType> RoundTripPost([FromBody] ProductType productType)
    {
       return RoundTripInternal(productType);
    }
 
    [HttpPost("productTypeWrapper")]
-   public IActionResult RoundTripPost([FromBody] ProductTypeWrapper productType)
+   public ActionResult<ProductType> RoundTripPost([FromBody] ProductTypeWrapper productType)
    {
       return RoundTripInternal(productType.ProductType);
    }
 
    [HttpGet("productName/{name}")]
-   public IActionResult RoundTrip(ProductName? name)
+   public ActionResult<ProductName?> RoundTrip(ProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -78,7 +78,7 @@ public class DemoController : Controller
    }
 
    [HttpPost("productName")]
-   public IActionResult RoundTripPost([FromBody] ProductName? name)
+   public ActionResult<ProductName?> RoundTripPost([FromBody] ProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -89,7 +89,7 @@ public class DemoController : Controller
    }
 
    [HttpGet("otherProductName/{name}")]
-   public IActionResult RoundTrip(OtherProductName? name)
+   public ActionResult<OtherProductName?> RoundTrip(OtherProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -100,7 +100,7 @@ public class DemoController : Controller
    }
 
    [HttpPost("otherProductName")]
-   public IActionResult RoundTripPost([FromBody] OtherProductName? name)
+   public ActionResult<OtherProductName?> RoundTripPost([FromBody] OtherProductName? name)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -111,7 +111,7 @@ public class DemoController : Controller
    }
 
    [HttpGet("enddate/{endDate}")]
-   public IActionResult RoundTripGet(OpenEndDate endDate)
+   public ActionResult<OpenEndDate> RoundTripGet(OpenEndDate endDate)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -122,7 +122,7 @@ public class DemoController : Controller
    }
 
    [HttpPost("enddate")]
-   public IActionResult RoundTripPost([FromBody] OpenEndDate endDate)
+   public ActionResult<OpenEndDate> RoundTripPost([FromBody] OpenEndDate endDate)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -133,7 +133,7 @@ public class DemoController : Controller
    }
 
    [HttpGet("textOrNumber/{textOrNumber}")]
-   public IActionResult RoundTrip(TextOrNumberSerializable textOrNumber)
+   public ActionResult<TextOrNumberSerializable> RoundTrip(TextOrNumberSerializable textOrNumber)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
@@ -143,7 +143,7 @@ public class DemoController : Controller
       return Json(textOrNumber);
    }
 
-   private IActionResult RoundTripInternal<T>(T value)
+   private ActionResult<T> RoundTripInternal<T>(T value)
       where T : notnull
    {
       if (!ModelState.IsValid)

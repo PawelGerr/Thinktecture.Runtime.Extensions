@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -126,12 +127,28 @@ public class Program
                        services.AddSingleton(loggerFactory)
                                .AddSingleton<EmailNotificationSender>()
                                .AddSingleton<SmsNotificationSender>();
-                       services.AddMvc(options => options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider()))
+                       services.AddMvc(options =>
+                               {
+                                  options.ModelBinderProviders.Insert(0, new ThinktectureModelBinderProvider());
+
+                                  options.OutputFormatters.RemoveType<StringOutputFormatter>();
+                                  options.OutputFormatters.RemoveType<StreamOutputFormatter>();
+
+                                  var inputMediaTypes = options.InputFormatters.OfType<SystemTextJsonInputFormatter>().Single().SupportedMediaTypes;
+                                  RemoveUnnecessaryContentTypes(inputMediaTypes);
+
+                                  var outputMediaTypes = options.OutputFormatters.OfType<SystemTextJsonOutputFormatter>().Single().SupportedMediaTypes;
+                                  RemoveUnnecessaryContentTypes(outputMediaTypes);
+                               })
                                .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory()))
                                .AddApplicationPart(typeof(DemoController).Assembly);
 
                        services.AddEndpointsApiExplorer()
-                               .AddSwaggerGen(options => options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" }))
+                               .AddSwaggerGen(options =>
+                               {
+                                  options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                                  options.TagActionsBy(_ => ["demo"]);
+                               })
                                .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
                     })
                     .ConfigureWebHostDefaults(builder =>
@@ -152,6 +169,16 @@ public class Program
       return webHost.StartAsync();
    }
 
+   private static void RemoveUnnecessaryContentTypes(MediaTypeCollection supportedMediaTypes)
+   {
+      var unnecessaryContentTypes = supportedMediaTypes.Where(contentType => contentType != "application/json").ToList();
+
+      foreach (var contentType in unnecessaryContentTypes)
+      {
+         supportedMediaTypes.Remove(contentType);
+      }
+   }
+
    private static Task StartMinimalWebApiAsync(ILoggerFactory loggerFactory)
    {
       var builder = WebApplication.CreateBuilder();
@@ -164,7 +191,11 @@ public class Program
                 options.SerializerOptions.Converters.Add(new ThinktectureJsonConverterFactory());
              })
              .AddEndpointsApiExplorer()
-             .AddSwaggerGen(options => options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" }))
+             .AddSwaggerGen(options =>
+             {
+                options.SwaggerDoc("demo", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                options.TagActionsBy(_ => ["demo"]);
+             })
              .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
 
       var app = builder.Build();

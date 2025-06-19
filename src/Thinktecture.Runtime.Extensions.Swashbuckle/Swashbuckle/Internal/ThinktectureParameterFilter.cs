@@ -17,63 +17,43 @@ public class ThinktectureParameterFilter : IParameterFilter
       OpenApiParameter parameter,
       ParameterFilterContext context)
    {
-      var metadata = context.ParameterInfo is null
-                        ? null
-                        : MetadataLookup.Find(context.ParameterInfo.ParameterType);
+      if (context.ParameterInfo is null)
+         return;
 
-      metadata?.Switch(
-         (Filter: this, parameter, context),
-         keylessSmartEnum: static (state, smartEnumMetadata) => Apply(state.parameter, state.context, smartEnumMetadata),
-         keyedSmartEnum: static (state, smartEnumMetadata) => Apply(state.parameter, state.context, smartEnumMetadata),
-         keyedValueObject: static (state, keyedValueObjectMetadata) => Apply(state.parameter, state.context, keyedValueObjectMetadata),
-         complexValueObject: static (state, complexValueObjectMetadata) => Apply(state.parameter, state.context, complexValueObjectMetadata),
-         adHocUnion: static (state, adHocUnionMetadata) => Apply(state.parameter, state.context, adHocUnionMetadata),
-         regularUnion: static (state, regularUnionMetadata) => Apply(state.parameter, state.context, regularUnionMetadata));
+      var modelBindingType = GetModelBindingType(context.ParameterInfo.ParameterType);
+
+      if (modelBindingType is null)
+         return;
+
+      parameter.Schema = context.SchemaGenerator.GenerateSchema(
+         modelBindingType,
+         context.SchemaRepository,
+         parameterInfo: context.ParameterInfo);
    }
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.KeylessSmartEnum metadata)
+   private Type? GetModelBindingType(Type parameterType)
    {
-      // IParsable
-      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
+      // 1) Object factory with UseForModelBinding has precedence over metadata
+      var metadataForModelBinding = MetadataLookup.FindMetadataForConversion(
+         parameterType,
+         f => f.UseForModelBinding,
+         _ => false);
+
+      if (metadataForModelBinding is not null)
+         return metadataForModelBinding.Value.KeyType;
+
+      // 2) It is assumed that keyed objects are bindable by default
+      if (MetadataLookup.Find(parameterType) is Metadata.Keyed keyedMetadata)
       {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
+         return keyedMetadata.Type;
       }
-   }
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.Keyed.SmartEnum metadata)
-   {
-      parameter.Schema = context.SchemaGenerator.GenerateSchema(metadata.Type, context.SchemaRepository);
-   }
+      // 3) IParsable is our last resort
+      var parsableMetadata = MetadataLookup.FindMetadataForConversion(
+         parameterType,
+         f => f.ValueType == typeof(string),
+         _ => false);
 
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.Keyed.ValueObject metadata)
-   {
-      parameter.Schema = context.SchemaGenerator.GenerateSchema(metadata.Type, context.SchemaRepository);
-   }
-
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.ComplexValueObject metadata)
-   {
-      // IParsable
-      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
-      {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
-      }
-   }
-
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.AdHocUnion metadata)
-   {
-      // IParsable
-      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
-      {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
-      }
-   }
-
-   private static void Apply(OpenApiParameter parameter, ParameterFilterContext context, Metadata.RegularUnion metadata)
-   {
-      // IParsable
-      if (metadata.ObjectFactories.Any(f => f.ValueType == typeof(string)))
-      {
-         parameter.Schema = context.SchemaGenerator.GenerateSchema(typeof(string), context.SchemaRepository, parameterInfo: context.ParameterInfo);
-      }
+      return parsableMetadata?.KeyType;
    }
 }
