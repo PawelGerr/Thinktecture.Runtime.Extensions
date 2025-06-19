@@ -4,8 +4,20 @@
 namespace Thinktecture.Tests;
 
 [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-partial class TestEnum :
+partial class TestEnum : global::Thinktecture.Internal.IObjectFactoryOwner,
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum, string, global::Thinktecture.ValidationError>,
       global::Thinktecture.IConvertible<string>
 {
+   static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.ObjectFactoryMetadata> global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories { get; } =
+      new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
+      {
+         new global::Thinktecture.Internal.ObjectFactoryMetadata()
+         {
+            ValueType = typeof(string),
+            ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            UseForSerialization = global::Thinktecture.SerializationFrameworks.All,
+            UseWithEntityFramework = false,
+            UseForModelBinding = false
+         }
+      }.AsReadOnly();
 }

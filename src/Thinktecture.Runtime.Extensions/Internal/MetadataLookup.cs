@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -22,7 +23,7 @@ public static class MetadataLookup
    /// <returns>An instance of <see cref="Metadata"/> if the <paramref name="type"/> has metadata; otherwise <c>null</c>.</returns>
    public static Metadata? Find(Type? type)
    {
-      if (type is null)
+      if (!IsCandidate(type))
          return null;
 
       type = UnwrapNullable(type);
@@ -53,7 +54,7 @@ public static class MetadataLookup
       Func<ObjectFactoryMetadata, bool> objectFactoryFilter,
       Func<Metadata.Keyed, bool> metadataFilter)
    {
-      if (type is null)
+      if (!IsCandidate(type))
          return null;
 
       type = UnwrapNullable(type);
@@ -98,6 +99,11 @@ public static class MetadataLookup
       }
 
       return GetConversionMetadata(type, null, objectFactories, objectFactoryFilter);
+   }
+
+   private static bool IsCandidate([NotNullWhen(true)] Type? type)
+   {
+      return type is { IsPrimitive: false, IsArray: false, IsEnum: false, IsPointer: false };
    }
 
    private static (LambdaExpression? FromCtor, LambdaExpression? FromFactory) GetFromExpressions(Metadata.Keyed keyedMetadata)

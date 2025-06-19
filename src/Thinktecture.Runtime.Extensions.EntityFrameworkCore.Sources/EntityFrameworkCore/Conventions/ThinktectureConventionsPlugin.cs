@@ -59,7 +59,7 @@ internal sealed class ThinktectureConventionsPlugin
          if (!propertyInfo.IsCandidateProperty())
             continue;
 
-         if (MetadataLookup.Find(propertyInfo.PropertyType) is not Metadata.Keyed metadata)
+         if (propertyInfo.PropertyType.FindMetadataForValueConverter() is not { } metadata)
             continue;
 
          property = entity.AddProperty(propertyInfo);
@@ -84,6 +84,7 @@ internal sealed class ThinktectureConventionsPlugin
 #if COMPLEX_TYPES
          var complexProperty = entity.FindComplexProperty(member);
 
+         // Ignore complex properties, even if it has an ObjectFactory
          if (complexProperty is not null)
             continue;
 #endif
@@ -122,7 +123,7 @@ internal sealed class ThinktectureConventionsPlugin
       if (valueConverter is not null)
          return;
 
-      if (MetadataLookup.Find(elementType.ClrType) is not Metadata.Keyed metadata)
+      if (elementType.ClrType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
       elementType.SetValueConverter(GetValueConverter(metadata));
@@ -134,7 +135,7 @@ internal sealed class ThinktectureConventionsPlugin
    {
       var naviType = navigation.ClrType;
 
-      if (MetadataLookup.Find(naviType) is not Metadata.Keyed metadata)
+      if (naviType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
       var property = navigation.DeclaringEntityType.Builder
@@ -154,19 +155,19 @@ internal sealed class ThinktectureConventionsPlugin
       if (valueConverter is not null)
          return;
 
-      if (MetadataLookup.Find(property.ClrType) is not Metadata.Keyed metadata)
+      if (property.ClrType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
       SetConverterAndExecuteCallback(property, metadata);
    }
 
-   private void SetConverterAndExecuteCallback(IConventionProperty property, Metadata.Keyed metadata)
+   private void SetConverterAndExecuteCallback(IConventionProperty property, ConversionMetadata metadata)
    {
       property.SetValueConverter(GetValueConverter(metadata));
       _configureEnumsAndKeyedValueObjects(property);
    }
 
-   private ValueConverter GetValueConverter(Metadata.Keyed metadata)
+   private ValueConverter GetValueConverter(ConversionMetadata metadata)
    {
       return ThinktectureValueConverterFactory.Create(metadata, _useConstructorForRead);
    }

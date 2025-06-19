@@ -5,8 +5,31 @@ namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class TestEnum :
+      global::Thinktecture.Internal.IMetadataOwner,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.KeylessSmartEnum(typeof(global::Thinktecture.Tests.TestEnum))
+         {
+            Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.KeylessSmartEnumItemMetadata>>(
+                     () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.KeylessSmartEnumItemMetadata>(
+                        global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.TestEnum.Items, (item, index) =>
+                        {
+                           string identifier = index switch
+                           {
+                              0 => "Item1", 
+                              1 => "Item2", 
+                              _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                           };
+
+                           return new global::Thinktecture.Internal.KeylessSmartEnumItemMetadata
+                           {
+                              Item = item,
+                              Identifier = identifier
+                           };
+                        })).AsReadOnly()),
+         };
+
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>> _items
                                              = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum>>(GetItems, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
 

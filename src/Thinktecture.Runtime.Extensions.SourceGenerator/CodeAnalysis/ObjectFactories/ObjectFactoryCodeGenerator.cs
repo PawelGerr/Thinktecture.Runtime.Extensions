@@ -52,7 +52,8 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
          _sb.Append(@",
       global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(factory).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">");
 
-         if (factory.UseForSerialization != SerializationFrameworks.None)
+         if (factory.UseForSerialization != SerializationFrameworks.None
+             || factory.UseWithEntityFramework)
          {
             _sb.Append(@",
       global::Thinktecture.IConvertible<").AppendTypeFullyQualified(factory).Append(">");

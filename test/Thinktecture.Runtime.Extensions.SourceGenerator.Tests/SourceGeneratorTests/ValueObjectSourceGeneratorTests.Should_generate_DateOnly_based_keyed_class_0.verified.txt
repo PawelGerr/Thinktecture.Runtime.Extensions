@@ -11,28 +11,28 @@ namespace Thinktecture.Tests
       global::Thinktecture.Internal.IMetadataOwner,
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestValueObject, global::System.DateOnly, global::Thinktecture.ValidationError>
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
-      {
-         Type = typeof(global::Thinktecture.Tests.TestValueObject),
-         KeyType = typeof(global::System.DateOnly),
-         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
-         ConvertToKey = static global::System.DateOnly (global::Thinktecture.Tests.TestValueObject item) => item._value,
-         ConvertToKeyExpression = static global::System.DateOnly (global::Thinktecture.Tests.TestValueObject item) => item._value,
-         GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
-         ConvertFromKey = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
-         ConvertFromKeyExpression = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
-         ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => new global::Thinktecture.Tests.TestValueObject(@value),
-         TryGetFromKey = 
-            (object? key,
-             out object? obj,
-             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
-            {
-               error = global::Thinktecture.Tests.TestValueObject.Validate(key is global::System.DateOnly typedKey ? typedKey : default, null, out var item);
-               obj = item;
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(global::Thinktecture.Tests.TestValueObject))
+         {
+            KeyType = typeof(global::System.DateOnly),
+            ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            ConvertToKey = static global::System.DateOnly (global::Thinktecture.Tests.TestValueObject item) => item._value,
+            ConvertToKeyExpression = static global::System.DateOnly (global::Thinktecture.Tests.TestValueObject item) => item._value,
+            GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
+            ConvertFromKey = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
+            ConvertFromKeyExpression = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => global::Thinktecture.Tests.TestValueObject.Create(@value),
+            ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (global::System.DateOnly @value) => new global::Thinktecture.Tests.TestValueObject(@value),
+            TryGetFromKey = 
+               (object? key,
+                out object? obj,
+                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+               {
+                  error = global::Thinktecture.Tests.TestValueObject.Validate(key is global::System.DateOnly typedKey ? typedKey : default, null, out var item);
+                  obj = item;
 
-               return error is null;
-            }
-      };
+                  return error is null;
+               }
+         };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 

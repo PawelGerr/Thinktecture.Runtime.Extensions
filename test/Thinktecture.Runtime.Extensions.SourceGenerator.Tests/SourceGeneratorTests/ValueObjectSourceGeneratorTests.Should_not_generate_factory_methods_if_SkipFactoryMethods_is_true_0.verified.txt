@@ -9,19 +9,19 @@ namespace Thinktecture.Tests
       global::Thinktecture.IConvertible<int>,
       global::Thinktecture.Internal.IMetadataOwner
    {
-      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; } = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject
-      {
-         Type = typeof(global::Thinktecture.Tests.TestValueObject),
-         KeyType = typeof(int),
-         ValidationErrorType = typeof(global::Thinktecture.ValidationError),
-         ConvertToKey = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
-         ConvertToKeyExpression = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
-         GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
-         ConvertFromKey = null,
-         ConvertFromKeyExpression = null,
-         ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (int @value) => new global::Thinktecture.Tests.TestValueObject(@value),
-         TryGetFromKey = null
-      };
+      static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
+         = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(global::Thinktecture.Tests.TestValueObject))
+         {
+            KeyType = typeof(int),
+            ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            ConvertToKey = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
+            ConvertToKeyExpression = static int (global::Thinktecture.Tests.TestValueObject item) => item._value,
+            GetKey = static object (object item) => ((global::Thinktecture.Tests.TestValueObject)item)._value,
+            ConvertFromKey = null,
+            ConvertFromKeyExpression = null,
+            ConvertFromKeyExpressionViaConstructor = static global::Thinktecture.Tests.TestValueObject (int @value) => new global::Thinktecture.Tests.TestValueObject(@value),
+            TryGetFromKey = null
+         };
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 

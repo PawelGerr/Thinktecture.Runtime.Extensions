@@ -526,15 +526,15 @@ file static class Extensions
       else
       {
          sb.Append(@"
-            (object? key,
-             out object? obj,
-             [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
-            {
-               error = ").AppendTypeFullyQualified(state).Append(".Validate(key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item);
-               obj = item;
+               (object? key,
+                out object? obj,
+                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+               {
+                  error = ").AppendTypeFullyQualified(state).Append(".Validate(key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item);
+                  obj = item;
 
-               return error is null;
-            }");
+                  return error is null;
+               }");
       }
 
       return sb;

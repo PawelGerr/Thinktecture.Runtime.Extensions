@@ -608,7 +608,7 @@ file static class Extensions
             sb.Append(",");
 
          sb.Append(@"
-                              o.").Append(member.Name);
+                                 o.").Append(member.Name);
       }
 
       return sb;

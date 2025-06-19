@@ -61,7 +61,7 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter();
 
 #if PRIMITIVE_COLLECTIONS
-            primitiveCollectionBuilder.HasThinktectureValueConverter(true);
+            primitiveCollectionBuilder.HasThinktectureValueConverter();
 #endif
          }
 
