@@ -26,6 +26,12 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
+**Value Objects articles**:
+* [Value Objects: Solving Primitive Obsession in .NET](https://www.thinktecture.com/en/net/value-objects-solving-primitive-obsession-in-net/)
+
+**Smart Enums articles**:
+* [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
+
 
 # Requirements
 
