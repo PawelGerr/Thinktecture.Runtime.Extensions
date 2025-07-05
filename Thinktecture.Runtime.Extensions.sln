@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{21EB22
 		.gitattributes = .gitattributes
 		.editorconfig = .editorconfig
 		.github\copilot-instructions.md = .github\copilot-instructions.md
+		context7.json = context7.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{E6F200ED-86D2-4D5C-9D5F-34592908B107}"
