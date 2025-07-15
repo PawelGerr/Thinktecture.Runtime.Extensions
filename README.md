@@ -33,6 +33,8 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 **Smart Enums articles**:
 * [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
 
+**Discriminated Unions articles**:
+* [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
 
 # Requirements
 
