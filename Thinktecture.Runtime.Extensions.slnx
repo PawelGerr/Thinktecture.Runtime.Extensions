@@ -1,0 +1,54 @@
+<Solution>
+  <Folder Name="/assets/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/workflows/ci.ps1" />
+    <File Path=".github/workflows/codeql-analysis.yml" />
+    <File Path=".github/workflows/main.yml" />
+    <File Path=".gitignore" />
+    <File Path="context7.json" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/samples/">
+    <File Path="samples/Directory.Build.props" />
+    <Project Path="samples/AspNetCore.Samples/AspNetCore.Samples.csproj" />
+    <Project Path="samples/Basic.Samples/Basic.Samples.csproj" />
+    <Project Path="samples/Benchmarking/Benchmarking.csproj" />
+    <Project Path="samples/EntityFrameworkCore.Samples/EntityFrameworkCore.Samples.csproj" />
+    <Project Path="samples/MessagePack.Samples/MessagePack.Samples.csproj" />
+    <Project Path="samples/Newtonsoft.Json.AspNetCore.Samples/Newtonsoft.Samples.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/.editorconfig" />
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.AspNetCore/Thinktecture.Runtime.Extensions.AspNetCore.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore8/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore9/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.Json/Thinktecture.Runtime.Extensions.Json.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.MessagePack/Thinktecture.Runtime.Extensions.MessagePack.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.Newtonsoft.Json/Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.SourceGenerator/Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions.Swashbuckle/Thinktecture.Runtime.Extensions.Swashbuckle.csproj" />
+    <Project Path="src/Thinktecture.Runtime.Extensions/Thinktecture.Runtime.Extensions.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.AspNetCore.Tests/Thinktecture.Runtime.Extensions.AspNetCore.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.Json.Tests/Thinktecture.Runtime.Extensions.Json.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.MessagePack.Tests/Thinktecture.Runtime.Extensions.MessagePack.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.SourceGenerator.Tests/Thinktecture.Runtime.Extensions.SourceGenerator.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.Swashbuckle.Tests/Thinktecture.Runtime.Extensions.Swashbuckle.Tests.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.Tests.Shared/Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
+    <Project Path="test/Thinktecture.Runtime.Extensions.Tests/Thinktecture.Runtime.Extensions.Tests.csproj" />
+  </Folder>
+</Solution>
