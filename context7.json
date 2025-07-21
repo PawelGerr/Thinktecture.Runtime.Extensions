@@ -2,131 +2,20 @@
   "$schema": "https://context7.com/schema/context7.json",
   "projectTitle": "Thinktecture Runtime Extensions",
   "description": "Provides an easy way to implement Smart Enums, Value Objects and Discriminated Unions in .NET",
-  "folders": [
-    "docs",
-    "samples"
-  ],
+  "folders": [],
   "excludeFolders": [
-    "test", 
-    ".github", 
-    "docs/Version 7", 
+    "src",
+    "test",
+    ".github",
+    "docs/Version 7",
     "docs/Version 8",
+    "__wiki__/Version 7",
+    "__wiki__/Version 8",
     ".git",
     ".vs",
     ".idea",
     "test-results"
   ],
-  "excludeFiles": [
-    "LICENSE.md",
-    "*.user",
-    "*.DotSettings.user",
-    "*.cache",
-    "*.suo",
-    "*.tmp",
-    "*.binlog"
-  ],
-  "rules": [
-    {
-      "name": "Core Documentation",
-      "description": "Include main documentation files that explain the library's core concepts",
-      "include": [
-        "README.md",
-        "docs/Smart-Enums.md",
-        "docs/Value-Objects.md", 
-        "docs/Discriminated-Unions.md",
-        "docs/Home.md",
-        "docs/_Sidebar.md"
-      ]
-    },
-    {
-      "name": "Technical Articles",
-      "description": "Include comprehensive technical articles that provide detailed explanations and examples of core features",
-      "include": [
-        "docs/articles/Value-Objects-Solving-Primitive-Obsession-in-NET.md",
-        "docs/articles/Handling-Complexity-Introducing-Complex-Value-Objects-in-dotnet.md",
-        "docs/articles/Smart-Enums-Beyond-Traditional-Enumerations.md",
-        "docs/articles/Discriminated-Unions-Representation-of-Alternative-Types-in-dotnet.md"
-      ]
-    },
-    {
-      "name": "Utility Documentation",
-      "description": "Include documentation for utility features",
-      "include": [
-        "docs/SingleItem.md",
-        "docs/ToReadOnlyCollection.md",
-        "docs/TrimOrNullify.md",
-        "docs/Empty-....md"
-      ]
-    },
-    {
-      "name": "Migration Guides",
-      "description": "Include migration documentation for version upgrades",
-      "include": [
-        "docs/Migration-*.md",
-        "docs/Migrations.md"
-      ]
-    },
-    {
-      "name": "Version-Specific Documentation",
-      "description": "Include current version documentation",
-      "include": [
-        "docs/Version-*.md"
-      ]
-    },
-    {
-      "name": "Project Configuration",
-      "description": "Include key project configuration files that affect library usage",
-      "include": [
-        "global.json",
-        "Directory.Build.props",
-        "Directory.Packages.props",
-        "NuGet.config",
-        ".editorconfig"
-      ]
-    },
-    {
-      "name": "Public API - Core Library",
-      "description": "Include public interfaces and attributes that users interact with",
-      "include": [
-        "src/Thinktecture.Runtime.Extensions/**/*.cs"
-      ],
-      "exclude": [
-        "src/Thinktecture.Runtime.Extensions/**/Internal/**",
-        "src/Thinktecture.Runtime.Extensions/**/*Internal*.cs",
-        "src/Thinktecture.Runtime.Extensions/**/*Exception*.cs"
-      ]
-    },
-    {
-      "name": "Integration Libraries - Public API",
-      "description": "Include public APIs for framework integrations",
-      "include": [
-        "src/Thinktecture.Runtime.Extensions.AspNetCore/**/*.cs",
-        "src/Thinktecture.Runtime.Extensions.EntityFrameworkCore*/**/*.cs",
-        "src/Thinktecture.Runtime.Extensions.Json/**/*.cs",
-        "src/Thinktecture.Runtime.Extensions.Newtonsoft.Json/**/*.cs",
-        "src/Thinktecture.Runtime.Extensions.MessagePack/**/*.cs",
-        "src/Thinktecture.Runtime.Extensions.Swashbuckle/**/*.cs"
-      ],
-      "exclude": [
-        "src/**/Internal/**",
-        "src/**/*Internal*.cs",
-        "src/**/*Exception*.cs"
-      ]
-    },
-    {
-      "name": "Sample Projects",
-      "description": "Include sample code demonstrating library usage patterns",
-      "include": [
-        "samples/**/*.cs",
-        "samples/**/*.csproj",
-        "samples/**/Program.cs",
-        "samples/**/appsettings*.json"
-      ],
-      "exclude": [
-        "samples/**/bin/**",
-        "samples/**/obj/**"
-      ]
-    }
-  ],
+  "excludeFiles": [],
   "previousVersions": []
 }
