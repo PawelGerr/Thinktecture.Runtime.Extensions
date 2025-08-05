@@ -241,6 +241,29 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS) ?? false;
    }
 
+   public static IReadOnlyList<string> FindUnionSwitchMapOverloadStopAtTypes(this AttributeData attributeData)
+   {
+      var stopAtArgument = attributeData.FindNamedAttribute("StopAt");
+
+      if (stopAtArgument.Kind != TypedConstantKind.Array || stopAtArgument.Values.Length == 0)
+         return [];
+
+      var result = new List<string>(stopAtArgument.Values.Length);
+
+      foreach (var value in stopAtArgument.Values)
+      {
+         if (value.Value is not ITypeSymbol typeSymbol)
+            continue;
+
+         if (typeSymbol.TypeKind == TypeKind.Error)
+            return [];
+
+         result.Add(typeSymbol.ToFullyQualifiedDisplayString());
+      }
+
+      return result;
+   }
+
    public static (ITypeSymbol ComparerType, ITypeSymbol ItemType)? GetComparerTypes(this AttributeData attributeData)
    {
       if (attributeData.AttributeClass is not { } attributeClass || attributeClass.TypeKind == TypeKind.Error)

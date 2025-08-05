@@ -15,6 +15,7 @@ public class DiscriminatedUnionsDemos
       DemoForUnions(logger);
       DemoForJurisdiction(logger);
       DemoForPartiallyKnownDate(logger);
+      DemoForNestedUnionsAndSwitchMapOverloads(logger);
    }
 
    private static void DemoForAdHocUnions(ILogger logger)
@@ -294,5 +295,29 @@ public class DiscriminatedUnionsDemos
 
       var deserializedDate = JsonSerializer.Deserialize<PartiallyKnownDate>(json);
       logger.Information("Deserialized date: {Date}", FormatDate(deserializedDate)); // "2023-12-31"
+   }
+
+   private static void DemoForNestedUnionsAndSwitchMapOverloads(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Nested Unions and Switch/Map Overloads ====
+
+                         """);
+
+      var apiResponse = new ApiResponse.Failure.Unauthorized();
+
+      apiResponse.Switch(
+         success: success => logger.Information("[Switch] Success"),
+         failure: HandleFailure);
+
+      void HandleFailure(ApiResponse.Failure failure)
+      {
+         failure.Switch(
+            failureNotFound: notFound => logger.Information("[Switch] Not Found"),
+            failureUnauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
+         );
+      }
    }
 }

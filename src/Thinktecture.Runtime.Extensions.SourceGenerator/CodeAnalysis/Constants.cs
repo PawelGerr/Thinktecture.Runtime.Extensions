@@ -105,5 +105,11 @@ public static class Constants
          public const string FULL_NAME_4_TYPES = "Thinktecture.UnionAttribute`4";
          public const string FULL_NAME_5_TYPES = "Thinktecture.UnionAttribute`5";
       }
+
+      public static class UnionSwitchMapOverload
+      {
+         public const string NAME = "UnionSwitchMapOverloadAttribute";
+         public const string FULL_NAME = "Thinktecture.UnionSwitchMapOverloadAttribute";
+      }
    }
 }

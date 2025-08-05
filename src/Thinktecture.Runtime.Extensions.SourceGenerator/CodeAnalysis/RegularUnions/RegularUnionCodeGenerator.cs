@@ -4,16 +4,13 @@ namespace Thinktecture.CodeAnalysis.RegularUnions;
 
 public class RegularUnionCodeGenerator : CodeGeneratorBase
 {
-   private readonly record struct TypeMember(
-      RegularUnionTypeMemberState State,
-      string ArgumentName);
-
    public override string CodeGeneratorName => "RegularUnion-CodeGenerator";
    public override string FileNameSuffix => ".RegularUnion";
 
    private readonly RegularUnionSourceGenState _state;
    private readonly StringBuilder _sb;
    private readonly IReadOnlyList<TypeMember> _typeMembers;
+   private readonly IReadOnlyList<TypeMember> _allOrderedTypeMembers;
 
    public RegularUnionCodeGenerator(
       RegularUnionSourceGenState state,
@@ -22,10 +19,10 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
       _state = state;
       _sb = sb;
 
-      var typeMembers = OrderTypeMembers(state, _sb);
-      typeMembers.RemoveAll(t => t.State.IsAbstract);
-      typeMembers.Reverse();
-      _typeMembers = typeMembers;
+      var allTypeMembers = OrderTypeMembers(state, _sb);
+      allTypeMembers.Reverse();
+      _allOrderedTypeMembers = allTypeMembers;
+      _typeMembers = allTypeMembers.Where(t => !t.State.IsAbstract).ToList();
    }
 
    private List<TypeMember> OrderTypeMembers(
@@ -60,10 +57,14 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
 
             for (var j = typeMembers.Count - 1; j >= 0; j--)
             {
-               if (typeMembers[j].State.TypeDefinitionFullyQualified != unsortedTypeMember.BaseTypeDefinitionFullyQualified)
+               var typeMember = typeMembers[j];
+
+               if (typeMember.State.TypeDefinitionFullyQualified != unsortedTypeMember.BaseTypeDefinitionFullyQualified)
                   continue;
 
-               typeMembers.Add(MakeTypeMember(unsortedTypeMember, sb));
+               var derivedType = MakeTypeMember(unsortedTypeMember, sb);
+               typeMember.DerivedTypes.Add(derivedType);
+               typeMembers.Add(derivedType);
                unsortedTypeMembers.RemoveAt(i);
                break;
             }
@@ -83,7 +84,7 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
       var argName = typeMember.ContainingTypes
                               .MakeFullyQualifiedArgumentName(typeMember.Name, skipRootContainingType: true, sb);
 
-      return new TypeMember(typeMember, argName);
+      return new TypeMember(typeMember, argName, []);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -134,35 +135,46 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None)
+      var typeMembersToProcess = _state.Settings.SwitchMapOverloads
+                                       .Select(FilterTypeMembersForOverload)
+                                       .Prepend(_typeMembers)
+                                       .Distinct(TypeMembersEqualityComparer.Instance);
+
+      foreach (var typeMembers in typeMembersToProcess)
       {
-         GenerateSwitchForAction(false, false);
+         if (typeMembers.Count <= 0)
+            continue;
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForAction(false, true);
+         if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None)
+         {
+            GenerateSwitchForAction(false, false, typeMembers);
 
-         GenerateSwitchForAction(true, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForAction(false, true, typeMembers);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForAction(true, true);
+            GenerateSwitchForAction(true, false, typeMembers);
 
-         GenerateSwitchForFunc(false, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForAction(true, true, typeMembers);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForFunc(false, true);
+            GenerateSwitchForFunc(false, false, typeMembers);
 
-         GenerateSwitchForFunc(true, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForFunc(false, true, typeMembers);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForFunc(true, true);
-      }
+            GenerateSwitchForFunc(true, false, typeMembers);
 
-      if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None)
-      {
-         GenerateMap(false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForFunc(true, true, typeMembers);
+         }
 
-         if (_state.Settings.MapMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateMap(true);
+         if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None)
+         {
+            GenerateMap(false, typeMembers);
+
+            if (_state.Settings.MapMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateMap(true, typeMembers);
+         }
       }
 
       GenerateConversionsFromValue();
@@ -208,7 +220,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
    }
 
-   private void GenerateSwitchForAction(bool withState, bool isPartially)
+   private void GenerateSwitchForAction(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
 
@@ -228,9 +240,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""default"">The action to execute if no type-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The action to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
@@ -261,9 +273,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          _sb.AppendTypeFullyQualified(_state).Append(">? @default = null,");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var memberType = _typeMembers[i];
+         var memberType = typeMembers[i];
 
          if (i != 0)
             _sb.Append(",");
@@ -298,21 +310,21 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       _sb.Append(@"
    {");
 
-      GenerateIndexBasedActionSwitchBody(withState, isPartially);
+      GenerateIndexBasedActionSwitchBody(withState, isPartially, typeMembers);
 
       _sb.Append(@"
    }");
    }
 
-   private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially)
+   private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
       switch (this)
       {");
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
          case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
@@ -353,7 +365,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
    }
 
-   private void GenerateSwitchForFunc(bool withState, bool isPartially)
+   private void GenerateSwitchForFunc(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
 
@@ -373,9 +385,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""default"">The function to execute if no type-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The function to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
@@ -406,9 +418,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          _sb.AppendTypeFullyQualified(_state).Append(", TResult> @default,");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var memberType = _typeMembers[i];
+         var memberType = typeMembers[i];
 
          if (i != 0)
             _sb.Append(",");
@@ -444,21 +456,21 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 #endif
    {");
 
-      GenerateIndexBasedFuncSwitchBody(withState, isPartially);
+      GenerateIndexBasedFuncSwitchBody(withState, isPartially, typeMembers);
 
       _sb.Append(@"
    }");
    }
 
-   private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially)
+   private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
       switch (this)
       {");
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
          case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
@@ -498,7 +510,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
    }
 
-   private void GenerateMap(bool isPartially)
+   private void GenerateMap(bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
 
@@ -512,9 +524,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <param name=""default"">The instance to return if no value is provided for the current type.</param>");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
    /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The instance to return if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
@@ -530,7 +542,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       TResult @default,");
       }
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
          if (i != 0)
             _sb.Append(",");
@@ -546,7 +558,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (isPartially)
             _sb.Append(">");
 
-         _sb.Append(" ").AppendEscaped(_typeMembers[i].ArgumentName);
+         _sb.Append(" ").AppendEscaped(typeMembers[i].ArgumentName);
 
          if (isPartially)
             _sb.Append(" = default");
@@ -558,21 +570,21 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 #endif
    {");
 
-      GenerateIndexBasedMapSwitchBody(isPartially);
+      GenerateIndexBasedMapSwitchBody(isPartially, typeMembers);
 
       _sb.Append(@"
    }");
    }
 
-   private void GenerateIndexBasedMapSwitchBody(bool isPartially)
+   private void GenerateIndexBasedMapSwitchBody(bool isPartially, IReadOnlyList<TypeMember> typeMembers)
    {
       _sb.Append(@"
       switch (this)
       {");
 
-      for (var i = 0; i < _typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Count; i++)
       {
-         var typeMember = _typeMembers[i];
+         var typeMember = typeMembers[i];
 
          _sb.Append(@"
          case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
@@ -604,6 +616,79 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          _sb.Append(@"
 
          return @default;");
+      }
+   }
+
+   private IReadOnlyList<TypeMember> FilterTypeMembersForOverload(RegularUnionSwitchMapOverload overload)
+   {
+      var typeMembers = _allOrderedTypeMembers.ToList();
+
+      foreach (var stopType in overload.StopAtTypeNames)
+      {
+         var type = _allOrderedTypeMembers.FirstOrDefault(m => m.State.TypeDefinitionFullyQualified == stopType);
+
+         // a) In case of open generics, which are not supported by C#
+         // b) In case of a type that is not part of the union
+         if (type == default)
+            return [];
+
+         RemoveDerivedTypes(typeMembers, type);
+      }
+
+      typeMembers.RemoveAll(t => t.State.IsAbstract && !overload.StopAtTypeNames.Contains(t.State.TypeDefinitionFullyQualified));
+
+      return typeMembers;
+   }
+
+   private void RemoveDerivedTypes(List<TypeMember> typeMembers, TypeMember stopType)
+   {
+      for (var i = 0; i < stopType.DerivedTypes.Count; i++)
+      {
+         var derivedType = stopType.DerivedTypes[i];
+         typeMembers.Remove(derivedType);
+
+         RemoveDerivedTypes(typeMembers, derivedType);
+      }
+   }
+
+   private readonly record struct TypeMember(
+      RegularUnionTypeMemberState State,
+      string ArgumentName,
+      List<TypeMember> DerivedTypes);
+
+   private class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>
+   {
+      public static TypeMembersEqualityComparer Instance { get; } = new();
+
+      public bool Equals(IReadOnlyList<TypeMember>? x, IReadOnlyList<TypeMember>? y)
+      {
+         if (ReferenceEquals(x, y))
+            return true;
+
+         if (x is null || y is null)
+            return false;
+
+         return x.SequenceEqual(y, TypeMemberComparer.TypeMemberComparerInstance);
+      }
+
+      public int GetHashCode(IReadOnlyList<TypeMember>? obj)
+      {
+         return obj is null ? 0 : obj.ComputeHashCode(TypeMemberComparer.TypeMemberComparerInstance);
+      }
+
+      private class TypeMemberComparer : IEqualityComparer<TypeMember>
+      {
+         public static readonly TypeMemberComparer TypeMemberComparerInstance = new();
+
+         public bool Equals(TypeMember x, TypeMember y)
+         {
+            return x.State.TypeFullyQualified == y.State.TypeFullyQualified;
+         }
+
+         public int GetHashCode(TypeMember obj)
+         {
+            return obj.State.TypeFullyQualified.GetHashCode();
+         }
       }
    }
 }

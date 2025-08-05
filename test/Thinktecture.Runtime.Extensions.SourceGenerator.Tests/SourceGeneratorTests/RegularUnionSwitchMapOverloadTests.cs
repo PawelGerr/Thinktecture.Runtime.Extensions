@@ -1,0 +1,209 @@
+using System.Threading.Tasks;
+using Thinktecture.CodeAnalysis.RegularUnions;
+using Xunit.Abstractions;
+
+namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
+
+public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
+{
+   public RegularUnionSwitchMapOverloadTests(ITestOutputHelper output)
+      : base(output, 33_000) // Increased limit to accommodate the additional overload methods
+   {
+   }
+
+   [Fact]
+   public async Task Should_not_generate_switch_map_overload_when_type_has_no_derived_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(ConcreteType1)])]
+            public partial class TestUnion
+            {
+               public sealed class ConcreteType1 : TestUnion;
+               public sealed class ConcreteType2 : TestUnion;
+               public sealed class ConcreteType3 : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_switch_map_overload_when_types_have_no_derived_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(ConcreteType1), typeof(ConcreteType2)])]
+            public partial class TestUnion
+            {
+               public sealed class ConcreteType1 : TestUnion;
+               public sealed class ConcreteType2 : TestUnion;
+               public sealed class ConcreteType3 : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_switch_map_overload_for_generic_union()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         // generics in attributes are not supported in C#
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(Success)])]
+            public partial record Result<T>
+            {
+               public partial record Success(T Value) : Result<T>;
+               public partial record Failure(string Error) : Result<T>;
+               public partial record Pending : Result<T>;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_switch_map_overload_with_inheritance_hierarchy()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(BaseType)])]
+            public partial class TestUnion
+            {
+               public abstract class BaseType : TestUnion;
+               public sealed class ConcreteType1 : BaseType;
+               public sealed class ConcreteType2 : BaseType;
+               public sealed class OtherType : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_switch_map_overload_with_complex_inheritance_hierarchy()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(BaseType1), typeof(ConcreteType4)])]
+            public partial class TestUnion
+            {
+               public abstract class BaseType1 : TestUnion;
+               public sealed class ConcreteType1 : BaseType1;
+               public class ConcreteType2 : BaseType1
+               {
+                  public sealed class ConcreteType2_1 : ConcreteType2;
+               }
+
+               public abstract class BaseType2 : TestUnion;
+               public sealed class ConcreteType3 : BaseType2;
+               public class ConcreteType4 : BaseType2
+               {
+                  public sealed class ConcreteType4_1 : ConcreteType4;
+               }
+
+               public sealed class DirectType : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_empty_switch_map_overload_when_no_types_match()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(NonExistentType)])]
+            public partial class TestUnion
+            {
+               public sealed class ConcreteType1 : TestUnion;
+               public sealed class ConcreteType2 : TestUnion;
+            }
+
+            public class NonExistentType
+            {
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_switch_map_overload_respecting_partial_methods_setting()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(
+               SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+               MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+            [UnionSwitchMapOverload(StopAt = [typeof(BaseType)])]
+            public partial class TestUnion
+            {
+               public abstract class BaseType : TestUnion;
+               public sealed class ConcreteType1 : BaseType;
+               public sealed class ConcreteType2 : BaseType;
+               public sealed class OtherType : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+}

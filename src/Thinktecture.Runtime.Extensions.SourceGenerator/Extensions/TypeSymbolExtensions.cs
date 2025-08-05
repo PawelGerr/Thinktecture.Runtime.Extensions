@@ -120,6 +120,14 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
+   public static bool IsUnionSwitchMapOverloadAttribute(this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is { Name: Constants.Attributes.UnionSwitchMapOverload.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    public static bool IsThinktectureComponentAttribute(this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)

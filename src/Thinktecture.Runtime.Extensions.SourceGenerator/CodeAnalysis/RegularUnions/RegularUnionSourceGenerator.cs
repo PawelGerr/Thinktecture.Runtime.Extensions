@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.RegularUnions;
 public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public RegularUnionSourceGenerator()
-      : base(15_000)
+      : base(20_000)
    {
    }
 
@@ -127,7 +127,21 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
             derivedTypes.Add(new RegularUnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef, singleArgCtorsPerType[i]));
          }
 
-         var settings = new RegularUnionSettings(context.Attributes[0]);
+         List<RegularUnionSwitchMapOverload>? switchMapOverloads = null;
+         var allAttributes = type.GetAttributes();
+
+         foreach (var attribute in allAttributes)
+         {
+            if (attribute.AttributeClass?.IsUnionSwitchMapOverloadAttribute() != true)
+               continue;
+
+            var stopAtTypes = attribute.FindUnionSwitchMapOverloadStopAtTypes();
+
+            if (stopAtTypes.Count > 0)
+               (switchMapOverloads ??= []).Add(new RegularUnionSwitchMapOverload(stopAtTypes));
+         }
+
+         var settings = new RegularUnionSettings(context.Attributes[0], switchMapOverloads ?? []);
 
          var unionState = new RegularUnionSourceGenState(type,
                                                          derivedTypes,
