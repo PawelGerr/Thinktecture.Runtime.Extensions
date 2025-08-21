@@ -18,7 +18,22 @@
     ".idea",
     "test-results"
   ],
-  "excludeFiles": [],
+  "excludeFiles": [
+    "LICENSE.md",
+    "version-7*",
+    "Version-7*",
+    "version-8*",
+    "Version-8*",
+    "Directory.Packages.props",
+    "Directory.Build.props",
+    "global.json",
+    "NuGet.config",
+    ".gitignore",
+    ".gitattributes",
+    ".editorconfig",
+    "Thinktecture.Runtime.Extensions.sln.DotSettings",
+    "Thinktecture.Runtime.Extensions.AspNetCore.Samples_demo.json"
+  ],
   "previousVersions": [],
   "rules": []
 }
