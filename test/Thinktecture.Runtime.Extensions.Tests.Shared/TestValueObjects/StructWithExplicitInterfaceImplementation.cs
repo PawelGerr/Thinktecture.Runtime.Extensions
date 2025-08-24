@@ -5,7 +5,9 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
 public struct StructWithExplicitInterfaceImplementation :
    IParsable<StructWithExplicitInterfaceImplementation>,
-   IFormattable
+   IFormattable,
+   IComparable,
+   IComparable<StructWithExplicitInterfaceImplementation>
 {
    static StructWithExplicitInterfaceImplementation IParsable<StructWithExplicitInterfaceImplementation>.Parse(
       string s,
@@ -23,6 +25,16 @@ public struct StructWithExplicitInterfaceImplementation :
    }
 
    string IFormattable.ToString(string? format, IFormatProvider? formatProvider)
+   {
+      throw new NotImplementedException();
+   }
+
+   int IComparable.CompareTo(object? obj)
+   {
+      throw new NotImplementedException();
+   }
+
+   int IComparable<StructWithExplicitInterfaceImplementation>.CompareTo(StructWithExplicitInterfaceImplementation other)
    {
       throw new NotImplementedException();
    }

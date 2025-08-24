@@ -16,7 +16,7 @@ partial class TestEnum :
       if(obj is not global::Thinktecture.Tests.TestEnum item)
          throw new global::System.ArgumentException("Argument must be of type \"TestEnum\".", nameof(obj));
 
-      return this.CompareTo(item);
+      return ((global::System.IComparable)this).CompareTo(item);
    }
 
    /// <inheritdoc />
@@ -25,6 +25,6 @@ partial class TestEnum :
       if(obj is null)
          return 1;
 
-      return this.Key.CompareTo(obj.Key);
+      return ((global::System.IComparable<int>)this.Key).CompareTo(obj.Key);
    }
 }

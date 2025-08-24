@@ -1199,4 +1199,41 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Formattable.g.cs",
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_explicitly_implemented_IComparable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests;
+
+         public struct StructWithExplicitInterfaceImplementation : IComparable, IComparable<StructWithExplicitInterfaceImplementation>
+         {
+            int IComparable.CompareTo(object? obj)
+            {
+               throw new NotImplementedException();
+            }
+
+            int IComparable<StructWithExplicitInterfaceImplementation>.CompareTo(StructWithExplicitInterfaceImplementation other)
+            {
+               throw new NotImplementedException();
+            }
+         }
+
+         [ValueObject<StructWithExplicitInterfaceImplementation>]
+         public partial class ValueObjectForStructWithExplicitInterfaceImplementation;
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.ValueObject.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Comparable.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
+   }
 }
