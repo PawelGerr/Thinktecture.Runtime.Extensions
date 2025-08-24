@@ -1125,4 +1125,46 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests._1TestValueObject.MultiplyOperators.g.cs",
                         "Thinktecture.Tests._1TestValueObject.DivisionOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_explicitly_implemented_IParsable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests;
+
+         public struct StructWithExplicitInterfaceImplementation : IParsable<StructWithExplicitInterfaceImplementation>
+         {
+            static StructWithExplicitInterfaceImplementation IParsable<StructWithExplicitInterfaceImplementation>.Parse(
+               string s,
+               IFormatProvider? provider)
+            {
+               throw new NotImplementedException();
+            }
+
+            static bool IParsable<StructWithExplicitInterfaceImplementation>.TryParse(
+               [NotNullWhen(true)] string? s,
+               IFormatProvider? provider,
+               out StructWithExplicitInterfaceImplementation result)
+            {
+               throw new NotImplementedException();
+            }
+         }
+
+         [ValueObject<StructWithExplicitInterfaceImplementation>]
+         public partial class ValueObjectForStructWithExplicitInterfaceImplementation;
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.ValueObject.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Parsable.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
+   }
 }

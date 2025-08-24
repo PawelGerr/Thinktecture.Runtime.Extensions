@@ -90,7 +90,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       else if (state.KeyMember is not null)
       {
          sb.Append(@"
-      var key = ").AppendTypeFullyQualified(state.KeyMember).Append(@".Parse(s, provider);
+      var key = ParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider);
       var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out var result);");
       }
 
@@ -100,6 +100,13 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return result!;
 
       throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
+   }
+
+   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+   private static TValue ParseValue<TValue>(string s, global::System.IFormatProvider? provider)
+      where TValue : global::System.IParsable<TValue>
+   {
+      return TValue.Parse(s, provider);
    }");
    }
 
@@ -149,7 +156,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       {
          sb.Append(@"
 
-      if(!").AppendTypeFullyQualified(state.KeyMember).Append(@".TryParse(s, provider, out var key))
+      if (!TryParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider, out var key))
       {
          result = default;
          return false;
@@ -160,6 +167,13 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
       sb.Append(@"
       return validationError is null;
+   }
+
+   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+   private static bool TryParseValue<TValue>(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out TValue result)
+      where TValue : global::System.IParsable<TValue>
+   {
+      return TValue.TryParse(s, provider, out result);
    }");
    }
 

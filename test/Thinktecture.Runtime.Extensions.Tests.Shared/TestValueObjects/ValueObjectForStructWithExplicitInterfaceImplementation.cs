@@ -1,0 +1,4 @@
+namespace Thinktecture.Runtime.Tests.TestValueObjects;
+
+[ValueObject<StructWithExplicitInterfaceImplementation>]
+public partial class ValueObjectForStructWithExplicitInterfaceImplementation;

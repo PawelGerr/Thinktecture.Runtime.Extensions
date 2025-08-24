@@ -32,6 +32,13 @@ partial class TestEnum :
       throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestEnum\".");
    }
 
+   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+   private static TValue ParseValue<TValue>(string s, global::System.IFormatProvider? provider)
+      where TValue : global::System.IParsable<TValue>
+   {
+      return TValue.Parse(s, provider);
+   }
+
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
    public static global::TestEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
@@ -59,6 +66,13 @@ partial class TestEnum :
 
       var validationError = Validate<global::TestEnum>(s, provider, out result!);
       return validationError is null;
+   }
+
+   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+   private static bool TryParseValue<TValue>(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out TValue result)
+      where TValue : global::System.IParsable<TValue>
+   {
+      return TValue.TryParse(s, provider, out result);
    }
 
 #if NET9_0_OR_GREATER
