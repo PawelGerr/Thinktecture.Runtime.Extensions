@@ -3,12 +3,12 @@
 
 namespace Thinktecture.Tests;
 
-partial class TestEnum :
+partial class ValueObjectForStructWithExplicitInterfaceImplementation :
    global::System.IFormattable
 {
    /// <inheritdoc />
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
-      return ((global::System.IFormattable)this.Key).ToString(format, formatProvider);
+      return ((global::System.IFormattable)this._value).ToString(format, formatProvider);
    }
 }

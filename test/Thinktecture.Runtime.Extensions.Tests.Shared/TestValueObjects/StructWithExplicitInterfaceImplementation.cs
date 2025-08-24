@@ -3,7 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.Runtime.Tests.TestValueObjects;
 
-public struct StructWithExplicitInterfaceImplementation : IParsable<StructWithExplicitInterfaceImplementation>
+public struct StructWithExplicitInterfaceImplementation :
+   IParsable<StructWithExplicitInterfaceImplementation>,
+   IFormattable
 {
    static StructWithExplicitInterfaceImplementation IParsable<StructWithExplicitInterfaceImplementation>.Parse(
       string s,
@@ -16,6 +18,11 @@ public struct StructWithExplicitInterfaceImplementation : IParsable<StructWithEx
       [NotNullWhen(true)] string? s,
       IFormatProvider? provider,
       out StructWithExplicitInterfaceImplementation result)
+   {
+      throw new NotImplementedException();
+   }
+
+   string IFormattable.ToString(string? format, IFormatProvider? formatProvider)
    {
       throw new NotImplementedException();
    }

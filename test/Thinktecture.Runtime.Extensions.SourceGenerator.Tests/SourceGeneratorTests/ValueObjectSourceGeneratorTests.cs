@@ -1167,4 +1167,36 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Parsable.g.cs",
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_explicitly_implemented_IFormattable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests;
+
+         public struct StructWithExplicitInterfaceImplementation : IFormattable
+         {
+            string IFormattable.ToString(string? format, IFormatProvider? formatProvider)
+            {
+               throw new NotImplementedException();
+            }
+         }
+
+         [ValueObject<StructWithExplicitInterfaceImplementation>]
+         public partial class ValueObjectForStructWithExplicitInterfaceImplementation;
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.ValueObject.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Formattable.g.cs",
+                        "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
+   }
 }

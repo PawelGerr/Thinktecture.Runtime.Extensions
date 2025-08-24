@@ -9,6 +9,6 @@ partial class TestEnum :
    /// <inheritdoc />
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
-      return this.Key.ToString(format, formatProvider);
+      return ((global::System.IFormattable)this.Key).ToString(format, formatProvider);
    }
 }

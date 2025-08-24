@@ -21,7 +21,7 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc />
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
-      return this.").Append(state.KeyMember.Name).Append(@".ToString(format, formatProvider);
+      return ((global::System.IFormattable)this.").Append(state.KeyMember.Name).Append(@").ToString(format, formatProvider);
    }");
    }
 }
