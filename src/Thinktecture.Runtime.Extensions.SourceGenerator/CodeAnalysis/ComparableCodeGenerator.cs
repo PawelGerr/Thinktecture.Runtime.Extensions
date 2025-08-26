@@ -35,7 +35,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if(obj is not ").AppendTypeFullyQualified(state.Type).Append(@" item)
          throw new global::System.ArgumentException(""Argument must be of type \""").AppendTypeMinimallyQualified(state.Type).Append(@"\""."", nameof(obj));
 
-      return ((global::System.IComparable)this).CompareTo(item);
+      return this.CompareTo(item);
    }
 
    /// <inheritdoc />

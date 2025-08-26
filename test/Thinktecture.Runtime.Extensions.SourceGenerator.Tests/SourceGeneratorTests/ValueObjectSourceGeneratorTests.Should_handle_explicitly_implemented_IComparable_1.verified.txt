@@ -16,7 +16,7 @@ partial class ValueObjectForStructWithExplicitInterfaceImplementation :
       if(obj is not global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation item)
          throw new global::System.ArgumentException("Argument must be of type \"ValueObjectForStructWithExplicitInterfaceImplementation\".", nameof(obj));
 
-      return ((global::System.IComparable)this).CompareTo(item);
+      return this.CompareTo(item);
    }
 
    /// <inheritdoc />

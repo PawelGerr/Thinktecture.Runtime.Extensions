@@ -16,7 +16,7 @@ partial struct TestValueObject :
       if(obj is not global::Thinktecture.Tests.TestValueObject item)
          throw new global::System.ArgumentException("Argument must be of type \"TestValueObject\".", nameof(obj));
 
-      return ((global::System.IComparable)this).CompareTo(item);
+      return this.CompareTo(item);
    }
 
    /// <inheritdoc />
