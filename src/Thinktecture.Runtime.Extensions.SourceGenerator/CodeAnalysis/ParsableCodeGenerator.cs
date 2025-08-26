@@ -82,6 +82,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
+      var needParseMethod = false;
+
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
@@ -89,6 +91,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       }
       else if (state.KeyMember is not null)
       {
+         needParseMethod = true;
          sb.Append(@"
       var key = ParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider);
       var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out var result);");
@@ -100,7 +103,11 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return result!;
 
       throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
-   }
+   }");
+
+      if (needParseMethod)
+      {
+         sb.Append(@"
 
    [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
    private static TValue ParseValue<TValue>(string s, global::System.IFormatProvider? provider)
@@ -108,6 +115,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       return TValue.Parse(s, provider);
    }");
+      }
    }
 
    private static void GenerateParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
@@ -146,6 +154,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return false;
       }");
 
+      var needParseMethod = false;
+
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
@@ -154,6 +164,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       }
       else if (state.KeyMember is not null)
       {
+         needParseMethod = true;
          sb.Append(@"
 
       if (!TryParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider, out var key))
@@ -167,7 +178,11 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
       sb.Append(@"
       return validationError is null;
-   }
+   }");
+
+      if (needParseMethod)
+      {
+         sb.Append(@"
 
    [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
    private static bool TryParseValue<TValue>(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out TValue result)
@@ -175,6 +190,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       return TValue.TryParse(s, provider, out result);
    }");
+      }
    }
 
    private static void GenerateTryParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
