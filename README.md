@@ -36,6 +36,7 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 **Discriminated Unions articles**:
 * [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
+* [Pattern Matching with Discriminated Unions in .NET](https://www.thinktecture.com/net/pattern-matching-with-discriminated-unions-in-net/)
 
 # Requirements
 
