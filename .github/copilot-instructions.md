@@ -19,7 +19,7 @@ These instructions are **not** for end-users of the library. End-user documentat
 
 ## Important files
 
-- `Thinktecture.Runtime.Extensions.sln`: The main solution file.
+- `Thinktecture.Runtime.Extensions.slnx`: The main solution file.
 - `src/`: Contains the source code for the library.
 - `test/`: Contains the unit tests.
 - `docs/`: Contains the documentation.

@@ -4,6 +4,8 @@
 **/obj/**
 **/packages/**
 **/test-results/**
+.local-memory/**
+.serena/cache/**
 
 *\.sln\.DotSettings\.user
 *\.csproj\.user
