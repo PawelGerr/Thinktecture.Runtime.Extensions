@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -144,6 +145,8 @@ public class Program
 
    private static IServiceProvider CreateServiceProvider(LoggingLevelSwitch loggingLevelSwitch)
    {
+      var configuration = GetConfiguration();
+
       return new ServiceCollection()
              .AddLogging(builder =>
              {
@@ -157,7 +160,7 @@ public class Program
 
                 builder.AddSerilog(serilogLogger);
              })
-             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer("Server=localhost;Database=TT-Runtime-Extensions-Demo;Integrated Security=true;TrustServerCertificate=true")
+             .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer(configuration.GetConnectionString("default"))
                                                                 .EnableSensitiveDataLogging()
                                                                 .UseThinktectureValueConverters(configureEnumsAndKeyedValueObjects: property =>
                                                                 {
@@ -177,6 +180,14 @@ public class Program
                                                                    }
                                                                 }))
              .BuildServiceProvider();
+   }
+
+   private static IConfiguration GetConfiguration()
+   {
+      return new ConfigurationBuilder()
+             .AddJsonFile("appsettings.json")
+             .AddUserSecrets<Program>()
+             .Build();
    }
 
    private static int RoundUp(int value)
