@@ -30,35 +30,23 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup Python and Serena MCP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip3 install uv
+
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1
+        env:
+          CONTEXT7_API_KEY: ${{ secrets.CONTEXT7_API_KEY }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # This is an optional setting that allows Claude to read CI results on PRs
           additional_permissions: |
             actions: read
           
-          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4.1)
-          # model: "claude-opus-4-1-20250805"
-          
-          # Optional: Customize the trigger phrase (default: @claude)
-          # trigger_phrase: "/claude"
-          
-          # Optional: Trigger when specific user is assigned to an issue
-          # assignee_trigger: "claude-bot"
-          
-          # Optional: Allow Claude to run specific commands
-          # allowed_tools: "Bash(npm install),Bash(npm run build),Bash(npm run test:*),Bash(npm run lint:*)"
-          
-          # Optional: Add custom instructions for Claude to customize its behavior for your project
-          # custom_instructions: |
-          #   Follow our coding standards
-          #   Ensure all new code has tests
-          #   Use TypeScript for new files
-          
-          # Optional: Custom environment variables for Claude
-          # claude_env: |
-          #   NODE_ENV: test
-
+          claude_args: |
+            --mcp-config ".github/workflows/mcp-config.json"
+            --allowedTools mcp__context7__resolve-library-id,mcp__context7__get-library-docs,mcp__sequential-thinking__sequentialthinking,mcp__serena__list_dir,mcp__serena__find_file,mcp__serena__search_for_pattern,mcp__serena__get_symbols_overview,mcp__serena__find_symbol,mcp__serena__find_referencing_symbols,mcp__serena__replace_symbol_body,mcp__serena__insert_after_symbol,mcp__serena__insert_before_symbol,mcp__serena__write_memory,mcp__serena__read_memory,mcp__serena__list_memories,mcp__serena__delete_memory,mcp__serena__activate_project,mcp__serena__check_onboarding_performed,mcp__serena__onboarding,mcp__serena__think_about_collected_information,mcp__serena__think_about_task_adherence,mcp__serena__think_about_whether_you_are_done

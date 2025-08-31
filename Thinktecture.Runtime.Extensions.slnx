@@ -15,6 +15,13 @@
     <File Path="README.md" />
     <File Path="CLAUDE.md" />
   </Folder>
+  <Folder Name="/assets/.github/">
+    <File Path=".github\workflows\claude.yml" />
+    <File Path=".github\workflows\claude-code-review.yml" />
+    <File Path=".github\workflows\ci.ps1" />
+    <File Path=".github\workflows\mcp-config.json" />
+    <File Path=".github\workflows\main.yml" />
+  </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/AspNetCore.Samples/AspNetCore.Samples.csproj" />
     <Project Path="samples/Basic.Samples/Basic.Samples.csproj" />
