@@ -40,6 +40,9 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
 partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
+   /// <summary>
+   /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
+   /// </summary>
    public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
@@ -60,6 +63,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Initializes JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
+      /// </summary>
       public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
@@ -311,6 +317,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       }
    }
 
+   /// <summary>
+   /// JSON converter factory for ").AppendTypeForXmlComment(_type).Append(@".
+   /// </summary>
    public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
    {
       /// <inheritdoc />

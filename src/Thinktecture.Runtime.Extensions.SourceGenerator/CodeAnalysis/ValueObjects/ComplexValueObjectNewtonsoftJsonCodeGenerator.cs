@@ -39,6 +39,9 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
 partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
+   /// <summary>
+   /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
+   /// </summary>
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
       private static readonly global::System.Type _type = typeof(").AppendTypeFullyQualified(_type).Append(@");

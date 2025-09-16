@@ -103,6 +103,9 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
+      /// <summary>
+      /// Default instance of ").AppendTypeForXmlComment(_state).Append(@".
+      /// </summary>
       public static readonly ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
@@ -272,7 +275,15 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateCreateMethod(bool allowNullOutput, bool emptyStringYieldsNull)
    {
       _sb.Append(@"
-");
+      /// <summary>
+      /// Creates an instance of the type ").AppendTypeForXmlComment(_state).Append(@" from the provided value,
+      /// performing validation during the process.
+      /// </summary>
+      /// <param name=""").Append(_state.KeyMember.ArgumentName).Append(@""">The value to create the object from.</param>
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if validation is successful.</returns>
+      /// <exception cref=""System.ComponentModel.DataAnnotations.ValidationException"">
+      /// Thrown if the provided value does not pass validation.
+      /// </exception>");
 
       // If emptyStringYieldsNull=true then an empty-string-argument (i.e. not null) will lead to null as return value,
       // that's why we cannot use the NotNullIfNotNullAttribute.
@@ -298,6 +309,16 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+      /// <summary>
+      /// Tries to create an instance of the type ").AppendTypeForXmlComment(_state).Append(@" based on provided value.
+      /// </summary>
+      /// <param name=""").Append(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
+      /// <param name=""obj"">
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// </param>
+      /// <returns>
+      /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
+      /// </returns>
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(@", out obj, out _);
@@ -305,6 +326,19 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Tries to create an instance of the type ").AppendTypeForXmlComment(_state).Append(@" based on provided value.
+      /// </summary>
+      /// <param name=""").Append(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
+      /// <param name=""obj"">
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// </param>
+      /// <param name=""validationError"">
+      /// When the method returns, contains the validation error if the creation or validation failed; otherwise, it will be <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
+      /// </returns>
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append(@"(
          ").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(@",
          ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj,
@@ -322,6 +356,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Validates the provided value and attempts to create an instance of ").AppendTypeForXmlComment(_state).Append(@".
+      /// </summary>
+      /// <param name=""").Append(_state.KeyMember.ArgumentName).Append(@""">The value to validate.</param>
+      /// <param name=""provider"">The format provider for parsing or validation, if applicable.</param>
+      /// <param name=""obj"">When the method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation succeeds; otherwise, <c>null</c>.</param>
+      /// <returns>
+      /// A ").AppendTypeForXmlComment(_state.ValidationError).Append(@" representing the validation error if validation fails; otherwise, <c>null</c>.
+      /// </returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullKeyMemberInput).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {");
 
@@ -421,6 +464,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+      /// <summary>
+      /// Initializes a new instance of the ").AppendTypeForXmlComment(_state).Append(@" type.
+      /// </summary>
       ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").RenderArgumentWithType(_state.KeyMember).Append(@")
       {
          ValidateConstructorArguments(").RenderArgument(_state.KeyMember, "ref ").Append(@");

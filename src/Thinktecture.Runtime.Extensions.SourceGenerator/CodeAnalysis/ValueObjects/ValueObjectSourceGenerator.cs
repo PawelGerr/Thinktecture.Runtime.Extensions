@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public ValueObjectSourceGenerator()
-      : base(15_000)
+      : base(18_000)
    {
    }
 

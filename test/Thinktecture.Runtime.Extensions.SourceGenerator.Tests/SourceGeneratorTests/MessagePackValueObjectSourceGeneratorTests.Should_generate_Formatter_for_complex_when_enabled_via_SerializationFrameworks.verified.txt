@@ -6,6 +6,9 @@ namespace Thinktecture.Tests;
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial class ComplexValueObjectWithNonNullProperty
 {
+   /// <summary>
+   /// MassagePack formatter for <see cref="ComplexValueObjectWithNonNullProperty"/>.
+   /// </summary>
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty?>
    {
       /// <inheritdoc />

@@ -6,6 +6,9 @@ namespace Thinktecture.Tests;
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
 partial class TestValueObject
 {
+   /// <summary>
+   /// JSON converter for <see cref="TestValueObject"/>.
+   /// </summary>
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
       private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.TestValueObject);

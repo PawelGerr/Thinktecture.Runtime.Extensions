@@ -65,6 +65,9 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 {
+   /// <summary>
+   /// MassagePack formatter for ").AppendTypeForXmlComment(_type).Append(@".
+   /// </summary>
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@">
    {
       /// <inheritdoc />

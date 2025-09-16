@@ -6,6 +6,9 @@ namespace Thinktecture.Tests;
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial class TestValueObject
 {
+   /// <summary>
+   /// MassagePack formatter for <see cref="TestValueObject"/>.
+   /// </summary>
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject?>
    {
       /// <inheritdoc />

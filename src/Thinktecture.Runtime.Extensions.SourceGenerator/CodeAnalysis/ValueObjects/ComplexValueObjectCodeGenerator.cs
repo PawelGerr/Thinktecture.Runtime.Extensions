@@ -119,6 +119,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Creates an instance of the ").AppendTypeForXmlComment(_state).Append(@" type if the provided values pass validation.
+      /// </summary>");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      {
+         var memberInfo = fieldsAndProperties[i];
+
+         _sb.Append(@"
+      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      }
+
+      _sb.Append(@"
+      /// <returns>A newly created ").AppendTypeForXmlComment(_state).Append(@" instance.</returns>
+      /// <exception cref=""System.ComponentModel.DataAnnotations.ValidationException"">Thrown when the provided values fail validation.</exception>
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties, prefix: @"
          ", comma: ",").Append(@")
       {
@@ -146,6 +161,27 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Attempts to create an instance of type ").AppendTypeForXmlComment(_state).Append(@"
+      /// if the provided values pass validation.
+      /// </summary>");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      {
+         var memberInfo = fieldsAndProperties[i];
+
+         _sb.Append(@"
+      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      }
+
+      _sb.Append(@"
+      /// <param name=""obj"">
+      /// When this method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@"
+      /// if the operation is successful; otherwise, <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
+      /// </returns>
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -169,6 +205,31 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Attempts to create an instance of type ").AppendTypeForXmlComment(_state).Append(@"
+      /// if the provided values pass validation.
+      /// </summary>");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      {
+         var memberInfo = fieldsAndProperties[i];
+
+         _sb.Append(@"
+      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      }
+
+      _sb.Append(@"
+      /// <param name=""obj"">
+      /// When this method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@"
+      /// if the operation is successful; otherwise, <c>null</c>.
+      /// </param>
+      /// <param name=""validationError"">
+      /// When this method returns, contains the ").AppendTypeForXmlComment(_state.ValidationError).Append(@"
+      /// describing why validation failed, if the operation fails; otherwise, <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
+      /// </returns>
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -199,6 +260,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Validates the values and creates an instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation is successful.
+      /// </summary>");
+
+      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      {
+         var memberInfo = fieldsAndProperties[i];
+
+         _sb.Append(@"
+      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      }
+
+      _sb.Append(@"
+      /// <param name=""obj"">The created object if validation is successful, otherwise <c>null</c>.</param>
+      /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -350,6 +426,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      /// <summary>
+      /// Initializes a new instance of the ").AppendTypeForXmlComment(_state).Append(@" type.
+      /// </summary>
       ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, prefix: @"

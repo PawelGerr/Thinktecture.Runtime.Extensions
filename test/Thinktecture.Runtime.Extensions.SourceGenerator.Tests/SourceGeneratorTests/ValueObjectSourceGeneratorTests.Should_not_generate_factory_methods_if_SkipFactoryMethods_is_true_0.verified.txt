@@ -65,6 +65,9 @@ namespace Thinktecture.Tests
          return obj._value;
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="TestValueObject"/> type.
+      /// </summary>
       private TestValueObject(int @value)
       {
          ValidateConstructorArguments(ref @value);

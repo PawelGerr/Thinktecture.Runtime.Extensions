@@ -31,6 +31,17 @@ namespace Thinktecture.Tests
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
+      /// <summary>
+      /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
+      /// </summary>
+      /// <param name="stringValue">The value to be used for object creation.</param>
+      /// <param name="intValue">The value to be used for object creation.</param>
+      /// <param name="referenceProperty">The value to be used for object creation.</param>
+      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
+      /// <param name="structProperty">The value to be used for object creation.</param>
+      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
+      /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static global::Thinktecture.ValidationError? Validate(
          string @stringValue,
          int @intValue,
@@ -82,6 +93,17 @@ namespace Thinktecture.Tests
          return validationError;
       }
 
+      /// <summary>
+      /// Creates an instance of the <see cref="TestValueObject"/> type if the provided values pass validation.
+      /// </summary>
+      /// <param name="stringValue">The value to be used for object creation.</param>
+      /// <param name="intValue">The value to be used for object creation.</param>
+      /// <param name="referenceProperty">The value to be used for object creation.</param>
+      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
+      /// <param name="structProperty">The value to be used for object creation.</param>
+      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
+      /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       public static global::Thinktecture.Tests.TestValueObject Create(
          string @stringValue,
          int @intValue,
@@ -105,6 +127,23 @@ namespace Thinktecture.Tests
          return obj!;
       }
 
+      /// <summary>
+      /// Attempts to create an instance of type <see cref="TestValueObject"/>
+      /// if the provided values pass validation.
+      /// </summary>
+      /// <param name="stringValue">The value to be used for object creation.</param>
+      /// <param name="intValue">The value to be used for object creation.</param>
+      /// <param name="referenceProperty">The value to be used for object creation.</param>
+      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
+      /// <param name="structProperty">The value to be used for object creation.</param>
+      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="obj">
+      /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
+      /// if the operation is successful; otherwise, <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
+      /// </returns>
       public static bool TryCreate(
          string @stringValue,
          int @intValue,
@@ -125,6 +164,27 @@ namespace Thinktecture.Tests
             out _);
       }
 
+      /// <summary>
+      /// Attempts to create an instance of type <see cref="TestValueObject"/>
+      /// if the provided values pass validation.
+      /// </summary>
+      /// <param name="stringValue">The value to be used for object creation.</param>
+      /// <param name="intValue">The value to be used for object creation.</param>
+      /// <param name="referenceProperty">The value to be used for object creation.</param>
+      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
+      /// <param name="structProperty">The value to be used for object creation.</param>
+      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="obj">
+      /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
+      /// if the operation is successful; otherwise, <c>null</c>.
+      /// </param>
+      /// <param name="validationError">
+      /// When this method returns, contains the <see cref="global::Thinktecture.ValidationError"/>
+      /// describing why validation failed, if the operation fails; otherwise, <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
+      /// </returns>
       public static bool TryCreate(
          string @stringValue,
          int @intValue,
@@ -158,6 +218,9 @@ namespace Thinktecture.Tests
 
       partial void FactoryPostInit();
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="TestValueObject"/> type.
+      /// </summary>
       private TestValueObject(
          string @stringValue,
          int @intValue,

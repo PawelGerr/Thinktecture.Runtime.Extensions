@@ -6,6 +6,9 @@ namespace Thinktecture.Tests;
 [global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
 partial class ComplexValueObjectWithPartialKeys
 {
+   /// <summary>
+   /// MassagePack formatter for <see cref="ComplexValueObjectWithPartialKeys"/>.
+   /// </summary>
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys?>
    {
       /// <inheritdoc />

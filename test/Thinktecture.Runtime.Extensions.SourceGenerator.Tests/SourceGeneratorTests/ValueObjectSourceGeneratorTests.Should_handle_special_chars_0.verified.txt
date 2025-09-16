@@ -41,6 +41,15 @@ namespace Thinktecture.Tests
       /// </summary>
       private readonly int _1Key;
 
+      /// <summary>
+      /// Validates the provided value and attempts to create an instance of <see cref="_1TestValueObject"/>.
+      /// </summary>
+      /// <param name="_1Key">The value to validate.</param>
+      /// <param name="provider">The format provider for parsing or validation, if applicable.</param>
+      /// <param name="obj">When the method returns, contains the created instance of type <see cref="_1TestValueObject"/> if validation succeeds; otherwise, <c>null</c>.</param>
+      /// <returns>
+      /// A <see cref="global::Thinktecture.ValidationError"/> representing the validation error if validation fails; otherwise, <c>null</c>.
+      /// </returns>
       public static global::Thinktecture.ValidationError? Validate(int @_1Key, global::System.IFormatProvider? @provider, out global::Thinktecture.Tests._1TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
@@ -58,7 +67,15 @@ namespace Thinktecture.Tests
 
          return validationError;
       }
-
+      /// <summary>
+      /// Creates an instance of the type <see cref="_1TestValueObject"/> from the provided value,
+      /// performing validation during the process.
+      /// </summary>
+      /// <param name="_1Key">The value to create the object from.</param>
+      /// <returns>An instance of <see cref="_1TestValueObject"/> if validation is successful.</returns>
+      /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">
+      /// Thrown if the provided value does not pass validation.
+      /// </exception>
       public static global::Thinktecture.Tests._1TestValueObject Create(int @_1Key)
       {
          var validationError = Validate(@_1Key, null, out global::Thinktecture.Tests._1TestValueObject? obj);
@@ -69,11 +86,34 @@ namespace Thinktecture.Tests
          return obj!;
       }
 
+      /// <summary>
+      /// Tries to create an instance of the type <see cref="_1TestValueObject"/> based on provided value.
+      /// </summary>
+      /// <param name="_1Key">The value to be used for object creation.</param>
+      /// <param name="obj">
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// </param>
+      /// <returns>
+      /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
+      /// </returns>
       public static bool TryCreate(int @_1Key, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests._1TestValueObject? obj)
       {
          return TryCreate(@_1Key, out obj, out _);
       }
 
+      /// <summary>
+      /// Tries to create an instance of the type <see cref="_1TestValueObject"/> based on provided value.
+      /// </summary>
+      /// <param name="_1Key">The value to be used for object creation.</param>
+      /// <param name="obj">
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// </param>
+      /// <param name="validationError">
+      /// When the method returns, contains the validation error if the creation or validation failed; otherwise, it will be <c>null</c>.
+      /// </param>
+      /// <returns>
+      /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
+      /// </returns>
       public static bool TryCreate(
          int @_1Key,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests._1TestValueObject? obj,
@@ -133,6 +173,9 @@ namespace Thinktecture.Tests
          return global::Thinktecture.Tests._1TestValueObject.Create(@_1Key);
       }
 
+      /// <summary>
+      /// Initializes a new instance of the <see cref="_1TestValueObject"/> type.
+      /// </summary>
       private _1TestValueObject(int @_1Key)
       {
          ValidateConstructorArguments(ref @_1Key);

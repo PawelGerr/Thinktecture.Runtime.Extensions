@@ -6,6 +6,9 @@ namespace Thinktecture.Tests;
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
 partial struct TestValueObject
 {
+   /// <summary>
+   /// JSON converter for <see cref="TestValueObject"/>.
+   /// </summary>
    public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
       private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
@@ -15,6 +18,9 @@ partial struct TestValueObject
       private readonly global::System.Text.Json.Serialization.JsonConverter<decimal?> _nullableStructPropertyConverter;
       private readonly string _nullableStructPropertyPropertyName;
 
+      /// <summary>
+      /// Initializes JSON converter for <see cref="TestValueObject"/>.
+      /// </summary>
       public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
@@ -121,6 +127,9 @@ partial struct TestValueObject
       }
    }
 
+   /// <summary>
+   /// JSON converter factory for <see cref="TestValueObject"/>.
+   /// </summary>
    public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
    {
       /// <inheritdoc />
