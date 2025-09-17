@@ -39,7 +39,7 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
 
          if (typeMember.BaseTypeDefinitionFullyQualified == state.TypeDefinitionFullyQualified)
          {
-            typeMembers.Add(MakeTypeMember(typeMember, sb));
+            typeMembers.Add(MakeTypeMember(typeMember, null, sb));
          }
          else
          {
@@ -62,7 +62,7 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
                if (typeMember.State.TypeDefinitionFullyQualified != unsortedTypeMember.BaseTypeDefinitionFullyQualified)
                   continue;
 
-               var derivedType = MakeTypeMember(unsortedTypeMember, sb);
+               var derivedType = MakeTypeMember(unsortedTypeMember, typeMember, sb);
                typeMember.DerivedTypes.Add(derivedType);
                typeMembers.Add(derivedType);
                unsortedTypeMembers.RemoveAt(i);
@@ -79,12 +79,13 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
 
    private static TypeMember MakeTypeMember(
       RegularUnionTypeMemberState typeMember,
+      TypeMember? baseType,
       StringBuilder sb)
    {
       var argName = typeMember.ContainingTypes
                               .MakeFullyQualifiedArgumentName(typeMember.Name, skipRootContainingType: true, sb);
 
-      return new TypeMember(typeMember, argName, []);
+      return new TypeMember(typeMember, argName, baseType, []);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -332,19 +333,33 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (isPartially)
          {
             _sb.Append(@"
-            if (").AppendEscaped(typeMember.ArgumentName).Append(@" is null)
-               break;
-");
-         }
+            if (").AppendEscaped(typeMember.ArgumentName).Append(@" is not null)
+            {
+               ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
-         _sb.Append(@"
+            if (withState)
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+
+            _sb.Append(@"value);
+               return;
+            }
+");
+            GenerateBaseTypeActionChecks(typeMember, withState);
+
+            _sb.Append(@"
+            break;");
+         }
+         else
+         {
+            _sb.Append(@"
             ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
-         if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            if (withState)
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.Append(@"value);
+            _sb.Append(@"value);
             return;");
+         }
       }
 
       _sb.Append(@"
@@ -478,18 +493,32 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (isPartially)
          {
             _sb.Append(@"
-            if (").AppendEscaped(typeMember.ArgumentName).Append(@" is null)
-               break;
-");
-         }
+            if (").AppendEscaped(typeMember.ArgumentName).Append(@" is not null)
+            {
+               return ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
-         _sb.Append(@"
+            if (withState)
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+
+            _sb.Append(@"value);
+            }
+");
+
+            GenerateBaseTypeFuncChecks(typeMember, withState);
+
+            _sb.Append(@"
+            break;");
+         }
+         else
+         {
+            _sb.Append(@"
             return ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
-         if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            if (withState)
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.Append("value);");
+            _sb.Append("value);");
+         }
       }
 
       _sb.Append(@"
@@ -592,18 +621,22 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (isPartially)
          {
             _sb.Append(@"
-               if (!").AppendEscaped(typeMember.ArgumentName).Append(@".IsSet)
-                  break;
+               if (").AppendEscaped(typeMember.ArgumentName).Append(@".IsSet)
+               {
+                  return ").AppendEscaped(typeMember.ArgumentName).Append(@".Value;
+               }
 ");
+
+            GenerateBaseTypeMapChecks(typeMember);
+
+            _sb.Append(@"
+               break;");
          }
-
-         _sb.Append(@"
-               return ").AppendEscaped(typeMember.ArgumentName);
-
-         if (isPartially)
-            _sb.Append(".Value");
-
-         _sb.Append(";");
+         else
+         {
+            _sb.Append(@"
+               return ").AppendEscaped(typeMember.ArgumentName).Append(";");
+         }
       }
 
       _sb.Append(@"
@@ -651,9 +684,82 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
    }
 
-   private readonly record struct TypeMember(
+   private void GenerateBaseTypeActionChecks(TypeMember derivedType, bool withState)
+   {
+      var currentBaseType = derivedType.BaseType;
+
+      while (currentBaseType != null)
+      {
+         if (!currentBaseType.State.IsAbstract)
+         {
+            _sb.Append(@"
+            if (").AppendEscaped(currentBaseType.ArgumentName).Append(@" is not null)
+            {
+               ").AppendEscaped(currentBaseType.ArgumentName).Append("(");
+
+            if (withState)
+            {
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            }
+
+            _sb.Append(@"value);
+               return;
+            }");
+         }
+
+         currentBaseType = currentBaseType.BaseType;
+      }
+   }
+
+   private void GenerateBaseTypeFuncChecks(TypeMember derivedType, bool withState)
+   {
+      var currentBaseType = derivedType.BaseType;
+
+      while (currentBaseType != null)
+      {
+         if (!currentBaseType.State.IsAbstract)
+         {
+            _sb.Append(@"
+            if (").AppendEscaped(currentBaseType.ArgumentName).Append(@" is not null)
+            {
+               return ").AppendEscaped(currentBaseType.ArgumentName).Append("(");
+
+            if (withState)
+            {
+               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            }
+
+            _sb.Append(@"value);
+            }");
+         }
+
+         currentBaseType = currentBaseType.BaseType;
+      }
+   }
+
+   private void GenerateBaseTypeMapChecks(TypeMember derivedType)
+   {
+      var currentBaseType = derivedType.BaseType;
+
+      while (currentBaseType != null)
+      {
+         if (!currentBaseType.State.IsAbstract)
+         {
+            _sb.Append(@"
+               if (").AppendEscaped(currentBaseType.ArgumentName).Append(@".IsSet)
+               {
+                  return ").AppendEscaped(currentBaseType.ArgumentName).Append(@".Value;
+               }");
+         }
+
+         currentBaseType = currentBaseType.BaseType;
+      }
+   }
+
+   private sealed record TypeMember(
       RegularUnionTypeMemberState State,
       string ArgumentName,
+      TypeMember? BaseType,
       List<TypeMember> DerivedTypes);
 
    private class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>

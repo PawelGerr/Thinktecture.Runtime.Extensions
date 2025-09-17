@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
 {
    public RegularUnionSwitchMapOverloadTests(ITestOutputHelper output)
-      : base(output, 33_000) // Increased limit to accommodate the additional overload methods
+      : base(output, 35_000) // Increased limit to accommodate the additional overload methods
    {
    }
 
@@ -206,4 +206,61 @@ public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_handle_derived_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+                   MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+            public partial class PlaceId
+            {
+               public class Unknown : PlaceId
+               {
+                  public static readonly Unknown Instance = new();
+
+                  private Unknown()
+                  {
+                  }
+               }
+
+               [ValueObject<int>]
+               public partial class CountryId : PlaceId;
+
+               public abstract class AbstractRegionId : PlaceId
+               {
+                  private AbstractRegionId()
+                  {
+                  }
+
+                  public sealed class SpecialRegionId : AbstractRegionId;
+               }
+
+               public class RegionId : PlaceId
+               {
+                  private RegionId()
+                  {
+                  }
+
+                  public sealed class InnerPlaceId : PlaceId;
+
+                  public sealed class InnerRegionId : RegionId;
+
+                  public class InnerRegionId2 : object;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.PlaceId.RegularUnion.g.cs");
+   }
+
+
 }

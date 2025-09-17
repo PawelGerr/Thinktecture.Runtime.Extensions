@@ -31,7 +31,9 @@ public partial class PlaceId
       {
       }
 
-      public sealed class InnerRegionId : PlaceId;
+      public sealed class InnerPlaceId : PlaceId;
+
+      public sealed class InnerRegionId : RegionId;
 
       public class InnerRegionId2 : object;
    }

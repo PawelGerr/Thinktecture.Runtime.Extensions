@@ -69,23 +69,29 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.ConcreteType2 value:
-            if (@concreteType2 is null)
-               break;
+            if (@concreteType2 is not null)
+            {
+               @concreteType2(value);
+               return;
+            }
 
-            @concreteType2(value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.ConcreteType1 value:
-            if (@concreteType1 is null)
-               break;
+            if (@concreteType1 is not null)
+            {
+               @concreteType1(value);
+               return;
+            }
 
-            @concreteType1(value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               @otherType(value);
+               return;
+            }
 
-            @otherType(value);
-            return;
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -148,23 +154,29 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.ConcreteType2 value:
-            if (@concreteType2 is null)
-               break;
+            if (@concreteType2 is not null)
+            {
+               @concreteType2(@state, value);
+               return;
+            }
 
-            @concreteType2(@state, value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.ConcreteType1 value:
-            if (@concreteType1 is null)
-               break;
+            if (@concreteType1 is not null)
+            {
+               @concreteType1(@state, value);
+               return;
+            }
 
-            @concreteType1(@state, value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               @otherType(@state, value);
+               return;
+            }
 
-            @otherType(@state, value);
-            return;
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -220,20 +232,26 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.ConcreteType2 value:
-            if (@concreteType2 is null)
-               break;
+            if (@concreteType2 is not null)
+            {
+               return @concreteType2(value);
+            }
 
-            return @concreteType2(value);
+            break;
          case global::Thinktecture.Tests.TestUnion.ConcreteType1 value:
-            if (@concreteType1 is null)
-               break;
+            if (@concreteType1 is not null)
+            {
+               return @concreteType1(value);
+            }
 
-            return @concreteType1(value);
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               return @otherType(value);
+            }
 
-            return @otherType(value);
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -295,20 +313,26 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.ConcreteType2 value:
-            if (@concreteType2 is null)
-               break;
+            if (@concreteType2 is not null)
+            {
+               return @concreteType2(@state, value);
+            }
 
-            return @concreteType2(@state, value);
+            break;
          case global::Thinktecture.Tests.TestUnion.ConcreteType1 value:
-            if (@concreteType1 is null)
-               break;
+            if (@concreteType1 is not null)
+            {
+               return @concreteType1(@state, value);
+            }
 
-            return @concreteType1(@state, value);
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               return @otherType(@state, value);
+            }
 
-            return @otherType(@state, value);
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -364,20 +388,26 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.ConcreteType2 value:
-               if (!@concreteType2.IsSet)
-                  break;
+               if (@concreteType2.IsSet)
+               {
+                  return @concreteType2.Value;
+               }
 
-               return @concreteType2.Value;
+               break;
          case global::Thinktecture.Tests.TestUnion.ConcreteType1 value:
-               if (!@concreteType1.IsSet)
-                  break;
+               if (@concreteType1.IsSet)
+               {
+                  return @concreteType1.Value;
+               }
 
-               return @concreteType1.Value;
+               break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-               if (!@otherType.IsSet)
-                  break;
+               if (@otherType.IsSet)
+               {
+                  return @otherType.Value;
+               }
 
-               return @otherType.Value;
+               break;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
@@ -423,17 +453,21 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.BaseType value:
-            if (@baseType is null)
-               break;
+            if (@baseType is not null)
+            {
+               @baseType(value);
+               return;
+            }
 
-            @baseType(value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               @otherType(value);
+               return;
+            }
 
-            @otherType(value);
-            return;
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -489,17 +523,21 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.BaseType value:
-            if (@baseType is null)
-               break;
+            if (@baseType is not null)
+            {
+               @baseType(@state, value);
+               return;
+            }
 
-            @baseType(@state, value);
-            return;
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               @otherType(@state, value);
+               return;
+            }
 
-            @otherType(@state, value);
-            return;
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -549,15 +587,19 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.BaseType value:
-            if (@baseType is null)
-               break;
+            if (@baseType is not null)
+            {
+               return @baseType(value);
+            }
 
-            return @baseType(value);
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               return @otherType(value);
+            }
 
-            return @otherType(value);
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -613,15 +655,19 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.BaseType value:
-            if (@baseType is null)
-               break;
+            if (@baseType is not null)
+            {
+               return @baseType(@state, value);
+            }
 
-            return @baseType(@state, value);
+            break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-            if (@otherType is null)
-               break;
+            if (@otherType is not null)
+            {
+               return @otherType(@state, value);
+            }
 
-            return @otherType(@state, value);
+            break;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -671,15 +717,19 @@ abstract partial class TestUnion :
       switch (this)
       {
          case global::Thinktecture.Tests.TestUnion.BaseType value:
-               if (!@baseType.IsSet)
-                  break;
+               if (@baseType.IsSet)
+               {
+                  return @baseType.Value;
+               }
 
-               return @baseType.Value;
+               break;
          case global::Thinktecture.Tests.TestUnion.OtherType value:
-               if (!@otherType.IsSet)
-                  break;
+               if (@otherType.IsSet)
+               {
+                  return @otherType.Value;
+               }
 
-               return @otherType.Value;
+               break;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }

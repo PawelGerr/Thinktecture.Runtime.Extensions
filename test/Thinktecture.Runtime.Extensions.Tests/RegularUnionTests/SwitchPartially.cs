@@ -59,6 +59,24 @@ public class SwitchPartially
 
             calledActionOn.Should().Be(expected);
          }
+
+         [Theory]
+         [InlineData(1, "RegionId")]
+         [InlineData(2, "InnerRegionId")]
+         public void Should_use_base_class_callback_before_default(int index, string expected)
+         {
+            var value = new PlaceId.RegionId.InnerRegionId();
+            string calledActionOn = null;
+
+            value.SwitchPartially(@default: _ =>
+                                  {
+                                     calledActionOn = "default";
+                                  },
+                                  regionId: index == 1 ? _ => calledActionOn = "RegionId" : null,
+                                  regionIdInnerRegionId: index == 2 ? _ => calledActionOn = "InnerRegionId" : null);
+
+            calledActionOn.Should().Be(expected);
+         }
       }
 
       public class WithActionAndState
@@ -111,15 +129,15 @@ public class SwitchPartially
 
             value.SwitchPartially(state,
                                   child1: (s, v) =>
-                                          {
-                                             s.Value.Should().Be(42);
-                                             calledActionOn = v.Name;
-                                          },
+                                  {
+                                     s.Value.Should().Be(42);
+                                     calledActionOn = v.Name;
+                                  },
                                   child2: (s, v) =>
-                                          {
-                                             s.Value.Should().Be(42);
-                                             calledActionOn = v.Name;
-                                          });
+                                  {
+                                     s.Value.Should().Be(42);
+                                     calledActionOn = v.Name;
+                                  });
 
             calledActionOn.Should().Be(expected);
          }
@@ -151,6 +169,26 @@ public class SwitchPartially
                                      ctx.Should().Be(state);
                                      calledActionOn = v.Name;
                                   });
+
+            calledActionOn.Should().Be(expected);
+         }
+
+         [Theory]
+         [InlineData(1, "RegionId")]
+         [InlineData(2, "InnerRegionId")]
+         public void Should_use_base_class_callback_before_default(int index, string expected)
+         {
+            var value = new PlaceId.RegionId.InnerRegionId();
+            var state = new object();
+            string calledActionOn = null;
+
+            value.SwitchPartially(state,
+                                  @default: (_, _) =>
+                                  {
+                                     calledActionOn = "default";
+                                  },
+                                  regionId: index == 1 ? (_, _) => calledActionOn = "RegionId" : null,
+                                  regionIdInnerRegionId: index == 2 ? (_, _) => calledActionOn = "InnerRegionId" : null);
 
             calledActionOn.Should().Be(expected);
          }
@@ -212,6 +250,20 @@ public class SwitchPartially
 
             var calledActionOn = value.SwitchPartially(@default: v => $"default:{v.Name}",
                                                        child2: v => v.Name);
+
+            calledActionOn.Should().Be(expected);
+         }
+
+         [Theory]
+         [InlineData(1, "RegionId")]
+         [InlineData(2, "InnerRegionId")]
+         public void Should_use_base_class_callback_before_default(int index, string expected)
+         {
+            var value = new PlaceId.RegionId.InnerRegionId();
+
+            var calledActionOn = value.SwitchPartially(@default: _ => "default",
+                                                       regionId: index == 1 ? _ => "RegionId" : null,
+                                                       regionIdInnerRegionId: index == 2 ? _ => "InnerRegionId" : null);
 
             calledActionOn.Should().Be(expected);
          }
@@ -278,6 +330,22 @@ public class SwitchPartially
                                                           ctx.Should().Be(state);
                                                           return v.Name;
                                                        });
+
+            calledActionOn.Should().Be(expected);
+         }
+
+         [Theory]
+         [InlineData(1, "RegionId")]
+         [InlineData(2, "InnerRegionId")]
+         public void Should_use_base_class_callback_before_default(int index, string expected)
+         {
+            var value = new PlaceId.RegionId.InnerRegionId();
+            var state = new object();
+
+            var calledActionOn = value.SwitchPartially(state,
+                                                       @default: (_, _) => "default",
+                                                       regionId: index == 1 ? (_, _) => "RegionId" : null,
+                                                       regionIdInnerRegionId: index == 2 ? (_, _) => "InnerRegionId" : null);
 
             calledActionOn.Should().Be(expected);
          }

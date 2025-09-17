@@ -65,6 +65,20 @@ public class MapPartially
 
          calledActionOn.Should().Be(expected);
       }
+
+      [Theory]
+      [InlineData(1, "RegionId")]
+      [InlineData(2, "InnerRegionId")]
+      public void Should_use_base_class_callback_before_default(int index, string expected)
+      {
+         var value = new PlaceId.RegionId.InnerRegionId();
+
+         var calledActionOn = value.MapPartially(@default: "default",
+                                                 regionId: index == 1 ? "RegionId" : default(Argument<string>),
+                                                 regionIdInnerRegionId: index == 2 ? "InnerRegionId" : default(Argument<string>));
+
+         calledActionOn.Should().Be(expected);
+      }
    }
 
    public class HavingRecord
