@@ -221,6 +221,7 @@ abstract partial class TestUnion :
       }
    }
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
@@ -264,6 +265,7 @@ abstract partial class TestUnion :
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class
 
    /// <summary>
    /// Executes an action depending on the current type.
@@ -403,6 +405,7 @@ abstract partial class TestUnion :
       }
    }
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
@@ -434,4 +437,5 @@ abstract partial class TestUnion :
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class
 }

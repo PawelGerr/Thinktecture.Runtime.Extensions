@@ -529,6 +529,7 @@ abstract partial class PlaceId :
       return @default(@state, this);
    }
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
@@ -568,7 +569,9 @@ abstract partial class PlaceId :
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
@@ -646,4 +649,5 @@ abstract partial class PlaceId :
 
          return @default;
    }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class
 }

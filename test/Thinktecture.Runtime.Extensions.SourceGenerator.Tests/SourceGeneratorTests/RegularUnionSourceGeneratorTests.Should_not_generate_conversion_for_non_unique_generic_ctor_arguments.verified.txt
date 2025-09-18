@@ -143,6 +143,7 @@ abstract partial record Result<T> :
       }
    }
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
@@ -170,6 +171,7 @@ abstract partial record Result<T> :
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class
 
    /// <summary>
    /// Implicit conversion from type <see cref="string"/>.

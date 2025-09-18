@@ -543,6 +543,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    {
       _sb.Append(@"
 
+#pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name=""TResult""/>.
    /// </summary>");
@@ -602,7 +603,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       GenerateIndexBasedMapSwitchBody(isPartially, typeMembers);
 
       _sb.Append(@"
-   }");
+   }
+#pragma warning restore CS0108 // Map in nested union hides Map from base class");
    }
 
    private void GenerateIndexBasedMapSwitchBody(bool isPartially, IReadOnlyList<TypeMember> typeMembers)
