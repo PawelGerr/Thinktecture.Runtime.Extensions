@@ -1955,6 +1955,66 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
             await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
          }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named_but_not_all_are_present()
+         {
+            var code = """
+
+               using System;
+               using System.Collections.Generic;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var value = new PlaceId.RegionId.InnerRegionId();
+                        var res = value.SwitchPartially(
+                           @default: _ => "default",
+                           regionId: _ => "RegionId" ,
+                           regionIdInnerRegionId: _ => "InnerRegionId");
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named_and_result_is_inlined_as_method_arg()
+         {
+            var code = """
+
+               using System;
+               using System.Collections.Generic;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var value = new PlaceId.RegionId.InnerRegionId();
+                        List<string> res = [];
+
+                        res.Add(value.SwitchPartially(
+                           @default: _ => "default",
+                           regionId: _ => "RegionId" ,
+                           regionIdInnerRegionId: _ => "InnerRegionId"));
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly]);
+         }
       }
 
       public class SwitchWithFuncAndContext

@@ -343,7 +343,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       {
          var argument = args[argIndex];
 
-         if (argument.Syntax is not ArgumentSyntax argSyntax)
+         if (argument.ArgumentKind == ArgumentKind.DefaultValue || argument.Syntax is not ArgumentSyntax argSyntax)
             continue;
 
          if (argSyntax.NameColon is not null)
