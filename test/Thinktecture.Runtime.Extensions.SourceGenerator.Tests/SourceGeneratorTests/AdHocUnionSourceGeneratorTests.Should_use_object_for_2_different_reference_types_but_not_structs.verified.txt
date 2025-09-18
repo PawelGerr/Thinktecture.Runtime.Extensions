@@ -15,7 +15,8 @@ namespace Thinktecture.Tests
       {
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {
-                           typeof(global::System.Collections.Generic.List<string>),
+                           typeof(int),
+                           typeof(string),
                            typeof(global::System.Collections.Generic.List<int>)
                        }
                        .AsReadOnly()
@@ -25,23 +26,35 @@ namespace Thinktecture.Tests
 
       private readonly int _valueIndex;
 
+      private readonly int _int32;
       private readonly object? _obj;
 
       /// <summary>
-      /// Indication whether the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
+      /// Indication whether the current value is of type <see cref="int"/>.
       /// </summary>
-      public bool IsListOfString => this._valueIndex == 1;
+      public bool IsInt32 => this._valueIndex == 1;
+
+      /// <summary>
+      /// Indication whether the current value is of type <see cref="string"/>.
+      /// </summary>
+      public bool IsString => this._valueIndex == 2;
 
       /// <summary>
       /// Indication whether the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.
       /// </summary>
-      public bool IsListOfInt32 => this._valueIndex == 2;
+      public bool IsListOfInt32 => this._valueIndex == 3;
 
       /// <summary>
-      /// Gets the current value as <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
+      /// Gets the current value as <see cref="int"/>.
       /// </summary>
-      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</exception>
-      public global::System.Collections.Generic.List<string> AsListOfString => IsListOfString ? ((global::System.Collections.Generic.List<string>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'List<string>'.");
+      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
+      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+
+      /// <summary>
+      /// Gets the current value as <see cref="string"/>.
+      /// </summary>
+      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
+      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
 
       /// <summary>
       /// Gets the current value as <c>global::System.Collections.Generic.List&lt;int&gt;</c>.
@@ -54,19 +67,30 @@ namespace Thinktecture.Tests
       /// </summary>
       public object Value => this._valueIndex switch
       {
-         1 => this._obj!,
+         1 => this._int32,
          2 => this._obj!,
+         3 => this._obj!,
          _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
       };
 
       /// <summary>
-      /// Initializes new instance with <paramref name="listOfString"/>.
+      /// Initializes new instance with <paramref name="int32"/>.
       /// </summary>
-      /// <param name="listOfString">Value to create a new instance for.</param>
-      public TestUnion(global::System.Collections.Generic.List<string> @listOfString)
+      /// <param name="int32">Value to create a new instance for.</param>
+      public TestUnion(int @int32)
       {
-         this._obj = @listOfString;
+         this._int32 = @int32;
          this._valueIndex = 1;
+      }
+
+      /// <summary>
+      /// Initializes new instance with <paramref name="string"/>.
+      /// </summary>
+      /// <param name="string">Value to create a new instance for.</param>
+      public TestUnion(string @string)
+      {
+         this._obj = @string;
+         this._valueIndex = 2;
       }
 
       /// <summary>
@@ -76,25 +100,30 @@ namespace Thinktecture.Tests
       public TestUnion(global::System.Collections.Generic.List<int> @listOfInt32)
       {
          this._obj = @listOfInt32;
-         this._valueIndex = 2;
+         this._valueIndex = 3;
       }
 
       /// <summary>
       /// Executes an action depending on the current value.
       /// </summary>
-      /// <param name="listOfString">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
+      /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="listOfInt32">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<global::System.Collections.Generic.List<string>> @listOfString,
+         global::System.Action<int> @int32,
+         global::System.Action<string> @string,
          global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32)
       {
          switch (this._valueIndex)
          {
             case 1:
-               @listOfString(((global::System.Collections.Generic.List<string>?)this._obj)!);
+               @int32(this._int32);
                return;
             case 2:
+               @string(((string?)this._obj)!);
+               return;
+            case 3:
                @listOfInt32(((global::System.Collections.Generic.List<int>?)this._obj)!);
                return;
             default:
@@ -106,12 +135,14 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="listOfString">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
+      /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="listOfInt32">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, global::System.Collections.Generic.List<string>> @listOfString,
+         global::System.Action<TState, int> @int32,
+         global::System.Action<TState, string> @string,
          global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
@@ -120,9 +151,12 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @listOfString(@state, ((global::System.Collections.Generic.List<string>?)this._obj)!);
+               @int32(@state, this._int32);
                return;
             case 2:
+               @string(@state, ((string?)this._obj)!);
+               return;
+            case 3:
                @listOfInt32(@state, ((global::System.Collections.Generic.List<int>?)this._obj)!);
                return;
             default:
@@ -133,11 +167,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes a function depending on the current value.
       /// </summary>
-      /// <param name="listOfString">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
+      /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="listOfInt32">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<global::System.Collections.Generic.List<string>, TResult> @listOfString,
+         global::System.Func<int, TResult> @int32,
+         global::System.Func<string, TResult> @string,
          global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -146,8 +182,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @listOfString(((global::System.Collections.Generic.List<string>?)this._obj)!);
+               return @int32(this._int32);
             case 2:
+               return @string(((string?)this._obj)!);
+            case 3:
                return @listOfInt32(((global::System.Collections.Generic.List<int>?)this._obj)!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -158,12 +196,14 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="listOfString">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
+      /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="listOfInt32">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, global::System.Collections.Generic.List<string>, TResult> @listOfString,
+         global::System.Func<TState, int, TResult> @int32,
+         global::System.Func<TState, string, TResult> @string,
          global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -173,8 +213,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @listOfString(@state, ((global::System.Collections.Generic.List<string>?)this._obj)!);
+               return @int32(@state, this._int32);
             case 2:
+               return @string(@state, ((string?)this._obj)!);
+            case 3:
                return @listOfInt32(@state, ((global::System.Collections.Generic.List<int>?)this._obj)!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -184,11 +226,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Maps current value to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
-      /// <param name="listOfString">The instance to return if the current value is of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</param>
+      /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
       /// <param name="listOfInt32">The instance to return if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
-         TResult @listOfString,
+         TResult @int32,
+         TResult @string,
          TResult @listOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -197,8 +241,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @listOfString;
+               return @int32;
             case 2:
+               return @string;
+            case 3:
                return @listOfInt32;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -206,13 +252,23 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion from type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
+      /// Implicit conversion from type <see cref="int"/>.
       /// </summary>
-      /// <param name="listOfString">Value to covert from.</param>
-      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="listOfString"/>.</returns>
-      public static implicit operator global::Thinktecture.Tests.TestUnion(global::System.Collections.Generic.List<string> @listOfString)
+      /// <param name="int32">Value to covert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
+      public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
       {
-         return new global::Thinktecture.Tests.TestUnion(@listOfString);
+         return new global::Thinktecture.Tests.TestUnion(@int32);
+      }
+
+      /// <summary>
+      /// Implicit conversion from type <see cref="string"/>.
+      /// </summary>
+      /// <param name="string">Value to covert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+      public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@string);
       }
 
       /// <summary>
@@ -226,14 +282,25 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Explicit conversion to type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
+      /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
       /// <param name="obj">Object to covert.</param>
-      /// <returns>Inner value of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</returns>
-      /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</exception>
-      public static explicit operator global::System.Collections.Generic.List<string>(global::Thinktecture.Tests.TestUnion obj)
+      /// <returns>Inner value of type <see cref="int"/>.</returns>
+      /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
+      public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
       {
-         return obj.AsListOfString;
+         return obj.AsInt32;
+      }
+
+      /// <summary>
+      /// Explicit conversion to type <see cref="string"/>.
+      /// </summary>
+      /// <param name="obj">Object to covert.</param>
+      /// <returns>Inner value of type <see cref="string"/>.</returns>
+      /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
+      public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
+      {
+         return obj.AsString;
       }
 
       /// <summary>
@@ -292,8 +359,9 @@ namespace Thinktecture.Tests
 
          return this._valueIndex switch
          {
-            1 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Collections.Generic.List<string>)this._obj!).Equals(((global::System.Collections.Generic.List<string>?)other._obj)),
-            2 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Collections.Generic.List<int>)this._obj!).Equals(((global::System.Collections.Generic.List<int>?)other._obj)),
+            1 => this._int32.Equals(other._int32),
+            2 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
+            3 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Collections.Generic.List<int>)this._obj!).Equals(((global::System.Collections.Generic.List<int>?)other._obj)),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -303,8 +371,9 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<string>?)this._obj)?.GetHashCode() ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0),
+            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
+            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((string?)this._obj)?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
+            3 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -314,8 +383,9 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => ((global::System.Collections.Generic.List<string>?)this._obj)?.ToString(),
-            2 => ((global::System.Collections.Generic.List<int>?)this._obj)?.ToString(),
+            1 => this._int32.ToString(),
+            2 => ((string?)this._obj),
+            3 => ((global::System.Collections.Generic.List<int>?)this._obj)?.ToString(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

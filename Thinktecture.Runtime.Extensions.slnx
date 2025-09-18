@@ -2,10 +2,6 @@
   <Folder Name="/assets/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
-    <File Path=".github/copilot-instructions.md" />
-    <File Path=".github/workflows/ci.ps1" />
-    <File Path=".github/workflows/codeql-analysis.yml" />
-    <File Path=".github/workflows/main.yml" />
     <File Path=".gitignore" />
     <File Path="context7.json" />
     <File Path="Directory.Build.props" />
@@ -19,6 +15,7 @@
     <File Path=".github\workflows\claude.yml" />
     <File Path=".github\workflows\claude-code-review.yml" />
     <File Path=".github\workflows\ci.ps1" />
+    <File Path=".github/copilot-instructions.md" />
     <File Path=".github\workflows\mcp-config.json" />
     <File Path=".github\workflows\main.yml" />
   </Folder>

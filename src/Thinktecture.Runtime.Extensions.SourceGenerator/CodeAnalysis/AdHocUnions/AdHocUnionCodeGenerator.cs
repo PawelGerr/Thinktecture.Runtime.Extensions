@@ -9,6 +9,7 @@ public class AdHocUnionCodeGenerator : CodeGeneratorBase
 
    private readonly AdHocUnionSourceGenState _state;
    private readonly StringBuilder _sb;
+   private readonly bool _useSharedObjectForRefTypes;
 
    public AdHocUnionCodeGenerator(
       AdHocUnionSourceGenState state,
@@ -16,6 +17,8 @@ public class AdHocUnionCodeGenerator : CodeGeneratorBase
    {
       _state = state;
       _sb = sb;
+      _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
+                                    || _state.MemberTypes.Where(t => t.IsReferenceType && t.TypeDuplicateCounter <= 1).Select(t => t.TypeFullyQualified).Count() >= 2;
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -247,7 +250,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => this.").Append(memberType.BackingFieldName);
+            ").Append(i + 1).Append(" => ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
@@ -289,7 +292,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, this.").Append(memberType.BackingFieldName);
+         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -366,14 +369,22 @@ namespace ").Append(_state.Namespace).Append(@"
       for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
+         var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
 
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
          if (memberType.IsReferenceType)
-            _sb.Append("this.").Append(memberType.BackingFieldName).Append(" is null ? other.").Append(memberType.BackingFieldName).Append(" is null : ");
+         {
+            _sb.Append("this.").AppendBackingFieldName(useSharedObjectBackingField, memberType).Append(" is null ? other.").AppendBackingFieldName(_state, _useSharedObjectForRefTypes, memberType).Append(" is null : ");
+         }
 
-         _sb.Append("this.").Append(memberType.BackingFieldName).Append(".Equals(other.").Append(memberType.BackingFieldName);
+         if (useSharedObjectBackingField)
+         {
+            _sb.Append("this._valueIndex == other._valueIndex && ");
+         }
+
+         _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
 
          if (memberType.SpecialType == SpecialType.System_String)
             _sb.Append(", global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
@@ -523,7 +534,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
+         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
                return;");
       }
 
@@ -684,7 +695,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.Append("this.").Append(memberType.BackingFieldName).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
+         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
       }
 
       _sb.Append(@"
@@ -866,7 +877,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@")
       {
-         this.").Append(memberType.BackingFieldName).Append(" = ").AppendEscaped(argName).Append(@";
+         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(@";
          this._valueIndex = ");
 
          if (hasDuplicates)
@@ -910,6 +921,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateMemberTypeFieldsAndProps()
    {
+      var objBackingFieldWritten = false;
+
       for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
@@ -917,8 +930,23 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.TypeDuplicateCounter > 1)
             continue;
 
-         _sb.Append(@"
+         var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
+
+         if (useSharedObjectBackingField)
+         {
+            if (objBackingFieldWritten)
+               continue;
+
+            objBackingFieldWritten = true;
+
+            _sb.Append(@"
+      private readonly object? _obj;");
+         }
+         else
+         {
+            _sb.Append(@"
       private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append(memberType.BackingFieldName).Append(";");
+         }
       }
 
       for (var i = 0; i < _state.MemberTypes.Count; i++)
@@ -942,7 +970,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
-            .Append(" ? this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
+            .Append(" ? ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
       }
    }
@@ -964,7 +992,15 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      public object").Append(hasNullableTypes ? "?" : null).Append(@" Value => this._valueIndex switch
+      public object").Append(hasNullableTypes ? "?" : null).Append(" Value => ");
+
+      if (_state.Settings.UseSingleBackingField)
+      {
+         _sb.Append("this._obj!;");
+         return;
+      }
+
+      _sb.Append(@"this._valueIndex switch
       {");
 
       if (!_state.IsReferenceType)
@@ -978,7 +1014,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => this.").Append(memberType.BackingFieldName).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
+         ").Append(i + 1).Append(" => ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, withCast: false, nullAnnotated: false, suppressed: false).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
       }
 
       _sb.Append(@"
@@ -1003,5 +1039,92 @@ file static class Extensions
       }
 
       return sb;
+   }
+
+   public static bool UseSharedObjectBackingField(
+      this AdHocUnionSourceGenState state,
+      bool useSharedObjectForRefTypes,
+      AdHocUnionMemberTypeState memberType)
+   {
+      return state.Settings.UseSingleBackingField || (useSharedObjectForRefTypes && memberType.IsReferenceType);
+   }
+
+   public static StringBuilder AppendBackingFieldAccess(
+      this StringBuilder sb,
+      AdHocUnionSourceGenState state,
+      bool useSharedObjectForRefTypes,
+      AdHocUnionMemberTypeState memberType,
+      bool withCast = true,
+      bool nullAnnotated = true,
+      bool suppressed = false,
+      string qualifier = "this")
+   {
+      var useSharedObjectBackingField = state.UseSharedObjectBackingField(useSharedObjectForRefTypes, memberType);
+
+      return AppendBackingFieldAccess(sb, useSharedObjectBackingField, memberType, withCast, nullAnnotated, suppressed, qualifier);
+   }
+
+   public static StringBuilder AppendBackingFieldAccess(
+      this StringBuilder sb,
+      bool useSharedObjectBackingField,
+      AdHocUnionMemberTypeState memberType,
+      bool withCast = true,
+      bool nullAnnotated = true,
+      bool suppressed = false,
+      string qualifier = "this")
+   {
+      if (useSharedObjectBackingField)
+      {
+         if (withCast)
+         {
+            sb.Append("((");
+
+            if (nullAnnotated)
+            {
+               sb.AppendTypeFullyQualifiedNullAnnotated(memberType);
+            }
+            else
+            {
+               sb.AppendTypeFullyQualified(memberType);
+            }
+
+            sb.Append(")");
+         }
+
+         sb.Append(qualifier).Append("._obj");
+
+         if (withCast)
+         {
+            if (suppressed || memberType is { IsReferenceType: false, IsNullableStruct: false })
+               sb.Append("!");
+
+            sb.Append(")");
+         }
+      }
+      else
+      {
+         sb.Append(qualifier).Append(".").Append(memberType.BackingFieldName);
+      }
+
+      return sb;
+   }
+
+   public static StringBuilder AppendBackingFieldName(
+      this StringBuilder sb,
+      AdHocUnionSourceGenState state,
+      bool useSharedObjectForRefTypes,
+      AdHocUnionMemberTypeState memberType)
+   {
+      var useSharedObjectBackingField = state.UseSharedObjectBackingField(useSharedObjectForRefTypes, memberType);
+
+      return AppendBackingFieldName(sb, useSharedObjectBackingField, memberType);
+   }
+
+   public static StringBuilder AppendBackingFieldName(
+      this StringBuilder sb,
+      bool useSharedObjectBackingField,
+      AdHocUnionMemberTypeState memberType)
+   {
+      return sb.Append(useSharedObjectBackingField ? "_obj" : memberType.BackingFieldName);
    }
 }

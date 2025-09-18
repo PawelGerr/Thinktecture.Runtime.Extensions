@@ -231,6 +231,11 @@ public static class AttributeDataExtensions
              ?? UnionConstructorAccessModifier.Public;
    }
 
+   public static bool? FindUseSingleBackingField(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "UseSingleBackingField");
+   }
+
    public static JsonIgnoreCondition? FindJsonIgnoreCondition(this AttributeData attributeData)
    {
       return (JsonIgnoreCondition?)GetIntegerParameterValue(attributeData, "Condition");

@@ -54,6 +54,12 @@ public abstract class UnionAttributeBase : Attribute
    public string? SwitchMapStateParameterName { get; set; }
 
    /// <summary>
+   /// Indication whether the generator should use a single backing field of type <see cref="object"/> for all members, even for structs.
+   /// Default is <c>false</c>.
+   /// </summary>
+   public bool UseSingleBackingField { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()
