@@ -191,7 +191,7 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
             (states ??= []).Add(parameterState);
          }
 
-         statesPerTypeInfo.Add(states ?? (IReadOnlyList<DefaultMemberState>) []);
+         statesPerTypeInfo.Add(states ?? (IReadOnlyList<DefaultMemberState>)[]);
       }
 
       return statesPerTypeInfo;
@@ -246,14 +246,30 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
 
          var parameterCandidate = ctor.Parameters[0];
 
-         // Ignore copy constructor
-         if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type))
+         if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type) // Ignore copy constructor
+             || IsBaseTypeOf(parameterCandidate.Type, derivedTypeInfo.Type)                       // Ignore base type constructor
+             || IsBaseTypeOf(derivedTypeInfo.Type, parameterCandidate.Type))                      // Ignore constructors with derived types
             continue;
 
          (parameters ??= []).Add(parameterCandidate);
       }
 
-      return parameters ?? (IReadOnlyList<IParameterSymbol>) [];
+      return parameters ?? (IReadOnlyList<IParameterSymbol>)[];
+   }
+
+   private static bool IsBaseTypeOf(ITypeSymbol type, ITypeSymbol potentialBaseType)
+   {
+      var baseType = type.BaseType;
+
+      while (baseType is not null)
+      {
+         if (SymbolEqualityComparer.Default.Equals(baseType, potentialBaseType))
+            return true;
+
+         baseType = baseType.BaseType;
+      }
+
+      return false;
    }
 
    private void InitializeUnionTypeGeneration(

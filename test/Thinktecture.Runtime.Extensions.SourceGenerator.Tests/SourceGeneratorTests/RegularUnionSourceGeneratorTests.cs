@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public RegularUnionSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 10_000)
+      : base(output, 13_000)
    {
    }
 
@@ -291,6 +291,113 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
                public sealed class Child1(IReadOnlyList<string> List) : TestUnion;
 
                public sealed class Child2 : TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_accepts_base_class_as_ctor_arg_1()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class TestUnion
+            {
+               public sealed class Child1(TestUnion Value) : TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_accepts_base_class_as_ctor_arg_2()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class TestUnion
+            {
+               public class Child1 : TestUnion
+               {
+                  private Child1()
+                  {
+                  }
+
+                  public sealed class Child2(TestUnion value) : Child1;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_accepts_base_class_as_ctor_arg_3()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class TestUnion
+            {
+               public class Child1 : TestUnion
+               {
+                  private Child1()
+                  {
+                  }
+
+                  public sealed class Child2(Child1 value) : Child1;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_implicit_conversion_if_derived_accepts_base_class_as_ctor_arg_4()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public class BaseClass;
+
+            [Union]
+            public partial class TestUnion : BaseClass
+            {
+               public class Child1(BaseClass value) : TestUnion;
             }
          }
          """;
