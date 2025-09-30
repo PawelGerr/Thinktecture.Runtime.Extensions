@@ -85,6 +85,9 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
+      /// <summary>
+      /// Default instance of ").AppendTypeForXmlComment(_state).Append(@".
+      /// </summary>
       public static readonly ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
