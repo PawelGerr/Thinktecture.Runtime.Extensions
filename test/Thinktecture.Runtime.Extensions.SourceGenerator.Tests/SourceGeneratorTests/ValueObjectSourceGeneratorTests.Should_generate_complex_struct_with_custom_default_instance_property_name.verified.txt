@@ -25,6 +25,9 @@ namespace Thinktecture.Tests
 
       private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
+      /// <summary>
+      /// Default instance of <see cref="TestValueObject"/>.
+      /// </summary>
       public static readonly global::Thinktecture.Tests.TestValueObject Null = default;
 
       /// <summary>
