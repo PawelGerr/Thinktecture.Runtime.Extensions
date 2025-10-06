@@ -41,13 +41,13 @@ abstract partial class TestUnion :
    /// <param name="directType">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.DirectType"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1> @concreteType4ConcreteType4_1,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1> @concreteType2ConcreteType2_1,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType2> @concreteType2,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType1> @concreteType1,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.DirectType> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1> @concreteType4ConcreteType4_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1> @concreteType2ConcreteType2_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType2> @concreteType2,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType1> @concreteType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.DirectType> @directType)
    {
       switch (this)
       {
@@ -91,13 +91,13 @@ abstract partial class TestUnion :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1> @concreteType4ConcreteType4_1,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1> @concreteType2ConcreteType2_1,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2> @concreteType2,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType1> @concreteType1,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.DirectType> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1> @concreteType4ConcreteType4_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1> @concreteType2ConcreteType2_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2> @concreteType2,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType1> @concreteType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.DirectType> @directType)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -142,13 +142,13 @@ abstract partial class TestUnion :
    /// <param name="directType">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.DirectType"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1, TResult> @concreteType4ConcreteType4_1,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1, TResult> @concreteType2ConcreteType2_1,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType2, TResult> @concreteType2,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType1, TResult> @concreteType1,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1, TResult> @concreteType4ConcreteType4_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1, TResult> @concreteType2ConcreteType2_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType2, TResult> @concreteType2,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType1, TResult> @concreteType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -188,13 +188,13 @@ abstract partial class TestUnion :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1, TResult> @concreteType4ConcreteType4_1,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1, TResult> @concreteType2ConcreteType2_1,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2, TResult> @concreteType2,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType1, TResult> @concreteType1,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4.ConcreteType4_1, TResult> @concreteType4ConcreteType4_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2.ConcreteType2_1, TResult> @concreteType2ConcreteType2_1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType2, TResult> @concreteType2,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType1, TResult> @concreteType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct
@@ -276,10 +276,10 @@ abstract partial class TestUnion :
    /// <param name="directType">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.DirectType"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.BaseType1> @baseType1,
-      global::System.Action<global::Thinktecture.Tests.TestUnion.DirectType> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.BaseType1> @baseType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.DirectType> @directType)
    {
       switch (this)
       {
@@ -311,10 +311,10 @@ abstract partial class TestUnion :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.BaseType1> @baseType1,
-      global::System.Action<TState, global::Thinktecture.Tests.TestUnion.DirectType> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.BaseType1> @baseType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.DirectType> @directType)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -347,10 +347,10 @@ abstract partial class TestUnion :
    /// <param name="directType">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.DirectType"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.BaseType1, TResult> @baseType1,
-      global::System.Func<global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.BaseType1, TResult> @baseType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -381,10 +381,10 @@ abstract partial class TestUnion :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.BaseType1, TResult> @baseType1,
-      global::System.Func<TState, global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType4, TResult> @concreteType4,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.ConcreteType3, TResult> @concreteType3,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.BaseType1, TResult> @baseType1,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.DirectType, TResult> @directType)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct

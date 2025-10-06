@@ -150,11 +150,11 @@ namespace Thinktecture.Tests
       /// <param name="nullableOfInt32">The action to execute if the current value is of type <c>int?</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<int> @int32,
-         global::System.Action<string> @string,
-         global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32,
-         global::System.Action<bool> @boolean,
-         global::System.Action<int?> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<bool> @boolean,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int?> @nullableOfInt32)
       {
          switch (this._valueIndex)
          {
@@ -190,11 +190,11 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, int> @int32,
-         global::System.Action<TState, string> @string,
-         global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32,
-         global::System.Action<TState, bool> @boolean,
-         global::System.Action<TState, int?> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, bool> @boolean,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int?> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -231,11 +231,11 @@ namespace Thinktecture.Tests
       /// <param name="nullableOfInt32">The function to execute if the current value is of type <c>int?</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<int, TResult> @int32,
-         global::System.Func<string, TResult> @string,
-         global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
-         global::System.Func<bool, TResult> @boolean,
-         global::System.Func<int?, TResult> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<bool, TResult> @boolean,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -269,11 +269,11 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, int, TResult> @int32,
-         global::System.Func<TState, string, TResult> @string,
-         global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
-         global::System.Func<TState, bool, TResult> @boolean,
-         global::System.Func<TState, int?, TResult> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, bool, TResult> @boolean,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

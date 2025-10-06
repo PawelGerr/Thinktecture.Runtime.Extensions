@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
 {
    public RegularUnionSwitchMapOverloadTests(ITestOutputHelper output)
-      : base(output, 35_000) // Increased limit to accommodate the additional overload methods
+      : base(output, 38_000)
    {
    }
 

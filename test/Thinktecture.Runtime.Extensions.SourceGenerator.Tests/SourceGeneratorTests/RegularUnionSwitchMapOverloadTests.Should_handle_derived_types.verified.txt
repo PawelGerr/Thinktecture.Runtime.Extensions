@@ -38,12 +38,12 @@ abstract partial class PlaceId :
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId> @regionIdInnerRegionId,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId> @abstractRegionIdSpecialRegionId,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.Unknown> @unknown,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.CountryId> @countryId,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId> @regionId,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId> @regionIdInnerPlaceId)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId> @regionIdInnerRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId> @abstractRegionIdSpecialRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.Unknown> @unknown,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.CountryId> @countryId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId> @regionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId> @regionIdInnerPlaceId)
    {
       switch (this)
       {
@@ -82,13 +82,13 @@ abstract partial class PlaceId :
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void SwitchPartially(
-      global::System.Action<global::Thinktecture.Tests.PlaceId>? @default = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId>? @regionIdInnerRegionId = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId>? @abstractRegionIdSpecialRegionId = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.Unknown>? @unknown = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.CountryId>? @countryId = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId>? @regionId = null,
-      global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId>? @regionIdInnerPlaceId = null)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId>? @default = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId>? @regionIdInnerRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId>? @abstractRegionIdSpecialRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.Unknown>? @unknown = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.CountryId>? @countryId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId>? @regionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId>? @regionIdInnerPlaceId = null)
    {
       switch (this)
       {
@@ -165,12 +165,12 @@ abstract partial class PlaceId :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId> @regionIdInnerRegionId,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId> @abstractRegionIdSpecialRegionId,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.Unknown> @unknown,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.CountryId> @countryId,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId> @regionId,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId> @regionIdInnerPlaceId)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId> @regionIdInnerRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId> @abstractRegionIdSpecialRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.Unknown> @unknown,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.CountryId> @countryId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId> @regionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId> @regionIdInnerPlaceId)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -214,13 +214,13 @@ abstract partial class PlaceId :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void SwitchPartially<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId>? @default = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId>? @regionIdInnerRegionId = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId>? @abstractRegionIdSpecialRegionId = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.Unknown>? @unknown = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.CountryId>? @countryId = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId>? @regionId = null,
-      global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId>? @regionIdInnerPlaceId = null)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId>? @default = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId>? @regionIdInnerRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId>? @abstractRegionIdSpecialRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.Unknown>? @unknown = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.CountryId>? @countryId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId>? @regionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId>? @regionIdInnerPlaceId = null)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -298,12 +298,12 @@ abstract partial class PlaceId :
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult> @regionIdInnerRegionId,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult> @abstractRegionIdSpecialRegionId,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.Unknown, TResult> @unknown,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.CountryId, TResult> @countryId,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId, TResult> @regionId,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult> @regionIdInnerPlaceId)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult> @regionIdInnerRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult> @abstractRegionIdSpecialRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.Unknown, TResult> @unknown,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.CountryId, TResult> @countryId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId, TResult> @regionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult> @regionIdInnerPlaceId)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -339,13 +339,13 @@ abstract partial class PlaceId :
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult SwitchPartially<TResult>(
-      global::System.Func<global::Thinktecture.Tests.PlaceId, TResult> @default,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult>? @regionIdInnerRegionId = null,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult>? @abstractRegionIdSpecialRegionId = null,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.Unknown, TResult>? @unknown = null,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.CountryId, TResult>? @countryId = null,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId, TResult>? @regionId = null,
-      global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult>? @regionIdInnerPlaceId = null)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId, TResult> @default,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult>? @regionIdInnerRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult>? @abstractRegionIdSpecialRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.Unknown, TResult>? @unknown = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.CountryId, TResult>? @countryId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId, TResult>? @regionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult>? @regionIdInnerPlaceId = null)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -418,12 +418,12 @@ abstract partial class PlaceId :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult> @regionIdInnerRegionId,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult> @abstractRegionIdSpecialRegionId,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.Unknown, TResult> @unknown,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.CountryId, TResult> @countryId,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId, TResult> @regionId,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult> @regionIdInnerPlaceId)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult> @regionIdInnerRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult> @abstractRegionIdSpecialRegionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.Unknown, TResult> @unknown,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.CountryId, TResult> @countryId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId, TResult> @regionId,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult> @regionIdInnerPlaceId)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct
@@ -462,13 +462,13 @@ abstract partial class PlaceId :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult SwitchPartially<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId, TResult> @default,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult>? @regionIdInnerRegionId = null,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult>? @abstractRegionIdSpecialRegionId = null,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.Unknown, TResult>? @unknown = null,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.CountryId, TResult>? @countryId = null,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId, TResult>? @regionId = null,
-      global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult>? @regionIdInnerPlaceId = null)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId, TResult> @default,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult>? @regionIdInnerRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId, TResult>? @abstractRegionIdSpecialRegionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.Unknown, TResult>? @unknown = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.CountryId, TResult>? @countryId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId, TResult>? @regionId = null,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId, TResult>? @regionIdInnerPlaceId = null)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct

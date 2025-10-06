@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public SmartEnumSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 43_000)
+      : base(output, 46_000)
    {
    }
 

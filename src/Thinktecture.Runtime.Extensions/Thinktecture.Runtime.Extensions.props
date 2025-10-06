@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_Counter" />
+    <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_GenerateJetBrainsAnnotations" />
     <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogFilePath" />
     <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogFilePathMustBeUnique" />
     <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_LogLevel" />

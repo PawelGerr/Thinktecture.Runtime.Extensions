@@ -32,11 +32,14 @@ public abstract class ThinktectureSourceGeneratorBase
       return context.AnalyzerConfigOptionsProvider.Select((options, _) =>
       {
          var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
-                              && IsFeatureEnable(counterEnabledValue);
+                              && IsFeatureEnabled(counterEnabledValue);
+
+         var generateJetbrainsAnnotations = !options.GlobalOptions.TryGetValue(Constants.Configuration.GENERATE_JETBRAINS_ANNOTATIONS, out var disabledValue)
+                                            || IsFeatureEnabled(disabledValue);
 
          var loggingOptions = GetLoggingOptions(options);
 
-         return new GeneratorOptions(counterEnabled, loggingOptions);
+         return new GeneratorOptions(counterEnabled, generateJetbrainsAnnotations, loggingOptions);
       });
    }
 
@@ -98,11 +101,11 @@ public abstract class ThinktectureSourceGeneratorBase
       return new LoggingOptions(logFilePath, isLogFileUnique, logLevel, initialBufferSize);
    }
 
-   private static bool IsFeatureEnable(string counterEnabledValue)
+   protected static bool IsFeatureEnabled(string booleanValue)
    {
-      return StringComparer.OrdinalIgnoreCase.Equals("enable", counterEnabledValue)
-             || StringComparer.OrdinalIgnoreCase.Equals("enabled", counterEnabledValue)
-             || StringComparer.OrdinalIgnoreCase.Equals("true", counterEnabledValue);
+      return StringComparer.OrdinalIgnoreCase.Equals("enable", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("enabled", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("true", booleanValue);
    }
 
    protected void ReportError(

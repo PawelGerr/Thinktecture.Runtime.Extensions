@@ -29,8 +29,8 @@ abstract partial record Result :
    /// <param name="failure">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Result.Failure"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      global::System.Action<global::Thinktecture.Tests.Result.Success> @success,
-      global::System.Action<global::Thinktecture.Tests.Result.Failure> @failure)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Result.Success> @success,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Result.Failure> @failure)
    {
       switch (this)
       {
@@ -54,8 +54,8 @@ abstract partial record Result :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests.Result.Success> @success,
-      global::System.Action<TState, global::Thinktecture.Tests.Result.Failure> @failure)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.Result.Success> @success,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.Result.Failure> @failure)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -80,8 +80,8 @@ abstract partial record Result :
    /// <param name="failure">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Result.Failure"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      global::System.Func<global::Thinktecture.Tests.Result.Success, TResult> @success,
-      global::System.Func<global::Thinktecture.Tests.Result.Failure, TResult> @failure)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Result.Success, TResult> @success,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Result.Failure, TResult> @failure)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -106,8 +106,8 @@ abstract partial record Result :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests.Result.Success, TResult> @success,
-      global::System.Func<TState, global::Thinktecture.Tests.Result.Failure, TResult> @failure)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.Result.Success, TResult> @success,
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.Result.Failure, TResult> @failure)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct

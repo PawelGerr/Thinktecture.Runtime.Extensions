@@ -86,8 +86,8 @@ namespace Thinktecture.Tests
       /// <param name="listOfInt32">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<global::System.Collections.Generic.List<string>> @listOfString,
-         global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::System.Collections.Generic.List<string>> @listOfString,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32)
       {
          switch (this._valueIndex)
          {
@@ -111,8 +111,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, global::System.Collections.Generic.List<string>> @listOfString,
-         global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::System.Collections.Generic.List<string>> @listOfString,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -137,8 +137,8 @@ namespace Thinktecture.Tests
       /// <param name="listOfInt32">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<global::System.Collections.Generic.List<string>, TResult> @listOfString,
-         global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::System.Collections.Generic.List<string>, TResult> @listOfString,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -163,8 +163,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, global::System.Collections.Generic.List<string>, TResult> @listOfString,
-         global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::System.Collections.Generic.List<string>, TResult> @listOfString,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

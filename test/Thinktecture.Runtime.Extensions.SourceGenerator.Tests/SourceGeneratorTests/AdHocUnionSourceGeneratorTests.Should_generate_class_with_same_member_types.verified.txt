@@ -163,11 +163,11 @@ namespace Thinktecture.Tests
       /// <param name="nullableOfInt32">The action to execute if the current value is of type <c>int?</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<string> @text,
-         global::System.Action<int> @int32,
-         global::System.Action<string> @string2,
-         global::System.Action<string?> @string3,
-         global::System.Action<int?> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string2,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string?> @string3,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int?> @nullableOfInt32)
       {
          switch (this._valueIndex)
          {
@@ -203,11 +203,11 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, string> @text,
-         global::System.Action<TState, int> @int32,
-         global::System.Action<TState, string> @string2,
-         global::System.Action<TState, string?> @string3,
-         global::System.Action<TState, int?> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string2,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string?> @string3,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int?> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -244,11 +244,11 @@ namespace Thinktecture.Tests
       /// <param name="nullableOfInt32">The function to execute if the current value is of type <c>int?</c>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<string, TResult> @text,
-         global::System.Func<int, TResult> @int32,
-         global::System.Func<string, TResult> @string2,
-         global::System.Func<string?, TResult> @string3,
-         global::System.Func<int?, TResult> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string2,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string?, TResult> @string3,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -282,11 +282,11 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, string, TResult> @text,
-         global::System.Func<TState, int, TResult> @int32,
-         global::System.Func<TState, string, TResult> @string2,
-         global::System.Func<TState, string?, TResult> @string3,
-         global::System.Func<TState, int?, TResult> @nullableOfInt32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string2,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string?, TResult> @string3,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int?, TResult> @nullableOfInt32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

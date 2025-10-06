@@ -27,7 +27,7 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// <param name="_1Test">The action to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      global::System.Action<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
    {
       switch (this)
       {
@@ -47,7 +47,7 @@ abstract partial class _1TestUnionWithSpecialChars :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      global::System.Action<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -68,7 +68,7 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// <param name="_1Test">The function to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      global::System.Func<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -90,7 +90,7 @@ abstract partial class _1TestUnionWithSpecialChars :
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      global::System.Func<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct

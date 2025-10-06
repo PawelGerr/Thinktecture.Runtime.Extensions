@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.RegularUnions;
 public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public RegularUnionSourceGenerator()
-      : base(20_000)
+      : base(25_000)
    {
    }
 

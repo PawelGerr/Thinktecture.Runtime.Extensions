@@ -424,7 +424,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-         global::System.Action<");
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<");
 
          if (withState)
             _sb.Append("TState, ");
@@ -438,7 +438,7 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(",");
 
          _sb.Append(@"
-         global::System.Action");
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action");
 
          if (withState)
             _sb.Append("<TState>");
@@ -568,7 +568,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-         global::System.Func<");
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<");
 
          if (withState)
             _sb.Append("TState, ");
@@ -584,7 +584,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          ");
 
-         _sb.Append("global::System.Func<");
+         _sb.Append("[global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<");
 
          if (withState)
             _sb.Append("TState, ");

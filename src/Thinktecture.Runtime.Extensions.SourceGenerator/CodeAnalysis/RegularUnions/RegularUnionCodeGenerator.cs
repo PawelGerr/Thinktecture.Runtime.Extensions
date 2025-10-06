@@ -266,7 +266,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (isPartially)
       {
          _sb.Append(@"
-      global::System.Action<");
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<");
 
          if (withState)
             _sb.Append("TState, ");
@@ -282,7 +282,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
             _sb.Append(",");
 
          _sb.Append(@"
-      global::System.Action<");
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<");
 
          if (withState)
             _sb.Append("TState, ");
@@ -425,7 +425,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (isPartially)
       {
          _sb.Append(@"
-      global::System.Func<");
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<");
 
          if (withState)
             _sb.Append("TState, ");
@@ -441,7 +441,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
             _sb.Append(",");
 
          _sb.Append(@"
-      global::System.Func<");
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<");
 
          if (withState)
             _sb.Append("TState, ");

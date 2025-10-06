@@ -264,8 +264,8 @@ namespace Thinktecture.Tests
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action @item1,
-         global::System.Action @item2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item2)
       {
          switch (_itemIndex.Value)
          {
@@ -288,9 +288,9 @@ namespace Thinktecture.Tests
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
-         global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
-         global::System.Action? @item1 = null,
-         global::System.Action? @item2 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action? @item1 = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action? @item2 = null)
       {
          switch (_itemIndex.Value)
          {
@@ -322,8 +322,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState> @item1,
-         global::System.Action<TState> @item2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState> @item1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState> @item2)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -351,9 +351,9 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
-         global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
-         global::System.Action<TState>? @item1 = null,
-         global::System.Action<TState>? @item2 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestEnum>? @default = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState>? @item1 = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState>? @item2 = null)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -386,8 +386,8 @@ namespace Thinktecture.Tests
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<TResult> @item1,
-         global::System.Func<TResult> @item2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @item1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @item2)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -411,9 +411,9 @@ namespace Thinktecture.Tests
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
-         global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
-         global::System.Func<TResult>? @item1 = null,
-         global::System.Func<TResult>? @item2 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult>? @item1 = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult>? @item2 = null)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -446,8 +446,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, TResult> @item1,
-         global::System.Func<TState, TResult> @item2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult> @item1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult> @item2)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -474,9 +474,9 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
-         global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
-         global::System.Func<TState, TResult>? @item1 = null,
-         global::System.Func<TState, TResult>? @item2 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestEnum, TResult> @default,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult>? @item1 = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult>? @item2 = null)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

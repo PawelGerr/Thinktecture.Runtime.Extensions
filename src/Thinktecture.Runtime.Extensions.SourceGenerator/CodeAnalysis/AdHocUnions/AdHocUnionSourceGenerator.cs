@@ -6,7 +6,7 @@ namespace Thinktecture.CodeAnalysis.AdHocUnions;
 public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public AdHocUnionSourceGenerator()
-      : base(15_000)
+      : base(20_000)
    {
    }
 

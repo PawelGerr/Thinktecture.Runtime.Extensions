@@ -3,13 +3,15 @@ namespace Thinktecture.CodeAnalysis;
 public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
 {
    public bool CounterEnabled { get; }
+   public bool GenerateJetbrainsAnnotations { get; }
    public LoggingOptions? Logging { get; }
 
-   public GeneratorOptions(
-      bool counterEnabled,
-      LoggingOptions? logging)
+   public GeneratorOptions(bool counterEnabled,
+                           bool generateJetbrainsAnnotations,
+                           LoggingOptions? logging)
    {
       CounterEnabled = counterEnabled;
+      GenerateJetbrainsAnnotations = generateJetbrainsAnnotations;
       Logging = logging;
    }
 
@@ -22,6 +24,7 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
          return true;
 
       return CounterEnabled == other.CounterEnabled
+             && GenerateJetbrainsAnnotations == other.GenerateJetbrainsAnnotations
              && Logging.EqualsTo(other.Logging);
    }
 
@@ -34,7 +37,9 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
    {
       unchecked
       {
-         return (CounterEnabled.GetHashCode() * 397) ^ Logging.GetHashCode();
+         return (CounterEnabled.GetHashCode() * 397)
+                ^ (GenerateJetbrainsAnnotations.GetHashCode() * 397)
+                ^ Logging.GetHashCode();
       }
    }
 }

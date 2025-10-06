@@ -87,8 +87,8 @@ namespace Thinktecture.Tests
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<string> @string,
-         global::System.Action<int> @int32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int32)
       {
          switch (this._valueIndex)
          {
@@ -111,9 +111,9 @@ namespace Thinktecture.Tests
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
-         global::System.Action<object?>? @default = null,
-         global::System.Action<string>? @string = null,
-         global::System.Action<int>? @int32 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<object?>? @default = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string>? @string = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int>? @int32 = null)
       {
          switch (this._valueIndex)
          {
@@ -145,8 +145,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, string> @string,
-         global::System.Action<TState, int> @int32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int32)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -174,9 +174,9 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
-         global::System.Action<TState, object?>? @default = null,
-         global::System.Action<TState, string>? @string = null,
-         global::System.Action<TState, int>? @int32 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, object?>? @default = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string>? @string = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int>? @int32 = null)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -209,8 +209,8 @@ namespace Thinktecture.Tests
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<string, TResult> @string,
-         global::System.Func<int, TResult> @int32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -234,9 +234,9 @@ namespace Thinktecture.Tests
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
-         global::System.Func<object?, TResult> @default,
-         global::System.Func<string, TResult>? @string = null,
-         global::System.Func<int, TResult>? @int32 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<object?, TResult> @default,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult>? @string = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult>? @int32 = null)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -269,8 +269,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, string, TResult> @string,
-         global::System.Func<TState, int, TResult> @int32)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int32)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -297,9 +297,9 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
-         global::System.Func<TState, object?, TResult> @default,
-         global::System.Func<TState, string, TResult>? @string = null,
-         global::System.Func<TState, int, TResult>? @int32 = null)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, object?, TResult> @default,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult>? @string = null,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult>? @int32 = null)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

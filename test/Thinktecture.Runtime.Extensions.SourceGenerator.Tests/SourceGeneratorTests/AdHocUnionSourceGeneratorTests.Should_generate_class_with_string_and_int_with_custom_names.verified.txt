@@ -87,8 +87,8 @@ namespace Thinktecture.Tests
       /// <param name="number">The action to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<string> @text,
-         global::System.Action<int> @number)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @number)
       {
          switch (this._valueIndex)
          {
@@ -112,8 +112,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, string> @text,
-         global::System.Action<TState, int> @number)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @number)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -138,8 +138,8 @@ namespace Thinktecture.Tests
       /// <param name="number">The function to execute if the current value is of type <see cref="int"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<string, TResult> @text,
-         global::System.Func<int, TResult> @number)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @number)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -164,8 +164,8 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, string, TResult> @text,
-         global::System.Func<TState, int, TResult> @number)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @text,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @number)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct

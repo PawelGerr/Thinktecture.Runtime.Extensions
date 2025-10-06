@@ -139,10 +139,10 @@ namespace Thinktecture.Tests
       /// <param name="string2">The action to execute if the current value is of type <see cref="string"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         global::System.Action<int> @int32,
-         global::System.Action<string> @string1,
-         global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32,
-         global::System.Action<string> @string2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::System.Collections.Generic.List<int>> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string2)
       {
          switch (this._valueIndex)
          {
@@ -174,10 +174,10 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         global::System.Action<TState, int> @int32,
-         global::System.Action<TState, string> @string1,
-         global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32,
-         global::System.Action<TState, string> @string2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::System.Collections.Generic.List<int>> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string2)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -210,10 +210,10 @@ namespace Thinktecture.Tests
       /// <param name="string2">The function to execute if the current value is of type <see cref="string"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         global::System.Func<int, TResult> @int32,
-         global::System.Func<string, TResult> @string1,
-         global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
-         global::System.Func<string, TResult> @string2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string2)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -244,10 +244,10 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         global::System.Func<TState, int, TResult> @int32,
-         global::System.Func<TState, string, TResult> @string1,
-         global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
-         global::System.Func<TState, string, TResult> @string2)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string1,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::System.Collections.Generic.List<int>, TResult> @listOfInt32,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string2)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
