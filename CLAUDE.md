@@ -21,22 +21,154 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discriminated Unions** through Roslyn Source Generators. The core architecture consists of:
 
 ### Core Components
-- **`src/Thinktecture.Runtime.Extensions`**: Core library with base interfaces and attributes
-- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`**: Roslyn Source Generator that creates boilerplate code for partial classes/structs
-- **Framework Integration Projects**: Separate projects for JSON, MessagePack, Entity Framework Core (7/8/9), ASP.NET Core, and Swashbuckle
+- **`src/Thinktecture.Runtime.Extensions`**: Core library with base interfaces, attributes, and runtime helpers
+  - Attributes: `SmartEnumAttribute<TKey>`, `SmartEnumAttribute`, `ValueObjectAttribute<TKey>`, `ComplexValueObjectAttribute`, `UnionAttribute<T1,T2,...>` (up to 5 type parameters), `UnionAttribute`, `ObjectFactoryAttribute<T>`
+  - Additional attributes: `KeyMemberEqualityComparerAttribute`, `KeyMemberComparerAttribute`, `MemberEqualityComparerAttribute`, `IgnoreMemberAttribute`, `ValidationErrorAttribute`, `UseDelegateFromConstructorAttribute`, `UnionSwitchMapOverloadAttribute`
+  - Key interfaces: `ISmartEnum<TKey>`, `IEnum`, `IKeyedObject<TKey>`, `IKeyedValueObject<TKey>`, `IComplexValueObject`, `IValidationError`, `IObjectFactory<T>`
+  - Utility types: `ValidationError`, `ComparerAccessors`, collection helpers (EmptyDictionary, EmptyLookup, SingleItemReadOnlyDictionary, etc.)
+  - Enums: `AccessModifier`, `MemberKind`, `OperatorsGeneration`, `ConversionOperatorsGeneration`, `SwitchMapMethodsGeneration`, `SerializationFrameworks`, `UnionConstructorAccessModifier`
+- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`**: Roslyn Source Generators and Analyzers that create boilerplate code and validate usage for partial classes/structs
+  - Contains 6 source generators, 2 analyzers, and 1 code fix provider
+  - Organized into subdirectories: SmartEnums, ValueObjects, AdHocUnions, RegularUnions, ObjectFactories, Annotations, Diagnostics, CodeFixes
+- **Framework Integration Projects**: Separate projects for JSON, MessagePack, Newtonsoft.Json, ProtoBuf, Entity Framework Core (7/8/9), ASP.NET Core, and Swashbuckle
+  - **EF Core**: Shared sources in `EntityFrameworkCore.Sources`, version-specific projects for EF Core 7/8/9
+  - **Serialization**: Converters/formatters for System.Text.Json, MessagePack, Newtonsoft.Json, and ProtoBuf
+
+### Source Generators and Analyzers
+The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple incremental source generators and analyzers:
+
+#### Source Generators
+1. **`SmartEnumSourceGenerator`**: Generates code for types annotated with `[SmartEnum<T>]` or `[SmartEnum]`
+   - Creates factory methods (`Create`, `TryCreate`, `Get`, `Parse`, `TryParse`)
+   - Generates equality, comparison, and conversion operators
+   - Implements `IParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
+   - Generates exhaustive `Switch`/`Map` methods for pattern matching
+   - Integrates with serializers (JSON, MessagePack, Newtonsoft.Json)
+
+2. **`ValueObjectSourceGenerator`**: Generates code for types annotated with `[ValueObject<T>]` or `[ComplexValueObject]`
+   - Handles both keyed (simple) and complex value objects
+   - Creates factory methods (`Create`, `TryCreate`, `Validate`)
+   - Generates equality members (`Equals`, `GetHashCode`, operators)
+   - Implements `IParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
+   - Supports arithmetic operators (`+`, `-`, `*`, `/`) when configured
+   - Integrates with serializers (JSON, MessagePack, Newtonsoft.Json)
+
+3. **`AdHocUnionSourceGenerator`**: Generates code for ad-hoc unions annotated with `[Union<T1, T2, ...>]` (up to 5 types)
+   - Creates implicit conversion operators for each union member type
+   - Generates exhaustive `Switch`/`Map` methods for pattern matching
+   - Provides type-safe value access with `IsT1`, `AsT1` properties and methods
+
+4. **`RegularUnionSourceGenerator`**: Generates code for inheritance-based unions annotated with `[Union]`
+   - Creates static factory methods for each derived type
+   - Generates exhaustive `Switch`/`Map` methods for all derived types
+   - Supports complex domain hierarchies with multiple derived types
+
+5. **`ObjectFactorySourceGenerator`**: Generates code for types with custom factories annotated with `[ObjectFactory<T>]`
+   - Creates custom serialization/deserialization logic
+   - Implements `IParsable<T>` with custom parsing logic
+   - Integrates with serializers using custom converter factories
+
+6. **`AnnotationsSourceGenerator`**: Generates JetBrains ReSharper/Rider annotations if not already present
+   - Adds attributes like `[InstantHandle]`
+   - Improves IDE static analysis and code completion
+   - Only generates if JetBrains.Annotations package is not referenced
+
+#### Analyzers
+1. **`ThinktectureRuntimeExtensionsAnalyzer`**: Main diagnostic analyzer with 40+ diagnostic rules that validates correct usage of library features
+   - **Type structure**: Ensures types with `[SmartEnum]`, `[ValueObject]`, or `[Union]` are `partial`, are class/struct, not generic (except regular unions), not nested in generic types
+   - **Constructor rules**: Validates constructors are private, no primary constructors allowed
+   - **Member validation**:
+     - Fields must be readonly, properties must be readonly (no set) or have private init
+     - Smart enum items must be public static readonly/const
+     - Key members should not be nullable, custom key member implementations must match types
+     - Members disallowing default values must be required
+   - **Comparer validation**: Validates KeyMemberEqualityComparer/KeyMemberComparer usage, warns about string-based value objects without explicit equality comparer
+   - **Smart enum specific**: Key member names must be allowed, enums without derived types must be sealed, must have at least one item, derived types must be properly accessible
+   - **Union specific**: Must be sealed or have private constructors only, records must be sealed, derived types must not be generic, accessibility rules for non-abstract derived types
+   - **Object factory**: Validates corresponding constructor exists, smart enums cannot use object factory constructors
+   - **Switch/Map usage**: Index-based switch/map must use named parameters, validates exhaustiveness
+   - **UseDelegateFromConstructor**: Methods must be partial and not have generics
+   - **Struct defaults**: Validates AllowDefaultStructs settings consistency
+
+2. **`ThinktectureRuntimeExtensionsInternalUsageAnalyzer`**: Prevents usage of internal library APIs outside Thinktecture modules
+   - Detects usage of types/members in `Thinktecture.Internal` namespace
+   - Validates that types with `[ModuleInternalAttribute]` are only used within the library
+   - Prevents accidental dependencies on internal implementation details
+
+#### Code Fix Provider
+- **`ThinktectureRuntimeExtensionsCodeFixProvider`**: Provides automatic fixes for common diagnostic issues
+  - Can automatically add `partial` keyword to types
+  - Fixes member accessibility issues
+  - Other code fixes for analyzer diagnostics
 
 ### Key Concepts
-1. **Smart Enums** (`[SmartEnum<T>]` or `[SmartEnum]`): Type-safe enums with rich behavior, properties, and methods
-   - Can be keyed (with underlying type) or keyless
-   - Support custom behavior via inheritance or `[UseDelegateFromConstructor]`
-   - Provide exhaustive pattern matching with `Switch`/`Map` methods
-2. **Value Objects** (`[ValueObject<T>]` or `[ComplexValueObject]`): Immutable types with validation and proper equality
-   - Simple (keyed) vs. Complex (multiple properties) value objects
-   - Use `[KeyMemberEqualityComparer]` for custom equality (especially strings)
-   - Use `[ObjectFactory<T>]` for custom serialization/parsing behavior
-3. **Discriminated Unions** (`[Union<T1,T2>]` for ad-hoc or `[Union]` for inheritance-based): Type-safe alternative types
-   - Ad-hoc unions: simple combination of types (up to 5)
-   - Regular unions: inheritance-based for complex domain hierarchies
+
+#### 1. Smart Enums
+**Keyless**: `[SmartEnum]` - Type-safe enums without underlying values
+- Items are defined as public static readonly/const fields or properties
+- Cannot use comparison operators (no key to compare)
+- Supports `Switch`/`Map` methods, equality operators, serialization
+- Must be sealed if no derived types
+
+**Keyed**: `[SmartEnum<TKey>]` - Type-safe enums with underlying key values
+- Key can be any non-nullable type (int, string, Guid, etc.)
+- Configurable key member via `KeyMemberName`, `KeyMemberAccessModifier`, `KeyMemberKind`
+- Supports comparison operators if key is comparable
+- Supports `IParsable<T>`, `IComparable<T>`, `IFormattable` (depending on key type)
+- Configurable conversion operators: `ConversionToKeyMemberType`, `ConversionFromKeyMemberType`
+- Can skip interfaces: `SkipIComparable`, `SkipIParsable`, `SkipIFormattable`, `SkipToString`
+- Can control operator generation: `ComparisonOperators`, `EqualityComparisonOperators`
+- Can control `Switch`/`Map` generation: `SwitchMethods`, `MapMethods`
+
+**Custom Behavior**: Use `[UseDelegateFromConstructor]` on partial methods to inject delegate parameters into constructor
+
+#### 2. Value Objects
+**Simple (Keyed)**: `[ValueObject<TKey>]` - Single-value immutable types
+- Key member is the single value (e.g., `Amount`, `ProductId`)
+- Default key member name: `_value` (private field) or `Value` (public)
+- Configurable via `KeyMemberName`, `KeyMemberAccessModifier`, `KeyMemberKind`
+- **String keys**: MUST specify `[KeyMemberEqualityComparer<MyType, string, ...>]` for proper string comparison (Ordinal, OrdinalIgnoreCase, etc.)
+- Null handling: `NullInFactoryMethodsYieldsNull`, `EmptyStringInFactoryMethodsYieldsNull`
+- Supports arithmetic operators: `AdditionOperators`, `SubtractionOperators`, `MultiplyOperators`, `DivisionOperators`
+- Comparison/equality operators: `ComparisonOperators`, `EqualityComparisonOperators`
+- Conversion operators: `ConversionToKeyMemberType`, `UnsafeConversionToKeyMemberType`, `ConversionFromKeyMemberType`
+- Can skip key member generation: `SkipKeyMember` (you implement it manually)
+
+**Complex**: `[ComplexValueObject]` - Multi-property immutable types
+- Multiple properties define the value (e.g., `DateRange` with StartDate and EndDate)
+- Properties are auto-discovered (non-static, non-ignored)
+- Use `[IgnoreMember]` to exclude properties from equality/comparisons
+- Use `[MemberEqualityComparer<MyType, TMember, ...>]` for custom per-member equality
+- **String members**: Analyzer warns if no explicit equality comparer is specified
+- All members participate in `Equals`, `GetHashCode` unless ignored
+
+**Common settings**:
+- `SkipFactoryMethods`: Skip generation of `Create`, `TryCreate`, `Validate`
+- `SkipIParsable`, `SkipIComparable`, `SkipIFormattable`: Skip interface implementations
+- Validation: Implement `ValidateFactoryArguments` (preferred) or `ValidateConstructorArguments`
+
+#### 3. Discriminated Unions
+**Ad-hoc Unions**: `[Union<T1, T2>]` through `[Union<T1, T2, T3, T4, T5>]`
+- Simple combination of 2-5 types without inheritance
+- Generates implicit conversion operators from each type to union (configurable via `ConversionFromValue`)
+- Type checking: `IsT1`, `IsT2`, etc. properties
+- Value access: `AsT1`, `AsT2`, etc. properties (throws if wrong type)
+- Configurable member names: `T1Name`, `T2Name`, etc.
+- Nullable reference types: `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, etc.
+- Supports `Switch`/`Map` methods for exhaustive pattern matching
+
+**Regular (Inheritance-based) Unions**: `[Union]`
+- Base class/record represents the union, derived types are the alternatives
+- Must be sealed or have only private constructors
+- Records must be sealed
+- Generates static factory methods for each derived type
+- Supports `Switch`/`Map` methods over all derived types
+- Can control constructor accessibility: `UnionConstructorAccessModifier`
+- Use `[UnionSwitchMapOverload]` to customize generated `Switch`/`Map` overloads
+
+**Common settings**:
+- `SwitchMethods`, `MapMethods`: Control generation of pattern matching methods
+- `SwitchMapStateParameterName`: Customize state parameter name (default: "state")
 
 ### Source Generation Pattern
 Most types in this library are `partial` classes/structs. The Source Generator automatically creates:
@@ -56,19 +188,74 @@ Most types in this library are `partial` classes/structs. The Source Generator a
 - Validation is used by factory methods (`Create`, `TryCreate`, `Validate`)
 
 ### Framework Integration
-- **JSON/MessagePack Serialization**: Two approaches
-  1. **Project Reference** (preferred): Reference integration packages in the project where types are defined
-  2. **Manual Registration**: Register converter factories in `Startup.cs` or `Program.cs`
-- **Entity Framework Core**: 
-  - Use `.UseThinktectureValueConverters()` on `DbContextOptionsBuilder` for automatic value converters
-  - Regular Discriminated Unions may need manual discriminator configuration
-- **ASP.NET Core Model Binding**: 
-  - Types rely on `IParsable<T>` interface (auto-generated)
-  - Use `[ObjectFactory<string>]` for custom parsing logic from strings
+
+#### Serialization
+The library supports multiple serialization frameworks through dedicated integration packages:
+
+1. **System.Text.Json** (`Thinktecture.Runtime.Extensions.Json`)
+   - `ThinktectureJsonConverterFactory`: Auto-registers converters for Smart Enums, Value Objects, and Unions
+   - Specialized converters for numeric key types (Int, Long, Byte, Short, UInt, ULong, UShort, Single, Double, Decimal, SByte)
+   - **Integration**: Either reference the package in your project (source generator auto-generates integration code) OR manually register `ThinktectureJsonConverterFactory` in JsonSerializerOptions
+
+2. **MessagePack** (`Thinktecture.Runtime.Extensions.MessagePack`)
+   - `ThinktectureMessageFormatterResolver`: Resolves formatters for generated types
+   - Separate formatters for classes (`ThinktectureMessagePackFormatter`) and structs (`ThinktectureStructMessagePackFormatter`)
+   - **Integration**: Either reference the package OR manually register the resolver
+
+3. **Newtonsoft.Json** (`Thinktecture.Runtime.Extensions.Newtonsoft.Json`)
+   - Provides JsonConverter implementations for compatibility with Newtonsoft.Json
+   - **Integration**: Either reference the package OR manually register converters
+
+4. **ProtoBuf** (`Thinktecture.Runtime.Extensions.ProtoBuf`)
+   - Support for Protocol Buffers serialization
+   - **Integration**: Reference the package in your project
+
+**General pattern**: The source generator detects which serialization packages are referenced and automatically generates appropriate integration code. You can also opt out using the `SerializationFrameworks` property on attributes.
+
+#### Entity Framework Core
+Three version-specific packages (`EntityFrameworkCore7`, `EntityFrameworkCore8`, `EntityFrameworkCore9`) with shared implementation in `EntityFrameworkCore.Sources`:
+
+- **Value Converters**: Automatically converts Value Objects and Smart Enums to/from their underlying types
+- **Setup**: Call `.UseThinktectureValueConverters()` on `DbContextOptionsBuilder` to register automatic value converters
+- **Advanced**: Use `.UseValueObjectValueConverter<TValueObject, TProvider>()` for fine-grained control
+- **Conventions**: Includes `ThinktectureConventionSetPlugin` for automatic EF Core configuration
+- **Extensions**: Provides extension methods on `EntityTypeBuilder`, `PropertyBuilder`, `ComplexTypePropertyBuilder`, `PrimitiveCollectionBuilder`, and `ModelBuilder` for explicit configuration
+- **Regular Discriminated Unions**: May require manual discriminator configuration using standard EF Core APIs
+
+#### ASP.NET Core
+Package: `Thinktecture.Runtime.Extensions.AspNetCore`
+
+- **Model Binding**: Automatic model binding relies on `IParsable<T>` interface (auto-generated by source generators)
+- **Custom Parsing**: Use `[ObjectFactory<string>]` for custom parsing logic from strings in query parameters, route values, etc.
+- **Minimal APIs**: Full support for Smart Enums and Value Objects as parameters
+
+#### Swashbuckle/OpenAPI
+Package: `Thinktecture.Runtime.Extensions.Swashbuckle`
+
+- Provides schema filters and operation filters for proper OpenAPI documentation of Smart Enums, Value Objects, and Unions
+- Ensures generated OpenAPI specs correctly represent the underlying types for client generation
 
 ### Pattern Matching
 - Use generated `Switch`/`Map` methods for exhaustive, type-safe pattern matching
 - Overloads exist to prevent closures for performance-critical scenarios
+
+### Source Generator Architecture
+The source generators follow a consistent pattern:
+
+1. **Incremental Generators**: All generators implement `IIncrementalGenerator` for optimal performance
+2. **Pipeline Architecture**:
+   - Syntax providers filter for attributed types
+   - Transform providers extract semantic information into lightweight state objects
+   - Code generators produce source code from state
+3. **State Objects**: Each generator has corresponding state classes (e.g., `SmartEnumSourceGeneratorState`, `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState`)
+4. **Code Generators**: Separated into specialized generators:
+   - **Interface implementations**: `ParsableCodeGenerator`, `ComparableCodeGenerator`, `FormattableCodeGenerator`, `InterfaceCodeGeneratorFactory`
+   - **Operators**: `ComparisonOperatorsCodeGenerator`, `EqualityComparisonOperatorsCodeGenerator`, `AdditionOperatorsCodeGenerator`, `SubtractionOperatorsCodeGenerator`, `MultiplyOperatorsCodeGenerator`, `DivisionOperatorsCodeGenerator`
+   - **Serialization**: Separate code generator factories for each serialization framework (e.g., `JsonSmartEnumCodeGeneratorFactory`, `MessagePackValueObjectCodeGeneratorFactory`)
+5. **Type Information**: Rich type metadata captured in interfaces like `ITypeInformation`, `ITypedMemberState`, `IMemberState`, `IKeyMemberSettings`
+6. **Nullability Awareness**: Full support for nullable reference types and value types
+7. **Containing Types**: Handles nested types properly with `ContainingTypeState`
+8. **Generics Support**: Limited support - regular unions can be generic, but smart enums, value objects, and ad-hoc unions cannot
 
 ## Project Structure
 
@@ -96,6 +283,28 @@ Most types in this library are `partial` classes/structs. The Source Generator a
 - **XML documentation required** for all publicly visible types and members (except source generator, test, and sample projects)
 - Multi-target framework support (net7.0 base, with EF Core version-specific projects)
 - Use `dotnet format` to format the entire solution
+
+## Common Troubleshooting and Best Practices
+
+### Best Practices
+1. **String-based keys/members**: Always explicitly specify equality comparer using `[KeyMemberEqualityComparer]` or `[MemberEqualityComparer]` to avoid culture-sensitive comparisons
+2. **Validation**: Prefer `ValidateFactoryArguments` over `ValidateConstructorArguments` for better framework integration and returning `ValidationError`
+3. **Null handling**: For nullable key types, consider using `NullInFactoryMethodsYieldsNull` or `EmptyStringInFactoryMethodsYieldsNull` instead of throwing exceptions
+4. **Immutability**: All members should be readonly (fields) or have no setter/private init (properties)
+5. **Constructors**: Keep constructors private to enforce use of factory methods (`Create`, `TryCreate`)
+6. **Smart Enum items**: Must be public static readonly/const - non-static properties won't be recognized as items
+7. **Serialization**: Reference integration packages in the same project as your types for automatic code generation, or manually register converter factories
+8. **Partial keyword**: Types must be marked `partial` for source generators to work
+
+### Common Issues
+1. **"Type must be partial"**: Add `partial` keyword to your class/struct declaration
+2. **"String-based value object needs equality comparer"**: Add `[KeyMemberEqualityComparer<MyType, string, StringComparer>]` attribute
+3. **"Smart enum has no items"**: Ensure items are public static readonly/const fields or properties of the enum type
+4. **"Custom key member implementation not found"**: When using `SkipKeyMember = true`, ensure you've implemented the key member with the correct name and type
+5. **"Members disallowing default values must be required"**: Properties with `IDisallowDefaultValue` constraint must use `required` keyword or be initialized
+6. **Serialization not working**: Ensure integration package is referenced, or manually register converters/formatters
+7. **EF Core not converting**: Call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
+8. **Switch/Map not exhaustive**: Ensure all enum items or union types are handled; consider using generated overloads for compile-time exhaustiveness checking
 
 ## Common Patterns and Use Cases
 

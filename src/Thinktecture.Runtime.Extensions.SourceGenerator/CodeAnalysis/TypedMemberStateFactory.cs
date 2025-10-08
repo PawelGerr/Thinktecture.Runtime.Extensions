@@ -53,7 +53,7 @@ public class TypedMemberStateFactory
    private static TypedMemberStates CreateStates(Compilation compilation, SpecialType specialType)
    {
       var type = compilation.GetSpecialType(specialType);
-      return CreateStates(type);
+      return CreateStates(compilation, type);
    }
 
    private static void CreateAndAddStatesForSystemRuntime(Compilation compilation, string fullName, Dictionary<(string, int), TypedMemberStates> lookup)
@@ -92,12 +92,14 @@ public class TypedMemberStateFactory
       if (type is null || type.TypeKind == TypeKind.Error)
          return;
 
-      lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(type));
+      lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(compilation, type));
    }
 
-   private static TypedMemberStates CreateStates(INamedTypeSymbol type)
+   private static TypedMemberStates CreateStates(Compilation compilation, INamedTypeSymbol type)
    {
-      var nullableType = type.WithNullableAnnotation(NullableAnnotation.Annotated);
+      var nullableType = type.IsReferenceType
+                            ? type.WithNullableAnnotation(NullableAnnotation.Annotated)
+                            : compilation.GetSpecialType(SpecialType.System_Nullable_T).Construct(type);
 
       var notNullable = new CachedTypedMemberState(new TypedMemberState(type));
       var nullable = new CachedTypedMemberState(new TypedMemberState(nullableType));

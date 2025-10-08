@@ -411,6 +411,24 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_union_with_nullable_struct()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int?, string>]
+            public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_use_object_for_2_out_of_3_different_reference_types()
    {
       var source = """
