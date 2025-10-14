@@ -472,4 +472,36 @@ public class JsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_generic_complex_value_object()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+         using System.Text.Json.Serialization;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject]
+         public partial class ComplexValueObject<T1, T2, T3>
+            where T1 : class, IEquatable<T1>
+            where T3 : struct
+         {
+            public T1 Property { get; }
+            public T2? NullableProperty { get; }
+            public T3 StructProperty { get; }
+            public T3? NullableStructProperty { get; }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

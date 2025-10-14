@@ -52,7 +52,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
       global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(@", bool>,
       global::Thinktecture.Internal.IMetadataOwner");
 
@@ -488,7 +488,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
-      if (_state.IsReferenceType)
+      if (_state.IsReferenceType || _state is { IsTypeParameter: true, IsStruct: false })
       {
          _sb.Append(@"
          if (other is null)
@@ -526,7 +526,7 @@ namespace ").Append(_state.Namespace).Append(@"
             }
             else
             {
-               if (member.IsReferenceType)
+               if (member.IsReferenceType || member is { IsTypeParameter: true, IsStruct: false })
                {
                   _sb.Append("(this.").Append(member.Name).Append(" is null ? other.").Append(member.Name).Append(" is null : this.").Append(member.Name).Append(".Equals(other.").Append(member.Name).Append("))");
                }

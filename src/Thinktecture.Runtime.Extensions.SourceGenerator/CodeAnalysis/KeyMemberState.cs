@@ -16,6 +16,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
+   public bool IsStruct => _typedMemberState.IsStruct;
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;

@@ -75,7 +75,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 
 #### Analyzers
 1. **`ThinktectureRuntimeExtensionsAnalyzer`**: Main diagnostic analyzer with 40+ diagnostic rules that validates correct usage of library features
-   - **Type structure**: Ensures types with `[SmartEnum]`, `[ValueObject]`, or `[Union]` are `partial`, are class/struct, not generic (except regular unions), not nested in generic types
+   - **Type structure**: Ensures types with `[SmartEnum]`, `[ValueObject]`, or `[Union]` are `partial`, are class/struct, not generic (except regular unions and complex value objects), not nested in generic types
    - **Constructor rules**: Validates constructors are private, no primary constructors allowed
    - **Member validation**:
      - Fields must be readonly, properties must be readonly (no set) or have private init
@@ -133,6 +133,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 - Comparison/equality operators: `ComparisonOperators`, `EqualityComparisonOperators`
 - Conversion operators: `ConversionToKeyMemberType`, `UnsafeConversionToKeyMemberType`, `ConversionFromKeyMemberType`
 - Can skip key member generation: `SkipKeyMember` (you implement it manually)
+- **Cannot be generic**: Keyed value objects must not have type parameters
 
 **Complex**: `[ComplexValueObject]` - Multi-property immutable types
 - Multiple properties define the value (e.g., `DateRange` with StartDate and EndDate)
@@ -141,6 +142,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 - Use `[MemberEqualityComparer<MyType, TMember, ...>]` for custom per-member equality
 - **String members**: Analyzer warns if no explicit equality comparer is specified
 - All members participate in `Equals`, `GetHashCode` unless ignored
+- **Can be generic**: Complex value objects can have type parameters (e.g., `Range<T> where T : IComparable<T>`)
 
 **Common settings**:
 - `SkipFactoryMethods`: Skip generation of `Create`, `TryCreate`, `Validate`
@@ -255,7 +257,7 @@ The source generators follow a consistent pattern:
 5. **Type Information**: Rich type metadata captured in interfaces like `ITypeInformation`, `ITypedMemberState`, `IMemberState`, `IKeyMemberSettings`
 6. **Nullability Awareness**: Full support for nullable reference types and value types
 7. **Containing Types**: Handles nested types properly with `ContainingTypeState`
-8. **Generics Support**: Limited support - regular unions can be generic, but smart enums, value objects, and ad-hoc unions cannot
+8. **Generics Support**: Limited support - regular unions and complex value objects can be generic, but smart enums, keyed value objects, and ad-hoc unions cannot
 
 ## Project Structure
 
@@ -312,6 +314,7 @@ The source generators follow a consistent pattern:
 - **ISBN**: String-based with validation and normalization
 - **Amount**: Decimal-based ensuring always positive and rounded
 - **DateRange**: Complex object with start/end dates and validation
+- **Range<T>**: Generic complex value object for ranges (e.g., `Range<DateTime>`, `Range<int>`)
 
 ### Smart Enums
 - **ShippingMethod**: Rich enum with pricing, delivery estimates, and calculation methods

@@ -2,9 +2,10 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBase
+public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGeneratorBase
+   where T : ITypeInformation, IHasGenerics
 {
-   private readonly ITypeInformation _type;
+   private readonly T _type;
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
    private readonly int _nextFreeKey;
@@ -14,7 +15,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBa
    public override string FileNameSuffix => ".MessagePack";
 
    public ComplexValueObjectMessagePackCodeGenerator(
-      ITypeInformation type,
+      T type,
       IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
@@ -52,6 +53,8 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator : CodeGeneratorBa
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
+      var isGeneric = _type.GenericParameters.Count > 0;
+
       if (_type.Namespace is not null)
       {
          _sb.Append(@"
@@ -62,9 +65,27 @@ namespace ").Append(_type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_type.ContainingTypes);
 
       _sb.Append(@"
-[global::MessagePack.MessagePackFormatter(typeof(ValueObjectMessagePackFormatter))]
-partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
-{
+[global::MessagePack.MessagePackFormatter(typeof(");
+
+      if (isGeneric)
+         _sb.AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(".");
+
+      _sb.Append(@"ValueObjectMessagePackFormatter))]
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTypeParameters(_type).Append(@"
+{");
+      GenerateFormatter(cancellationToken);
+      _sb.Append(@"
+}");
+
+      _sb.RenderContainingTypesEnd(_type.ContainingTypes);
+
+      _sb.Append(@"
+");
+   }
+
+   private void GenerateFormatter(CancellationToken cancellationToken)
+   {
+      _sb.Append(@"
    /// <summary>
    /// MassagePack formatter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
@@ -235,12 +256,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
 
       _sb.Append(@"
       }
-   }
-}");
-
-      _sb.RenderContainingTypesEnd(_type.ContainingTypes)
-         .Append(@"
-");
+   }");
    }
 
    private InstanceMemberInfo? GetMemberWithKey(int key, ref int numberOfUsedMembersWithoutKey, ref int nextFreeKey)

@@ -15,7 +15,9 @@ public class RegularUnionSourceGenState
    public bool IsRecord { get; }
    public bool HasNonDefaultConstructor { get; }
 
+   public bool IsTypeParameter => false;
    public bool IsReferenceType => true;
+   public bool IsStruct => false;
 
    public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }

@@ -526,6 +526,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
+      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration);
+
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, attribute.Syntax.GetLocation());
@@ -680,7 +682,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      TypeMustNotBeGeneric(context, type, locationOfFirstDeclaration);
       TypeMustNotBeInsideGenericType(context, type, locationOfFirstDeclaration);
 
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)

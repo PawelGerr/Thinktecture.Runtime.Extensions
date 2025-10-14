@@ -9,8 +9,10 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public SpecialType SpecialType { get; }
    public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
+   public bool IsTypeParameter => TypeKind == TypeKind.TypeParameter;
    public bool IsNullableStruct { get; }
-   public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct;
+   public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct || (IsTypeParameter && !IsStruct);
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
@@ -26,10 +28,12 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
+      IsStruct = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       SpecialType = type.SpecialType;
       TypeKind = type.TypeKind;
-      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T
+                         || type is { IsValueType: true, NullableAnnotation: NullableAnnotation.Annotated };
       IsToStringReturnTypeNullable = IsToStringNullable(type);
 
       // Check for implemented interfaces
@@ -180,6 +184,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
              && TypeKind == other.TypeKind
              && IsNullableStruct == other.IsNullableStruct
              && IsReferenceType == other.IsReferenceType
+             && IsStruct == other.IsStruct
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
              && IsParsable == other.IsParsable
@@ -200,6 +205,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          hashCode = (hashCode * 397) ^ (int)TypeKind;
          hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();

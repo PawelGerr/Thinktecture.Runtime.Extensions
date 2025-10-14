@@ -80,10 +80,10 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
       }
    }
 
-   public class ComplexValue_objects_must_not_be_generic
+   public class ComplexValue_objects_can_be_generic
    {
       [Fact]
-      public async Task Should_trigger_on_generic_class()
+      public async Task Should_not_trigger_on_generic_class()
       {
          var code = """
 
@@ -93,18 +93,18 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
             namespace TestNamespace
             {
                [ComplexValueObject]
-            	public partial class {|#0:TestValueObject|}<T>
+            	public partial class TestValueObject<T>
             	{
+                  public T Value { get; }
                }
             }
             """;
 
-         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject<T>");
-         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
 
       [Fact]
-      public async Task Should_trigger_on_generic_struct()
+      public async Task Should_not_trigger_on_generic_struct()
       {
          var code = """
 
@@ -114,14 +114,58 @@ public class TTRESG033_EnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
             namespace TestNamespace
             {
                [ComplexValueObject]
-            	public partial struct {|#0:TestValueObject|}<T>
+            	public partial struct TestValueObject<T>
             	{
+                  public T Value { get; }
                }
             }
             """;
 
-         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestValueObject<T>");
-         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_generic_class_with_multiple_type_parameters()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial class TestValueObject<TFirst, TSecond>
+            	{
+                  public TFirst First { get; }
+                  public TSecond Second { get; }
+               }
+            }
+            """;
+
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_generic_struct_with_constraints()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+            	public partial struct TestValueObject<T> where T : struct, IComparable<T>
+            	{
+                  public T X { get; }
+                  public T Y { get; }
+               }
+            }
+            """;
+
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
       }
    }
 

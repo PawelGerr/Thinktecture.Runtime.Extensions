@@ -1,8 +1,9 @@
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSerializerGeneratorState>, INamespaceAndName
+public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSerializerGeneratorState<T>>, INamespaceAndName
+   where T : ITypeInformation, IHasGenerics
 {
-   public ITypeInformation Type { get; }
+   public T Type { get; }
    public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
    public AttributeInfo AttributeInfo { get; }
    public SerializationFrameworks SerializationFrameworks { get; }
@@ -13,7 +14,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
    public int NumberOfGenerics => 0;
 
    public ComplexSerializerGeneratorState(
-      ITypeInformation type,
+      T type,
       IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       AttributeInfo attributeInfo,
       SerializationFrameworks serializationFrameworks)
@@ -24,7 +25,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
       SerializationFrameworks = serializationFrameworks;
    }
 
-   public bool Equals(ComplexSerializerGeneratorState other)
+   public bool Equals(ComplexSerializerGeneratorState<T> other)
    {
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && SerializationFrameworks == other.SerializationFrameworks
@@ -35,7 +36,7 @@ public readonly struct ComplexSerializerGeneratorState : IEquatable<ComplexSeria
 
    public override bool Equals(object? obj)
    {
-      return obj is ComplexSerializerGeneratorState other && Equals(other);
+      return obj is ComplexSerializerGeneratorState<T> other && Equals(other);
    }
 
    public override int GetHashCode()

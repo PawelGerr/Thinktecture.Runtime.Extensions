@@ -13,19 +13,19 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : NewtonsoftJs
    {
    }
 
-   public bool MustGenerateCode(ComplexSerializerGeneratorState state)
+   public bool MustGenerateCode(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state)
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.NewtonsoftJson)
              && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson));
    }
 
-   public CodeGeneratorBase Create(ComplexSerializerGeneratorState state, StringBuilder stringBuilder)
+   public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)
    {
-      return new ComplexValueObjectNewtonsoftJsonCodeGenerator(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
+      return new ComplexValueObjectNewtonsoftJsonCodeGenerator<ComplexValueObjectSourceGeneratorState>(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
    }
 
    public bool Equals(IValueObjectSerializerCodeGeneratorFactory? other) => ReferenceEquals(this, other);
-   public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState> other) => ReferenceEquals(this, other);
+   public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState>> other) => ReferenceEquals(this, other);
    public bool Equals(IComplexSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
 }

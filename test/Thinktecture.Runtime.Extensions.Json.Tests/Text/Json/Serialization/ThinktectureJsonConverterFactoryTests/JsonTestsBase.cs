@@ -72,6 +72,15 @@ public class JsonTestsBase
       return SerializeWithConverter<T, TConverterFactory>(value, namingPolicy, ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never, numberHandling);
    }
 
+   protected static string Serialize<T>(
+      T value,
+      JsonNamingPolicy namingPolicy = null,
+      bool ignoreNullValues = false,
+      JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
+   {
+      return Serialize(value, namingPolicy, ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never, numberHandling);
+   }
+
    protected static string SerializeWithConverter<T, TConverterFactory>(
       T value,
       JsonNamingPolicy namingPolicy,
@@ -83,6 +92,22 @@ public class JsonTestsBase
       var options = new JsonSerializerOptions
                     {
                        Converters = { factory },
+                       PropertyNamingPolicy = namingPolicy,
+                       DefaultIgnoreCondition = jsonIgnoreCondition,
+                       NumberHandling = numberHandling
+                    };
+
+      return JsonSerializer.Serialize(value, options);
+   }
+
+   protected static string Serialize<T>(
+      T value,
+      JsonNamingPolicy namingPolicy,
+      JsonIgnoreCondition jsonIgnoreCondition,
+      JsonNumberHandling numberHandling = JsonNumberHandling.Strict)
+   {
+      var options = new JsonSerializerOptions
+                    {
                        PropertyNamingPolicy = namingPolicy,
                        DefaultIgnoreCondition = jsonIgnoreCondition,
                        NumberHandling = numberHandling

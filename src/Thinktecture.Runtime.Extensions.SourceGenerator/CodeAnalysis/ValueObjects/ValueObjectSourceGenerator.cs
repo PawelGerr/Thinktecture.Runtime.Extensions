@@ -184,7 +184,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       var complexSerializerGeneratorStates = validStates.SelectMany((state, _) =>
                                                         {
-                                                           var serializerState = new ComplexSerializerGeneratorState(
+                                                           var serializerState = new ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState>(
                                                               state.State,
                                                               state.State.AssignableInstanceFieldsAndProperties,
                                                               state.AttributeInfo,
@@ -382,8 +382,8 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       {
          return syntaxNode switch
          {
-            ClassDeclarationSyntax classDeclaration when IsValueObjectCandidate(classDeclaration) => true,
-            StructDeclarationSyntax structDeclaration when IsValueObjectCandidate(structDeclaration) => true,
+            ClassDeclarationSyntax => true,
+            StructDeclarationSyntax => true,
             _ => false
          };
       }
@@ -394,22 +394,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
    }
 
-   private bool IsValueObjectCandidate(TypeDeclarationSyntax typeDeclaration)
-   {
-      var isCandidate = !typeDeclaration.IsGeneric();
-
-      if (isCandidate)
-      {
-         Logger.LogDebug("The type declaration is a value object candidate", typeDeclaration);
-      }
-      else
-      {
-         Logger.LogTrace("The type declaration is not a value object candidate", typeDeclaration);
-      }
-
-      return isCandidate;
-   }
-
    private SourceGenContext<KeyedValidSourceGenState>? GetKeyedSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
@@ -418,6 +402,12 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       {
          if (!TryGetType(context, tds, out var type))
             return null;
+
+         if (!type.TypeParameters.IsDefaultOrEmpty)
+         {
+            Logger.LogDebug("Keyed value objects must not be generic", tds);
+            return null;
+         }
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;

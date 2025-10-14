@@ -16,10 +16,12 @@ public sealed class KeyedValueObjectSourceGeneratorState
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
 
    public bool IsRecord => false;
+   public bool IsTypeParameter => false;
 
    public string? FactoryValidationReturnType { get; }
 
@@ -42,6 +44,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
+      IsStruct = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
@@ -70,6 +73,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
+             && IsStruct == other.IsStruct
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && KeyMember.Equals(other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
@@ -83,6 +87,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ KeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();

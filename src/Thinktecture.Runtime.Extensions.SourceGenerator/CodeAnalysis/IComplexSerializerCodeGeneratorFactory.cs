@@ -2,7 +2,7 @@ using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 
-public interface IComplexSerializerCodeGeneratorFactory : ICodeGeneratorFactory<ComplexSerializerGeneratorState>, IEquatable<IComplexSerializerCodeGeneratorFactory>
+public interface IComplexSerializerCodeGeneratorFactory : ICodeGeneratorFactory<ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState>>, IEquatable<IComplexSerializerCodeGeneratorFactory>
 {
-   bool MustGenerateCode(ComplexSerializerGeneratorState state);
+   bool MustGenerateCode(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state);
 }

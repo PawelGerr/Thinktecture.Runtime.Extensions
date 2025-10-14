@@ -124,7 +124,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public void Should_not_generate_code_for_complex_class_with_generic()
+   public async Task Should_generate_code_for_complex_class_with_generic()
    {
       var source = """
 
@@ -135,15 +135,21 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-           [ComplexValueObject]
-         	public partial class TestValueObject<T>
-         	{
-           }
+            [ComplexValueObject]
+            public partial class ComplexValueObject<T1, T2, T3>
+               where T1 : class, IEquatable<T1>
+               where T3 : struct
+            {
+               public T1 Property { get; }
+               public T2? NullableProperty { get; }
+               public T3 StructProperty { get; }
+               public T3? NullableStructProperty { get; }
+            }
          }
 
          """;
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
-      output.Should().BeNull();
+      await VerifyAsync(output);
    }
 
    [Fact]

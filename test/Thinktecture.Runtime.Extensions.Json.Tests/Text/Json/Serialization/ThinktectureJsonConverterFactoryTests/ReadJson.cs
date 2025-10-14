@@ -111,6 +111,7 @@ public class ReadJson : JsonTestsBase
       Deserialize<TestValueObject_Complex_Class>("null").Should().Be(null);
       Deserialize<TestValueObject_Complex_Struct?>("null").Should().Be(null);
       Deserialize<TestValueObject_Complex_Struct>("null").Should().Be(default(TestValueObject_Complex_Struct));
+      Deserialize<GenericComplexValueObjectStruct<string, int, TimeSpan>?>("null").Should().Be(null);
    }
 
    [Theory]
@@ -407,5 +408,85 @@ public class ReadJson : JsonTestsBase
       };
       var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
       deserialized.Should().Be(expected);
+   }
+
+   [Fact]
+   public void Should_deserialize_generic_complex_value_object()
+   {
+      var json = """
+         {
+           "ClassProperty" : "text",
+           "NullableClassProperty" : "nullable-text",
+           "StructProperty" : 42,
+           "NullableStructProperty" : 43,
+           "Property" : "00:00:10",
+           "NullableProperty" : "00:00:11"
+         }
+         """;
+
+      var deserialized = Deserialize<GenericComplexValueObject<string, int, TimeSpan>>(json);
+
+      deserialized.Should().BeEquivalentTo(GenericComplexValueObject<string, int, TimeSpan>.Create(
+                                              "text",
+                                              "nullable-text",
+                                              42,
+                                              43,
+                                              TimeSpan.FromSeconds(10),
+                                              TimeSpan.FromSeconds(11)
+                                           ));
+   }
+
+   [Fact]
+   public void Should_deserialize_generic_complex_value_object_struct()
+   {
+      var json = """
+         {
+           "ClassProperty" : "text",
+           "NullableClassProperty" : "nullable-text",
+           "StructProperty" : 42,
+           "NullableStructProperty" : 43,
+           "Property" : "00:00:10",
+           "NullableProperty" : "00:00:11"
+         }
+         """;
+
+      var deserialized = Deserialize<GenericComplexValueObjectStruct<string, int, TimeSpan>>(json);
+
+      deserialized.Should().BeEquivalentTo(GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+                                              "text",
+                                              "nullable-text",
+                                              42,
+                                              43,
+                                              TimeSpan.FromSeconds(10),
+                                              TimeSpan.FromSeconds(11)
+                                           ));
+   }
+
+   [Fact]
+   public void Should_deserialize_nullable_generic_complex_value_object_struct()
+   {
+      var json = """
+         {
+           "ClassProperty" : "text",
+           "NullableClassProperty" : "nullable-text",
+           "StructProperty" : 42,
+           "NullableStructProperty" : 43,
+           "Property" : "00:00:10",
+           "NullableProperty" : "00:00:11"
+         }
+         """;
+
+      var deserialized = Deserialize<GenericComplexValueObjectStruct<string, int, TimeSpan>?>(json);
+
+      GenericComplexValueObjectStruct<string, int, TimeSpan>? expected = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      deserialized.Should().BeEquivalentTo(expected);
    }
 }

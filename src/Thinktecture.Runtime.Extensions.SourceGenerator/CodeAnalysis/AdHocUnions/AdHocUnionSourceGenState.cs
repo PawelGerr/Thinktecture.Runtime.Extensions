@@ -11,12 +11,14 @@ public sealed class AdHocUnionSourceGenState
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
    public bool IsRefStruct { get; }
    public bool IsEqualWithReferenceEquality => false;
 
    public bool IsRecord => false;
+   public bool IsTypeParameter => false;
    public bool DisallowsDefaultValue => true;
    public int NumberOfGenerics => 0;
 
@@ -39,6 +41,7 @@ public sealed class AdHocUnionSourceGenState
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
+      IsStruct = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
       IsRefStruct = type is { IsRefLikeType: true, IsReferenceType: false };
@@ -58,6 +61,7 @@ public sealed class AdHocUnionSourceGenState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
+             && IsStruct == other.IsStruct
              && IsRefStruct == other.IsRefStruct
              && Settings.Equals(other.Settings)
              && AttributeInfo.Equals(other.AttributeInfo)
@@ -71,6 +75,7 @@ public sealed class AdHocUnionSourceGenState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();

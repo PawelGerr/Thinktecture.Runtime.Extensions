@@ -2,9 +2,10 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator : CodeGeneratorBase
+public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator<T> : CodeGeneratorBase
+   where T : ITypeInformation, IHasGenerics
 {
-   private readonly ITypeInformation _type;
+   private readonly T _type;
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
@@ -12,7 +13,7 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator : CodeGenerato
    public override string FileNameSuffix => ".NewtonsoftJson";
 
    public ComplexValueObjectNewtonsoftJsonCodeGenerator(
-      ITypeInformation type,
+      T type,
       IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
@@ -26,6 +27,8 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator : CodeGenerato
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
+      var isGeneric = _type.GenericParameters.Count > 0;
+
       if (_type.Namespace is not null)
       {
          _sb.Append(@"
@@ -33,12 +36,24 @@ namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
-      _sb.RenderContainingTypesStart(_type.ContainingTypes);
+      _sb.RenderContainingTypesStart(_type.ContainingTypes)
+         .Append(@"
+[global::Newtonsoft.Json.JsonConverterAttribute(typeof(").Append(isGeneric ? "ValueObjectNewtonsoftJsonConverterFactory" : "ValueObjectNewtonsoftJsonConverter").Append(@"))]
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTypeParameters(_type).Append(@"
+{");
 
+      GenerateConverter(cancellationToken);
       _sb.Append(@"
-[global::Newtonsoft.Json.JsonConverterAttribute(typeof(ValueObjectNewtonsoftJsonConverter))]
-partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
-{
+}");
+      _sb.RenderContainingTypesEnd(_type.ContainingTypes);
+
+      if (isGeneric)
+         GenerateFactory();
+   }
+
+   private void GenerateConverter(CancellationToken cancellationToken)
+   {
+      _sb.Append(@"
    /// <summary>
    /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
@@ -49,7 +64,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type objectType)
       {
-         return _type.IsAssignableFrom(objectType);
+         return _type == objectType;
       }
 
       /// <inheritdoc />
@@ -317,11 +332,60 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
             return (0, 0);
          }
       }
+   }");
    }
-}");
 
-      _sb.RenderContainingTypesEnd(_type.ContainingTypes)
-         .Append(@"
+   private void GenerateFactory()
+   {
+      _sb.Append(@"
+
+file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.JsonConverter
+{
+   private static readonly global::System.Collections.Concurrent.ConcurrentDictionary<global::System.Type, global::Newtonsoft.Json.JsonConverter> _converterByType = new();
+
+   public override bool CanConvert(global::System.Type objectType)
+   {
+      objectType = global::System.Nullable.GetUnderlyingType(objectType) ?? objectType;
+
+      if (!objectType.IsGenericType || objectType.IsGenericTypeDefinition)
+         return false;
+
+      return typeof(").AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(@") == objectType.GetGenericTypeDefinition();
+   }
+
+   public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
+   {
+      return _converterByType.GetOrAdd(objectType, CreateConverter).ReadJson(reader, objectType, existingValue, serializer);
+   }
+
+   public override void WriteJson(global::Newtonsoft.Json.JsonWriter writer, object? value, global::Newtonsoft.Json.JsonSerializer serializer)
+   {
+      if (value is null)
+      {
+         writer.WriteNull();
+      }
+      else
+      {
+         _converterByType.GetOrAdd(value.GetType(), CreateConverter).WriteJson(writer, value, serializer);
+      }
+   }
+
+   private static global::Newtonsoft.Json.JsonConverter CreateConverter(global::System.Type objectType)
+   {
+      if (objectType is null)
+         throw new global::System.ArgumentNullException(nameof(objectType));
+
+      objectType = global::System.Nullable.GetUnderlyingType(objectType) ?? objectType;
+
+      var converterType = objectType.GetNestedType(""ValueObjectNewtonsoftJsonConverter"")
+         ?? throw new global::System.Exception(""Implementation of the json converter for the complex value object \""").AppendTypeFullyQualified(_type).Append(@"\"" not found."");
+
+      converterType = converterType.MakeGenericType(objectType.GenericTypeArguments);
+
+      return (global::Newtonsoft.Json.JsonConverter?)global::System.Activator.CreateInstance(converterType)
+         ?? throw new global::System.Exception($""Could not create an instance of json converter of type \""{converterType.FullName}\""."");
+   }
+}
 ");
    }
 

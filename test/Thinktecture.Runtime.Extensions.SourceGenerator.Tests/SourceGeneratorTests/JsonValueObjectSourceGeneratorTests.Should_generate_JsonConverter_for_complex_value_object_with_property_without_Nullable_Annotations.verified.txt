@@ -3,13 +3,13 @@
 
 namespace Thinktecture.Tests;
 
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
 partial struct ComplexValueObjectWithNonNullProperty
 {
    /// <summary>
    /// JSON converter for <see cref="ComplexValueObjectWithNonNullProperty"/>.
    /// </summary>
-   public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty>
+   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty>
    {
       private readonly global::System.Text.Json.Serialization.JsonConverter<string> _propertyConverter;
       private readonly string _propertyPropertyName;
@@ -17,7 +17,7 @@ partial struct ComplexValueObjectWithNonNullProperty
       /// <summary>
       /// Initializes JSON converter for <see cref="ComplexValueObjectWithNonNullProperty"/>.
       /// </summary>
-      public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
+      public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
             throw new global::System.ArgumentNullException(nameof(options));
@@ -92,27 +92,23 @@ partial struct ComplexValueObjectWithNonNullProperty
          writer.WriteEndObject();
       }
    }
+}
 
-   /// <summary>
-   /// JSON converter factory for <see cref="ComplexValueObjectWithNonNullProperty"/>.
-   /// </summary>
-   public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+{
+   public override bool CanConvert(global::System.Type typeToConvert)
    {
-      /// <inheritdoc />
-      public override bool CanConvert(global::System.Type typeToConvert)
-      {
-         return typeof(global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty).IsAssignableFrom(typeToConvert);
-      }
+      return typeof(global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty) == typeToConvert;
+   }
 
-      /// <inheritdoc />
-      public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new global::System.ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new global::System.ArgumentNullException(nameof(options));
+   public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+   {
+      if (typeToConvert is null)
+         throw new global::System.ArgumentNullException(nameof(typeToConvert));
 
-         return new JsonConverter(options);
-      }
+      if (options is null)
+         throw new global::System.ArgumentNullException(nameof(options));
+
+      return new global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty.ValueObjectJsonConverter(options);
    }
 }

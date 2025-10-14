@@ -9,6 +9,8 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public SpecialType SpecialType { get; }
    public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
+   public bool IsTypeParameter { get; }
    public bool IsReferenceTypeOrNullableStruct { get; }
    public bool IsNullableStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
@@ -31,6 +33,8 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       SpecialType = typedMemberState.SpecialType;
       TypeKind = typedMemberState.TypeKind;
       IsReferenceType = typedMemberState.IsReferenceType;
+      IsStruct = typedMemberState.IsStruct;
+      IsTypeParameter = typedMemberState.IsTypeParameter;
       IsReferenceTypeOrNullableStruct = typedMemberState.IsReferenceTypeOrNullableStruct;
       IsNullableStruct = typedMemberState.IsNullableStruct;
       NullableAnnotation = typedMemberState.NullableAnnotation;

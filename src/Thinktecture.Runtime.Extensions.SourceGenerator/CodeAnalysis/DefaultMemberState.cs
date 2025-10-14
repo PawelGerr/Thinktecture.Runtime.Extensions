@@ -11,6 +11,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
+   public bool IsStruct => _typedMemberState.IsStruct;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation => _typedMemberState.NullableAnnotation;
    public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;

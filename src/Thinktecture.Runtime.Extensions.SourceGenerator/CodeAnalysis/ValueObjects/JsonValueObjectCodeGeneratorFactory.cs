@@ -13,19 +13,19 @@ public sealed class JsonValueObjectCodeGeneratorFactory : JsonKeyedSerializerCod
    {
    }
 
-   public bool MustGenerateCode(ComplexSerializerGeneratorState state)
+   public bool MustGenerateCode(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state)
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
              && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
    }
 
-   public CodeGeneratorBase Create(ComplexSerializerGeneratorState state, StringBuilder stringBuilder)
+   public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)
    {
-      return new ComplexValueObjectJsonCodeGenerator(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
+      return new ComplexValueObjectJsonCodeGenerator<ComplexValueObjectSourceGeneratorState>(state.Type, state.AssignableInstanceFieldsAndProperties, stringBuilder);
    }
 
    public bool Equals(IValueObjectSerializerCodeGeneratorFactory? other) => ReferenceEquals(this, other);
-   public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState> other) => ReferenceEquals(this, other);
+   public bool Equals(ICodeGeneratorFactory<ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState>> other) => ReferenceEquals(this, other);
    public bool Equals(IComplexSerializerCodeGeneratorFactory other) => ReferenceEquals(this, other);
 }

@@ -48,9 +48,10 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_value_object_if_null_and_default()
    {
-      SerializeWithConverter<TestValueObject_Complex_Class, TestValueObject_Complex_Class.JsonConverterFactory>(null).Should().Be("null");
-      SerializeWithConverter<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.JsonConverterFactory>(null).Should().Be("null");
-      SerializeWithConverter<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.JsonConverterFactory>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+      Serialize<TestValueObject_Complex_Class>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct?>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+      Serialize<GenericComplexValueObjectStruct<string, int, TimeSpan>?>(null).Should().Be("null");
    }
 
    [Theory]
@@ -97,7 +98,7 @@ public class WriteJson : JsonTestsBase
       JsonNamingPolicy namingPolicy = null,
       JsonIgnoreCondition jsonIgnoreCondition = JsonIgnoreCondition.Never)
    {
-      var json = SerializeWithConverter<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.JsonConverterFactory>(valueObject, namingPolicy, jsonIgnoreCondition);
+      var json = Serialize(valueObject, namingPolicy, jsonIgnoreCondition);
 
       json.Should().Be(expectedJson);
    }
@@ -129,7 +130,7 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_serialize_complex_value_object_with_ValidationErrorAttribute()
    {
-      var value = SerializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.JsonConverterFactory>(BoundaryWithCustomError.Create(1, 2), JsonNamingPolicy.CamelCase);
+      var value = Serialize(BoundaryWithCustomError.Create(1, 2), JsonNamingPolicy.CamelCase);
 
       value.Should().BeEquivalentTo("{\"lower\":1,\"upper\":2}");
    }
@@ -161,7 +162,7 @@ public class WriteJson : JsonTestsBase
    public void Should_serialize_complex_value_object_with_object_property()
    {
       var obj = ComplexValueObjectWithObjectProperty.Create(new { Test = 1 });
-      var value = SerializeWithConverter<ComplexValueObjectWithObjectProperty, ComplexValueObjectWithObjectProperty.JsonConverterFactory>(obj);
+      var value = Serialize(obj);
 
       value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
    }
@@ -174,9 +175,9 @@ public class WriteJson : JsonTestsBase
          0, 0, 0, 0, 0,
          null, null, null, null, null, null);
 
-       var value = SerializeWithConverter<ComplexValueObjectWithJsonIgnore, ComplexValueObjectWithJsonIgnore.JsonConverterFactory>(obj);
+      var value = Serialize(obj);
 
-       value.Should().BeEquivalentTo("{\"StringProperty_Ignore_Never\":null,\"StringProperty\":null,\"IntProperty_Ignore_Never\":0,\"IntProperty\":0,\"NullableIntProperty_Ignore_Never\":null,\"NullableIntProperty\":null}");
+      value.Should().BeEquivalentTo("{\"StringProperty_Ignore_Never\":null,\"StringProperty\":null,\"IntProperty_Ignore_Never\":0,\"IntProperty\":0,\"NullableIntProperty_Ignore_Never\":null,\"NullableIntProperty\":null}");
    }
 
    [Theory]
@@ -201,5 +202,56 @@ public class WriteJson : JsonTestsBase
    {
       var json = Serialize<PartiallyKnownDateSerializable, string>(null);
       json.Should().Be("null");
+   }
+
+   [Fact]
+   public void Should_serialize_generic_class()
+   {
+      var obj = GenericComplexValueObject<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = JsonSerializer.Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
+   }
+
+   [Fact]
+   public void Should_serialize_generic_struct()
+   {
+      var obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = JsonSerializer.Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
+   }
+
+   [Fact]
+   public void Should_serialize_nullable_generic_struct()
+   {
+      GenericComplexValueObjectStruct<string, int, TimeSpan>? obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = JsonSerializer.Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
    }
 }

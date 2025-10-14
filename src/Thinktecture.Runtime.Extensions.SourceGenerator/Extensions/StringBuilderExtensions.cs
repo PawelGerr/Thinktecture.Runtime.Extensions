@@ -204,7 +204,7 @@ public static class StringBuilderExtensions
       ITypeInformation type,
       (string Text, string? Separator)? suffix = null)
    {
-      return sb.AppendTypeForXmlComment(type.TypeMinimallyQualified,
+      return sb.AppendTypeForXmlComment(type.ContainingTypes.Count == 0 ? type.TypeMinimallyQualified : type.TypeFullyQualified,
                                         false,
                                         suffix);
    }
@@ -262,6 +262,26 @@ public static class StringBuilderExtensions
 
    public static StringBuilder AppendTypeFullyQualified(
       this StringBuilder sb,
+      INamespaceAndName type,
+      IReadOnlyList<ContainingTypeState> containingTypes)
+   {
+      sb.Append("global::");
+
+      if (type.Namespace is not null)
+      {
+         sb.Append(type.Namespace).Append('.');
+      }
+
+      foreach (var containingType in containingTypes)
+      {
+         sb.Append(containingType.Name).Append('.');
+      }
+
+      return sb.Append(type.Name);
+   }
+
+   public static StringBuilder AppendTypeFullyQualified(
+      this StringBuilder sb,
       ITypeInformationWithNullability type,
       bool nullable)
    {
@@ -288,7 +308,7 @@ public static class StringBuilderExtensions
    {
       sb.AppendTypeFullyQualified(type);
 
-      if (type.IsReferenceType && type.NullableAnnotation != NullableAnnotation.Annotated)
+      if ((type.IsReferenceType || type is { IsTypeParameter: true, IsStruct: false }) && type.NullableAnnotation != NullableAnnotation.Annotated)
          sb.Append("?");
 
       return sb;
@@ -418,7 +438,8 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
 
    public static StringBuilder AppendGenericTypeParameters(
       this StringBuilder sb,
-      IHasGenerics type)
+      IHasGenerics type,
+      bool constructOpenGeneric = false)
    {
       if (type.GenericParameters.Count <= 0)
          return sb;
@@ -428,12 +449,35 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
       for (var i = 0; i < type.GenericParameters.Count; i++)
       {
          if (i > 0)
-            sb.Append(", ");
+            sb.Append(constructOpenGeneric ? "," : ", ");
 
-         sb.Append(type.GenericParameters[i].Name);
+         if (!constructOpenGeneric)
+            sb.Append(type.GenericParameters[i].Name);
       }
 
       return sb.Append(">");
+   }
+
+   public static StringBuilder AppendGenericConstraints(
+      this StringBuilder sb,
+      IHasGenerics type,
+      string prefix)
+   {
+      if (type.GenericParameters.Count <= 0)
+         return sb;
+
+      for (var i = 0; i < type.GenericParameters.Count; i++)
+      {
+         var parameter = type.GenericParameters[i];
+
+         if (parameter.Constraints.Count == 0)
+            continue;
+
+         sb.Append(@"
+").Append(prefix).Append("where ").Append(parameter.Name).Append(" : ").AppendGenericConstraints(parameter.Constraints);
+      }
+
+      return sb;
    }
 
    public static StringBuilder AppendGenericConstraints(

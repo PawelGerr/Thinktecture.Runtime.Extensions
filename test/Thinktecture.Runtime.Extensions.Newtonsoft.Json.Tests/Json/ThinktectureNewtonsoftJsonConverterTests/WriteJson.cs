@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Thinktecture.Json;
 using Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
@@ -44,9 +43,10 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_deserialize_value_object_if_null_and_default()
    {
-      SerializeWithConverter<TestValueObject_Complex_Class, TestValueObject_Complex_Class.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      SerializeWithConverter<TestValueObject_Complex_Struct?, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(null).Should().Be("null");
-      SerializeWithConverter<TestValueObject_Complex_Struct, TestValueObject_Complex_Struct.ValueObjectNewtonsoftJsonConverter>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+      Serialize<TestValueObject_Complex_Class>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct?>(null).Should().Be("null");
+      Serialize<TestValueObject_Complex_Struct>(default).Should().Be("{\"Property1\":null,\"Property2\":null}");
+      Serialize<GenericComplexValueObjectStruct<string, int, TimeSpan>?>(null).Should().Be("null");
    }
 
    [Theory]
@@ -75,7 +75,7 @@ public class WriteJson : JsonTestsBase
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
    {
-      var json = SerializeWithConverter<ValueObjectWithMultipleProperties, ValueObjectWithMultipleProperties.ValueObjectNewtonsoftJsonConverter>(value, namingStrategy, nullValueHandling);
+      var json = Serialize(value, namingStrategy, nullValueHandling);
 
       json.Should().Be(expectedJson);
    }
@@ -107,7 +107,7 @@ public class WriteJson : JsonTestsBase
    [Fact]
    public void Should_serialize_complex_value_object_with_ValidationErrorAttribute()
    {
-      var value = SerializeWithConverter<BoundaryWithCustomError, BoundaryWithCustomError.ValueObjectNewtonsoftJsonConverter>(BoundaryWithCustomError.Create(1, 2), new CamelCaseNamingStrategy());
+      var value = Serialize(BoundaryWithCustomError.Create(1, 2), new CamelCaseNamingStrategy());
 
       value.Should().BeEquivalentTo("{\"lower\":1.0,\"upper\":2.0}");
    }
@@ -125,7 +125,7 @@ public class WriteJson : JsonTestsBase
    public void Should_serialize_complex_value_object_with_object_property()
    {
       var obj = ComplexValueObjectWithObjectProperty.Create(new { Test = 1 });
-      var value = SerializeWithConverter<ComplexValueObjectWithObjectProperty, ComplexValueObjectWithObjectProperty.ValueObjectNewtonsoftJsonConverter>(obj);
+      var value = Serialize(obj);
 
       value.Should().BeEquivalentTo("{\"Property\":{\"Test\":1}}");
    }
@@ -154,6 +154,57 @@ public class WriteJson : JsonTestsBase
       json.Should().Be("null");
    }
 
+   [Fact]
+   public void Should_serialize_generic_class()
+   {
+      var obj = GenericComplexValueObject<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
+   }
+
+   [Fact]
+   public void Should_serialize_generic_struct()
+   {
+      var obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
+   }
+
+   [Fact]
+   public void Should_serialize_nullable_generic_struct()
+   {
+      GenericComplexValueObjectStruct<string, int, TimeSpan>? obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+
+      var json = Serialize(obj);
+
+      json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
+   }
+
    private static string Serialize<T, TKey>(
       T value,
       NamingStrategy namingStrategy = null,
@@ -170,7 +221,7 @@ public class WriteJson : JsonTestsBase
       where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
       where TValidationError : class, IValidationError<TValidationError>
    {
-      return SerializeWithConverter<T, ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError>>(value, namingStrategy, nullValueHandling);
+      return Serialize(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeNullableStruct<T, TKey>(
@@ -179,7 +230,7 @@ public class WriteJson : JsonTestsBase
       NullValueHandling nullValueHandling = NullValueHandling.Include)
       where T : struct, IObjectFactory<T, TKey, ValidationError>, IConvertible<TKey>
    {
-      return SerializeWithConverter<T?, ThinktectureNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
+      return Serialize(value, namingStrategy, nullValueHandling);
    }
 
    private static string SerializeStruct<T, TKey>(
@@ -188,21 +239,19 @@ public class WriteJson : JsonTestsBase
       NullValueHandling nullValueHandling = NullValueHandling.Include)
       where T : struct, IObjectFactory<T, TKey, ValidationError>, IConvertible<TKey>
    {
-      return SerializeWithConverter<T, ThinktectureNewtonsoftJsonConverter<T, TKey, ValidationError>>(value, namingStrategy, nullValueHandling);
+      return Serialize(value, namingStrategy, nullValueHandling);
    }
 
-   private static string SerializeWithConverter<T, TConverter>(
+   private static string Serialize<T>(
       T value,
       NamingStrategy namingStrategy = null,
       NullValueHandling nullValueHandling = NullValueHandling.Include)
-      where TConverter : JsonConverter, new()
    {
       using var writer = new StringWriter();
       using var jsonWriter = new JsonTextWriter(writer);
 
       var settings = new JsonSerializerSettings
                      {
-                        Converters = { new TConverter() },
                         NullValueHandling = nullValueHandling
                      };
 

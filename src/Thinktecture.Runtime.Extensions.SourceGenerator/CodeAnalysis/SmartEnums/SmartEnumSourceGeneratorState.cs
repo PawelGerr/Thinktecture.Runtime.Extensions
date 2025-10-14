@@ -22,10 +22,12 @@ public sealed class SmartEnumSourceGeneratorState
    public bool IsNullableStruct { get; }
    public bool IsAbstract { get; }
 
-   public bool IsReferenceType => true; // Smart Enums cannot be structs
+   public bool IsReferenceType => true;        // Smart Enums cannot be structs
+   public bool IsStruct => false;              // Smart Enums cannot be structs
    public bool DisallowsDefaultValue => false; // Smart Enums cannot be structs
    public bool IsEqualWithReferenceEquality => true;
    public bool IsRecord => false;
+   public bool IsTypeParameter => false;
    public int NumberOfGenerics => 0;
 
    public EnumItems Items { get; }

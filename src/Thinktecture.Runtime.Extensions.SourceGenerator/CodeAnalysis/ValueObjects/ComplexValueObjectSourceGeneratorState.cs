@@ -4,6 +4,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
    : ITypeInformation,
      IParsableTypeInformation,
      IKeyedSerializerGeneratorTypeInformation,
+     IHasGenerics,
      IEquatable<ComplexValueObjectSourceGeneratorState>
 {
    public string TypeFullyQualified { get; }
@@ -11,15 +12,18 @@ public sealed class ComplexValueObjectSourceGeneratorState
    public bool IsEqualWithReferenceEquality => false;
    public bool DisallowsDefaultValue => !IsReferenceType && !Settings.AllowDefaultStructs;
    public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public int NumberOfGenerics => 0;
+   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
+   public int NumberOfGenerics => GenericParameters.Count;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
 
    public bool IsRecord => false;
+   public bool IsTypeParameter => false;
 
    public string? FactoryValidationReturnType { get; }
 
@@ -43,7 +47,9 @@ public sealed class ComplexValueObjectSourceGeneratorState
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       ContainingTypes = type.GetContainingTypes();
+      GenericParameters = type.GetGenericTypeParameters();
       IsReferenceType = type.IsReferenceType;
+      IsStruct = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
@@ -109,11 +115,13 @@ public sealed class ComplexValueObjectSourceGeneratorState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
+             && IsStruct == other.IsStruct
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
              && EqualityMembers.SequenceEqual(other.EqualityMembers)
+             && GenericParameters.SequenceEqual(other.GenericParameters)
              && ContainingTypes.SequenceEqual(other.ContainingTypes);
    }
 
@@ -123,11 +131,13 @@ public sealed class ComplexValueObjectSourceGeneratorState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;

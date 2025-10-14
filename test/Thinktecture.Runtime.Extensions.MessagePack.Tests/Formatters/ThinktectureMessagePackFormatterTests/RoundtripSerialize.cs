@@ -439,6 +439,48 @@ public partial class RoundTripSerialize
                    .Should().NotThrow();
    }
 
+   [Fact]
+   public void Should_roundtrip_serialize_generic_complex_value_object()
+   {
+      var obj = GenericComplexValueObject<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+      RoundTrip(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_generic_complex_value_object_struct()
+   {
+      var obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+      RoundTrip(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_nullable_generic_complex_value_object_struct()
+   {
+      GenericComplexValueObjectStruct<string, int, TimeSpan>? obj = GenericComplexValueObjectStruct<string, int, TimeSpan>.Create(
+         "text",
+         "nullable-text",
+         42,
+         43,
+         TimeSpan.FromSeconds(10),
+         TimeSpan.FromSeconds(11)
+      );
+      RoundTrip(obj);
+   }
+
    private static void Roundtrip_serialize_types_with_struct_properties_using_resolver(
       bool skipValueObjectsWithMessagePackFormatter,
       object obj)

@@ -321,4 +321,35 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_generic_complex_value_object()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject]
+          public partial class ComplexValueObject<T1, T2, T3>
+             where T1 : class, IEquatable<T1>
+             where T3 : struct
+          {
+             public T1 Property { get; }
+             public T2? NullableProperty { get; }
+             public T3 StructProperty { get; }
+             public T3? NullableStructProperty { get; }
+          }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

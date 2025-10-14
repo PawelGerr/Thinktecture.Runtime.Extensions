@@ -7,7 +7,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public NewtonsoftJsonValueObjectSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 9_000)
+      : base(output, 10_500)
    {
    }
 
@@ -332,6 +332,37 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
             public readonly ClassDisallowingDefaultValues? _nullableReferenceType;
             public readonly StructDisallowingDefaultValues _nonNullableStruct;
             public readonly StructDisallowingDefaultValues? _nullableStruct;
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverter<,,>).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_generic_complex_value_object()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable disable
+
+         namespace Thinktecture.Tests;
+
+         [ComplexValueObject]
+         public partial class ComplexValueObject<T1, T2, T3>
+            where T1 : class, IEquatable<T1>
+            where T3 : struct
+         {
+            public T1 Property { get; }
+            public T2? NullableProperty { get; }
+            public T3 StructProperty { get; }
+            public T3? NullableStructProperty { get; }
          }
 
          """;

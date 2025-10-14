@@ -12,6 +12,7 @@ public sealed class ObjectFactorySourceGeneratorState :
    public string TypeFullyQualified { get; }
    public bool IsRecord { get; }
    public bool IsReferenceType { get; }
+   public bool IsStruct { get; }
    public bool IsRefStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
@@ -20,6 +21,8 @@ public sealed class ObjectFactorySourceGeneratorState :
    public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
 
    public int NumberOfGenerics => GenericParameters.Count;
+
+   public bool IsTypeParameter => false;
 
    public ObjectFactorySourceGeneratorState(
       INamedTypeSymbol type,
@@ -33,6 +36,7 @@ public sealed class ObjectFactorySourceGeneratorState :
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       IsRecord = type.IsRecord;
       IsReferenceType = type.IsReferenceType;
+      IsStruct = type.IsValueType;
       IsRefStruct = type is { IsRefLikeType: true, IsReferenceType: false };
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
@@ -51,6 +55,7 @@ public sealed class ObjectFactorySourceGeneratorState :
       return TypeFullyQualified == other.TypeFullyQualified
              && IsRecord == other.IsRecord
              && IsReferenceType == other.IsReferenceType
+             && IsStruct == other.IsStruct
              && IsRefStruct == other.IsRefStruct
              && AttributeInfo.Equals(other.AttributeInfo)
              && GenericParameters.SequenceEqual(other.GenericParameters)
@@ -64,6 +69,7 @@ public sealed class ObjectFactorySourceGeneratorState :
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();

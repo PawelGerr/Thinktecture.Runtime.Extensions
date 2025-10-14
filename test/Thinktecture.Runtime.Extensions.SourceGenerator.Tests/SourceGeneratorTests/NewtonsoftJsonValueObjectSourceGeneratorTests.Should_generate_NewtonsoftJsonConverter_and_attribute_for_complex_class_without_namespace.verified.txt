@@ -14,7 +14,7 @@ partial class TestValueObject
       /// <inheritdoc />
       public override bool CanConvert(global::System.Type objectType)
       {
-         return _type.IsAssignableFrom(objectType);
+         return _type == objectType;
       }
 
       /// <inheritdoc />

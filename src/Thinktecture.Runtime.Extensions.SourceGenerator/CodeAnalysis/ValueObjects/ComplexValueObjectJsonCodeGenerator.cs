@@ -3,9 +3,10 @@ using Thinktecture.Json;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public sealed class ComplexValueObjectJsonCodeGenerator : CodeGeneratorBase
+public sealed class ComplexValueObjectJsonCodeGenerator<T> : CodeGeneratorBase
+   where T : ITypeInformation, IHasGenerics
 {
-   private readonly ITypeInformation _type;
+   private readonly T _type;
    private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
@@ -13,7 +14,7 @@ public sealed class ComplexValueObjectJsonCodeGenerator : CodeGeneratorBase
    public override string FileNameSuffix => ".Json";
 
    public ComplexValueObjectJsonCodeGenerator(
-      ITypeInformation type,
+      T type,
       IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
@@ -34,16 +35,28 @@ namespace ").Append(_type.Namespace).Append(@";
 ");
       }
 
-      _sb.RenderContainingTypesStart(_type.ContainingTypes);
+      _sb.RenderContainingTypesStart(_type.ContainingTypes)
+         .Append(@"
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]
+partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTypeParameters(_type).Append(@"
+{");
+
+      GenerateConverter(cancellationToken);
 
       _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(JsonConverterFactory))]
-partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
-{
+}");
+      _sb.RenderContainingTypesEnd(_type.ContainingTypes);
+
+      GenerateFactory();
+   }
+
+   private void GenerateConverter(CancellationToken cancellationToken)
+   {
+      _sb.Append(@"
    /// <summary>
    /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
-   public sealed class JsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
+   public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
@@ -66,7 +79,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       /// <summary>
       /// Initializes JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
       /// </summary>
-      public JsonConverter(global::System.Text.Json.JsonSerializerOptions options)
+      public ValueObjectJsonConverter(global::System.Text.Json.JsonSerializerOptions options)
       {
          if(options is null)
             throw new global::System.ArgumentNullException(nameof(options));
@@ -315,34 +328,66 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).Append(@"
       _sb.Append(@"
          writer.WriteEndObject();
       }
+   }");
    }
 
-   /// <summary>
-   /// JSON converter factory for ").AppendTypeForXmlComment(_type).Append(@".
-   /// </summary>
-   public class JsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+   private void GenerateFactory()
    {
-      /// <inheritdoc />
-      public override bool CanConvert(global::System.Type typeToConvert)
+      var isGeneric = _type.GenericParameters.Count > 0;
+
+      _sb.Append(@"
+
+file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
+{
+   public override bool CanConvert(global::System.Type typeToConvert)
+   {");
+
+      if (isGeneric)
       {
-         return typeof(").AppendTypeFullyQualified(_type).Append(@").IsAssignableFrom(typeToConvert);
+         _sb.Append(@"
+      if (!typeToConvert.IsGenericType || typeToConvert.IsGenericTypeDefinition)
+         return false;
+
+      return typeof(").AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(") == typeToConvert.GetGenericTypeDefinition();");
+      }
+      else
+      {
+         _sb.Append(@"
+      return typeof(").AppendTypeFullyQualified(_type).Append(") == typeToConvert;");
       }
 
-      /// <inheritdoc />
-      public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
-      {
-         if (typeToConvert is null)
-            throw new global::System.ArgumentNullException(nameof(typeToConvert));
-         if (options is null)
-            throw new global::System.ArgumentNullException(nameof(options));
-
-         return new JsonConverter(options);
-      }
+      _sb.Append(@"
    }
-}");
 
-      _sb.RenderContainingTypesEnd(_type.ContainingTypes)
-         .Append(@"
+   public override global::System.Text.Json.Serialization.JsonConverter CreateConverter(global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+   {
+      if (typeToConvert is null)
+         throw new global::System.ArgumentNullException(nameof(typeToConvert));
+
+      if (options is null)
+         throw new global::System.ArgumentNullException(nameof(options));
+");
+
+      if (isGeneric)
+      {
+         _sb.Append(@"
+      var converterType = typeToConvert.GetNestedType(""ValueObjectJsonConverter"")
+         ?? throw new global::System.Exception(""Implementation of the json converter for the complex value object \""").AppendTypeFullyQualified(_type).Append(@"\"" not found."");
+
+      converterType = converterType.MakeGenericType(typeToConvert.GenericTypeArguments);
+
+      return (global::System.Text.Json.Serialization.JsonConverter?)global::System.Activator.CreateInstance(converterType, options)
+         ?? throw new global::System.Exception($""Could not create an instance of json converter of type \""{converterType.FullName}\""."");");
+      }
+      else
+      {
+         _sb.Append(@"
+      return new ").AppendTypeFullyQualified(_type).Append(".ValueObjectJsonConverter(options);");
+      }
+
+      _sb.Append(@"
+   }
+}
 ");
    }
 }
