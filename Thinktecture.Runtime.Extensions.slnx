@@ -19,6 +19,13 @@
     <File Path=".github\workflows\mcp-config.json" />
     <File Path=".github\workflows\main.yml" />
   </Folder>
+  <Folder Name="/assets/agents/">
+    <File Path=".claude\agents\feature-implementation-planner.md" />
+    <File Path=".claude\agents\feature-implementer.md" />
+    <File Path=".claude\agents\feature-test-writer.md" />
+    <File Path=".claude\agents\feature-reviewer.md" />
+    <File Path=".claude\agents\documentation-updater.md" />
+  </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/AspNetCore.Samples/AspNetCore.Samples.csproj" />
     <Project Path="samples/Basic.Samples/Basic.Samples.csproj" />
