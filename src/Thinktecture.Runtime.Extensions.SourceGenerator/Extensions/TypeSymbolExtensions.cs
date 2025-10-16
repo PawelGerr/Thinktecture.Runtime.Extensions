@@ -94,11 +94,14 @@ public static class TypeSymbolExtensions
    {
       if (attributeType is null
           || attributeType.TypeKind == TypeKind.Error
-          || attributeType is not INamedTypeSymbol namedType
-          || namedType.Arity == 0)
+          || attributeType is not INamedTypeSymbol namedType)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType.ContainingNamespace is { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+             && (
+                   attributeType.Name == Constants.Attributes.Union.NAME && namedType.Arity > 0
+                   || attributeType.Name == Constants.Attributes.Union.NAME_AD_HOCH && namedType.Arity == 0
+                );
    }
 
    public static bool IsRegularUnionAttribute(this ITypeSymbol? attributeType)
@@ -109,7 +112,11 @@ public static class TypeSymbolExtensions
           || namedType.Arity != 0)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is
+      {
+         Name: Constants.Attributes.Union.NAME,
+         ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsAnyUnionAttribute(this ITypeSymbol? attributeType)
@@ -117,7 +124,11 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: Constants.Attributes.Union.NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is
+      {
+         Name: Constants.Attributes.Union.NAME or Constants.Attributes.Union.NAME_AD_HOCH,
+         ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsUnionSwitchMapOverloadAttribute(this ITypeSymbol? attributeType)
@@ -138,7 +149,8 @@ public static class TypeSymbolExtensions
          Name: Constants.Attributes.SmartEnum.NAME
          or Constants.Attributes.ValueObject.KEYED_NAME
          or Constants.Attributes.ValueObject.COMPLEX_NAME
-         or Constants.Attributes.Union.NAME, // both regular and ad-hoc
+         or Constants.Attributes.Union.NAME // both regular and generic ad-hoc
+         or Constants.Attributes.Union.NAME_AD_HOCH, // non-generic ad-hoc
          ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
    }
@@ -487,7 +499,7 @@ public static class TypeSymbolExtensions
          (baseType, baseType.GetGenericTypeDefinition()),
          ref derivedTypes);
 
-      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>) [];
+      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)[];
    }
 
    private static void FindDerivedInnerTypes(
@@ -766,7 +778,7 @@ public static class TypeSymbolExtensions
                              : methodSymbol.ReturnType.ToFullyQualifiedDisplayString();
 
          var parameters = methodSymbol.Parameters.Length == 0
-                             ? (IReadOnlyList<ParameterState>) []
+                             ? (IReadOnlyList<ParameterState>)[]
                              : methodSymbol.Parameters
                                            .Select(p => new ParameterState(
                                                       p.Name,
@@ -786,7 +798,7 @@ public static class TypeSymbolExtensions
          (methodStates ??= []).Add(methodState);
       }
 
-      return methodStates ?? (IReadOnlyList<DelegateMethodState>) [];
+      return methodStates ?? (IReadOnlyList<DelegateMethodState>)[];
    }
 
    public static bool HasRequiredMembers(this INamedTypeSymbol type)

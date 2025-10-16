@@ -99,6 +99,9 @@ public static class Constants
 
       public static class Union
       {
+         public const string NAME_AD_HOCH = "AdHocUnionAttribute";
+         public const string FULL_NAME_AD_HOCH = "Thinktecture.AdHocUnionAttribute";
+
          public const string NAME = "UnionAttribute";
          public const string FULL_NAME = "Thinktecture.UnionAttribute";
          public const string FULL_NAME_2_TYPES = "Thinktecture.UnionAttribute`2";

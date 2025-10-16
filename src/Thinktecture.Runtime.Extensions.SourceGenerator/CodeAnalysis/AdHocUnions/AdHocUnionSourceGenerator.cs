@@ -23,21 +23,40 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
       IncrementalGeneratorInitializationContext context,
       IncrementalValueProvider<GeneratorOptions> options)
    {
-      InitializeUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_2_TYPES);
-      InitializeUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_3_TYPES);
-      InitializeUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_4_TYPES);
-      InitializeUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_5_TYPES);
+      InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_2_TYPES);
+      InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_3_TYPES);
+      InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_4_TYPES);
+      InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_5_TYPES);
+      InitializeNonGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_AD_HOCH);
+   }
+
+   private void InitializeGenericUnionSourceGen(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> options,
+      string fullyQualifiedMetadataName)
+   {
+      InitializeUnionSourceGen(context, options, fullyQualifiedMetadataName, IsGenericCandidate, GetSourceGenContextOrNullForGeneric);
+   }
+
+   private void InitializeNonGenericUnionSourceGen(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValueProvider<GeneratorOptions> options,
+      string fullyQualifiedMetadataName)
+   {
+      InitializeUnionSourceGen(context, options, fullyQualifiedMetadataName, IsNonGenericCandidate, GetSourceGenContextOrNullForNonGeneric);
    }
 
    private void InitializeUnionSourceGen(
       IncrementalGeneratorInitializationContext context,
       IncrementalValueProvider<GeneratorOptions> options,
-      string fullyQualifiedMetadataName)
+      string fullyQualifiedMetadataName,
+      Func<SyntaxNode, CancellationToken, bool> isCandate,
+      Func<GeneratorAttributeSyntaxContext, CancellationToken, SourceGenContext?> getSourceGenContextOrNull)
    {
       var unionTypeOrError = context.SyntaxProvider
                                     .ForAttributeWithMetadataName(fullyQualifiedMetadataName,
-                                                                  IsCandidate,
-                                                                  GetSourceGenContextOrNull)
+                                                                  isCandate,
+                                                                  getSourceGenContextOrNull)
                                     .SelectMany(static (state, _) => state.HasValue
                                                                         ? [state.Value]
                                                                         : ImmutableArray<SourceGenContext>.Empty);
@@ -52,7 +71,7 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
       InitializeExceptionReporting(context, unionTypeOrError);
    }
 
-   private bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private bool IsGenericCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
       try
       {
@@ -60,6 +79,24 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
          {
             ClassDeclarationSyntax classDeclaration when IsUnionCandidate(classDeclaration) => true,
             StructDeclarationSyntax structDeclaration when IsUnionCandidate(structDeclaration) => true,
+            _ => false
+         };
+      }
+      catch (Exception ex)
+      {
+         Logger.LogError("Error during checking whether a syntax node is a discriminated union candidate", exception: ex);
+         return false;
+      }
+   }
+
+   private bool IsNonGenericCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   {
+      try
+      {
+         return syntaxNode switch
+         {
+            ClassDeclarationSyntax => true,
+            StructDeclarationSyntax => true,
             _ => false
          };
       }
@@ -86,7 +123,85 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
       return isCandidate;
    }
 
-   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   private SourceGenContext? GetSourceGenContextOrNullForGeneric(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   {
+      return GetSourceGenContextOrNull(
+         context,
+         (tds, data) =>
+         {
+            var attributeType = data.AttributeClass;
+
+            if (attributeType is null)
+            {
+               Logger.LogDebug("The attribute type is null", tds);
+               return null;
+            }
+
+            if (attributeType.TypeKind == TypeKind.Error)
+            {
+               Logger.LogDebug("The attribute type is erroneous", tds);
+               return null;
+            }
+
+            if (attributeType.TypeArguments.IsDefaultOrEmpty)
+               return null;
+
+            return attributeType.TypeArguments;
+         },
+         cancellationToken);
+   }
+
+   private SourceGenContext? GetSourceGenContextOrNullForNonGeneric(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+   {
+      return GetSourceGenContextOrNull(
+         context,
+         (tds, data) =>
+         {
+            var attributeType = data.AttributeClass;
+
+            if (attributeType is null)
+            {
+               Logger.LogDebug("The attribute type is null", tds);
+               return null;
+            }
+
+            if (attributeType.TypeKind == TypeKind.Error)
+            {
+               Logger.LogDebug("The attribute type is erroneous", tds);
+               return null;
+            }
+
+            if(data.ConstructorArguments.IsDefaultOrEmpty)
+               return null;
+
+            var types = new List<ITypeSymbol>();
+            var foundNull = false;
+
+            for (var i = 0; i < data.ConstructorArguments.Length; i++)
+            {
+               var argument = data.ConstructorArguments[i];
+
+               if (argument.IsNull)
+               {
+                  foundNull = true;
+                  continue;
+               }
+
+               if (foundNull || argument.Value is not ITypeSymbol type || type.TypeKind == TypeKind.Error)
+                  return null;
+
+               types.Add(type);
+            }
+
+            return types;
+         },
+         cancellationToken);
+   }
+
+   private SourceGenContext? GetSourceGenContextOrNull(
+      GeneratorAttributeSyntaxContext context,
+      Func<TypeDeclarationSyntax, AttributeData, IReadOnlyList<ITypeSymbol>?> getMemberTypes,
+      CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
 
@@ -109,26 +224,17 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return null;
          }
 
-         var attributeType = context.Attributes[0].AttributeClass;
+         var attributeData = context.Attributes[0];
+         var memberTypeSymbols = getMemberTypes(tds, attributeData);
 
-         if (attributeType is null)
+         if (memberTypeSymbols is null)
          {
-            Logger.LogDebug("The attribute type is null", tds);
             return null;
          }
 
-         if (attributeType.TypeArguments.IsDefaultOrEmpty)
-            return null;
-
-         if (attributeType.TypeKind == TypeKind.Error)
+         if (memberTypeSymbols.Count < 2)
          {
-            Logger.LogDebug("The attribute type is erroneous", tds);
-            return null;
-         }
-
-         if (attributeType.Arity < 2)
-         {
-            Logger.LogDebug($"Expected the attribute type to have at least 2 type arguments but found {attributeType.Arity.ToString()}", tds);
+            Logger.LogDebug($"Expected the union to have at least 2 member types but found {memberTypeSymbols.Count}", tds);
             return null;
          }
 
@@ -146,12 +252,12 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               attributeType.Arity);
-         var memberTypeStates = attributeType.Arity == 0 ? [] : new AdHocUnionMemberTypeState[attributeType.Arity];
+                                               memberTypeSymbols.Count);
+         var memberTypeStates = new AdHocUnionMemberTypeState[memberTypeSymbols.Count];
 
-         for (var i = 0; i < attributeType.TypeArguments.Length; i++)
+         for (var i = 0; i < memberTypeSymbols.Count; i++)
          {
-            var memberType = attributeType.TypeArguments[i];
+            var memberType = memberTypeSymbols[i];
 
             if (memberType.TypeKind == TypeKind.Error)
             {
@@ -165,7 +271,7 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
 
             var typeDuplicateCounter = 0;
 
-            for (var j = 0; j < attributeType.TypeArguments.Length; j++)
+            for (var j = 0; j < memberTypeSymbols.Count; j++)
             {
                if (j == i)
                {
@@ -175,7 +281,7 @@ public class AdHocUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncre
                   continue;
                }
 
-               if (!SymbolEqualityComparer.Default.Equals(memberType, attributeType.TypeArguments[j]))
+               if (!SymbolEqualityComparer.Default.Equals(memberType, memberTypeSymbols[j]))
                   continue;
 
                if (j > i && typeDuplicateCounter != 0)
