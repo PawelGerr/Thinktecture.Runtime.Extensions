@@ -27,20 +27,20 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
 **Value Objects articles**:
-* [Value Objects: Solving Primitive Obsession in .NET](https://www.thinktecture.com/net/value-objects-solving-primitive-obsession-in-net/)
-* [Handling Complexity: Introducing Complex Value Objects in .NET](https://www.thinktecture.com/net/handling-complexity-introducing-complex-value-objects-in-dotnet/)
+* [Value Objects: Solving Primitive Obsession in .NET](https://www.thinktecture.com/en/net/value-objects-solving-primitive-obsession-in-net/)
+* [Handling Complexity: Introducing Complex Value Objects in .NET](https://www.thinktecture.com/en/net/handling-complexity-introducing-complex-value-objects-in-dotnet/)
 * [Value Objects in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/value-objects-in-net-integration-with-frameworks-and-libraries/)
 * [Value Objects in .NET: Enhancing Business Semantics](https://www.thinktecture.com/net/value-objects-in-dotnet-enhancing-business-semantics/)
 
 **Smart Enums articles**:
-* [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
-* [Smart Enums: Adding Domain Logic to Enumerations in .NET](https://www.thinktecture.com/net/smart-enums-adding-domain-logic-to-enumerations-in-dotnet/)
-* [Smart Enums in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/net/smart-enums-in-net-integration-with-frameworks-and-libraries/)
+* [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
+* [Smart Enums: Adding Domain Logic to Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-adding-domain-logic-to-enumerations-in-dotnet/)
+* [Smart Enums in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/smart-enums-in-net-integration-with-frameworks-and-libraries/)
 
 **Discriminated Unions articles**:
-* [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
-* [Pattern Matching with Discriminated Unions in .NET](https://www.thinktecture.com/net/pattern-matching-with-discriminated-unions-in-net/)
-* [Discriminated Unions in .NET: Modeling States and Variants](https://www.thinktecture.com/net/discriminated-unions-in-net-modeling-states-and-variants/)
+* [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/en/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
+* [Pattern Matching with Discriminated Unions in .NET](https://www.thinktecture.com/en/net/pattern-matching-with-discriminated-unions-in-net/)
+* [Discriminated Unions in .NET: Modeling States and Variants](https://www.thinktecture.com/en/net/discriminated-unions-in-net-modeling-states-and-variants/)
 
 # Requirements
 
