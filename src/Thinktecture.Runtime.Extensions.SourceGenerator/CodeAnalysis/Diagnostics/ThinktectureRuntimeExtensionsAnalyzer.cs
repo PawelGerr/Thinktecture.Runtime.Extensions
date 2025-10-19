@@ -404,7 +404,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          var locationOfFirstDeclaration = type.Locations.IsDefaultOrEmpty ? Location.None : type.Locations[0]; // a representative for all
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
 
          if (factory is null)
          {
@@ -811,7 +811,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation, _errorLogger);
+      var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.Compilation);
 
       if (factory is null)
       {

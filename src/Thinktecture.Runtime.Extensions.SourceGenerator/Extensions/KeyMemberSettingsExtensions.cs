@@ -10,6 +10,6 @@ public static class KeyMemberSettingsExtensions
                                 settings.KeyMemberAccessModifier,
                                 settings.KeyMemberKind,
                                 settings.KeyMemberName,
-                                settings.KeyMemberName.MakeArgumentName());
+                                ArgumentName.Create(settings.KeyMemberName));
    }
 }

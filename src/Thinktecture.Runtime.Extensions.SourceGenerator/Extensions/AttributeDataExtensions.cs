@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.Json;
 
@@ -27,32 +28,17 @@ public static class AttributeDataExtensions
 
    public static AccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
    {
-      return attributeData.FindAccessModifier(Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
+      return GetEnumParameterValue<AccessModifier>(attributeData, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);
    }
 
    public static AccessModifier? FindConstructorAccessModifier(this AttributeData attributeData)
    {
-      return attributeData.FindAccessModifier(Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER);
-   }
-
-   private static AccessModifier? FindAccessModifier(this AttributeData attributeData, string propertyName)
-   {
-      var modifier = (AccessModifier?)GetIntegerParameterValue(attributeData, propertyName);
-
-      if (modifier is null || !modifier.Value.IsValid())
-         return null;
-
-      return modifier;
+      return GetEnumParameterValue<AccessModifier>(attributeData, Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER);
    }
 
    public static MemberKind? FindKeyMemberKind(this AttributeData attributeData)
    {
-      var kind = (MemberKind?)GetIntegerParameterValue(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);
-
-      if (kind is null || !kind.Value.IsValid())
-         return null;
-
-      return kind;
+      return GetEnumParameterValue<MemberKind>(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);
    }
 
    public static string? FindKeyMemberName(this AttributeData attributeData)
@@ -142,57 +128,45 @@ public static class AttributeDataExtensions
 
    public static ConversionOperatorsGeneration? FindConversionFromValue(this AttributeData attributeData)
    {
-      return GetConversionOperatorsGeneration(attributeData, "ConversionFromValue");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionFromValue");
    }
 
    public static ConversionOperatorsGeneration? FindConversionToValue(this AttributeData attributeData)
    {
-      return GetConversionOperatorsGeneration(attributeData, "ConversionToValue");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionToValue");
    }
 
    public static ConversionOperatorsGeneration? FindConversionToKeyMemberType(this AttributeData attributeData)
    {
-      return GetConversionOperatorsGeneration(attributeData, "ConversionToKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionToKeyMemberType");
    }
 
    public static ConversionOperatorsGeneration? FindUnsafeConversionToKeyMemberType(this AttributeData attributeData)
    {
-      return GetConversionOperatorsGeneration(attributeData, "UnsafeConversionToKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "UnsafeConversionToKeyMemberType");
    }
 
    public static ConversionOperatorsGeneration? FindConversionFromKeyMemberType(this AttributeData attributeData)
    {
-      return GetConversionOperatorsGeneration(attributeData, "ConversionFromKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionFromKeyMemberType");
    }
 
    public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
    {
-      var frameworks = (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "UseForSerialization");
-
-      if (frameworks is null || !frameworks.Value.IsValid())
-         return SerializationFrameworks.None;
-
-      return frameworks.Value;
+      return GetEnumParameterValue<SerializationFrameworks>(attributeData, "UseForSerialization")
+             ?? SerializationFrameworks.None;
    }
 
    public static SerializationFrameworks FindSerializationFrameworks(this AttributeData attributeData)
    {
-      var frameworks = (SerializationFrameworks?)GetIntegerParameterValue(attributeData, "SerializationFrameworks");
-
-      if (frameworks is null || !frameworks.Value.IsValid())
-         return SerializationFrameworks.All;
-
-      return frameworks.Value;
+      return GetEnumParameterValue<SerializationFrameworks>(attributeData, "SerializationFrameworks")
+             ?? SerializationFrameworks.All;
    }
 
    public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
    {
-      var defaultStringComparison = (StringComparison?)GetIntegerParameterValue(attributeData, "DefaultStringComparison");
-
-      if (defaultStringComparison is null || !defaultStringComparison.Value.IsValid())
-         return StringComparison.OrdinalIgnoreCase;
-
-      return defaultStringComparison.Value;
+      return GetEnumParameterValue<StringComparison>(attributeData, "DefaultStringComparison")
+             ?? StringComparison.OrdinalIgnoreCase;
    }
 
    public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)
@@ -227,7 +201,7 @@ public static class AttributeDataExtensions
 
    public static UnionConstructorAccessModifier FindUnionConstructorAccessModifier(this AttributeData attributeData)
    {
-      return (UnionConstructorAccessModifier?)GetIntegerParameterValue(attributeData, "ConstructorAccessModifier")
+      return GetEnumParameterValue<UnionConstructorAccessModifier>(attributeData, "ConstructorAccessModifier")
              ?? UnionConstructorAccessModifier.Public;
    }
 
@@ -238,7 +212,7 @@ public static class AttributeDataExtensions
 
    public static JsonIgnoreCondition? FindJsonIgnoreCondition(this AttributeData attributeData)
    {
-      return (JsonIgnoreCondition?)GetIntegerParameterValue(attributeData, "Condition");
+      return GetEnumParameterValue<JsonIgnoreCondition>(attributeData, "Condition");
    }
 
    public static bool FindAllowDefaultStructs(this AttributeData attributeData)
@@ -250,13 +224,21 @@ public static class AttributeDataExtensions
    {
       var stopAtArgument = attributeData.FindNamedAttribute("StopAt");
 
-      if (stopAtArgument.Kind != TypedConstantKind.Array || stopAtArgument.Values.Length == 0)
+      if (stopAtArgument.Kind != TypedConstantKind.Array)
          return [];
 
-      var result = new List<string>(stopAtArgument.Values.Length);
+      var values = stopAtArgument.Values;
+      var length = values.Length;
 
-      foreach (var value in stopAtArgument.Values)
+      if (length == 0)
+         return [];
+
+      var result = new List<string>(length);
+
+      for (var i = 0; i < length; i++)
       {
+         var value = values[i];
+
          if (value.Value is not ITypeSymbol typeSymbol)
             continue;
 
@@ -288,55 +270,54 @@ public static class AttributeDataExtensions
       return (comparerAccessorTypes, keyType);
    }
 
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static string? GetStringParameterValue(AttributeData attributeData, string name)
    {
-      var value = (string?)attributeData.FindNamedAttribute(name).Value;
-
-      return String.IsNullOrWhiteSpace(value) ? null : value?.Trim();
-   }
-
-   private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
-   {
-      var generation = (OperatorsGeneration?)GetIntegerParameterValue(attributeData, name);
-
-      if (generation is null || !generation.Value.IsValid())
-         return OperatorsGeneration.Default;
-
-      return generation.Value;
-   }
-
-   private static SwitchMapMethodsGeneration GetSwitchMapGeneration(AttributeData attributeData, string name)
-   {
-      var generation = (SwitchMapMethodsGeneration?)GetIntegerParameterValue(attributeData, name);
-
-      if (generation is null || !generation.Value.IsValid())
-         return SwitchMapMethodsGeneration.Default;
-
-      return generation.Value;
-   }
-
-   private static ConversionOperatorsGeneration? GetConversionOperatorsGeneration(AttributeData attributeData, string name)
-   {
-      var generation = (ConversionOperatorsGeneration?)GetIntegerParameterValue(attributeData, name);
-
-      if (generation is null || !generation.Value.IsValid())
+      if (attributeData.FindNamedAttribute(name).Value is not string value)
          return null;
 
-      return generation.Value;
+      value = value.Trim();
+      return value.Length == 0 ? null : value;
    }
 
-   private static int? GetIntegerParameterValue(AttributeData attributeData, string name)
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
    {
-      return (int?)attributeData.FindNamedAttribute(name).Value;
+      return GetEnumParameterValue<OperatorsGeneration>(attributeData, name)
+             ?? OperatorsGeneration.Default;
    }
 
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   private static SwitchMapMethodsGeneration GetSwitchMapGeneration(AttributeData attributeData, string name)
+   {
+      return GetEnumParameterValue<SwitchMapMethodsGeneration>(attributeData, name)
+             ?? SwitchMapMethodsGeneration.Default;
+   }
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   private static T? GetEnumParameterValue<T>(AttributeData attributeData, string name)
+      where T : struct, Enum
+   {
+      return attributeData.FindNamedAttribute(name).Value is int value ? value.GetValidValue<T>() : null;
+   }
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static bool? GetBooleanParameterValue(AttributeData attributeData, string name)
    {
-      return (bool?)attributeData.FindNamedAttribute(name).Value;
+      return attributeData.FindNamedAttribute(name).Value as bool?;
    }
 
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static TypedConstant FindNamedAttribute(this AttributeData attributeData, string name)
    {
-      return attributeData.NamedArguments.FirstOrDefault(static (a, n) => a.Key == n, name).Value;
+      for (var i = 0; i < attributeData.NamedArguments.Length; i++)
+      {
+         var arg = attributeData.NamedArguments[i];
+
+         if (arg.Key == name)
+            return arg.Value;
+      }
+
+      return default;
    }
 }

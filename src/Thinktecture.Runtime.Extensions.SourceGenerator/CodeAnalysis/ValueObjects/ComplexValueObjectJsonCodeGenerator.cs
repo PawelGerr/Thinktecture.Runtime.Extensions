@@ -67,11 +67,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
              && memberInfo.SpecialType != SpecialType.System_Object)
          {
             _sb.Append(@"
-      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").Append(memberInfo.ArgumentName).Append("Converter;");
+      private readonly global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append("> _").AppendArgumentName(memberInfo.ArgumentName).Append("Converter;");
          }
 
          _sb.Append(@"
-      private readonly string _").Append(memberInfo.ArgumentName).Append("PropertyName;");
+      private readonly string _").AppendArgumentName(memberInfo.ArgumentName).Append("PropertyName;");
       }
 
       _sb.Append(@"
@@ -97,11 +97,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
              && memberInfo.SpecialType != SpecialType.System_Object)
          {
             _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append("));");
+         this._").AppendArgumentName(memberInfo.ArgumentName).Append("Converter = (global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(memberInfo).Append(">)global::Thinktecture.Internal.JsonSerializerOptionsExtensions.GetCustomMemberConverter(options, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append("));");
          }
 
          _sb.Append(@"
-         this._").Append(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
+         this._").AppendArgumentName(memberInfo.ArgumentName).Append("PropertyName = namingPolicy?.ConvertName(\"").Append(memberInfo.Name).Append(@""") ?? """).Append(memberInfo.Name).Append(@""";");
       }
 
       _sb.Append(@"
@@ -183,7 +183,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             else if ");
          }
 
-         _sb.Append("(comparer.Equals(propName, this._").Append(memberInfo.ArgumentName).Append(@"PropertyName))
+         _sb.Append("(comparer.Equals(propName, this._").AppendArgumentName(memberInfo.ArgumentName).Append(@"PropertyName))
             {");
 
          // Although empty, keep the condition; otherwise we end up in "else" and throw an exception
@@ -198,7 +198,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             }
             else
             {
-               _sb.Append("this._").Append(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);");
+               _sb.Append("this._").AppendArgumentName(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);");
             }
          }
          else
@@ -305,7 +305,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          }
 
          _sb.Append(@"
-            writer.WritePropertyName(this._").Append(memberInfo.ArgumentName).Append("PropertyName);");
+            writer.WritePropertyName(this._").AppendArgumentName(memberInfo.ArgumentName).Append("PropertyName);");
 
          if (memberInfo.SpecialType == SpecialType.System_Object)
          {
@@ -315,7 +315,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          else
          {
             _sb.Append(@"
-            this._").Append(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
+            this._").AppendArgumentName(memberInfo.ArgumentName).Append("Converter.Write(writer, ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue, options);");
          }
 
          if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Never)

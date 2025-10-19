@@ -99,7 +99,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
          if (attributeInfo.ObjectFactories.IsDefaultOrEmpty)
             return null;
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of an ObjectFactory", tds));

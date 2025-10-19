@@ -43,7 +43,7 @@ public static class NamedTypeSymbolExtensions
          {
             var parameters = ctor.Parameters.IsDefaultOrEmpty
                                 ? ImmutableArray<DefaultMemberState>.Empty
-                                : ImmutableArray.CreateRange(ctor.Parameters, static (p, f) => new DefaultMemberState(f.Create(p.Type), p.Name, p.Name), factory);
+                                : ImmutableArray.CreateRange(ctor.Parameters, static (p, f) => new DefaultMemberState(f.Create(p.Type), p.Name, ArgumentName.Create(p.Name, renderAsIs: true)), factory);
 
             var ctorState = new ConstructorState(parameters);
             (ctorStates ??= new List<ConstructorState>()).Add(ctorState);

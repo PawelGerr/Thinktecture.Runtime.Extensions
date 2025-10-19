@@ -186,7 +186,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             else if ");
          }
 
-         _sb.Append(@"(comparer.Equals(propName, """).Append(memberInfo.ArgumentName).Append(@"""))
+         _sb.Append(@"(comparer.Equals(propName, """).AppendArgumentName(memberInfo.ArgumentName).Append(@"""))
             {
                ").AppendEscaped(memberInfo.ArgumentName).Append(" = serializer.Deserialize<").AppendTypeFullyQualified(memberInfo).Append(@">(reader);
             }");

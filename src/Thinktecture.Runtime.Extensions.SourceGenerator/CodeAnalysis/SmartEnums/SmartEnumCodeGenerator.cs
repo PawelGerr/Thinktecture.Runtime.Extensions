@@ -196,7 +196,7 @@ namespace ").Append(_state.Namespace).Append(@"
       foreach (var method in _state.DelegateMethods)
       {
          _sb.Append(@"
-      private readonly ").AppendDelegateType(method).Append(" _").Append(method.ArgumentName).Append(";");
+      private readonly ").AppendDelegateType(method).Append(" _").AppendArgumentName(method.ArgumentName).Append(";");
       }
 
       GenerateConstructors();
@@ -347,7 +347,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (method.ReturnType != null)
             _sb.Append("return ");
 
-         _sb.Append("_").Append(method.ArgumentName).Append("(");
+         _sb.Append("_").AppendArgumentName(method.ArgumentName).Append("(");
 
          for (var i = 0; i < method.Parameters.Count; i++)
          {
@@ -403,7 +403,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""");
 
          var item = _state.Items[i];
-         _sb.Append(item.ArgumentName);
+         _sb.AppendArgumentName(item.ArgumentName);
          _sb.Append(@""">The action to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
@@ -547,7 +547,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""");
 
          var item = _state.Items[i];
-         _sb.Append(item.ArgumentName);
+         _sb.AppendArgumentName(item.ArgumentName);
          _sb.Append(@""">The function to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
@@ -688,7 +688,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var item = _state.Items[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(item.ArgumentName).Append(@""">The instance to return if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+      /// <param name=""").AppendArgumentName(item.ArgumentName).Append(@""">The instance to return if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
       }
 
       _sb.Append(@"
@@ -781,11 +781,11 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Gets a valid enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
+      /// Gets a valid enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>true</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
+      /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {");
 
@@ -813,11 +813,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
 #if NET9_0_OR_GREATER
       /// <summary>
-      /// Gets a valid enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
+      /// Gets a valid enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>true</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
+      /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       public static bool TryGet(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item);
@@ -827,17 +827,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidate(IMemberState keyProperty)
    {
-      var providerArgumentName = keyProperty.ArgumentName == "provider" ? "formatProvider" : "provider";
+      var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
       _sb.Append(@"
 
       /// <summary>
-      /// Validates the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> and returns a valid enumeration item if found.
+      /// Validates the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> and returns a valid enumeration item if found.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>null</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -853,18 +853,18 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidateForReadOnlySpanOfChar(IMemberState keyProperty)
    {
-      var providerArgumentName = keyProperty.ArgumentName == "provider" ? "formatProvider" : "provider";
+      var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
       _sb.Append(@"
 
 #if NET9_0_OR_GREATER
       /// <summary>
-      /// Validates the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> and returns a valid enumeration item if found.
+      /// Validates the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> and returns a valid enumeration item if found.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>null</c> if a valid item with provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -912,9 +912,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName).Append(@""")]
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]
       public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          return ").AppendTypeFullyQualified(_state).Append(".").Append(Constants.Methods.GET).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(@");
@@ -1114,16 +1114,16 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// Gets an enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.
+      /// Gets an enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>");
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>");
 
       if (keyProperty.IsReferenceType)
       {
          _sb.Append(@"
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").Append(keyProperty.ArgumentName).Append(@""")]");
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
@@ -1154,11 +1154,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
 #if NET9_0_OR_GREATER
       /// <summary>
-      /// Gets an enumeration item for provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.
+      /// Gets an enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").Append(keyProperty.ArgumentName).Append(@"""/>.</exception>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(Constants.Methods.GET).Append("(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          if (!_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
@@ -1188,7 +1188,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                .Select(ctor =>
                                {
                                   if (ctor.Arguments.Length == 0)
-                                     return (IReadOnlyList<ConstructorArgument>) [];
+                                     return (IReadOnlyList<ConstructorArgument>)[];
 
                                   return ctor.Arguments
                                              .Select(a =>
@@ -1196,10 +1196,10 @@ namespace ").Append(_state.Namespace).Append(@"
                                                 var argName = a.ArgumentName;
                                                 var counter = 0;
 
-                                                while (_state.KeyMember?.ArgumentName == argName || ContainsArgument(ownCtorArgs, argName))
+                                                while (_state.KeyMember?.ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase) == true || ContainsArgument(ownCtorArgs, argName))
                                                 {
                                                    counter++;
-                                                   argName = $"{a.ArgumentName}{counter.ToString()}"; // rename the argument name if it collides with another argument
+                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString()}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
                                                 }
 
                                                 return new ConstructorArgument(a.TypeFullyQualified, argName);
@@ -1215,11 +1215,11 @@ namespace ").Append(_state.Namespace).Append(@"
    }
 
    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, string argName)
+   private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, ArgumentName argName)
    {
       for (var i = 0; i < ownCtorArgs.Count; i++)
       {
-         if (ownCtorArgs[i].ArgumentName == argName)
+         if (ownCtorArgs[i].ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase))
             return true;
       }
 
@@ -1324,7 +1324,7 @@ namespace ").Append(_state.Namespace).Append(@"
          foreach (var method in _state.DelegateMethods)
          {
             _sb.Append(@"
-         this._").Append(method.ArgumentName).Append(" = ").AppendEscaped(method.ArgumentName).Append(";");
+         this._").AppendArgumentName(method.ArgumentName).Append(" = ").AppendEscaped(method.ArgumentName).Append(";");
          }
       }
 
@@ -1441,7 +1441,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(");");
    }
 
-   private readonly record struct ConstructorArgument(string TypeFullyQualified, string ArgumentName) : ITypeFullyQualified;
+   private readonly record struct ConstructorArgument(string TypeFullyQualified, ArgumentName ArgumentName) : ITypeFullyQualified;
 
    private sealed class ConstructorArgumentsComparer : IEqualityComparer<IReadOnlyList<ConstructorArgument>>
    {

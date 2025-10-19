@@ -17,7 +17,7 @@ public sealed class AdHocUnionMemberTypeState
    public bool IsInterface { get; }
    public int TypeDuplicateCounter { get; }
 
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
    public string BackingFieldName { get; }
    public AdHocUnionMemberTypeSetting Setting { get; }
 
@@ -32,7 +32,7 @@ public sealed class AdHocUnionMemberTypeState
       AdHocUnionMemberTypeSetting setting)
    {
       Name = name;
-      ArgumentName = Name.MakeArgumentName();
+      ArgumentName = ArgumentName.Create(Name);
 
       var backingFieldName = (typeDuplicateCounter == 0 ? Name : defaultName).MakeBackingFieldName();
       BackingFieldName = backingFieldName == Name ? $"_{backingFieldName}" : backingFieldName;

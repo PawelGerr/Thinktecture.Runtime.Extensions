@@ -452,7 +452,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
             return new SourceGenError("Could not fetch type information for code generation of a smart enum", tds);
@@ -503,7 +503,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
          }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
             return new SourceGenError("Could not fetch type information for code generation of a smart enum", tds);

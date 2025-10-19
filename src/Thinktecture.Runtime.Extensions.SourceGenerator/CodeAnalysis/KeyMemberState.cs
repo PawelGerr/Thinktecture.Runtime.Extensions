@@ -7,7 +7,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public AccessModifier AccessModifier { get; }
    public MemberKind Kind { get; }
    public string Name { get; }
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
 
    public bool IsRecord => false;
 
@@ -34,7 +34,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
       AccessModifier accessModifier,
       MemberKind kind,
       string name,
-      string argumentName)
+      ArgumentName argumentName)
    {
       _typedMemberState = typedMemberState;
       AccessModifier = accessModifier;
@@ -64,7 +64,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
              && AccessModifier == other.AccessModifier
              && Kind == other.Kind
              && Name == other.Name
-             && ArgumentName == other.ArgumentName;
+             && ArgumentName.Equals(other.ArgumentName);
    }
 
    public override int GetHashCode()

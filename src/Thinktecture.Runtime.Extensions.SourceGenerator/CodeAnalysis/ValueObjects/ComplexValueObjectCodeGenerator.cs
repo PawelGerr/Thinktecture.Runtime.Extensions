@@ -131,7 +131,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberInfo = fieldsAndProperties[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      /// <param name=""").AppendArgumentName(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
       }
 
       _sb.Append(@"
@@ -174,7 +174,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberInfo = fieldsAndProperties[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      /// <param name=""").AppendArgumentName(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
       }
 
       _sb.Append(@"
@@ -218,7 +218,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberInfo = fieldsAndProperties[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      /// <param name=""").AppendArgumentName(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
       }
 
       _sb.Append(@"
@@ -272,7 +272,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberInfo = fieldsAndProperties[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
+      /// <param name=""").AppendArgumentName(memberInfo.ArgumentName).Append(@""">The value to be used for object creation.</param>");
       }
 
       _sb.Append(@"

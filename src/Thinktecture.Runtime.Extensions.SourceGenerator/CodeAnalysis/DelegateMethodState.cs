@@ -6,7 +6,7 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
    public string MethodName { get; }
    public string? ReturnType { get; }
    public IReadOnlyList<ParameterState> Parameters { get; }
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
    public string? DelegateName { get; }
 
    public DelegateMethodState(
@@ -21,7 +21,7 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
       ReturnType = returnType;
       Parameters = parameters;
       DelegateName = delegateName;
-      ArgumentName = (delegateName ?? methodName).MakeArgumentName();
+      ArgumentName = ArgumentName.Create(delegateName ?? methodName);
    }
 
    public bool Equals(DelegateMethodState? other)

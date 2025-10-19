@@ -260,37 +260,9 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return factories;
    }
 
-   private bool IsSmartEnumCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+   private static bool IsSmartEnumCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
-      try
-      {
-         return syntaxNode switch
-         {
-            ClassDeclarationSyntax classDeclaration when IsEnumCandidate(classDeclaration) => true,
-            _ => false
-         };
-      }
-      catch (Exception ex)
-      {
-         Logger.LogError("Error during checking whether a syntax node is a smart enum candidate", exception: ex);
-         return false;
-      }
-   }
-
-   private bool IsEnumCandidate(TypeDeclarationSyntax typeDeclaration)
-   {
-      var isCandidate = !typeDeclaration.IsGeneric();
-
-      if (isCandidate)
-      {
-         Logger.LogDebug("The type declaration is a smart enum candidate", typeDeclaration);
-      }
-      else
-      {
-         Logger.LogTrace("The type declaration is not a smart enum candidate", typeDeclaration);
-      }
-
-      return isCandidate;
+      return syntaxNode is ClassDeclarationSyntax classDeclaration && !classDeclaration.IsGeneric();
    }
 
    private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, bool isKeyed, CancellationToken cancellationToken)
@@ -361,7 +333,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             }
          }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));

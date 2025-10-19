@@ -149,7 +149,7 @@ public static class TypeSymbolExtensions
          Name: Constants.Attributes.SmartEnum.NAME
          or Constants.Attributes.ValueObject.KEYED_NAME
          or Constants.Attributes.ValueObject.COMPLEX_NAME
-         or Constants.Attributes.Union.NAME // both regular and generic ad-hoc
+         or Constants.Attributes.Union.NAME          // both regular and generic ad-hoc
          or Constants.Attributes.Union.NAME_AD_HOCH, // non-generic ad-hoc
          ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
@@ -831,6 +831,12 @@ public static class TypeSymbolExtensions
    {
       if (!type.IsGenericType)
       {
+         if (type.Name.Length == 0)
+         {
+            name = null;
+            return false;
+         }
+
          name = type.Name;
          return true;
       }
@@ -899,7 +905,11 @@ public static class TypeSymbolExtensions
 
    public static bool IsIDisallowDefaultValue(this ITypeSymbol? type)
    {
-      return type is { Name: Constants.Interfaces.DisallowDefaultStructs.NAME, ContainingNamespace: { Name: Constants.Interfaces.DisallowDefaultStructs.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
+      return type is
+      {
+         Name: Constants.Interfaces.DisallowDefaultStructs.NAME,
+         ContainingNamespace: { Name: Constants.Interfaces.DisallowDefaultStructs.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool ImplementsIDisallowDefaultValue(this ITypeSymbol type)

@@ -3,13 +3,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
 [Generator]
-public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_000), IIncrementalGenerator
 {
-   public RegularUnionSourceGenerator()
-      : base(25_000)
-   {
-   }
-
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var options = GetGeneratorOptions(context);
@@ -63,50 +58,28 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
       {
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
-         if (type.TypeKind == TypeKind.Error)
+         if (type.TypeKind == TypeKind.Error
+             || context.Attributes.IsDefaultOrEmpty
+             || context.Attributes.Length != 1)
          {
-            Logger.LogDebug("Type from semantic model is erroneous", tds);
-            return null;
-         }
-
-         if (context.Attributes.IsDefaultOrEmpty)
-            return null;
-
-         if (context.Attributes.Length > 1)
-         {
-            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.Union.NAME}'", tds);
             return null;
          }
 
          var attributeType = context.Attributes[0].AttributeClass;
 
-         if (attributeType is null)
+         if (attributeType is null
+             || attributeType.TypeKind == TypeKind.Error
+             || attributeType.Arity != 0)
          {
-            Logger.LogDebug("The attribute type is null", tds);
-            return null;
-         }
-
-         if (attributeType.TypeKind == TypeKind.Error)
-         {
-            Logger.LogDebug("The attribute type is erroneous", tds);
-            return null;
-         }
-
-         if (attributeType.Arity != 0)
-         {
-            Logger.LogDebug($"Expected the union attribute type to have no type arguments but found {attributeType.Arity.ToString()}", tds);
             return null;
          }
 
          var derivedTypeInfos = type.FindDerivedInnerTypes();
 
          if (derivedTypeInfos.Count == 0)
-         {
-            Logger.LogDebug("Union has no derived types", tds);
             return null;
-         }
 
-         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation, Logger);
+         var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
@@ -120,34 +93,18 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
 
             if (derivedTypeInfo.Type.Arity != 0)
             {
-               Logger.LogDebug("Derived type of a union must not have generic parameters", tds);
-               return null;
+               return null; // Derived type of a union must not have generic parameters
             }
 
             derivedTypes.Add(new RegularUnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef, singleArgCtorsPerType[i]));
          }
 
-         List<RegularUnionSwitchMapOverload>? switchMapOverloads = null;
-         var allAttributes = type.GetAttributes();
-
-         foreach (var attribute in allAttributes)
-         {
-            if (attribute.AttributeClass?.IsUnionSwitchMapOverloadAttribute() != true)
-               continue;
-
-            var stopAtTypes = attribute.FindUnionSwitchMapOverloadStopAtTypes();
-
-            if (stopAtTypes.Count > 0)
-               (switchMapOverloads ??= []).Add(new RegularUnionSwitchMapOverload(stopAtTypes));
-         }
-
-         var settings = new RegularUnionSettings(context.Attributes[0], switchMapOverloads ?? []);
+         var switchMapOverloads = GetSwitchMapOverloads(type);
+         var settings = new RegularUnionSettings(context.Attributes[0], switchMapOverloads);
 
          var unionState = new RegularUnionSourceGenState(type,
                                                          derivedTypes,
                                                          settings);
-
-         Logger.LogDebug("The type declaration is a valid union", null, unionState);
 
          return new SourceGenContext(unionState);
       }
@@ -186,7 +143,7 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
             if (foundParam.Counter != 1)
                continue;
 
-            var parameterState = new DefaultMemberState(factory.Create(ctorParam.Type), ctorParam.Name, ctorParam.Name.MakeArgumentName());
+            var parameterState = new DefaultMemberState(factory.Create(ctorParam.Type), ctorParam.Name, ArgumentName.Create(ctorParam.Name));
 
             (states ??= []).Add(parameterState);
          }
@@ -270,6 +227,31 @@ public class RegularUnionSourceGenerator : ThinktectureSourceGeneratorBase, IInc
       }
 
       return false;
+   }
+
+   private static IReadOnlyList<RegularUnionSwitchMapOverload> GetSwitchMapOverloads(INamedTypeSymbol type)
+   {
+      var allAttributes = type.GetAttributes();
+
+      if (allAttributes.IsDefaultOrEmpty)
+         return [];
+
+      List<RegularUnionSwitchMapOverload>? switchMapOverloads = null;
+
+      for (var i = 0; i < allAttributes.Length; i++)
+      {
+         var attribute = allAttributes[i];
+
+         if (attribute.AttributeClass?.IsUnionSwitchMapOverloadAttribute() != true)
+            continue;
+
+         var stopAtTypes = attribute.FindUnionSwitchMapOverloadStopAtTypes();
+
+         if (stopAtTypes.Count > 0)
+            (switchMapOverloads ??= new(allAttributes.Length)).Add(new RegularUnionSwitchMapOverload(stopAtTypes));
+      }
+
+      return switchMapOverloads ?? [];
    }
 
    private void InitializeUnionTypeGeneration(

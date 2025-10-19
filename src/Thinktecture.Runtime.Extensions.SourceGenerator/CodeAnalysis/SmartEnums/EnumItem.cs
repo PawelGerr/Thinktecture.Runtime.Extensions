@@ -3,12 +3,12 @@ namespace Thinktecture.CodeAnalysis.SmartEnums;
 public readonly struct EnumItem : IEquatable<EnumItem>, IHashCodeComputable
 {
    public string Name { get; }
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
 
    public EnumItem(IFieldSymbol field)
    {
       Name = field.Name;
-      ArgumentName = field.Name.MakeArgumentName();
+      ArgumentName = ArgumentName.Create(field.Name);
    }
 
    public override bool Equals(object? obj)

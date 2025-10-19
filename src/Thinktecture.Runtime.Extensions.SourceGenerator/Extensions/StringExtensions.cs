@@ -2,19 +2,11 @@ namespace Thinktecture;
 
 public static class StringExtensions
 {
-   public static string MakeArgumentName(this string name)
-   {
-      return name.Length switch
-      {
-         1 => name.ToLowerInvariant(),
-         _ => ToCamelCase(name, false)
-      };
-   }
-
    public static string MakeBackingFieldName(this string name)
    {
       return name.Length switch
       {
+         0 => name,
          1 => name[0] == '_' ? name : $"_{Char.ToLowerInvariant(name[0])}",
          _ => ToCamelCase(name, true)
       };

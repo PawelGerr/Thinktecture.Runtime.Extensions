@@ -211,8 +211,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// <summary>
    /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(ctorArg).Append(@".
    /// </summary>
-   /// <param name=""").Append(ctorArg.ArgumentName).Append(@""">Value to covert from.</param>
-   /// <returns>A new instance of ").AppendTypeForXmlComment(memberType).Append(@" converted from <paramref name=""").Append(ctorArg.ArgumentName).Append(@"""/>.</returns>
+   /// <param name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@""">Value to covert from.</param>
+   /// <returns>A new instance of ").AppendTypeForXmlComment(memberType).Append(@" converted from <paramref name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@"""/>.</returns>
    public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
    {
       return new ").AppendTypeFullyQualified(memberType).Append("(").AppendEscaped(ctorArg.ArgumentName).Append(@");

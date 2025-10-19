@@ -156,8 +156,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to covert from.</param>
-      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.</returns>
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to covert from.</param>
+      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.</returns>
       public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
          return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
@@ -423,7 +423,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -581,7 +581,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -735,7 +735,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -840,6 +840,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateConstructors()
    {
+      var valueArgName = ArgumentName.Create("value", renderAsIs: true);
+
       for (var i = 0; i < _state.MemberTypes.Count; i++)
       {
          var memberType = _state.MemberTypes[i];
@@ -848,7 +850,7 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          var hasDuplicates = memberType.TypeDuplicateCounter != 0;
-         var argName = hasDuplicates ? "value" : memberType.ArgumentName;
+         var argName = hasDuplicates ? valueArgName : memberType.ArgumentName;
 
          _sb.Append(@"
 ");
@@ -857,9 +859,9 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append(@"
       /// <summary>
-      /// Initializes new instance with <paramref name=""").Append(argName).Append(@"""/>.
+      /// Initializes new instance with <paramref name=""").AppendArgumentName(argName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(argName).Append(@""">Value to create a new instance for.</param>");
+      /// <param name=""").AppendArgumentName(argName).Append(@""">Value to create a new instance for.</param>");
          }
 
          _sb.Append(@"
@@ -906,9 +908,9 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Creates new instance with <paramref name=""").Append(memberType.ArgumentName).Append(@"""/>.
+      /// Creates new instance with <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.
       /// </summary>
-      /// <param name=""").Append(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
 
          _sb.Append(@"
       ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").Append(_state.Name).Append(" Create").Append(memberType.Name).Append("(")

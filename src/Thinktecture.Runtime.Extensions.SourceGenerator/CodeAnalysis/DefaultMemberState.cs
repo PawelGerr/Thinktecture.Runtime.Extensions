@@ -5,7 +5,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
    private readonly ITypedMemberState _typedMemberState;
 
    public string Name { get; }
-   public string ArgumentName { get; }
+   public ArgumentName ArgumentName { get; }
 
    public SpecialType SpecialType => _typedMemberState.SpecialType;
    public bool IsTypeParameter => _typedMemberState.TypeKind == TypeKind.TypeParameter;
@@ -18,7 +18,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
 
    public bool IsRecord => false;
 
-   public DefaultMemberState(ITypedMemberState typedMemberState, string name, string argumentName)
+   public DefaultMemberState(ITypedMemberState typedMemberState, string name, ArgumentName argumentName)
    {
       _typedMemberState = typedMemberState;
       Name = name;
@@ -44,7 +44,7 @@ public sealed class DefaultMemberState : IMemberState, IEquatable<DefaultMemberS
 
       return _typedMemberState.Equals(other._typedMemberState)
              && Name == other.Name
-             && ArgumentName == other.ArgumentName;
+             && ArgumentName.Equals(other.ArgumentName);
    }
 
    public override int GetHashCode()

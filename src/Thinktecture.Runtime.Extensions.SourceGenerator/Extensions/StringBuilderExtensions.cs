@@ -178,6 +178,107 @@ public static class StringBuilderExtensions
       return sb.Append("@").Append(argName);
    }
 
+   public static StringBuilder AppendEscaped(
+      this StringBuilder sb,
+      ArgumentName argName)
+   {
+      return sb.Append("@").AppendArgumentName(argName);
+   }
+
+   public static StringBuilder AppendArgumentName(
+      this StringBuilder sb,
+      ArgumentName argName)
+   {
+      var name = argName.Name;
+
+      if (argName.RenderAsIs)
+      {
+         sb.Append(name);
+         return sb;
+      }
+
+      switch (name.Length)
+      {
+         case 0:
+            break;
+         case 1:
+            sb.Append(Char.ToLowerInvariant(name[0]));
+            break;
+         default:
+            sb.ToCamelCase(name, false);
+            break;
+      }
+
+      return sb;
+   }
+
+   private static void ToCamelCase(
+      this StringBuilder sb,
+      string name,
+      bool leadingUnderscore)
+   {
+      var startsWithUnderscore = name[0] == '_';
+
+      for (var i = 0; i < name.Length; i++)
+      {
+         var charValue = name[i];
+
+         if (Char.IsDigit(charValue))
+         {
+            sb.Append(name);
+            return;
+         }
+
+         if (Char.IsLower(charValue))
+            break;
+
+         if (!Char.IsLetter(charValue))
+            continue;
+
+         if (i == 0)
+         {
+            if (leadingUnderscore)
+               sb.Append("_");
+
+            sb.Append(Char.ToLowerInvariant(charValue));
+            sb.Append(name.Substring(1));
+
+            return;
+         }
+
+         if (leadingUnderscore && !startsWithUnderscore)
+            sb.Append("_");
+
+         sb.Append(name.Substring(startsWithUnderscore ? 1 : 0, i))
+           .Append(Char.ToLowerInvariant(charValue));
+
+         if (i != name.Length - 1)
+         {
+            sb.Append(name.Substring(i));
+         }
+
+         return;
+      }
+
+      if (leadingUnderscore)
+      {
+         if (!startsWithUnderscore)
+            sb.Append("_");
+
+         sb.Append(name);
+
+         return;
+      }
+
+      if (startsWithUnderscore && name.Length > 1)
+      {
+         sb.Append(name.Substring(1));
+         return;
+      }
+
+      sb.Append(name);
+   }
+
    public static StringBuilder AppendCast(
       this StringBuilder sb,
       ITypeFullyQualified type,
