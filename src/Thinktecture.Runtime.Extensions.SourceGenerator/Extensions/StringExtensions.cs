@@ -6,6 +6,7 @@ public static class StringExtensions
    {
       return name.Length switch
       {
+         0 => name,
          1 => name.ToLowerInvariant(),
          _ => ToCamelCase(name, false)
       };
@@ -15,6 +16,7 @@ public static class StringExtensions
    {
       return name.Length switch
       {
+         0 => name,
          1 => name[0] == '_' ? name : $"_{Char.ToLowerInvariant(name[0])}",
          _ => ToCamelCase(name, true)
       };
