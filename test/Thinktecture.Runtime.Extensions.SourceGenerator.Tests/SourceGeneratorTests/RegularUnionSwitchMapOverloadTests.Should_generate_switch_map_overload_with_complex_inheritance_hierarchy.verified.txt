@@ -29,6 +29,7 @@ abstract partial class TestUnion :
    {
    }
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -76,7 +77,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -129,7 +132,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -173,7 +178,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -220,6 +227,7 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
 #pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>
@@ -267,6 +275,7 @@ abstract partial class TestUnion :
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -299,7 +308,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -337,7 +348,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -369,7 +382,9 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -404,6 +419,7 @@ abstract partial class TestUnion :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
 #pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>

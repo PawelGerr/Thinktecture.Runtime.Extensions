@@ -78,6 +78,7 @@ namespace Thinktecture.Tests
          return _hashCode;
       }
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -100,7 +101,9 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -133,7 +136,9 @@ namespace Thinktecture.Tests
 
          @default?.Invoke(this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -161,7 +166,9 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -199,7 +206,9 @@ namespace Thinktecture.Tests
 
          @default?.Invoke(@state, this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -223,7 +232,9 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -257,7 +268,9 @@ namespace Thinktecture.Tests
 
          return @default(this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -284,7 +297,9 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -321,6 +336,7 @@ namespace Thinktecture.Tests
 
          return @default(@state, this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
       /// <summary>
       /// Maps an item to an instance of type <typeparamref name="TResult"/>.

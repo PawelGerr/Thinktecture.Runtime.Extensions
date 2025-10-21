@@ -27,6 +27,7 @@ abstract partial class PlaceId :
    {
    }
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -69,7 +70,9 @@ abstract partial class PlaceId :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -151,7 +154,9 @@ abstract partial class PlaceId :
 
       @default?.Invoke(this);
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -199,7 +204,9 @@ abstract partial class PlaceId :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
@@ -286,7 +293,9 @@ abstract partial class PlaceId :
 
       @default?.Invoke(@state, this);
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -326,7 +335,9 @@ abstract partial class PlaceId :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -404,7 +415,9 @@ abstract partial class PlaceId :
 
       return @default(this);
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -447,7 +460,9 @@ abstract partial class PlaceId :
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
@@ -528,6 +543,7 @@ abstract partial class PlaceId :
 
       return @default(@state, this);
    }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
 #pragma warning disable CS0108 // Map in nested union hides Map from base class
    /// <summary>

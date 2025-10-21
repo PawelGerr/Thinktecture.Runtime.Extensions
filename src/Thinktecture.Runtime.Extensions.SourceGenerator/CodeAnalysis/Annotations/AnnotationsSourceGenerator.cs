@@ -1,28 +1,57 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Thinktecture.CodeAnalysis.Annotations;
 
 [Generator]
-public class AnnotationsSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBase(1), IIncrementalGenerator
 {
-   public AnnotationsSourceGenerator()
-      : base(1)
-   {
-   }
+   private const string _INSTANT_HANDLE_ATTRIBUTE = "InstantHandleAttribute";
 
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var options = GetGeneratorOptions(context);
 
-      var annotationsCheck = context.MetadataReferencesProvider
-                                    .Select((reference, _) => HasJetbrainsAnnotations(reference))
-                                    .Collect();
+      var localAttribute = context.SyntaxProvider
+                                  .CreateSyntaxProvider(
+                                     (node, _) => node is ClassDeclarationSyntax { Identifier.Text: _INSTANT_HANDLE_ATTRIBUTE },
+                                     (ctx, token) => IsInstantHandleAttribute(ctx.SemanticModel.GetDeclaredSymbol(ctx.Node, token)))
+                                  .Where(hasLocal => hasLocal)
+                                  .Collect();
 
-      context.RegisterSourceOutput(
-         annotationsCheck.Combine(options)
-                         .SelectMany((tuple, _) => tuple.Left.Any(hasAnnotations => hasAnnotations) || !tuple.Right.GenerateJetbrainsAnnotations ? ImmutableArray<bool>.Empty : [false]),
-         (ctx, _) => AddAnnotations(ctx));
+      var referencedAttribute = context.MetadataReferencesProvider
+                                       .Select((reference, _) => HasJetbrainsAnnotations(reference))
+                                       .Where(hasAttribute => hasAttribute)
+                                       .Collect();
+
+      var pipeline = localAttribute
+                     .Combine(referencedAttribute.Combine(options))
+                     .SelectMany((tuple, _) =>
+                     {
+                        var (localAttributes, (referencedAttributes, opts)) = tuple;
+
+                        return !localAttributes.IsDefaultOrEmpty || !referencedAttributes.IsDefaultOrEmpty || !opts.GenerateJetbrainsAnnotations ? ImmutableArray<bool>.Empty : [true];
+                     });
+
+      context.RegisterSourceOutput(pipeline, (ctx, _) => AddAnnotations(ctx));
    }
 
-   private bool HasJetbrainsAnnotations(MetadataReference reference)
+   private static bool IsInstantHandleAttribute(ISymbol? symbol)
+   {
+      return symbol is
+      {
+         Name: _INSTANT_HANDLE_ATTRIBUTE, ContainingNamespace:
+         {
+            Name: "Annotations",
+            ContainingNamespace :
+            {
+               Name: "JetBrains",
+               ContainingNamespace.IsGlobalNamespace: true
+            }
+         }
+      };
+   }
+
+   private static bool HasJetbrainsAnnotations(MetadataReference reference)
    {
       try
       {

@@ -18,6 +18,6 @@ public static class MetadataReferenceExtensions
       if (metadataReference is PortableExecutableReference portable && portable.GetMetadata() is AssemblyMetadata assemblyMetadata)
          return assemblyMetadata.GetModules().Select(m => new ModuleInfo(m.Name));
 
-      return Array.Empty<ModuleInfo>();
+      return [];
    }
 }
