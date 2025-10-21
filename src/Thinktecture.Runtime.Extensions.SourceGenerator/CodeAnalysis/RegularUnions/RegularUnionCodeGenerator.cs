@@ -225,6 +225,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    {
       _sb.Append(@"
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>");
@@ -314,7 +315,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       GenerateIndexBasedActionSwitchBody(withState, isPartially, typeMembers);
 
       _sb.Append(@"
-   }");
+   }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly");
    }
 
    private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)
@@ -384,6 +386,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    {
       _sb.Append(@"
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>");
@@ -474,7 +477,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       GenerateIndexBasedFuncSwitchBody(withState, isPartially, typeMembers);
 
       _sb.Append(@"
-   }");
+   }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly");
    }
 
    private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially, IReadOnlyList<TypeMember> typeMembers)

@@ -402,6 +402,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current value.
       /// </summary>");
@@ -497,7 +498,8 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateIndexBasedActionSwitchBody(withState, isPartially);
 
       _sb.Append(@"
-      }");
+      }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly");
    }
 
    private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially)
@@ -560,6 +562,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current value.
       /// </summary>");
@@ -658,7 +661,8 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateIndexBasedFuncSwitchBody(withState, isPartially);
 
       _sb.Append(@"
-      }");
+      }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly");
    }
 
    private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially)

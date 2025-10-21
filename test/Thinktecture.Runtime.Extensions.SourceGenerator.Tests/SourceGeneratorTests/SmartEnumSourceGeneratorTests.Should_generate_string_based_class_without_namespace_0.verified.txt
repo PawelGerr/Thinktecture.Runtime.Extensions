@@ -255,6 +255,7 @@
          return this.Key.ToString();
       }
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -277,7 +278,9 @@
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -310,7 +313,9 @@
 
          @default?.Invoke(this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -338,7 +343,9 @@
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
@@ -376,7 +383,9 @@
 
          @default?.Invoke(@state, this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -400,7 +409,9 @@
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -434,7 +445,9 @@
 
          return @default(this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -461,7 +474,9 @@
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
+#pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
@@ -498,6 +513,7 @@
 
          return @default(@state, this);
       }
+#pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
 
       /// <summary>
       /// Maps an item to an instance of type <typeparamref name="TResult"/>.
