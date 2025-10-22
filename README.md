@@ -30,7 +30,8 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 * [Value Objects: Solving Primitive Obsession in .NET](https://www.thinktecture.com/en/net/value-objects-solving-primitive-obsession-in-net/)
 * [Handling Complexity: Introducing Complex Value Objects in .NET](https://www.thinktecture.com/en/net/handling-complexity-introducing-complex-value-objects-in-dotnet/)
 * [Value Objects in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/value-objects-in-net-integration-with-frameworks-and-libraries/)
-* [Value Objects in .NET: Enhancing Business Semantics](https://www.thinktecture.com/net/value-objects-in-dotnet-enhancing-business-semantics/)
+* [Value Objects in .NET: Enhancing Business Semantics](https://www.thinktecture.com/en/net/value-objects-in-dotnet-enhancing-business-semantics/)
+* [Advanced Value Object Patterns in .NET](https://www.thinktecture.com/en/net/advanced-value-object-patterns-in-net/)
 
 **Smart Enums articles**:
 * [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
