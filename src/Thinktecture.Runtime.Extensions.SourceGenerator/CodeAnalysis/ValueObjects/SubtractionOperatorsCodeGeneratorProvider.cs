@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class SubtractionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorProvider
+public sealed class SubtractionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorProvider
 {
    public static readonly IOperatorsCodeGeneratorProvider Instance = new SubtractionOperatorsCodeGeneratorProvider();
 

@@ -3,7 +3,7 @@ using Timer = System.Timers.Timer;
 
 namespace Thinktecture.Logging;
 
-public class PeriodicCleanup
+public sealed class PeriodicCleanup : IDisposable
 {
    private readonly FileSystemSinkProvider _fileSystemSinkProvider;
    private readonly object _cleanupLock;
@@ -18,6 +18,7 @@ public class PeriodicCleanup
                   Interval = TimeSpan.FromSeconds(5).TotalMilliseconds,
                   AutoReset = false
                };
+      _timer.Elapsed += TimerOnElapsed;
    }
 
    public void Start()
@@ -27,7 +28,6 @@ public class PeriodicCleanup
          if (_timer.Enabled)
             return;
 
-         _timer.Elapsed += TimerOnElapsed;
          _timer.Enabled = true;
       }
    }
@@ -40,11 +40,18 @@ public class PeriodicCleanup
       {
          if (!_fileSystemSinkProvider.HasSinks())
          {
-            _timer.Elapsed -= TimerOnElapsed;
+            _timer.Enabled = false;
             return;
          }
-      }
 
-      Start();
+         _timer.Enabled = true;
+      }
+   }
+
+   public void Dispose()
+   {
+      _timer.Stop();
+      _timer.Elapsed -= TimerOnElapsed;
+      _timer.Dispose();
    }
 }

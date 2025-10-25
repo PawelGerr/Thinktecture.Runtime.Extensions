@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using MessagePack;
-using Thinktecture.CodeAnalysis.AdHocUnions;
 using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.Formatters;
 using Xunit.Abstractions;

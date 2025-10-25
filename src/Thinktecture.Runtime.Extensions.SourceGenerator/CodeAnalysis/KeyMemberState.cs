@@ -16,7 +16,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public bool IsInterface => _typedMemberState.TypeKind == TypeKind.Interface;
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
-   public bool IsStruct => _typedMemberState.IsStruct;
+   public bool IsValueType => _typedMemberState.IsValueType;
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
@@ -44,11 +44,6 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    }
 
    public override bool Equals(object? obj)
-   {
-      return obj is KeyMemberState other && Equals(other);
-   }
-
-   public bool Equals(IMemberState? obj)
    {
       return obj is KeyMemberState other && Equals(other);
    }

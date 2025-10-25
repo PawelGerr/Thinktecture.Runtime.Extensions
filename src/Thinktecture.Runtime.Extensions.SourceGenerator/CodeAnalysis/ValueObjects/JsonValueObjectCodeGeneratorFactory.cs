@@ -17,7 +17,7 @@ public sealed class JsonValueObjectCodeGeneratorFactory : JsonKeyedSerializerCod
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson)
-             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)

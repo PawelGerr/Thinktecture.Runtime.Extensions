@@ -6,7 +6,7 @@ using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class TypeOnlyComparer
+public sealed class TypeOnlyComparer
    : IEqualityComparer<FormattableGeneratorState>,
      IEqualityComparer<ComparableGeneratorState>,
      IEqualityComparer<ParsableGeneratorState>,

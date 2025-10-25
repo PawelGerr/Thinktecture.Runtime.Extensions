@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionCodeGeneratorFactory : ICodeGeneratorFactory<RegularUnionSourceGenState>
+public sealed class RegularUnionCodeGeneratorFactory : ICodeGeneratorFactory<RegularUnionSourceGenState>
 {
    public static readonly ICodeGeneratorFactory<RegularUnionSourceGenState> Instance = new RegularUnionCodeGeneratorFactory();
 

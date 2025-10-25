@@ -49,4 +49,14 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
          return hashCode;
       }
    }
+
+   public static bool operator ==(FormattableGeneratorState left, FormattableGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(FormattableGeneratorState left, FormattableGeneratorState right)
+   {
+      return !(left == right);
+   }
 }

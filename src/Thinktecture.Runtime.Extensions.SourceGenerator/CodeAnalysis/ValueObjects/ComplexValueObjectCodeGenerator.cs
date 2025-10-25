@@ -77,9 +77,7 @@ namespace ").Append(_state.Namespace).Append(@"
                      arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
                )
                .AsReadOnly()
-         };
-
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
+         };");
 
       if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
       {
@@ -126,7 +124,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Creates an instance of the ").AppendTypeForXmlComment(_state).Append(@" type if the provided values pass validation.
       /// </summary>");
 
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      for (var i = 0; i < fieldsAndProperties.Length; i++)
       {
          var memberInfo = fieldsAndProperties[i];
 
@@ -145,7 +143,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
 
-      if (fieldsAndProperties.Count > 0)
+      if (fieldsAndProperties.Length > 0)
          _sb.Append(",");
 
       _sb.Append(@"
@@ -169,7 +167,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// if the provided values pass validation.
       /// </summary>");
 
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      for (var i = 0; i < fieldsAndProperties.Length; i++)
       {
          var memberInfo = fieldsAndProperties[i];
 
@@ -198,7 +196,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
 
-      if (fieldsAndProperties.Count > 0)
+      if (fieldsAndProperties.Length > 0)
          _sb.Append(",");
 
       _sb.Append(@"
@@ -213,7 +211,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// if the provided values pass validation.
       /// </summary>");
 
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      for (var i = 0; i < fieldsAndProperties.Length; i++)
       {
          var memberInfo = fieldsAndProperties[i];
 
@@ -247,7 +245,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
 
-      if (fieldsAndProperties.Count > 0)
+      if (fieldsAndProperties.Length > 0)
          _sb.Append(",");
 
       _sb.Append(@"
@@ -267,7 +265,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Validates the values and creates an instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation is successful.
       /// </summary>");
 
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      for (var i = 0; i < fieldsAndProperties.Length; i++)
       {
          var memberInfo = fieldsAndProperties[i];
 
@@ -287,7 +285,7 @@ namespace ").Append(_state.Namespace).Append(@"
          out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {");
 
-      for (var i = 0; i < fieldsAndProperties.Count; i++)
+      for (var i = 0; i < fieldsAndProperties.Length; i++)
       {
          var memberInfo = fieldsAndProperties[i];
 
@@ -422,7 +420,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
-      var isStructDefaultCtor = !_state.IsReferenceType && fieldsAndProperties.Count == 0;
+      var isStructDefaultCtor = !_state.IsReferenceType && fieldsAndProperties.Length == 0;
 
       if (isStructDefaultCtor)
          return;
@@ -440,7 +438,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@")
       {");
 
-      if (fieldsAndProperties.Count > 0)
+      if (fieldsAndProperties.Length > 0)
       {
          _sb.Append(@"
          ValidateConstructorArguments(");
@@ -461,7 +459,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       }");
 
-      if (fieldsAndProperties.Count > 0)
+      if (fieldsAndProperties.Length > 0)
       {
          _sb.Append(@"
 
@@ -488,7 +486,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
-      if (_state.IsReferenceType || _state is { IsTypeParameter: true, IsStruct: false })
+      if (_state.IsReferenceType || _state is { IsTypeParameter: true, IsValueType: false })
       {
          _sb.Append(@"
          if (other is null)
@@ -499,9 +497,9 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
-      if (_state.EqualityMembers.Count > 0)
+      if (_state.EqualityMembers.Length > 0)
       {
-         for (var i = 0; i < _state.EqualityMembers.Count; i++)
+         for (var i = 0; i < _state.EqualityMembers.Length; i++)
          {
             var (member, equalityComparerAccessor) = _state.EqualityMembers[i];
 
@@ -526,7 +524,7 @@ namespace ").Append(_state.Namespace).Append(@"
             }
             else
             {
-               if (member.IsReferenceType || member is { IsTypeParameter: true, IsStruct: false })
+               if (member.IsReferenceType || member is { IsTypeParameter: true, IsValueType: false })
                {
                   _sb.Append("(this.").Append(member.Name).Append(" is null ? other.").Append(member.Name).Append(" is null : this.").Append(member.Name).Append(".Equals(other.").Append(member.Name).Append("))");
                }
@@ -572,30 +570,31 @@ namespace ").Append(_state.Namespace).Append(@"
       public override int GetHashCode()
       {");
 
-      if (_state.EqualityMembers.Count > 0)
+      if (_state.EqualityMembers.Length > 0)
       {
-         var useShortForm = _state.EqualityMembers.Count < 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null && !m.Member.IsString());
+         var useShortForm = _state.EqualityMembers.Length < 8 && _state.EqualityMembers.All(m => m.EqualityComparerAccessor == null && !m.Member.IsString());
 
          if (useShortForm)
          {
             _sb.Append(@"
-         return global::System.HashCode.Combine(
-            _typeHashCode");
+         return global::System.HashCode.Combine(");
          }
          else
          {
             _sb.Append(@"
-         var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);");
+         var hashCode = new global::System.HashCode();");
          }
 
-         for (var i = 0; i < _state.EqualityMembers.Count; i++)
+         for (var i = 0; i < _state.EqualityMembers.Length; i++)
          {
             var (member, equalityComparerAccessor) = _state.EqualityMembers[i];
 
             if (useShortForm)
             {
-               _sb.Append(@",
+               if (i > 0)
+                  _sb.Append(",");
+
+               _sb.Append(@"
             this.").Append(member.Name);
             }
             else
@@ -635,7 +634,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-         return _typeHashCode;");
+         return 0;");
       }
 
       _sb.Append(@"
@@ -650,12 +649,12 @@ namespace ").Append(_state.Namespace).Append(@"
       public override string ToString()
       {");
 
-      if (_state.EqualityMembers.Count > 0)
+      if (_state.EqualityMembers.Length > 0)
       {
          _sb.Append(@"
          return $""{{");
 
-         for (var i = 0; i < _state.EqualityMembers.Count; i++)
+         for (var i = 0; i < _state.EqualityMembers.Length; i++)
          {
             var member = _state.EqualityMembers[i].Member;
 

@@ -76,7 +76,7 @@
             throw new global::System.ArgumentNullException(nameof(@key));
 
          this.Key = @key;
-         this._hashCode = global::System.HashCode.Combine(typeof(global::TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
+         this._hashCode = global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key);
          this._itemIndex = new global::System.Lazy<int>(() =>
                                                         {
                                                            for (var i = 0; i < Items.Count; i++)

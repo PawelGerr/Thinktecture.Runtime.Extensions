@@ -1,16 +1,11 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ValidationErrorState
+public readonly struct ValidationErrorState(string typeFullyQualified)
    : ITypeFullyQualified, IEquatable<ValidationErrorState>, IHashCodeComputable
 {
    public static readonly ValidationErrorState Default = new("global::Thinktecture.ValidationError");
 
-   public string TypeFullyQualified { get; }
-
-   public ValidationErrorState(string typeFullyQualified)
-   {
-      TypeFullyQualified = typeFullyQualified;
-   }
+   public string TypeFullyQualified { get; } = typeFullyQualified;
 
    public override bool Equals(object? obj)
    {
@@ -30,5 +25,15 @@ public readonly struct ValidationErrorState
    public override string ToString()
    {
       return TypeFullyQualified;
+   }
+
+   public static bool operator ==(ValidationErrorState left, ValidationErrorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ValidationErrorState left, ValidationErrorState right)
+   {
+      return !(left == right);
    }
 }

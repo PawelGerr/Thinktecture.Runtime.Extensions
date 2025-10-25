@@ -5,13 +5,12 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public bool SkipToString { get; }
    public SwitchMapMethodsGeneration SwitchMethods { get; }
    public SwitchMapMethodsGeneration MapMethods { get; }
-   public IReadOnlyList<AdHocUnionMemberTypeSetting> MemberTypeSettings { get; }
+   public ImmutableArray<AdHocUnionMemberTypeSetting> MemberTypeSettings { get; }
    public StringComparison DefaultStringComparison { get; }
    public UnionConstructorAccessModifier ConstructorAccessModifier { get; }
    public ConversionOperatorsGeneration ConversionFromValue { get; }
    public ConversionOperatorsGeneration ConversionToValue { get; }
    public string SwitchMapStateParameterName { get; }
-   public SerializationFrameworks SerializationFrameworks { get; }
    public bool UseSingleBackingField { get; }
 
    public AdHocUnionSettings(
@@ -26,17 +25,17 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
       ConversionToValue = attribute.FindConversionToValue() ?? ConversionOperatorsGeneration.Explicit;
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
-      SerializationFrameworks = attribute.FindSerializationFrameworks();
       UseSingleBackingField = attribute.FindUseSingleBackingField() ?? false;
 
-      var memberTypeSettings = new AdHocUnionMemberTypeSetting[numberOfMemberTypes];
-      MemberTypeSettings = memberTypeSettings;
+      var memberTypeSettings = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeSetting>(numberOfMemberTypes);
 
       for (var i = 0; i < numberOfMemberTypes; i++)
       {
-         memberTypeSettings[i] = new AdHocUnionMemberTypeSetting(attribute.FindTxIsNullableReferenceType(i + 1),
-                                                                 attribute.FindTxName(i + 1));
+         memberTypeSettings.Add(new AdHocUnionMemberTypeSetting(attribute.FindTxIsNullableReferenceType(i + 1),
+                                                                attribute.FindTxName(i + 1)));
       }
+
+      MemberTypeSettings = memberTypeSettings.DrainToImmutable();
    }
 
    public override bool Equals(object? obj)
@@ -59,7 +58,6 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && ConversionFromValue == other.ConversionFromValue
              && ConversionToValue == other.ConversionToValue
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName
-             && SerializationFrameworks == other.SerializationFrameworks
              && UseSingleBackingField == other.UseSingleBackingField
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
@@ -76,7 +74,6 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
          hashCode = (hashCode * 397) ^ (int)ConversionToValue;
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
-         hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
          hashCode = (hashCode * 397) ^ UseSingleBackingField.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 

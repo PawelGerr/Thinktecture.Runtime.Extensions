@@ -20,7 +20,7 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
    {
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+                                .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
       var isString = customFactory is null
                         ? _state.KeyMember?.SpecialType == SpecialType.System_String

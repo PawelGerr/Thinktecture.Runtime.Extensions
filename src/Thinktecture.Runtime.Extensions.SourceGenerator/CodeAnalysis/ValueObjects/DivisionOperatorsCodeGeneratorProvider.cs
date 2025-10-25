@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
-public class DivisionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorProvider
+public sealed class DivisionOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorProvider
 {
    public static readonly IOperatorsCodeGeneratorProvider Instance = new DivisionOperatorsCodeGeneratorProvider();
 

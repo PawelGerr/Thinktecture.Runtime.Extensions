@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -23,7 +22,7 @@ public static class AnalyzerVerifier<TAnalyzer>
       string source,
       params DiagnosticResult[] expected)
    {
-      return VerifyAnalyzerAsync(source, Array.Empty<Assembly>(), expected);
+      return VerifyAnalyzerAsync(source, [], expected);
    }
 
    public static async Task VerifyAnalyzerAsync(

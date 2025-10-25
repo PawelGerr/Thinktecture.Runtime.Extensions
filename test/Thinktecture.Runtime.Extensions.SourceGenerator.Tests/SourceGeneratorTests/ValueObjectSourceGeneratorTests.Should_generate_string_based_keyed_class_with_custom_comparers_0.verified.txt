@@ -34,8 +34,6 @@ namespace Thinktecture.Tests
                }
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// The identifier of this object.
       /// </summary>
@@ -201,7 +199,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.GetHashCode(this._value));
+         return global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer.GetHashCode(this._value);
       }
 
       /// <inheritdoc />

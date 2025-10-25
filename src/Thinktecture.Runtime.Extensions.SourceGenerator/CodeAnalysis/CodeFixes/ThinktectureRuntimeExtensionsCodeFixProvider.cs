@@ -78,7 +78,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.InitAccessorMustBePrivate.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstNodeOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate.Id)
          {
@@ -209,7 +209,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       if (modifiers.Count > 0)
       {
-         var firstModifier = modifiers.FirstOrDefault();
+         var firstModifier = modifiers.FirstTokenOrDefault();
          var isFirstModiferRemoved = false;
 
          foreach (var currentModifier in newModifiers)
@@ -256,7 +256,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (declaration is null)
          return Task.FromResult(document);
 
-      var setter = declaration.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+      var setter = declaration.AccessorList?.Accessors.FirstNodeOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
 
       if (setter is not null)
       {
@@ -315,7 +315,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if ((!valueObjectType.IsValueObjectType(out var keyedAttribute)
            || keyedAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
@@ -367,7 +367,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
           || valueObjectAttribute.ApplicationSyntaxReference is null

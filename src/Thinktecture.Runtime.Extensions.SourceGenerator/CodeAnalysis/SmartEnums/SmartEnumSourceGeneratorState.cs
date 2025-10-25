@@ -10,7 +10,7 @@ public sealed class SmartEnumSourceGeneratorState
    public string Name { get; }
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
 
    public KeyMemberState? KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
@@ -23,7 +23,7 @@ public sealed class SmartEnumSourceGeneratorState
    public bool IsAbstract { get; }
 
    public bool IsReferenceType => true;        // Smart Enums cannot be structs
-   public bool IsStruct => false;              // Smart Enums cannot be structs
+   public bool IsValueType => false;              // Smart Enums cannot be structs
    public bool DisallowsDefaultValue => false; // Smart Enums cannot be structs
    public bool IsEqualWithReferenceEquality => true;
    public bool IsRecord => false;
@@ -31,8 +31,8 @@ public sealed class SmartEnumSourceGeneratorState
    public int NumberOfGenerics => 0;
 
    public EnumItems Items { get; }
-   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
-   public IReadOnlyList<DelegateMethodState> DelegateMethods { get; }
+   public ImmutableArray<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
+   public ImmutableArray<DelegateMethodState> DelegateMethods { get; }
 
    public SmartEnumSourceGeneratorState(
       TypedMemberStateFactory factory,
@@ -59,7 +59,7 @@ public sealed class SmartEnumSourceGeneratorState
 
       BaseType = type.GetBaseType(factory);
       Items = new EnumItems(type.GetEnumItems());
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = [..type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, false, cancellationToken)];
       DelegateMethods = type.GetDelegateMethods();
    }
 

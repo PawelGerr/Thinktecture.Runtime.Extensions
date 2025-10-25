@@ -161,4 +161,14 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          return hashCode;
       }
    }
+
+   public static bool operator ==(AttributeInfo left, AttributeInfo right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(AttributeInfo left, AttributeInfo right)
+   {
+      return !(left == right);
+   }
 }

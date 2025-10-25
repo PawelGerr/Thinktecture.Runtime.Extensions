@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using System.Globalization;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -296,7 +296,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateCustomDelegateTypes()
    {
-      for (var i = 0; i < _state.DelegateMethods.Count; i++)
+      for (var i = 0; i < _state.DelegateMethods.Length; i++)
       {
          var method = _state.DelegateMethods[i];
 
@@ -319,7 +319,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(");");
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
          _sb.AppendLine();
    }
 
@@ -780,7 +780,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   private void GenerateTryGet(IMemberState keyProperty)
+   private void GenerateTryGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -811,7 +811,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateTryGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateTryGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -829,7 +829,7 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif");
    }
 
-   private void GenerateValidate(IMemberState keyProperty)
+   private void GenerateValidate(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -855,7 +855,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateValidateForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateValidateForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -1099,7 +1099,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateToValue(IMemberState keyProperty)
+   private void GenerateToValue(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1113,7 +1113,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGet(IMemberState keyProperty)
+   private void GenerateGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1152,7 +1152,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1184,11 +1184,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.BaseType is null)
       {
-         GenerateConstructor(ownCtorArgs, Array.Empty<ConstructorArgument>());
+         GenerateConstructor(ownCtorArgs, []);
          return;
       }
 
-      var baseCtorArgs = _state.BaseType.Constructors
+      var baseCtorArgs = _state.BaseType.Value.Constructors
                                .Select(ctor =>
                                {
                                   if (ctor.Arguments.Length == 0)
@@ -1203,7 +1203,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                                 while (_state.KeyMember?.ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase) == true || ContainsArgument(ownCtorArgs, argName))
                                                 {
                                                    counter++;
-                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString()}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
+                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString(CultureInfo.InvariantCulture)}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
                                                 }
 
                                                 return new ConstructorArgument(a.TypeFullyQualified, argName);
@@ -1218,7 +1218,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, ArgumentName argName)
    {
       for (var i = 0; i < ownCtorArgs.Count; i++)
@@ -1263,9 +1262,9 @@ namespace ").Append(_state.Namespace).Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
       {
-         for (var i = 0; i < _state.DelegateMethods.Count; i++)
+         for (var i = 0; i < _state.DelegateMethods.Length; i++)
          {
             var method = _state.DelegateMethods[i];
 
@@ -1323,7 +1322,7 @@ namespace ").Append(_state.Namespace).Append(@"
          this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
       {
          foreach (var method in _state.DelegateMethods)
          {
@@ -1335,7 +1334,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-         this._hashCode = global::System.HashCode.Combine(typeof(").AppendTypeFullyQualified(_state).Append("), ");
+         this._hashCode = ");
 
          if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
          {
@@ -1350,7 +1349,7 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.AppendEscaped(_state.KeyMember.ArgumentName).Append(".GetHashCode()");
          }
 
-         _sb.Append(");");
+         _sb.Append(";");
       }
       else
       {

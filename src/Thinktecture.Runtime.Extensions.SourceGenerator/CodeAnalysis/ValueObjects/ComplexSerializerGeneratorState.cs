@@ -9,7 +9,7 @@ public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSe
    public SerializationFrameworks SerializationFrameworks { get; }
 
    public string? Namespace => Type.Namespace;
-   public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
+   public ImmutableArray<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
    public int NumberOfGenerics => 0;
 
@@ -50,5 +50,15 @@ public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSe
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          return hashCode;
       }
+   }
+
+   public static bool operator ==(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return !(left == right);
    }
 }

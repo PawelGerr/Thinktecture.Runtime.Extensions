@@ -26,4 +26,14 @@ public readonly struct EnumItems : IEquatable<EnumItems>
    {
       return _items.ComputeHashCode();
    }
+
+   public static bool operator ==(EnumItems left, EnumItems right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(EnumItems left, EnumItems right)
+   {
+      return !(left == right);
+   }
 }

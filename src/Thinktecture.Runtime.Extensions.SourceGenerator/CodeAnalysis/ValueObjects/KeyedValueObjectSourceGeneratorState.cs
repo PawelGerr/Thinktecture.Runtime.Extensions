@@ -10,13 +10,13 @@ public sealed class KeyedValueObjectSourceGeneratorState
    public string TypeMinimallyQualified { get; }
    public bool IsEqualWithReferenceEquality => false;
    public bool DisallowsDefaultValue => !IsReferenceType && (!Settings.AllowDefaultStructs || KeyMember.IsReferenceType);
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
    public int NumberOfGenerics => 0;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
-   public bool IsStruct { get; }
+   public bool IsValueType { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
 
@@ -44,7 +44,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
-      IsStruct = type.IsValueType;
+      IsValueType = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
 
@@ -73,7 +73,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
-             && IsStruct == other.IsStruct
+             && IsValueType == other.IsValueType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && KeyMember.Equals(other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
@@ -87,7 +87,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ KeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();

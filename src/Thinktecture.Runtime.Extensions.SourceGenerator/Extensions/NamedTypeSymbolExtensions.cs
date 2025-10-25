@@ -9,27 +9,30 @@ public static class NamedTypeSymbolExtensions
       this INamedTypeSymbol type,
       TypedMemberStateFactory factory)
    {
-      if (type.BaseType.IsNullOrObject() || type.BaseType.Kind == SymbolKind.ErrorType)
+      if (type.BaseType.IsNullOrDotnetBaseType() || type.BaseType.Kind == SymbolKind.ErrorType)
          return null;
 
-      var isSameAssembly = SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, type.BaseType.ContainingAssembly);
-      return new BaseTypeState(factory, type.BaseType, isSameAssembly);
+      var constructors = type.BaseType.GetAccessibleConstructors(type, factory);
+      return new BaseTypeState(constructors);
    }
 
-   public static IReadOnlyList<ConstructorState> GetConstructors(
+#pragma warning disable CA1859
+   private static IReadOnlyList<ConstructorState> GetAccessibleConstructors(
       this INamedTypeSymbol type,
+      INamedTypeSymbol derivedType,
       TypedMemberStateFactory factory)
-   {
-      return type.GetConstructors(factory, type.GetBaseType(factory));
-   }
-
-   private static IReadOnlyList<ConstructorState> GetConstructors(
-      this INamedTypeSymbol type,
-      TypedMemberStateFactory factory,
-      BaseTypeState? baseType)
+#pragma warning restore CA1859
    {
       if (type.Constructors.IsDefaultOrEmpty)
          return [];
+
+      var isSameAssembly = SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, derivedType.ContainingAssembly);
+
+      bool? isNestedInside = null;
+      bool GetIsNestedInside() => isNestedInside ??= derivedType.IsNestedInside(type);
+
+      bool? hasInternalsVisibleTo = null;
+      bool GetHasInternalsVisibleTo() => hasInternalsVisibleTo ??= type.ContainingAssembly.HasInternalsVisibleToFor(derivedType.ContainingAssembly);
 
       List<ConstructorState>? ctorStates = null;
 
@@ -37,34 +40,52 @@ public static class NamedTypeSymbolExtensions
       {
          var ctor = type.Constructors[i];
 
-         if (ctor.MethodKind == MethodKind.Constructor
-             && (ctor.DeclaredAccessibility is Accessibility.Protected or Accessibility.Public || (ctor.DeclaredAccessibility == Accessibility.Internal && baseType?.IsSameAssembly != true))
-             && (!ctor.IsImplicitlyDeclared || baseType?.IsSameAssembly != true)) // default-ctor will be replaced by ctor implemented by this generator
+         if (ctor.DeclaredAccessibility is Accessibility.Protected or Accessibility.Public or Accessibility.ProtectedOrInternal // always accessible
+             || (ctor.DeclaredAccessibility is Accessibility.Internal or Accessibility.ProtectedAndInternal && (isSameAssembly || GetHasInternalsVisibleTo()))
+             || (ctor.DeclaredAccessibility is Accessibility.Private && GetIsNestedInside()) // private but derived type is nested inside
+            )
          {
             var parameters = ctor.Parameters.IsDefaultOrEmpty
                                 ? ImmutableArray<DefaultMemberState>.Empty
                                 : ImmutableArray.CreateRange(ctor.Parameters, static (p, f) => new DefaultMemberState(f.Create(p.Type), p.Name, ArgumentName.Create(p.Name, renderAsIs: true)), factory);
 
             var ctorState = new ConstructorState(parameters);
-            (ctorStates ??= new List<ConstructorState>()).Add(ctorState);
+            (ctorStates ??= []).Add(ctorState);
          }
       }
 
-      return ctorStates ?? (IReadOnlyList<ConstructorState>)Array.Empty<ConstructorState>();
+      return ctorStates ?? (IReadOnlyList<ConstructorState>)[];
    }
 
-   public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this INamedTypeSymbol type)
+   private static bool IsNestedInside(this INamedTypeSymbol nestedType, INamedTypeSymbol type)
+   {
+      var containingType = nestedType.ContainingType;
+
+      while (containingType != null)
+      {
+         if (SymbolEqualityComparer.Default.Equals(containingType, type))
+         {
+            return true;
+         }
+
+         containingType = containingType.ContainingType;
+      }
+
+      return false;
+   }
+
+   public static ImmutableArray<GenericTypeParameterState> GetGenericTypeParameters(this INamedTypeSymbol type)
    {
       return type.TypeParameters.GetGenericTypeParameters();
    }
 
-   public static IReadOnlyList<ContainingTypeState> GetContainingTypes(
+   public static ImmutableArray<ContainingTypeState> GetContainingTypes(
       this INamedTypeSymbol type)
    {
       if (type.ContainingType is null)
          return [];
 
-      var types = new List<ContainingTypeState>();
+      var types = ImmutableArray.CreateBuilder<ContainingTypeState>();
       var containingType = type.ContainingType;
 
       while (containingType != null)
@@ -80,7 +101,7 @@ public static class NamedTypeSymbolExtensions
 
       types.Reverse();
 
-      return types;
+      return types.DrainToImmutable();
    }
 
    public static bool IsNestedInGenericClass(this INamedTypeSymbol type)
@@ -89,7 +110,7 @@ public static class NamedTypeSymbolExtensions
 
       while (containingType is not null)
       {
-         if (!containingType.TypeParameters.IsDefaultOrEmpty)
+         if (containingType.Arity > 0)
             return true;
 
          containingType = containingType.ContainingType;

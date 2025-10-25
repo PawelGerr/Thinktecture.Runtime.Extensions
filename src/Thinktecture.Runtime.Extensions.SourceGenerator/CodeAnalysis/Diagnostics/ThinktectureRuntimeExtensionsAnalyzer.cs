@@ -668,11 +668,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
    private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
       Location locationOfFirstDeclaration,
       TypedMemberStateFactory factory)
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
    {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
@@ -690,7 +692,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var baseClass = type.BaseType;
 
-      while (!baseClass.IsNullOrObject())
+      while (!baseClass.IsNullOrDotnetBaseType())
       {
          baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
@@ -839,7 +841,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var baseClass = enumType.BaseType;
 
-      while (!baseClass.IsNullOrObject())
+      while (!baseClass.IsNullOrDotnetBaseType())
       {
          baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, locationOfFirstDeclaration, context).Enumerate();
 
@@ -903,7 +905,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          var member = members[i];
 
          if (member.IsStatic && member is IPropertySymbol property && SymbolEqualityComparer.Default.Equals(property.Type, enumType) && !property.IsIgnored())
-            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None, property.Name);
+            ReportDiagnostic(context, DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems, property.GetIdentifierSyntax(context.CancellationToken)?.GetLocation() ?? Location.None, property.Name);
       }
    }
 
@@ -926,7 +928,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ReportDiagnostic(context, DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic, GetDerivedTypeLocation(context, derivedType), derivedType);
          }
 
-         if (!derivedType.BaseType.IsNullOrObject())
+         if (!derivedType.BaseType.IsNullOrDotnetBaseType())
             typesToLeaveOpen = typesToLeaveOpen.Add(derivedType.BaseType);
       }
 
@@ -985,7 +987,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var attributeSyntax = (AttributeSyntax?)enumSettingsAttr.Syntax;
 
       ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyMemberNameNotAllowed,
-                       attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.Properties.KEY_MEMBER_NAME)?.GetLocation() ?? location, keyMemberName);
+                       attributeSyntax?.ArgumentList?.Arguments.FirstNodeOrDefault(a => a.NameEquals?.Name.Identifier.Text == Constants.Attributes.Properties.KEY_MEMBER_NAME)?.GetLocation() ?? location, keyMemberName);
    }
 
    private static void EnumItemsMustBePublic(OperationAnalysisContext context, INamedTypeSymbol type, ImmutableArray<IFieldSymbol> items)
@@ -1001,7 +1003,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             continue;
 
          ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumItemMustBePublic,
-                          item.GetIdentifier(context.CancellationToken)?.GetLocation() ?? Location.None,
+                          item.GetIdentifierSyntax(context.CancellationToken)?.GetLocation() ?? Location.None,
                           item.Name, BuildTypeName(type));
       }
    }

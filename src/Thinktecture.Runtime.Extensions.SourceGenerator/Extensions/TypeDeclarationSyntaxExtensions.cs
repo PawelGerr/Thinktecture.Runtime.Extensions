@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture;
 
-internal static class TypeDeclarationSyntaxExtensions
+public static class TypeDeclarationSyntaxExtensions
 {
    [MethodImpl(MethodImplOptions.AggressiveInlining)]
    public static bool IsGeneric(this TypeDeclarationSyntax tds)

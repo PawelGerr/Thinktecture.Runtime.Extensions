@@ -54,4 +54,14 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
          return hashCode;
       }
    }
+
+   public static bool operator ==(ComparisonOperatorsGeneratorState left, ComparisonOperatorsGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ComparisonOperatorsGeneratorState left, ComparisonOperatorsGeneratorState right)
+   {
+      return !(left == right);
+   }
 }

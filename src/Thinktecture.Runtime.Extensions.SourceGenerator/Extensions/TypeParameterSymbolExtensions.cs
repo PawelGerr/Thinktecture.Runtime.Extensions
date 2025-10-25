@@ -4,23 +4,18 @@ namespace Thinktecture;
 
 public static class TypeParameterSymbolExtensions
 {
-   public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this ImmutableArray<ITypeParameterSymbol> generics)
+   public static ImmutableArray<GenericTypeParameterState> GetGenericTypeParameters(this ImmutableArray<ITypeParameterSymbol> generics)
    {
       if (generics.IsDefaultOrEmpty)
          return [];
 
-      var genericTypeParameters = new List<GenericTypeParameterState>(generics.Length);
-
-      for (var i = 0; i < generics.Length; i++)
+      return ImmutableArray.CreateRange(generics, static typeParam =>
       {
-         var typeParam = generics[i];
          var constraints = typeParam.GetConstraints();
 
-         genericTypeParameters.Add(new GenericTypeParameterState(
-                                      typeParam.Name,
-                                      constraints));
-      }
-
-      return genericTypeParameters;
+         return new GenericTypeParameterState(
+            typeParam.Name,
+            constraints);
+      });
    }
 }

@@ -29,8 +29,6 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
@@ -301,7 +299,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);
          hashCode.Add(this._stringValue, global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase.EqualityComparer);
          hashCode.Add(this._intValue, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
          return hashCode.ToHashCode();

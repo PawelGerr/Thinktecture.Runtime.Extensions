@@ -71,7 +71,7 @@ namespace Thinktecture.Tests
             ref @key);
 
          this.Key = @key;
-         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), @key.GetHashCode());
+         this._hashCode = @key.GetHashCode();
          this._itemIndex = new global::System.Lazy<int>(() =>
                                                         {
                                                            for (var i = 0; i < Items.Count; i++)

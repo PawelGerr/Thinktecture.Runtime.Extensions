@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public interface IMemberState : IEquatable<IMemberState>, IMemberInformation, IHashCodeComputable
+public interface IMemberState : IMemberInformation, IHashCodeComputable
 {
    ArgumentName ArgumentName { get; }
 }

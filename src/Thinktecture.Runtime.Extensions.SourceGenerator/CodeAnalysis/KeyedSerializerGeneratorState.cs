@@ -8,7 +8,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public SerializationFrameworks SerializationFrameworks { get; }
 
    public string? Namespace => Type.Namespace;
-   public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
+   public ImmutableArray<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
    public int NumberOfGenerics => 0;
 
@@ -50,5 +50,15 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
 
          return hashCode;
       }
+   }
+
+   public static bool operator ==(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return !(left == right);
    }
 }

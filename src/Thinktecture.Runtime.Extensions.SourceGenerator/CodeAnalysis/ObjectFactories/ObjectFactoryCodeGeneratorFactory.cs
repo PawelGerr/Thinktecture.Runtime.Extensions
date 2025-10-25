@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ObjectFactories;
 
-public class ObjectFactoryCodeGeneratorFactory : ICodeGeneratorFactory<ObjectFactorySourceGeneratorState>
+public sealed class ObjectFactoryCodeGeneratorFactory : ICodeGeneratorFactory<ObjectFactorySourceGeneratorState>
 {
    public static readonly ICodeGeneratorFactory<ObjectFactorySourceGeneratorState> Instance = new ObjectFactoryCodeGeneratorFactory();
 

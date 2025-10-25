@@ -55,7 +55,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_IsProperSubsetOf()
    {
       _sut.IsProperSubsetOf([]).Should().BeFalse();
-      _sut.IsProperSubsetOf(Array.Empty<int>()).Should().BeFalse();
+      _sut.IsProperSubsetOf([]).Should().BeFalse();
       _sut.IsProperSubsetOf([1]).Should().BeFalse();
       _sut.IsProperSubsetOf([42]).Should().BeFalse();
       _sut.IsProperSubsetOf([1, 2]).Should().BeFalse();
@@ -68,7 +68,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_IsProperSupersetOf()
    {
       _sut.IsProperSupersetOf([]).Should().BeTrue();
-      _sut.IsProperSupersetOf(Array.Empty<int>()).Should().BeTrue();
+      _sut.IsProperSupersetOf([]).Should().BeTrue();
       _sut.IsProperSupersetOf([1]).Should().BeFalse();
       _sut.IsProperSupersetOf([42]).Should().BeFalse();
       _sut.IsProperSupersetOf([1, 2]).Should().BeFalse();
@@ -80,7 +80,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_IsSubsetOf()
    {
       _sut.IsSubsetOf([]).Should().BeFalse();
-      _sut.IsSubsetOf(Array.Empty<int>()).Should().BeFalse();
+      _sut.IsSubsetOf([]).Should().BeFalse();
       _sut.IsSubsetOf([1]).Should().BeFalse();
       _sut.IsSubsetOf([42]).Should().BeTrue();
       _sut.IsSubsetOf([1, 2]).Should().BeFalse();
@@ -93,7 +93,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_IsSupersetOf()
    {
       _sut.IsSupersetOf([]).Should().BeTrue();
-      _sut.IsSupersetOf(Array.Empty<int>()).Should().BeTrue();
+      _sut.IsSupersetOf([]).Should().BeTrue();
       _sut.IsSupersetOf([1]).Should().BeFalse();
       _sut.IsSupersetOf([42]).Should().BeTrue();
       _sut.IsSupersetOf([1, 2]).Should().BeFalse();
@@ -105,7 +105,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_Overlaps()
    {
       _sut.Overlaps([]).Should().BeFalse();
-      _sut.Overlaps(Array.Empty<int>()).Should().BeFalse();
+      _sut.Overlaps([]).Should().BeFalse();
       _sut.Overlaps([1]).Should().BeFalse();
       _sut.Overlaps([42]).Should().BeTrue();
       _sut.Overlaps([1, 2]).Should().BeFalse();
@@ -117,7 +117,7 @@ public class SingleItemReadOnlySetTests
    public void Should_have_SetEquals()
    {
       _sut.SetEquals([]).Should().BeFalse();
-      _sut.SetEquals(Array.Empty<int>()).Should().BeFalse();
+      _sut.SetEquals([]).Should().BeFalse();
       _sut.SetEquals([1]).Should().BeFalse();
       _sut.SetEquals([42]).Should().BeTrue();
       _sut.SetEquals([1, 2]).Should().BeFalse();

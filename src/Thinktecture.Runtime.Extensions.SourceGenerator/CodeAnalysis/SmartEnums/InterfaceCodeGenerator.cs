@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public class InterfaceCodeGenerator<TState, TType> : CodeGeneratorBase
+public sealed class InterfaceCodeGenerator<TState, TType> : CodeGeneratorBase
    where TState : ITypeInformationProvider<TType>
    where TType: ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {

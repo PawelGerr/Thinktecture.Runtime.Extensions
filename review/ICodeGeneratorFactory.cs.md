@@ -1,0 +1,5 @@
+- Warning: Missing contravariance on generic parameter. The factory only consumes T (Create(T state, ...)), so declaring interface ICodeGeneratorFactory<in T> would improve substitutability. This is currently blocked by IEquatable<ICodeGeneratorFactory<T>> (T appears in an invariant position), so either:
+  - Move equality to the non-generic base: public interface ICodeGeneratorFactory : IEquatable<ICodeGeneratorFactory> and remove IEquatable from the generic interface; then declare public interface ICodeGeneratorFactory<in T> : ICodeGeneratorFactory.
+  - Or accept the current invariant T and the reduced flexibility.
+
+- Warning: Equality contract is ambiguous. ICodeGeneratorFactory<T> implements IEquatable<ICodeGeneratorFactory<T>>, but the base interface does not. This can lead to inconsistent behavior when comparing via base interface/object vs generic interface. Consider standardizing equality on the base interface (IEquatable<ICodeGeneratorFactory>) and defining a clear key (e.g., CodeGeneratorName and/or concrete type) for equality/GetHashCode to avoid surprises.

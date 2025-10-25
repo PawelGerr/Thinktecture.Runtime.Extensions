@@ -3,16 +3,13 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture;
 
-internal static class MemberDeclarationSyntaxExtensions
+public static class MemberDeclarationSyntaxExtensions
 {
-   public static bool IsPartial(this MemberDeclarationSyntax tds)
+   public static bool IsPartial(this MemberDeclarationSyntax mds)
    {
-      if (tds is null)
-         throw new ArgumentNullException(nameof(tds));
-
-      for (var i = 0; i < tds.Modifiers.Count; i++)
+      for (var i = 0; i < mds.Modifiers.Count; i++)
       {
-         if (tds.Modifiers[i].IsKind(SyntaxKind.PartialKeyword))
+         if (mds.Modifiers[i].IsKind(SyntaxKind.PartialKeyword))
             return true;
       }
 

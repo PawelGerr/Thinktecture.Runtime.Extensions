@@ -31,4 +31,14 @@ public readonly struct AdHocUnionMemberTypeSetting : IEquatable<AdHocUnionMember
          return (IsNullableReferenceType.GetHashCode() * 397) ^ (Name?.GetHashCode() ?? 0);
       }
    }
+
+   public static bool operator ==(AdHocUnionMemberTypeSetting left, AdHocUnionMemberTypeSetting right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(AdHocUnionMemberTypeSetting left, AdHocUnionMemberTypeSetting right)
+   {
+      return !(left == right);
+   }
 }

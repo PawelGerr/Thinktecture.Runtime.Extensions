@@ -91,7 +91,7 @@ namespace Thinktecture.Tests
          this._stringProcessDelegate = @stringProcessDelegate;
          this._intProcessDelegate = @intProcessDelegate;
          this._boolProcessDelegate = @boolProcessDelegate;
-         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key));
+         this._hashCode = global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(@key);
          this._itemIndex = new global::System.Lazy<int>(() =>
                                                         {
                                                            for (var i = 0; i < Items.Count; i++)

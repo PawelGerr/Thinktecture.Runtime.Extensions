@@ -43,7 +43,7 @@ public class GetHashCode
 
    private static void ComputeHashCode<T, T2>(T union, T2 value)
    {
-      var expected = HashCode.Combine(typeof(T), value is string s ? StringComparer.OrdinalIgnoreCase.GetHashCode(s) : value?.GetHashCode());
+      var expected = value is string s ? StringComparer.OrdinalIgnoreCase.GetHashCode(s) : value?.GetHashCode();
       union.GetHashCode().Should().Be(expected);
    }
 
@@ -74,7 +74,7 @@ public class GetHashCode
 
    private static void ComputeHashCodeOrdinal<T>(T union, string value, bool equal)
    {
-      var expected = HashCode.Combine(typeof(T), StringComparer.Ordinal.GetHashCode(value));
+      var expected = StringComparer.Ordinal.GetHashCode(value);
 
       if (equal)
       {

@@ -23,8 +23,6 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
@@ -169,7 +167,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode;
+         return 0;
       }
 
       /// <inheritdoc />

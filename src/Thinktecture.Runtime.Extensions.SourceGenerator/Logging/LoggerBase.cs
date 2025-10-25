@@ -37,46 +37,29 @@ public abstract class LoggerBase : IDisposable
                       ICodeGeneratorFactory? factory = null,
                       Exception? exception = null)
    {
-      if (exception is not null)
+      try
       {
-         message = $"{message}. Exception: {exception}";
-      }
-      else if (type is not null)
-      {
-         message = factory is not null
-                      ? $"{message}. Type: {type.Identifier.ToString()}. Code Generator: {factory.CodeGeneratorName}."
-                      : $"{message}. Type: {type.Identifier.ToString()}";
-      }
+         if (type is not null)
+         {
+            message += $" Type: {type.Identifier.ToString()}.";
+         }
 
-      _sink.Write(_source, logLevel, DateTime.Now, message);
-   }
+         if (factory is not null)
+         {
+            message += $" Code Generator: {factory.CodeGeneratorName}.";
+         }
 
-   protected void Log<T>(LogLevel logLevel,
-                         string message,
-                         TypeDeclarationSyntax? type,
-                         T namespaceAndName,
-                         ICodeGeneratorFactory? factory = null,
-                         Exception? exception = null)
-      where T : INamespaceAndName
-   {
-      if (exception is not null)
-      {
-         message = $"{message}. Exception: {exception}";
-      }
-      else if (type is not null)
-      {
-         message = factory is not null
-                      ? $"{message}. Type: {type.Identifier.ToString()}. Code Generator: {factory.CodeGeneratorName}."
-                      : $"{message}. Type: {type.Identifier.ToString()}";
-      }
-      else
-      {
-         message = factory is not null
-                      ? $"{message}. Type: {namespaceAndName.Namespace}.{namespaceAndName.Name}. Code Generator: {factory.CodeGeneratorName}."
-                      : $"{message}. Type: {namespaceAndName.Namespace}.{namespaceAndName.Name}";
-      }
+         if (exception is not null)
+         {
+            message += $" Exception: {exception}";
+         }
 
-      _sink.Write(_source, logLevel, DateTime.Now, message);
+         _sink.Write(_source, logLevel, DateTime.Now, message);
+      }
+      catch (Exception ex)
+      {
+         SelfLog.Write(ex.ToString());
+      }
    }
 
    public void Log(LogLevel logLevel, string message)
@@ -87,6 +70,12 @@ public abstract class LoggerBase : IDisposable
 
    public void Dispose()
    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+   }
+
+   private void Dispose(bool disposing)
+   {
       if (_isDisposed)
          return;
 
@@ -95,9 +84,10 @@ public abstract class LoggerBase : IDisposable
          if (_isDisposed)
             return;
 
-         _isDisposed = true;
+         if (disposing)
+            _loggerFactory.ReleaseSink(_sink);
 
-         _loggerFactory.ReleaseSink(_sink);
+         _isDisposed = true;
       }
    }
 }

@@ -1,0 +1,5 @@
+IMemberState.cs — Issues
+
+- [Warning] Interface-wide equality contract: The interface requires IEquatable<IMemberState>. This couples equality to the interface type and can lead to asymmetric or cross-type equality between different implementations unless all implementers share identical equality semantics. If equality is intended to be per-concrete-type, prefer implementing IEquatable<TConcrete> on implementations and remove IEquatable<IMemberState> from the interface.
+- [Warning] Implicit usings dependency: The file references IEquatable without a using System; directive. If ImplicitUsings are disabled for this project/TFM, this will not compile. Consider adding using System; or fully qualifying as System.IEquatable<IMemberState> to avoid hidden configuration dependency.
+- [Warning] Namespace resolution fragility: The file uses ArgumentName, IMemberInformation, and IHashCodeComputable without usings. If these types are not in the Thinktecture.CodeAnalysis namespace, missing using directives will break compilation. Verify their namespaces or add explicit using statements.

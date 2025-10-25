@@ -1,34 +1,23 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Thinktecture.CodeAnalysis;
-
 namespace Thinktecture;
 
 public static class MethodSymbolExtensions
 {
-   public static SyntaxToken GetIdentifier(this IMethodSymbol method, CancellationToken cancellationToken)
+   public static bool IsUserDefinedComparisonOperator(this IMethodSymbol method, ITypeSymbol type)
    {
-      var syntax = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
-      return syntax.Identifier;
+      return method is { MethodKind: MethodKind.UserDefinedOperator, IsStatic: true, ReturnType.SpecialType: SpecialType.System_Boolean, Parameters.Length: 2 }
+             && method.Parameters[0] is { RefKind: RefKind.None } firstParam
+             && method.Parameters[1] is { RefKind: RefKind.None } secondParam
+             && SymbolEqualityComparer.Default.Equals(firstParam.Type, type)
+             && SymbolEqualityComparer.Default.Equals(secondParam.Type, type);
    }
 
-   public static bool IsComparisonOperator(this IMethodSymbol method, ITypeSymbol type)
+   public static bool IsUserDefinedArithmeticOperator(this IMethodSymbol method, ITypeSymbol type)
    {
-      return method.ReturnType.SpecialType == SpecialType.System_Boolean
-             && method.Parameters.Length == 2
-             && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[0].Type, type)
-             && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[1].Type, type);
-   }
-
-   public static bool IsArithmeticOperator(this IMethodSymbol method, ITypeSymbol type)
-   {
-      return SymbolEqualityComparer.IncludeNullability.Equals(method.ReturnType, type)
-             && method.Parameters.Length == 2
-             && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[0].Type, type)
-             && SymbolEqualityComparer.IncludeNullability.Equals(method.Parameters[1].Type, type);
-   }
-
-   public static IReadOnlyList<GenericTypeParameterState> GetGenericTypeParameters(this IMethodSymbol method)
-   {
-      return method.TypeParameters.GetGenericTypeParameters();
+      return method is { MethodKind: MethodKind.UserDefinedOperator, IsStatic: true, Parameters.Length: 2 }
+             && SymbolEqualityComparer.Default.Equals(method.ReturnType, type)
+             && method.Parameters[0] is { RefKind: RefKind.None } firstParam
+             && method.Parameters[1] is { RefKind: RefKind.None } secondParam
+             && SymbolEqualityComparer.Default.Equals(firstParam.Type, type)
+             && SymbolEqualityComparer.Default.Equals(secondParam.Type, type);
    }
 }

@@ -21,8 +21,6 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly object? _obj;
@@ -311,8 +309,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<string>?)this._obj)?.GetHashCode() ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0),
+            1 => ((global::System.Collections.Generic.List<string>?)this._obj)?.GetHashCode() ?? 0,
+            2 => ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0,
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

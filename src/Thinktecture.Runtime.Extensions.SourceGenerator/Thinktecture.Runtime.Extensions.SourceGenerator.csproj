@@ -4,11 +4,14 @@
     <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>smart-enum;value-object;discriminated-union;sourcegenerator</PackageTags>
-    <NoWarn>$(NoWarn);CS1591;RS2008;NU5128</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NU5128</NoWarn>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <IncludeSymbols>false</IncludeSymbols>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IsRoslynComponent>true</IsRoslynComponent>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <NoWarn>$(NoWarn);CA1051;CA1707;CA1711;CA1716;CA1834;CA2201;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,7 +9,9 @@
 
   <ItemGroup>
     <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
-    <None Update="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build" />
+
+    <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build/$(PackageId).props" />
+    <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="buildTransitive/$(PackageId).props" />
 
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
                       SetTargetFramework="TargetFramework=netstandard2.0"

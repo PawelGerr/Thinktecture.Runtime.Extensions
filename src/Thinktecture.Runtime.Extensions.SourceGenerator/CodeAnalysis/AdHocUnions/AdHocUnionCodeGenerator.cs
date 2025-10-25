@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class AdHocUnionCodeGenerator : CodeGeneratorBase
+public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "AdHocUnion-CodeGenerator";
    public override string FileNameSuffix => ".AdHocUnion";
@@ -82,8 +82,6 @@ namespace ").Append(_state.Namespace).Append(@"
                        }
                        .AsReadOnly()
       };
-
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(@").GetHashCode();
 
       private readonly int _valueIndex;
 "); // index is 1-based
@@ -245,7 +243,7 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -285,14 +283,14 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -307,7 +305,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.IsReferenceType)
             _sb.Append(" ?? 0");
 
-         _sb.Append("),");
+         _sb.Append(",");
       }
 
       _sb.Append(@"
@@ -366,7 +364,7 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
@@ -419,7 +417,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The action to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -458,7 +456,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?>? @default = null,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -515,7 +513,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -579,7 +577,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The function to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -618,7 +616,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?, TResult> @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -678,7 +676,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -734,7 +732,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The instance to return if no value is provided for the current value.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -758,7 +756,7 @@ namespace ").Append(_state.Namespace).Append(@"
          TResult @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          if (i != 0)
             _sb.Append(",");
@@ -805,7 +803,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -846,7 +844,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var valueArgName = ArgumentName.Create("value", renderAsIs: true);
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -902,7 +900,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateFactoriesForTypeDuplicates()
    {
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -929,7 +927,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var objBackingFieldWritten = false;
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -951,11 +949,11 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append(memberType.BackingFieldName).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").AppendBackingFieldName(memberType.BackingFieldName).Append(";");
          }
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
@@ -966,7 +964,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
@@ -1015,7 +1013,7 @@ namespace ").Append(_state.Namespace).Append(@"
          0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -1031,9 +1029,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
 file static class Extensions
 {
-   public static StringBuilder AppendMemberTypes(this StringBuilder sb, IReadOnlyList<AdHocUnionMemberTypeState> memberTypes)
+   public static StringBuilder AppendMemberTypes(this StringBuilder sb, ImmutableArray<AdHocUnionMemberTypeState> memberTypes)
    {
-      for (var i = 0; i < memberTypes.Count; i++)
+      for (var i = 0; i < memberTypes.Length; i++)
       {
          var member = memberTypes[i];
 
@@ -1109,7 +1107,7 @@ file static class Extensions
       }
       else
       {
-         sb.Append(qualifier).Append(".").Append(memberType.BackingFieldName);
+         sb.Append(qualifier).Append(".").AppendBackingFieldName(memberType.BackingFieldName);
       }
 
       return sb;
@@ -1131,6 +1129,8 @@ file static class Extensions
       bool useSharedObjectBackingField,
       AdHocUnionMemberTypeState memberType)
    {
-      return sb.Append(useSharedObjectBackingField ? "_obj" : memberType.BackingFieldName);
+      return useSharedObjectBackingField
+                ? sb.Append("_obj")
+                : sb.AppendBackingFieldName(memberType.BackingFieldName);
    }
 }

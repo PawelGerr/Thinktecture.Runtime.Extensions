@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class TypedMemberStateFactoryProvider
+public sealed class TypedMemberStateFactoryProvider
 {
    private static readonly object _lock7 = new();
    private static readonly object _lock8 = new();

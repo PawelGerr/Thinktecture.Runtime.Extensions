@@ -2,27 +2,33 @@ namespace Thinktecture;
 
 public static class TypeParameterExtensions
 {
-   public static IReadOnlyList<string> GetConstraints(this ITypeParameterSymbol typeParam)
+   public static ImmutableArray<string> GetConstraints(this ITypeParameterSymbol typeParam)
    {
-      List<string>? constraints = null;
+      ImmutableArray<string>.Builder? constraints = null;
 
       if (typeParam.HasReferenceTypeConstraint)
       {
-         (constraints ??= []).Add("class");
+         (constraints = ImmutableArray.CreateBuilder<string>()).Add("class");
       }
       else if (typeParam.HasValueTypeConstraint)
       {
-         (constraints ??= []).Add("struct");
+         (constraints = ImmutableArray.CreateBuilder<string>()).Add("struct");
       }
 
       foreach (var constraintType in typeParam.ConstraintTypes)
       {
-         (constraints ??= []).Add(constraintType.ToFullyQualifiedDisplayString());
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add(constraintType.ToFullyQualifiedDisplayString());
       }
 
-      if (typeParam.HasConstructorConstraint)
-         (constraints ??= []).Add("new()");
+      if (typeParam.HasNotNullConstraint)
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("notnull");
 
-      return constraints ?? [];
+      if (typeParam.HasConstructorConstraint)
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("new()");
+
+      if (typeParam.HasUnmanagedTypeConstraint)
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("unmanaged");
+
+      return constraints?.DrainToImmutable() ?? [];
    }
 }

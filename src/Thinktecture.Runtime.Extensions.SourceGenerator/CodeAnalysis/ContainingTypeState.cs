@@ -8,13 +8,13 @@ public sealed class ContainingTypeState
    public string Name { get; }
    public bool IsReferenceType { get; }
    public bool IsRecord { get; }
-   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public ContainingTypeState(
       string name,
       bool isReferenceType,
       bool isRecord,
-      IReadOnlyList<GenericTypeParameterState> genericParameters)
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Name = name;
       IsReferenceType = isReferenceType;

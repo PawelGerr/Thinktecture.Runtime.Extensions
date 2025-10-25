@@ -24,7 +24,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public string TypeFullyQualified => _typedMemberState.TypeFullyQualified;
    public string TypeMinimallyQualified => _typedMemberState.TypeMinimallyQualified;
    public bool IsReferenceType => _typedMemberState.IsReferenceType;
-   public bool IsStruct => _typedMemberState.IsStruct;
+   public bool IsValueType => _typedMemberState.IsValueType;
    public bool IsReferenceTypeOrNullableStruct => _typedMemberState.IsReferenceTypeOrNullableStruct;
    public bool IsNullableStruct => _typedMemberState.IsNullableStruct;
    public NullableAnnotation NullableAnnotation { get; }
@@ -68,7 +68,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       bool populateValueObjectMemberSettings,
       bool allowedCaptureSymbols)
    {
-      if (field.Type.Kind == SymbolKind.ErrorType)
+      if (field.Type.TypeKind == TypeKind.Error)
          return null;
 
       var symbol = allowedCaptureSymbols ? field : null;
@@ -80,7 +80,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          field.Name,
          (symbol, null),
          field.IsStatic,
-         field.Type.TypeKind == TypeKind.Error,
+         false,
          field.IsAbstract,
          IsDisallowingDefaultValue(field.Type),
          field.Kind,
@@ -95,7 +95,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
       bool populateValueObjectMemberSettings,
       bool allowedCaptureSymbols)
    {
-      if (property.Type.Kind == SymbolKind.ErrorType)
+      if (property.Type.TypeKind == TypeKind.Error)
          return null;
 
       var symbol = allowedCaptureSymbols ? property : null;
@@ -107,7 +107,7 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
          property.Name,
          (null, symbol),
          property.IsStatic,
-         property.Type.TypeKind == TypeKind.Error,
+         false,
          property.IsAbstract,
          IsDisallowingDefaultValue(property.Type),
          property.Kind,
@@ -167,10 +167,10 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public Location? GetIdentifierLocation(CancellationToken cancellationToken)
    {
       if (_symbol.Field is not null)
-         return _symbol.Field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+         return _symbol.Field.GetIdentifierSyntax(cancellationToken)?.GetLocation();
 
       if (_symbol.Property is not null)
-         return _symbol.Property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+         return _symbol.Property.GetIdentifierSyntax(cancellationToken)?.GetLocation();
 
       return null;
    }
@@ -181,11 +181,6 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    }
 
    public override bool Equals(object? obj)
-   {
-      return obj is InstanceMemberInfo other && Equals(other);
-   }
-
-   public bool Equals(IMemberState? obj)
    {
       return obj is InstanceMemberInfo other && Equals(other);
    }

@@ -1,9 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace Thinktecture.Logging;
 
-public class FileSystemLoggingSink : ILoggingSink, IDisposable
+public sealed class FileSystemLoggingSink : ILoggingSink, IDisposable
 {
    // We are using quite primitive approach with "UnsafeQueueUserWorkItem" to prevent always-running task,
    // because source generator doesn't support IDisposable to stop the task.
@@ -167,9 +168,11 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
    {
       try
       {
-#pragma warning disable RS1035
+#pragma warning disable RS1035 // The symbol is banned for use by analyzers: Do not do file IO in analyzers
          var stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read | FileShare.Write | FileShare.Delete);
-#pragma warning restore RS1035
+#pragma warning restore RS1035 // The symbol is banned for use by analyzers: Do not do file IO in analyzers
+
+         stream.Seek(0, SeekOrigin.End);
 
          try
          {
@@ -215,19 +218,19 @@ public class FileSystemLoggingSink : ILoggingSink, IDisposable
 
    private static async Task WriteDateTimeAsync(StreamWriter writer, DateTime datetime)
    {
-      await writer.WriteAsync(datetime.Year.ToString("0000"));
+      await writer.WriteAsync(datetime.Year.ToString("0000", CultureInfo.InvariantCulture));
       await writer.WriteAsync("-");
-      await writer.WriteAsync(datetime.Month.ToString("00"));
+      await writer.WriteAsync(datetime.Month.ToString("00", CultureInfo.InvariantCulture));
       await writer.WriteAsync("-");
-      await writer.WriteAsync(datetime.Day.ToString("00"));
+      await writer.WriteAsync(datetime.Day.ToString("00", CultureInfo.InvariantCulture));
       await writer.WriteAsync(" ");
-      await writer.WriteAsync(datetime.Hour.ToString("00"));
+      await writer.WriteAsync(datetime.Hour.ToString("00", CultureInfo.InvariantCulture));
       await writer.WriteAsync(":");
-      await writer.WriteAsync(datetime.Minute.ToString("00"));
+      await writer.WriteAsync(datetime.Minute.ToString("00", CultureInfo.InvariantCulture));
       await writer.WriteAsync(":");
-      await writer.WriteAsync(datetime.Second.ToString("00"));
+      await writer.WriteAsync(datetime.Second.ToString("00", CultureInfo.InvariantCulture));
       await writer.WriteAsync(":");
-      await writer.WriteAsync(datetime.Millisecond.ToString("000"));
+      await writer.WriteAsync(datetime.Millisecond.ToString("000", CultureInfo.InvariantCulture));
    }
 
    private static string GetLogLevel(LogLevel logLevel)

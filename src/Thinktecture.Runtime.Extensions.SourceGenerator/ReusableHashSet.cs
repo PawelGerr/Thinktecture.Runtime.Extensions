@@ -1,33 +1,32 @@
 namespace Thinktecture;
 
-public abstract class ReusableHashSet<T>
+public abstract class ReusableHashSet<T>(int maxSetSize)
 {
-   private readonly int _maxSetSize;
-
-   private (HashSet<T> Set, IEqualityComparer<T> Comparer)? _cacheWithComparer;
-
-   protected ReusableHashSet(int maxSetSize)
-   {
-      _maxSetSize = maxSetSize;
-   }
+   private HashSet<T>? _cache;
 
    public HashSet<T> Lease(IEqualityComparer<T> comparer)
    {
-      if (_cacheWithComparer is null || !ReferenceEquals(_cacheWithComparer?.Comparer, comparer))
-         return new HashSet<T>(comparer);
+      var set = _cache;
 
-      var set = _cacheWithComparer.Value.Set;
-      _cacheWithComparer = null;
+      if (set is not null
+          && ReferenceEquals(set.Comparer, comparer)
+          && ReferenceEquals(set, Interlocked.CompareExchange(ref _cache, null, set)))
+      {
+         return set;
+      }
 
-      return set;
+      return new HashSet<T>(comparer);
    }
 
    public void Return(HashSet<T> set)
    {
-      if (set.Count > _maxSetSize)
+      // "Capacity" doesn't exist in .netstandard2.0
+      if (set.Count > maxSetSize)
          return;
 
       set.Clear();
-      _cacheWithComparer = (set, set.Comparer);
+
+      // Only cache if the slot is empty; otherwise, drop it
+      Interlocked.CompareExchange(ref _cache, set, null);
    }
 }

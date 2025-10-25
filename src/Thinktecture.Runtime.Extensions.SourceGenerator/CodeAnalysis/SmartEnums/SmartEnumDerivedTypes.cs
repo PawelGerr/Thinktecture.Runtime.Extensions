@@ -6,8 +6,8 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
    public string Name { get; }
    public string TypeFullyQualified { get; }
    public bool IsReferenceType { get; }
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public IReadOnlyList<string> DerivedTypesFullyQualified { get; }
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<string> DerivedTypesFullyQualified { get; }
    public int NumberOfGenerics => 0;
 
    public SmartEnumDerivedTypes(
@@ -15,8 +15,8 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
       string name,
       string typeFullyQualified,
       bool isReferenceType,
-      IReadOnlyList<ContainingTypeState> containingTypes,
-      IReadOnlyList<string> derivedTypesFullyQualified)
+      ImmutableArray<ContainingTypeState> containingTypes,
+      ImmutableArray<string> derivedTypesFullyQualified)
    {
       Namespace = ns;
       Name = name;
@@ -55,7 +55,7 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
          hashCode = (hashCode * 397) ^ Name.GetHashCode();
          hashCode = (hashCode * 397) ^ TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ DerivedTypesFullyQualified.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ DerivedTypesFullyQualified.ComputeHashCode(StringComparer.Ordinal);
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;

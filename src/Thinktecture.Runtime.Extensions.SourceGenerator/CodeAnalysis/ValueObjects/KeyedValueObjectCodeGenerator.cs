@@ -95,9 +95,7 @@ namespace ").Append(_state.Namespace).Append(@"
             ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
             ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
             TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
-         };
-
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
+         };");
 
       if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
       {
@@ -515,7 +513,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, ");
+         return ");
 
       if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
       {
@@ -527,10 +525,10 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("this.").Append(_state.KeyMember.Name);
+         _sb.Append("this.").Append(_state.KeyMember.Name).Append(".GetHashCode()");
       }
 
-      _sb.Append(@");
+      _sb.Append(@";
       }");
    }
 

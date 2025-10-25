@@ -25,4 +25,14 @@ public readonly struct EnumItem : IEquatable<EnumItem>, IHashCodeComputable
    {
       return Name.GetHashCode();
    }
+
+   public static bool operator ==(EnumItem left, EnumItem right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(EnumItem left, EnumItem right)
+   {
+      return !(left == right);
+   }
 }

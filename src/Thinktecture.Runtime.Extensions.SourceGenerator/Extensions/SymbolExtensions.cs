@@ -42,7 +42,7 @@ public static class SymbolExtensions
       this ISymbol member,
       [MaybeNullWhen(false)] out IMethodSymbol method)
    {
-      if (member is { IsStatic: true, Name: Constants.Methods.VALIDATE_FACTORY_ARGUMENTS } and IMethodSymbol methodSymbol)
+      if (member is { IsStatic: true, Name: Constants.Methods.VALIDATE_FACTORY_ARGUMENTS } and IMethodSymbol { IsGenericMethod: false } methodSymbol)
       {
          method = methodSymbol;
          return true;

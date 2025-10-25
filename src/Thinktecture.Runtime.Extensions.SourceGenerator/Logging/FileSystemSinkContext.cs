@@ -2,7 +2,7 @@ using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
 
-public class FileSystemSinkContext
+public sealed class FileSystemSinkContext
 {
    private readonly object _lock;
    private readonly List<WeakReference<ThinktectureSourceGeneratorBase>> _owners;

@@ -17,7 +17,7 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory : NewtonsoftJs
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasFlag(SerializationFrameworks.NewtonsoftJson)
-             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.NewtonsoftJson));
+             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)

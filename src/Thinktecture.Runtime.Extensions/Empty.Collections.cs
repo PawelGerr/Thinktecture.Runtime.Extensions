@@ -20,7 +20,7 @@ public partial class Empty
    /// <returns>An empty collection.</returns>
    public static IReadOnlyList<T> Collection<T>()
    {
-      return Array.Empty<T>();
+      return [];
    }
 
    /// <summary>

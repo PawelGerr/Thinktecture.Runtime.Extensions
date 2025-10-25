@@ -20,7 +20,7 @@ public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase : IKeyedSerial
           || !state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

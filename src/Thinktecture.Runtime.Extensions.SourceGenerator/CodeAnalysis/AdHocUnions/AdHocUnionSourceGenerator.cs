@@ -22,7 +22,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_3_TYPES);
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_4_TYPES);
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_5_TYPES);
-      InitializeNonGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_AD_HOCH);
+      InitializeNonGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_AD_HOC);
    }
 
    private void InitializeGenericUnionSourceGen(
@@ -79,7 +79,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
    {
       return GetSourceGenContextOrNull(
          context,
-         static (attributeClass, _) => attributeClass.TypeArguments.IsDefaultOrEmpty ? null : attributeClass.TypeArguments,
+         static (attributeClass, _) => attributeClass.TypeArguments.IsDefaultOrEmpty ? [] : attributeClass.TypeArguments,
          cancellationToken);
    }
 
@@ -90,9 +90,9 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          static (_, constructorArguments) =>
          {
             if (constructorArguments.IsDefaultOrEmpty)
-               return null;
+               return [];
 
-            var types = new List<ITypeSymbol>(constructorArguments.Length);
+            ImmutableArray<ITypeSymbol>.Builder? types = null;
             var foundNull = false;
 
             for (var i = 0; i < constructorArguments.Length; i++)
@@ -106,19 +106,19 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                }
 
                if (foundNull || argument.Value is not ITypeSymbol type || type.TypeKind == TypeKind.Error)
-                  return null;
+                  return [];
 
-               types.Add(type);
+               (types ??= ImmutableArray.CreateBuilder<ITypeSymbol>(constructorArguments.Length)).Add(type);
             }
 
-            return types.Count > 0 ? types : null;
+            return types?.Count > 0 ? types.DrainToImmutable() : [];
          },
          cancellationToken);
    }
 
    private SourceGenContext? GetSourceGenContextOrNull(
       GeneratorAttributeSyntaxContext context,
-      Func<INamedTypeSymbol, ImmutableArray<TypedConstant>, IReadOnlyList<ITypeSymbol>?> getMemberTypes,
+      Func<INamedTypeSymbol, ImmutableArray<TypedConstant>, ImmutableArray<ITypeSymbol>> getMemberTypes,
       CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
@@ -144,8 +144,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
          var memberTypeSymbols = getMemberTypes(attributeData.AttributeClass, attributeData.ConstructorArguments);
 
-         if (memberTypeSymbols is null
-             || memberTypeSymbols.Count < 2)
+         if (memberTypeSymbols.Length < 2)
          {
             return null;
          }
@@ -161,10 +160,10 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               memberTypeSymbols.Count);
-         var memberTypeStates = new AdHocUnionMemberTypeState[memberTypeSymbols.Count];
+                                               memberTypeSymbols.Length);
+         var memberTypeStates = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeState>(memberTypeSymbols.Length);
 
-         for (var i = 0; i < memberTypeSymbols.Count; i++)
+         for (var i = 0; i < memberTypeSymbols.Length; i++)
          {
             var memberType = memberTypeSymbols[i];
 
@@ -177,7 +176,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
             var typeDuplicateCounter = 0;
 
-            for (var j = 0; j < memberTypeSymbols.Count; j++)
+            for (var j = 0; j < memberTypeSymbols.Length; j++)
             {
                if (j == i)
                {
@@ -207,15 +206,15 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             if (String.IsNullOrWhiteSpace(name))
                return null;
 
-            memberTypeStates[i] = new AdHocUnionMemberTypeState(name,
-                                                                defaultName,
-                                                                typeDuplicateCounter,
-                                                                typeState,
-                                                                memberTypeSettings);
+            memberTypeStates.Add(new AdHocUnionMemberTypeState(name,
+                                                               defaultName,
+                                                               typeDuplicateCounter,
+                                                               typeState,
+                                                               memberTypeSettings));
          }
 
          var unionState = new AdHocUnionSourceGenState(type,
-                                                       memberTypeStates,
+                                                       memberTypeStates.DrainToImmutable(),
                                                        settings,
                                                        attributeInfo);
 
