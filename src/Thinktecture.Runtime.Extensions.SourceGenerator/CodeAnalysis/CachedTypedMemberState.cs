@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
+public sealed class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
 {
    private readonly int _hashCode;
 

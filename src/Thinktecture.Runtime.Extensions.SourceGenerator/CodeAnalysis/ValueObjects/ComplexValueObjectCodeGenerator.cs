@@ -77,9 +77,7 @@ namespace ").Append(_state.Namespace).Append(@"
                      arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
                )
                .AsReadOnly()
-         };
-
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
+         };");
 
       if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
       {
@@ -579,14 +577,12 @@ namespace ").Append(_state.Namespace).Append(@"
          if (useShortForm)
          {
             _sb.Append(@"
-         return global::System.HashCode.Combine(
-            _typeHashCode");
+         return global::System.HashCode.Combine(");
          }
          else
          {
             _sb.Append(@"
-         var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);");
+         var hashCode = new global::System.HashCode();");
          }
 
          for (var i = 0; i < _state.EqualityMembers.Count; i++)
@@ -595,7 +591,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
             if (useShortForm)
             {
-               _sb.Append(@",
+               if (i > 0)
+                  _sb.Append(",");
+
+               _sb.Append(@"
             this.").Append(member.Name);
             }
             else
@@ -635,7 +634,7 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-         return _typeHashCode;");
+         return 0;");
       }
 
       _sb.Append(@"

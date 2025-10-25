@@ -2,7 +2,7 @@ using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
 
-public class LoggerFactory
+public sealed class LoggerFactory
 {
    private readonly FileSystemSinkProvider _fileSystemSinkProvider;
    private readonly ThinktectureSourceGeneratorBase _owner;
@@ -35,13 +35,10 @@ public class LoggerFactory
    {
       return logLevel switch
       {
-         LogLevel.Trace => new TraceLogger(this, sink, source),
-         LogLevel.Debug => new DebugLogger(this, sink, source),
          LogLevel.Information => new InformationLogger(this, sink, source),
          LogLevel.Warning => new WarningLogger(this, sink, source),
          LogLevel.Error => new ErrorLogger(this, sink, source),
-         LogLevel.None => new SelfLogErrorLogger(source),
-         _ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, "Unknown log level")
+         _ => new SelfLogErrorLogger(source),
       };
    }
 

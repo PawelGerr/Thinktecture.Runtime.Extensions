@@ -315,7 +315,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if ((!valueObjectType.IsValueObjectType(out var keyedAttribute)
            || keyedAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
@@ -367,7 +367,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
           || valueObjectAttribute.ApplicationSyntaxReference is null

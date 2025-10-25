@@ -4,7 +4,7 @@ using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class InterfaceCodeGeneratorFactory<T, TType> : ICodeGeneratorFactory<T>
+public sealed class InterfaceCodeGeneratorFactory<T, TType> : ICodeGeneratorFactory<T>
    where T : ITypeInformationProvider<TType>
    where TType : ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {

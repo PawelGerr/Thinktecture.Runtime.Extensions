@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -780,7 +781,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   private void GenerateTryGet(IMemberState keyProperty)
+   private void GenerateTryGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -811,7 +812,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateTryGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateTryGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -829,7 +830,7 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif");
    }
 
-   private void GenerateValidate(IMemberState keyProperty)
+   private void GenerateValidate(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -855,7 +856,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateValidateForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateValidateForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -1099,7 +1100,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateToValue(IMemberState keyProperty)
+   private void GenerateToValue(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1113,7 +1114,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGet(IMemberState keyProperty)
+   private void GenerateGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1152,7 +1153,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1203,7 +1204,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                                 while (_state.KeyMember?.ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase) == true || ContainsArgument(ownCtorArgs, argName))
                                                 {
                                                    counter++;
-                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString()}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
+                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString(CultureInfo.InvariantCulture)}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
                                                 }
 
                                                 return new ConstructorArgument(a.TypeFullyQualified, argName);
@@ -1335,7 +1336,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-         this._hashCode = global::System.HashCode.Combine(typeof(").AppendTypeFullyQualified(_state).Append("), ");
+         this._hashCode = ");
 
          if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
          {
@@ -1350,7 +1351,7 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.AppendEscaped(_state.KeyMember.ArgumentName).Append(".GetHashCode()");
          }
 
-         _sb.Append(");");
+         _sb.Append(";");
       }
       else
       {

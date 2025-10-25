@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionCodeGenerator : CodeGeneratorBase
+public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "RegularUnion-CodeGenerator";
    public override string FileNameSuffix => ".RegularUnion";
@@ -679,7 +679,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       return typeMembers;
    }
 
-   private void RemoveDerivedTypes(List<TypeMember> typeMembers, TypeMember stopType)
+   private static void RemoveDerivedTypes(List<TypeMember> typeMembers, TypeMember stopType)
    {
       for (var i = 0; i < stopType.DerivedTypes.Count; i++)
       {
@@ -768,7 +768,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       TypeMember? BaseType,
       List<TypeMember> DerivedTypes);
 
-   private class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>
+   private sealed class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>
    {
       public static TypeMembersEqualityComparer Instance { get; } = new();
 
@@ -788,7 +788,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          return obj is null ? 0 : obj.ComputeHashCode(TypeMemberComparer.TypeMemberComparerInstance);
       }
 
-      private class TypeMemberComparer : IEqualityComparer<TypeMember>
+      private sealed class TypeMemberComparer : IEqualityComparer<TypeMember>
       {
          public static readonly TypeMemberComparer TypeMemberComparerInstance = new();
 

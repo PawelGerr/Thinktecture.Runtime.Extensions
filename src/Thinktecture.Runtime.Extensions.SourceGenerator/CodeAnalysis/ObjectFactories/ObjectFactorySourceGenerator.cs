@@ -1,9 +1,10 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis.ObjectFactories;
 
 [Generator]
-public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
 {
    public ObjectFactorySourceGenerator()
       : base(5_000)
@@ -80,10 +81,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
          if (type.TypeKind == TypeKind.Error)
-         {
-            Logger.LogDebug("Type from semantic model is erroneous", tds);
             return null;
-         }
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
@@ -91,10 +89,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
          var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo, out var thinktectureComponentAttribute);
 
          if (errorMessage is not null)
-         {
-            Logger.LogDebug(errorMessage, tds);
-            return null;
-         }
+            return new SourceGenContext(new SourceGenError(errorMessage, tds));
 
          if (attributeInfo.ObjectFactories.IsDefaultOrEmpty)
             return null;
@@ -105,8 +100,6 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of an ObjectFactory", tds));
 
          var state = new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute);
-
-         Logger.LogDebug("The type declaration is a valid type of ObjectFactory", null, state);
 
          return new SourceGenContext(state);
       }
@@ -175,17 +168,7 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
                                                  SerializationFrameworks.All))
                                       .Combine(serializerGeneratorFactories)
                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
-                                      .Where(tuple =>
-                                      {
-                                         if (tuple.Factory.MustGenerateCode(tuple.State))
-                                         {
-                                            Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
-                                            return true;
-                                         }
-
-                                         Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
-                                         return false;
-                                      });
+                                      .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));
 
       context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
    }
@@ -201,15 +184,15 @@ public class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBase, IIn
             switch (module.Name)
             {
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-                  Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
+                  Logger.Log(LogLevel.Information, "Code generator for System.Text.Json will participate in code generation");
                   factories = factories.Add(JsonObjectFactoryCodeGeneratorFactory.Instance);
                   break;
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-                  Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
+                  Logger.Log(LogLevel.Information, "Code generator for Newtonsoft.Json will participate in code generation");
                   factories = factories.Add(NewtonsoftJsonObjectFactoryCodeGeneratorFactory.Instance);
                   break;
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-                  Logger.LogInformation("Code generator for MessagePack will participate in code generation");
+                  Logger.Log(LogLevel.Information, "Code generator for MessagePack will participate in code generation");
                   factories = factories.Add(MessagePackObjectFactoryCodeGeneratorFactory.Instance);
                   break;
             }

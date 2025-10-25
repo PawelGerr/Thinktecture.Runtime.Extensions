@@ -5,11 +5,12 @@ public static class ReadOnlyCollectionExtensions
    public static int ComputeHashCode<T>(this IReadOnlyList<T> collection)
       where T : IEquatable<T>, IHashCodeComputable
    {
-      var hashCode = typeof(T).GetHashCode();
+      var hashCode = 0;
+      var count = collection.Count;
 
-      for (var i = 0; i < collection.Count; i++)
+      for (var i = 0; i < count; i++)
       {
-         hashCode = (hashCode * 397) ^ collection[i].GetHashCode();
+         hashCode = unchecked(hashCode * 397) ^ collection[i].GetHashCode();
       }
 
       return hashCode;
@@ -20,23 +21,12 @@ public static class ReadOnlyCollectionExtensions
       IEqualityComparer<T> comparer)
       where T : IEquatable<T>
    {
-      var hashCode = typeof(T).GetHashCode();
+      var hashCode = 0;
+      var count = collection.Count;
 
-      for (var i = 0; i < collection.Count; i++)
+      for (var i = 0; i < count; i++)
       {
-         hashCode = (hashCode * 397) ^ comparer.GetHashCode(collection[i]);
-      }
-
-      return hashCode;
-   }
-
-   public static int ComputeHashCode(this IReadOnlyList<string> collection)
-   {
-      var hashCode = typeof(string).GetHashCode();
-
-      for (var i = 0; i < collection.Count; i++)
-      {
-         hashCode = (hashCode * 397) ^ collection[i].GetHashCode();
+         hashCode = unchecked(hashCode * 397) ^ comparer.GetHashCode(collection[i]);
       }
 
       return hashCode;

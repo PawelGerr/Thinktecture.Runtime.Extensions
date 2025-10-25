@@ -43,4 +43,14 @@ public readonly struct ArgumentName : IEquatable<ArgumentName>
    {
       return Name;
    }
+
+   public static bool operator ==(ArgumentName left, ArgumentName right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ArgumentName left, ArgumentName right)
+   {
+      return !(left == right);
+   }
 }

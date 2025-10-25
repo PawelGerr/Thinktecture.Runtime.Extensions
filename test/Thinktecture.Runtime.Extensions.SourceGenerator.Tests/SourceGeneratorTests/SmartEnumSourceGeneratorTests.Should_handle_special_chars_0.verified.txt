@@ -65,13 +65,13 @@ namespace Thinktecture.Tests
       private readonly global::System.Lazy<int> _itemIndex;
 
       private _1TestEnum(
-         int @_1Key)
+         int @_1key)
       {
          ValidateConstructorArguments(
-            ref @_1Key);
+            ref @_1key);
 
-         this._1Key = @_1Key;
-         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests._1TestEnum), @_1Key.GetHashCode());
+         this._1Key = @_1key;
+         this._hashCode = @_1key.GetHashCode();
          this._itemIndex = new global::System.Lazy<int>(() =>
                                                         {
                                                            for (var i = 0; i < Items.Count; i++)
@@ -80,12 +80,12 @@ namespace Thinktecture.Tests
                                                                  return i;
                                                            }
 
-                                                           throw new global::System.Exception($"Current item '{@_1Key}' not found in 'Items'.");
+                                                           throw new global::System.Exception($"Current item '{@_1key}' not found in 'Items'.");
                                                         }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
       }
 
       static partial void ValidateConstructorArguments(
-         ref int @_1Key);
+         ref int @_1key);
 
       /// <summary>
       /// Gets the identifier of the item.
@@ -97,48 +97,48 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Gets an enumeration item for provided <paramref name="_1Key"/>.
+      /// Gets an enumeration item for provided <paramref name="_1key"/>.
       /// </summary>
-      /// <param name="_1Key">The identifier to return an enumeration item for.</param>
-      /// <returns>An instance of <see cref="_1TestEnum"/> if <paramref name="_1Key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref="Thinktecture.UnknownSmartEnumIdentifierException">If there is no item with the provided <paramref name="_1Key"/>.</exception>
-      public static global::Thinktecture.Tests._1TestEnum Get(int @_1Key)
+      /// <param name="_1key">The identifier to return an enumeration item for.</param>
+      /// <returns>An instance of <see cref="_1TestEnum"/> if <paramref name="_1key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
+      /// <exception cref="Thinktecture.UnknownSmartEnumIdentifierException">If there is no item with the provided <paramref name="_1key"/>.</exception>
+      public static global::Thinktecture.Tests._1TestEnum Get(int @_1key)
       {
-         if (!_lookups.Value.Lookup.TryGetValue(@_1Key, out var item))
+         if (!_lookups.Value.Lookup.TryGetValue(@_1key, out var item))
          {
-            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(global::Thinktecture.Tests._1TestEnum), @_1Key);
+            throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(global::Thinktecture.Tests._1TestEnum), @_1key);
          }
 
          return item;
       }
 
       /// <summary>
-      /// Gets a valid enumeration item for provided <paramref name="_1Key"/> if a valid item exists.
+      /// Gets a valid enumeration item for provided <paramref name="_1key"/> if a valid item exists.
       /// </summary>
-      /// <param name="_1Key">The identifier to return an enumeration item for.</param>
+      /// <param name="_1key">The identifier to return an enumeration item for.</param>
       /// <param name="item">An instance of <see cref="_1TestEnum"/>.</param>
-      /// <returns><c>true</c> if a valid item with provided <paramref name="_1Key"/> exists; <c>false</c> otherwise.</returns>
-      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @_1Key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests._1TestEnum item)
+      /// <returns><c>true</c> if a valid item with provided <paramref name="_1key"/> exists; <c>false</c> otherwise.</returns>
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] int @_1key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests._1TestEnum item)
       {
-         return _lookups.Value.Lookup.TryGetValue(@_1Key, out item);
+         return _lookups.Value.Lookup.TryGetValue(@_1key, out item);
       }
 
       /// <summary>
-      /// Validates the provided <paramref name="_1Key"/> and returns a valid enumeration item if found.
+      /// Validates the provided <paramref name="_1key"/> and returns a valid enumeration item if found.
       /// </summary>
-      /// <param name="_1Key">The identifier to return an enumeration item for.</param>
+      /// <param name="_1key">The identifier to return an enumeration item for.</param>
       /// <param name="provider">An object that provides culture-specific formatting information.</param>
       /// <param name="item">An instance of <see cref="_1TestEnum"/>.</param>
-      /// <returns><c>null</c> if a valid item with provided <paramref name="_1Key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-      public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int @_1Key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests._1TestEnum item)
+      /// <returns><c>null</c> if a valid item with provided <paramref name="_1key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
+      public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] int @_1key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests._1TestEnum item)
       {
-         if(global::Thinktecture.Tests._1TestEnum.TryGet(@_1Key, out item))
+         if(global::Thinktecture.Tests._1TestEnum.TryGet(@_1key, out item))
          {
             return null;
          }
          else
          {
-            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type '_1TestEnum' with the identifier '{@_1Key}'.");
+            return global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no item of type '_1TestEnum' with the identifier '{@_1key}'.");
          }
       }
 
@@ -156,12 +156,12 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion from the type <see cref="int"/>.
       /// </summary>
-      /// <param name="_1Key">Value to covert.</param>
-      /// <returns>An instance of <see cref="_1TestEnum"/> if the <paramref name="_1Key"/> is a known item.</returns>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("_1Key")]
-      public static explicit operator global::Thinktecture.Tests._1TestEnum?(int @_1Key)
+      /// <param name="_1key">Value to covert.</param>
+      /// <returns>An instance of <see cref="_1TestEnum"/> if the <paramref name="_1key"/> is a known item.</returns>
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("_1key")]
+      public static explicit operator global::Thinktecture.Tests._1TestEnum?(int @_1key)
       {
-         return global::Thinktecture.Tests._1TestEnum.Get(@_1Key);
+         return global::Thinktecture.Tests._1TestEnum.Get(@_1key);
       }
 
       /// <inheritdoc />
@@ -192,15 +192,15 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes an action depending on the current item.
       /// </summary>
-      /// <param name="_1Item1">The action to execute if the current item is equal to <see cref="_1Item1"/>.</param>
+      /// <param name="_1item1">The action to execute if the current item is equal to <see cref="_1Item1"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @_1Item1)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @_1item1)
       {
          switch (_itemIndex.Value)
          {
             case 0:
-               @_1Item1();
+               @_1item1();
                return;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -213,11 +213,11 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current item.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="_1Item1">The action to execute if the current item is equal to <see cref="_1Item1"/>.</param>
+      /// <param name="_1item1">The action to execute if the current item is equal to <see cref="_1Item1"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState> @_1Item1)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState> @_1item1)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -225,7 +225,7 @@ namespace Thinktecture.Tests
          switch (_itemIndex.Value)
          {
             case 0:
-               @_1Item1(@state);
+               @_1item1(@state);
                return;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
@@ -237,10 +237,10 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes a function depending on the current item.
       /// </summary>
-      /// <param name="_1Item1">The function to execute if the current item is equal to <see cref="_1Item1"/>.</param>
+      /// <param name="_1item1">The function to execute if the current item is equal to <see cref="_1Item1"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @_1Item1)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @_1item1)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -248,7 +248,7 @@ namespace Thinktecture.Tests
          switch (_itemIndex.Value)
          {
             case 0:
-               return @_1Item1();
+               return @_1item1();
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
@@ -260,11 +260,11 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="_1Item1">The function to execute if the current item is equal to <see cref="_1Item1"/>.</param>
+      /// <param name="_1item1">The function to execute if the current item is equal to <see cref="_1Item1"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult> @_1Item1)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, TResult> @_1item1)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -273,7 +273,7 @@ namespace Thinktecture.Tests
          switch (_itemIndex.Value)
          {
             case 0:
-               return @_1Item1(@state);
+               return @_1item1(@state);
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }
@@ -283,10 +283,10 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Maps an item to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
-      /// <param name="_1Item1">The instance to return if the current item is equal to <see cref="_1Item1"/>.</param>
+      /// <param name="_1item1">The instance to return if the current item is equal to <see cref="_1Item1"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
-         TResult @_1Item1)
+         TResult @_1item1)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -294,7 +294,7 @@ namespace Thinktecture.Tests
          switch (_itemIndex.Value)
          {
             case 0:
-               return @_1Item1;
+               return @_1item1;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
          }

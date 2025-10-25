@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberState>, ITypeFullyQualified, IHashCodeComputable
+public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberState>, ITypeFullyQualified, IHashCodeComputable
 {
    public string TypeFullyQualified { get; }
    public string TypeDefinitionFullyQualified { get; }
@@ -34,6 +34,11 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
       HasRequiredMembers = type.HasRequiredMembers();
 
       ContainingTypes = type.GetContainingTypes();
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return Equals(obj as RegularUnionTypeMemberState);
    }
 
    public bool Equals(RegularUnionTypeMemberState? other)

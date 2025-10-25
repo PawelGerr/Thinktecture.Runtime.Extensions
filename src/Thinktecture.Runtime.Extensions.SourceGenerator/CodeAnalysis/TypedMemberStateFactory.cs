@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class TypedMemberStateFactory
+public sealed class TypedMemberStateFactory
 {
    private const string _SYSTEM_RUNTIME_DLL = "System.Runtime.dll";
    private const string _SYSTEM_CORELIB_DLL = "System.Private.CoreLib.dll";
@@ -21,7 +21,9 @@ public class TypedMemberStateFactory
    private readonly TypedMemberStates _string;
    private readonly TypedMemberStates _dateTime;
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
    private readonly IReadOnlyDictionary<(string ModuleName, int MetadataToken), TypedMemberStates> _statesByTokens;
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
 
    private TypedMemberStateFactory(Compilation compilation)
    {

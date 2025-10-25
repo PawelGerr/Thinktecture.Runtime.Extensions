@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ObjectFactories;
 
-public class ObjectFactoryCodeGenerator : CodeGeneratorBase
+public sealed class ObjectFactoryCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "ObjectFactory-CodeGenerator";
    public override string FileNameSuffix => ".ObjectFactories";

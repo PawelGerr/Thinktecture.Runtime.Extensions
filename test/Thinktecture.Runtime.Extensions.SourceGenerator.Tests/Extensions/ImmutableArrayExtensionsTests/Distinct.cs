@@ -28,6 +28,22 @@ public class Distinct
       array.Distinct().Should().BeEquivalentTo([1, 2, 3]);
    }
 
+   [Fact]
+   public void Should_return_same_array_if_it_contains_one_item()
+   {
+      var array = ImmutableArray.CreateRange([1]);
+
+      array.Distinct().Should().BeEquivalentTo([1]);
+   }
+
+   [Fact]
+   public void Should_collapse_multiple_duplicates_to_single()
+   {
+      var array = ImmutableArray.CreateRange([1, 1, 1, 1]);
+
+      array.Distinct().Should().BeEquivalentTo([1]);
+   }
+
    [Theory]
    [InlineData(new[] { 1, 1, 2, 3 }, new[] { 1, 2, 3 })]
    [InlineData(new[] { 1, 2, 2, 3 }, new[] { 1, 2, 3 })]

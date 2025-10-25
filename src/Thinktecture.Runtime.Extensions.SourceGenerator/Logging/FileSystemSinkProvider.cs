@@ -1,12 +1,15 @@
-using System.Diagnostics;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Logging;
 
-public class FileSystemSinkProvider
+public sealed class FileSystemSinkProvider : IDisposable
 {
    private static readonly object _instanceLock = new();
+   private static readonly Lazy<FilePathComparer> _comparer = new(GetComparer);
+   private static readonly ConcurrentDictionary<string, object?> _loggedNotFoundPath = new(); // to prevent spamming the log with the same message
    private static WeakReference<FileSystemSinkProvider>? _instance;
 
    public static FileSystemSinkProvider GetOrCreate()
@@ -36,9 +39,23 @@ public class FileSystemSinkProvider
 
    private FileSystemSinkProvider()
    {
-      _sinksByFilePath = new Dictionary<(string, bool), FileSystemSinkContext>();
+      _sinksByFilePath = new Dictionary<(string, bool), FileSystemSinkContext>(_comparer.Value);
       _lock = new object();
       _periodicCleanup = new PeriodicCleanup(this);
+   }
+
+   private static FilePathComparer GetComparer()
+   {
+      try
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                   ? new FilePathComparer(StringComparer.OrdinalIgnoreCase)
+                   : new FilePathComparer(StringComparer.Ordinal);
+      }
+      catch
+      {
+         return new FilePathComparer(StringComparer.Ordinal);
+      }
    }
 
    public bool HasSinks()
@@ -64,8 +81,8 @@ public class FileSystemSinkProvider
          }
       }
 
-      var logFileInfos = GetFileInfos(fullPath);
-      var newSink = CreateLogFileOrNull(logFileInfos, filePathMustBeUnique, initialBufferSize);
+      var logFileInfo = GetFileInfo(fullPath);
+      var newSink = CreateLogFileOrNull(logFileInfo, filePathMustBeUnique, initialBufferSize);
 
       lock (_lock)
       {
@@ -117,7 +134,7 @@ public class FileSystemSinkProvider
             kvp.Value.RemoveReclaimedOwners();
 
             if (!kvp.Value.HasOwners())
-               (obsoleteSinks ??= new List<FileSystemSinkContext>()).Add(kvp.Value);
+               (obsoleteSinks ??= []).Add(kvp.Value);
          }
 
          if (obsoleteSinks is null)
@@ -136,9 +153,9 @@ public class FileSystemSinkProvider
       if (logFileInfos.FolderPath is null)
          return null;
 
-      var now = DateTime.Now;
+      var utcNow = DateTime.UtcNow;
       var fileName = filePathMustBeUnique
-                        ? $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{now.Year}{now.Month:00}{now.Day:00}_{now.Hour:00}{now.Minute:00}{now.Second:00}_{Guid.NewGuid():N}{logFileInfos.FileExtension ?? ".log"}"
+                        ? $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}_{utcNow.Year}{utcNow.Month:00}{utcNow.Day:00}_{utcNow.Hour:00}{utcNow.Minute:00}{utcNow.Second:00}_{Guid.NewGuid():N}{logFileInfos.FileExtension ?? ".log"}"
                         : $"{logFileInfos.FileName ?? "ThinktectureRuntimeExtensions_logs"}{logFileInfos.FileExtension ?? ".log"}";
       var logFilePath = Path.Combine(logFileInfos.FolderPath, fileName);
 
@@ -146,7 +163,7 @@ public class FileSystemSinkProvider
    }
 
    [SuppressMessage("MicrosoftCodeAnalysisCorrectness", "RS1035:Do not use APIs banned for analyzers")]
-   private static LogFileInfo GetFileInfos(string fullPath)
+   private static LogFileInfo GetFileInfo(string fullPath)
    {
       try
       {
@@ -164,8 +181,21 @@ public class FileSystemSinkProvider
 
          var folderPath = Path.GetDirectoryName(fullPath);
 
-         if (String.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+         if (String.IsNullOrWhiteSpace(folderPath))
+         {
+            if (_loggedNotFoundPath.TryAdd(fullPath, null))
+               SelfLog.Write($"Log folder path does not exist: '{fullPath}'.");
+
             return default;
+         }
+
+         if (!Directory.Exists(folderPath))
+         {
+            if (_loggedNotFoundPath.TryAdd(folderPath, null))
+               SelfLog.Write($"Log folder path does not exist. Checked paths: '{fullPath}' and '{folderPath}'.");
+
+            return default;
+         }
 
          return new LogFileInfo(folderPath,
                                 Path.GetFileNameWithoutExtension(fullPath),
@@ -173,7 +203,7 @@ public class FileSystemSinkProvider
       }
       catch (Exception ex)
       {
-         Debug.WriteLine(ex);
+         SelfLog.Write(ex.ToString());
          return default;
       }
    }
@@ -189,6 +219,24 @@ public class FileSystemSinkProvider
          FolderPath = String.IsNullOrWhiteSpace(folderPath) ? null : folderPath;
          FileName = String.IsNullOrWhiteSpace(fileName) ? null : fileName;
          FileExtension = String.IsNullOrWhiteSpace(fileExtension) ? null : fileExtension;
+      }
+   }
+
+   public void Dispose()
+   {
+      _periodicCleanup.Dispose();
+   }
+
+   private sealed class FilePathComparer(StringComparer stringComparer) : IEqualityComparer<(string, bool)>
+   {
+      public bool Equals((string, bool) x, (string, bool) y)
+      {
+         return stringComparer.Equals(x.Item1, y.Item1) && x.Item2 == y.Item2;
+      }
+
+      public int GetHashCode((string, bool) obj)
+      {
+         return unchecked(stringComparer.GetHashCode(obj.Item1) * 397) ^ obj.Item2.GetHashCode();
       }
    }
 }

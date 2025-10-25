@@ -76,7 +76,10 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(
+         source,
+         [typeof(ISmartEnum<>).Assembly],
+         ["Error during code generation for 'TestEnum': 'Multiple ValueObject/SmartEnum/Union-attributes found'"]);
       outputs.Should().BeEmpty();
    }
 
@@ -1067,4 +1070,3 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
    }
 }
-

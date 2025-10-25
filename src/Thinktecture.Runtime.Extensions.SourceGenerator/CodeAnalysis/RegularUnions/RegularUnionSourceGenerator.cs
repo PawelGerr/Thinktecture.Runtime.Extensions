@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
 [Generator]
-public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_000), IIncrementalGenerator
+public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_000), IIncrementalGenerator
 {
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
@@ -120,9 +120,11 @@ public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_
       }
    }
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
    private static IReadOnlyList<IReadOnlyList<DefaultMemberState>> GetSingleArgumentConstructors(
       TypedMemberStateFactory factory,
       IReadOnlyList<DerivedTypeInfo> derivedTypeInfos)
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
    {
       var (typeInfoCtors, foundArgTypes) = GetTypeInfoCtors(derivedTypeInfos);
 
@@ -163,9 +165,16 @@ public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_
       for (var i = 0; i < derivedTypeInfos.Count; i++)
       {
          var parameters = GetSingleArgumentConstructors(derivedTypeInfos[i]);
+
+         if (parameters.IsDefaultOrEmpty)
+         {
+            typeInfoCtors.Add([]);
+            continue;
+         }
+
          typeInfoCtors.Add(parameters);
 
-         for (var j = 0; j < parameters.Count; j++)
+         for (var j = 0; j < parameters.Length; j++)
          {
             var parameter = parameters[j];
             var foundParamIndex = argTypes.FindIndex(p => SymbolEqualityComparer.Default.Equals(p.Type, parameter.Type));
@@ -185,33 +194,60 @@ public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_
       return (typeInfoCtors, argTypes);
    }
 
-   private static IReadOnlyList<IParameterSymbol> GetSingleArgumentConstructors(
+   private static ImmutableArray<IParameterSymbol> GetSingleArgumentConstructors(
       DerivedTypeInfo derivedTypeInfo)
    {
-      if (derivedTypeInfo.Type.Constructors.IsDefaultOrEmpty)
-         return [];
+      var ctors = derivedTypeInfo.Type.Constructors;
 
-      List<IParameterSymbol>? parameters = null;
+      if (ctors.IsDefaultOrEmpty)
+         return ImmutableArray<IParameterSymbol>.Empty;
 
-      foreach (var ctor in derivedTypeInfo.Type.Constructors)
+      IParameterSymbol? first = null;
+      ImmutableArray<IParameterSymbol>.Builder? builder = null;
+
+      for (var i = 0; i < ctors.Length; i++)
       {
-         if (ctor.DeclaredAccessibility != Accessibility.Public || ctor.Parameters.IsDefaultOrEmpty)
+         var ctor = ctors[i];
+
+         if (ctor.DeclaredAccessibility != Accessibility.Public)
             continue;
 
-         if (ctor.Parameters.Length > 1)
+         var parameters = ctor.Parameters;
+
+         if (parameters.IsDefaultOrEmpty || parameters.Length != 1)
             continue;
 
-         var parameterCandidate = ctor.Parameters[0];
+         var parameterCandidate = parameters[0];
 
-         if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type) // Ignore copy constructor
-             || IsBaseTypeOf(parameterCandidate.Type, derivedTypeInfo.Type)                       // Ignore base type constructor
-             || IsBaseTypeOf(derivedTypeInfo.Type, parameterCandidate.Type))                      // Ignore constructors with derived types
+         // Ignore copy/base/derived-type constructors
+         if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type)
+             || IsBaseTypeOf(parameterCandidate.Type, derivedTypeInfo.Type)
+             || IsBaseTypeOf(derivedTypeInfo.Type, parameterCandidate.Type))
             continue;
 
-         (parameters ??= []).Add(parameterCandidate);
+         if (first is null)
+         {
+            // Fast path: record the first valid parameter without allocating
+            first = parameterCandidate;
+         }
+         else
+         {
+            // Second item: allocate a builder once and add both
+            builder ??= ImmutableArray.CreateBuilder<IParameterSymbol>(2);
+
+            if (builder.Count == 0)
+               builder.Add(first);
+
+            builder.Add(parameterCandidate);
+         }
       }
 
-      return parameters ?? (IReadOnlyList<IParameterSymbol>)[];
+      if (builder is not null)
+         return builder.DrainToImmutable();
+
+      return first is not null
+                ? [first] // Single-item, no builder allocation
+                : ImmutableArray<IParameterSymbol>.Empty;
    }
 
    private static bool IsBaseTypeOf(ITypeSymbol type, ITypeSymbol potentialBaseType)
@@ -229,7 +265,9 @@ public class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorBase(25_
       return false;
    }
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
    private static IReadOnlyList<RegularUnionSwitchMapOverload> GetSwitchMapOverloads(INamedTypeSymbol type)
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
    {
       var allAttributes = type.GetAttributes();
 

@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class AdHocUnionCodeGeneratorFactory : ICodeGeneratorFactory<AdHocUnionSourceGenState>
+public sealed class AdHocUnionCodeGeneratorFactory : ICodeGeneratorFactory<AdHocUnionSourceGenState>
 {
    public static readonly ICodeGeneratorFactory<AdHocUnionSourceGenState> Instance = new AdHocUnionCodeGeneratorFactory();
 

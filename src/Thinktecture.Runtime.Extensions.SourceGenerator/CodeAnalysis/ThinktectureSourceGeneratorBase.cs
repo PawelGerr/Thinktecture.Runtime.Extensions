@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Thinktecture.Logging;
@@ -27,15 +28,15 @@ public abstract class ThinktectureSourceGeneratorBase
       Logger = new SelfLogErrorLogger(GetType().Name);
    }
 
-   protected IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
+   protected static IncrementalValueProvider<GeneratorOptions> GetGeneratorOptions(IncrementalGeneratorInitializationContext context)
    {
       return context.AnalyzerConfigOptionsProvider.Select((options, _) =>
       {
          var counterEnabled = options.GlobalOptions.TryGetValue(Constants.Configuration.COUNTER, out var counterEnabledValue)
                               && IsFeatureEnabled(counterEnabledValue);
 
-         var generateJetbrainsAnnotations = !options.GlobalOptions.TryGetValue(Constants.Configuration.GENERATE_JETBRAINS_ANNOTATIONS, out var disabledValue)
-                                            || IsFeatureEnabled(disabledValue);
+         var generateJetbrainsAnnotations = !options.GlobalOptions.TryGetValue(Constants.Configuration.GENERATE_JETBRAINS_ANNOTATIONS, out var enabledValue)
+                                            || !IsFeatureDisabled(enabledValue);
 
          var loggingOptions = GetLoggingOptions(options);
 
@@ -93,19 +94,28 @@ public abstract class ThinktectureSourceGeneratorBase
 
       if (!options.GlobalOptions.TryGetValue(Constants.Configuration.LOG_INITIAL_BUFFER_SIZE, out var initialBufferSizeValue)
           || !Int32.TryParse(initialBufferSizeValue, out var initialBufferSize)
-          || initialBufferSize < 10)
+          || initialBufferSize < 100)
       {
-         initialBufferSize = 1000;
+         initialBufferSize = 100;
       }
 
       return new LoggingOptions(logFilePath, isLogFileUnique, logLevel, initialBufferSize);
    }
 
-   protected static bool IsFeatureEnabled(string booleanValue)
+   private static bool IsFeatureEnabled(string booleanValue)
    {
       return StringComparer.OrdinalIgnoreCase.Equals("enable", booleanValue)
              || StringComparer.OrdinalIgnoreCase.Equals("enabled", booleanValue)
-             || StringComparer.OrdinalIgnoreCase.Equals("true", booleanValue);
+             || StringComparer.OrdinalIgnoreCase.Equals("true", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("1", booleanValue);
+   }
+
+   private static bool IsFeatureDisabled(string booleanValue)
+   {
+      return StringComparer.OrdinalIgnoreCase.Equals("disable", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("disabled", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("false", booleanValue)
+             || StringComparer.OrdinalIgnoreCase.Equals("0", booleanValue);
    }
 
    protected void ReportError(
@@ -390,7 +400,7 @@ public abstract class ThinktectureSourceGeneratorBase
          if (options.CounterEnabled)
          {
             var counter = Interlocked.Increment(ref _counter);
-            stringBuilder.Append("// COUNTER: ").AppendLine(counter.ToString().PadLeft(8, ' ')).AppendLine();
+            stringBuilder.Append("// COUNTER: ").AppendLine(counter.ToString(CultureInfo.InvariantCulture).PadLeft(8, ' ')).AppendLine();
             sbLengthBeforeActualContent = stringBuilder.Length;
          }
 
@@ -408,9 +418,6 @@ public abstract class ThinktectureSourceGeneratorBase
          var generatedCode = stringBuilder.ToString();
 
          context.EmitFile(ns, containingTypes, name, numberOfGenerics, generatedCode, generator.FileNameSuffix);
-
-         if (Logger.IsEnabled(LogLevel.Information))
-            Logger.Log(LogLevel.Information, $"Code generator '{generator.CodeGeneratorName}' emitted code for '{ns}.{name}'.");
       }
       catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
       {

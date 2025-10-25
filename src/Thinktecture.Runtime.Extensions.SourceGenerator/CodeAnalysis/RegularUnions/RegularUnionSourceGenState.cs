@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionSourceGenState
+public sealed class RegularUnionSourceGenState
    : IEquatable<RegularUnionSourceGenState>,
      ITypeFullyQualified,
      ITypeKindInformation,
@@ -42,6 +42,11 @@ public class RegularUnionSourceGenState
       IsRecord = type.IsRecord;
       TypeMembers = typeMembers;
       Settings = settings;
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return Equals(obj as RegularUnionSourceGenState);
    }
 
    public bool Equals(RegularUnionSourceGenState? other)

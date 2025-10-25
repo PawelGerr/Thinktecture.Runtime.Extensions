@@ -55,7 +55,7 @@ public sealed class SmartEnumDerivedTypes : INamespaceAndName, ITypeFullyQualifi
          hashCode = (hashCode * 397) ^ Name.GetHashCode();
          hashCode = (hashCode * 397) ^ TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ DerivedTypesFullyQualified.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ DerivedTypesFullyQualified.ComputeHashCode(StringComparer.Ordinal);
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
 
          return hashCode;

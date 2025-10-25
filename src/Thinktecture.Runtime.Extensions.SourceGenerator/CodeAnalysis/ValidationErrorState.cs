@@ -31,4 +31,14 @@ public readonly struct ValidationErrorState
    {
       return TypeFullyQualified;
    }
+
+   public static bool operator ==(ValidationErrorState left, ValidationErrorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ValidationErrorState left, ValidationErrorState right)
+   {
+      return !(left == right);
+   }
 }

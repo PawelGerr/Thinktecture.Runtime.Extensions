@@ -197,86 +197,245 @@ public static class StringBuilderExtensions
          return sb;
       }
 
-      switch (name.Length)
+      if (name.Length == 0)
+         return sb;
+
+      var index = 0;
+
+      // Handle leading underscores:
+      // - If the name starts with '_' and is followed by a letter, drop all leading underscores.
+      // - Otherwise, keep underscores (e.g., "_", "__", or "__1").
+      if (name[0] == '_')
       {
-         case 0:
-            break;
-         case 1:
-            sb.Append(Char.ToLowerInvariant(name[0]));
-            break;
-         default:
-            sb.ToCamelCase(name, false);
-            break;
+         var j = 0;
+
+         while (j < name.Length && name[j] == '_')
+         {
+            j++;
+         }
+
+         if (j < name.Length && Char.IsLetter(name[j]))
+         {
+            // Drop underscores if immediately followed by a letter
+            index = j;
+         }
+         else
+         {
+            // Keep underscores as-is and continue processing after them
+            sb.Append(name, 0, j);
+            index = j;
+         }
       }
+
+      // Keep other non-letter prefixes (e.g., digits, '$') verbatim.
+      while (index < name.Length && !Char.IsLetter(name[index]))
+      {
+         sb.Append(name[index]);
+         index++;
+      }
+
+      // No letters found, we're done.
+      if (index >= name.Length)
+         return sb;
+
+      // If the first letter is already lowercase, append the remainder as-is.
+      if (Char.IsLower(name[index]))
+      {
+         sb.Append(name, index, name.Length - index);
+         return sb;
+      }
+
+      // Lowercase the initial consecutive run of uppercase letters (acronym handling).
+      var runEnd = index;
+
+      while (runEnd < name.Length && Char.IsUpper(name[runEnd]))
+      {
+         runEnd++;
+      }
+
+      for (var i = index; i < runEnd; i++)
+      {
+         sb.Append(Char.ToLowerInvariant(name[i]));
+      }
+
+      if (runEnd < name.Length)
+         sb.Append(name, runEnd, name.Length - runEnd);
 
       return sb;
    }
 
-   private static void ToCamelCase(
+   public static StringBuilder AppendBackingFieldName(
       this StringBuilder sb,
-      string name,
-      bool leadingUnderscore)
+      BackingFieldName fieldName)
    {
-      var startsWithUnderscore = name[0] == '_';
+      var name = fieldName.Name;
+      var start = sb.Length;
 
-      for (var i = 0; i < name.Length; i++)
+      if (string.IsNullOrEmpty(name))
       {
-         var charValue = name[i];
-
-         if (Char.IsDigit(charValue))
+         // nothing to append
+      }
+      else if (name.Length == 1)
+      {
+         if (name[0] == '_')
          {
             sb.Append(name);
+         }
+         else
+         {
+            sb.Append('_').Append(char.ToLowerInvariant(name[0]));
+         }
+      }
+      else
+      {
+         // Determine leading underscores to preserve (do not add more),
+         // but ensure at least one underscore if none exist.
+         var underscoreCount = 0;
+
+         while (underscoreCount < name.Length && name[underscoreCount] == '_')
+         {
+            underscoreCount++;
+         }
+
+         if (underscoreCount > 0)
+         {
+            sb.Append(name, 0, underscoreCount);
+         }
+         else
+         {
+            sb.Append('_');
+         }
+
+         var remainderIndex = underscoreCount;
+
+         if (remainderIndex >= name.Length)
+         {
+            // only underscores -> prefix already appended
+         }
+         else
+         {
+            // If the remainder starts with non-letter (e.g., digit), keep non-letter prefix,
+            // then camelize the first letter segment after that.
+            if (!char.IsLetter(name[remainderIndex]))
+            {
+               // Find first letter
+               var index = remainderIndex;
+
+               while (index < name.Length && !char.IsLetter(name[index]))
+               {
+                  index++;
+               }
+
+               if (index == name.Length)
+               {
+                  // No letters at all -> keep as-is
+                  sb.Append(name, remainderIndex, name.Length - remainderIndex);
+               }
+               else
+               {
+                  // Append non-letter prefix as-is
+                  sb.Append(name, remainderIndex, index - remainderIndex);
+                  // Camelize the letter part
+                  AppendCamelize(sb, name, index, name.Length - index);
+               }
+            }
+            else
+            {
+               // Starts with a letter -> camelize the entire remainder
+               AppendCamelize(sb, name, remainderIndex, name.Length - remainderIndex);
+            }
+         }
+      }
+
+      // Special case: if the rendered backing field name equals the PropertyName exactly,
+      // then prefix the result with an additional underscore to avoid collision.
+      var propName = fieldName.PropertyName;
+      var writtenLength = sb.Length - start;
+
+      if (propName.Length == writtenLength)
+      {
+         var equals = true;
+
+         for (var i = 0; i < writtenLength; i++)
+         {
+            if (sb[start + i] != propName[i])
+            {
+               equals = false;
+               break;
+            }
+         }
+
+         if (equals)
+         {
+            sb.Insert(start, "_");
+         }
+      }
+
+      return sb;
+
+      // Helper that camelizes a string segment starting at a letter, with acronym handling,
+      // and appends the result to the provided StringBuilder.
+      static void AppendCamelize(StringBuilder sb, string s, int startIndex, int length)
+      {
+         if (length <= 0)
+            return;
+
+         var character = s[startIndex];
+
+         // If first is not a letter, keep as-is
+         if (!char.IsLetter(character))
+         {
+            sb.Append(s, startIndex, length);
             return;
          }
 
-         if (Char.IsLower(charValue))
-            break;
-
-         if (!Char.IsLetter(charValue))
-            continue;
-
-         if (i == 0)
+         if (length == 1)
          {
-            if (leadingUnderscore)
-               sb.Append("_");
+            sb.Append(char.ToLowerInvariant(character));
+            return;
+         }
 
-            sb.Append(Char.ToLowerInvariant(charValue));
-            sb.Append(name.Substring(1));
+         // If second is lowercase -> PascalCase -> lower only first char
+         if (char.IsLower(s[startIndex + 1]))
+         {
+            sb.Append(char.ToLowerInvariant(character));
+            sb.Append(s, startIndex + 1, length - 1);
+            return;
+         }
+
+         // Compute length of initial uppercase run
+         var run = 1;
+         var end = startIndex + length;
+
+         var i = startIndex + 1;
+
+         while (i < end && char.IsUpper(s[i]))
+         {
+            run++;
+            i++;
+         }
+
+         if (run == length)
+         {
+            // Entire segment is uppercase -> lowercase all
+            for (var j = startIndex; j < end; j++)
+            {
+               sb.Append(char.ToLowerInvariant(s[j]));
+            }
 
             return;
          }
 
-         if (leadingUnderscore && !startsWithUnderscore)
-            sb.Append("_");
-
-         sb.Append(name.Substring(startsWithUnderscore ? 1 : 0, i))
-           .Append(Char.ToLowerInvariant(charValue));
-
-         if (i != name.Length - 1)
+         for (var j = 0; j < run; j++)
          {
-            sb.Append(name.Substring(i));
+            sb.Append(char.ToLowerInvariant(s[startIndex + j]));
          }
 
-         return;
+         if (run < length)
+         {
+            sb.Append(s, startIndex + run, length - run);
+         }
       }
-
-      if (leadingUnderscore)
-      {
-         if (!startsWithUnderscore)
-            sb.Append("_");
-
-         sb.Append(name);
-
-         return;
-      }
-
-      if (startsWithUnderscore && name.Length > 1)
-      {
-         sb.Append(name.Substring(1));
-         return;
-      }
-
-      sb.Append(name);
    }
 
    public static StringBuilder AppendCast(

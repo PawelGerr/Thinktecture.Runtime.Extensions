@@ -40,4 +40,14 @@ public readonly struct InterfaceCodeGeneratorState
          return hashCode;
       }
    }
+
+   public static bool operator ==(InterfaceCodeGeneratorState left, InterfaceCodeGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(InterfaceCodeGeneratorState left, InterfaceCodeGeneratorState right)
+   {
+      return !(left == right);
+   }
 }

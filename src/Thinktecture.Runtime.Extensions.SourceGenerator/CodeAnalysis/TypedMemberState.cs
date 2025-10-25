@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
+public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }

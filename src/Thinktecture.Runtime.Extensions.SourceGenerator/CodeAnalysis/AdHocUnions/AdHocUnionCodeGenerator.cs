@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class AdHocUnionCodeGenerator : CodeGeneratorBase
+public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "AdHocUnion-CodeGenerator";
    public override string FileNameSuffix => ".AdHocUnion";
@@ -82,8 +82,6 @@ namespace ").Append(_state.Namespace).Append(@"
                        }
                        .AsReadOnly()
       };
-
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(@").GetHashCode();
 
       private readonly int _valueIndex;
 "); // index is 1-based
@@ -292,7 +290,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -307,7 +305,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.IsReferenceType)
             _sb.Append(" ?? 0");
 
-         _sb.Append("),");
+         _sb.Append(",");
       }
 
       _sb.Append(@"
@@ -951,7 +949,7 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append(memberType.BackingFieldName).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").AppendBackingFieldName(memberType.BackingFieldName).Append(";");
          }
       }
 
@@ -1109,7 +1107,7 @@ file static class Extensions
       }
       else
       {
-         sb.Append(qualifier).Append(".").Append(memberType.BackingFieldName);
+         sb.Append(qualifier).Append(".").AppendBackingFieldName(memberType.BackingFieldName);
       }
 
       return sb;
@@ -1131,6 +1129,8 @@ file static class Extensions
       bool useSharedObjectBackingField,
       AdHocUnionMemberTypeState memberType)
    {
-      return sb.Append(useSharedObjectBackingField ? "_obj" : memberType.BackingFieldName);
+      return useSharedObjectBackingField
+                ? sb.Append("_obj")
+                : sb.AppendBackingFieldName(memberType.BackingFieldName);
    }
 }

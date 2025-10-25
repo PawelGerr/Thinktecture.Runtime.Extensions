@@ -27,8 +27,6 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c> if validation is successful.
       /// </summary>
@@ -259,7 +257,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          return global::System.HashCode.Combine(
-            _typeHashCode,
             this.Property,
             this.NullableProperty,
             this.StructProperty,

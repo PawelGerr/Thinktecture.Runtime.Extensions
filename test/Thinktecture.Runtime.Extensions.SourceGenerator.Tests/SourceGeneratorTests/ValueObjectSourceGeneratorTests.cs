@@ -119,7 +119,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Keyed value objects must not be generic'"]);
       output.Should().BeNull();
    }
 

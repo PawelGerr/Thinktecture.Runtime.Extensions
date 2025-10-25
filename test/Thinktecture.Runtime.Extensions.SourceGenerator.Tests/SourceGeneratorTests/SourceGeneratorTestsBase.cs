@@ -96,7 +96,16 @@ public abstract class SourceGeneratorTestsBase
       params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
-      return GetGeneratedOutput<T>(source, null, furtherAssemblies);
+      return GetGeneratedOutput<T>(source, furtherAssemblies, []);
+   }
+
+   protected string GetGeneratedOutput<T>(
+      string source,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutput<T>(source, null, furtherAssemblies, expectedCompilerErrors);
    }
 
    protected string GetGeneratedOutput<T>(
@@ -105,7 +114,17 @@ public abstract class SourceGeneratorTestsBase
       params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
-      var outputsByFilePath = GetGeneratedOutputs<T>(source, furtherAssemblies);
+      return GetGeneratedOutput<T>(source, generatedFileNameFragment, furtherAssemblies, []);
+   }
+
+   protected string GetGeneratedOutput<T>(
+      string source,
+      string generatedFileNameFragment,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
+      where T : IIncrementalGenerator, new()
+   {
+      var outputsByFilePath = GetGeneratedOutputs<T>(source, furtherAssemblies, expectedCompilerErrors);
 
       var output = outputsByFilePath.SingleOrDefault(t => generatedFileNameFragment is null || t.Key.Contains(generatedFileNameFragment)).Value;
 
@@ -114,7 +133,18 @@ public abstract class SourceGeneratorTestsBase
       return output;
    }
 
-   protected static Dictionary<string, string> GetGeneratedOutputs<T>(string source, params Assembly[] furtherAssemblies)
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutputs<T>(source, furtherAssemblies, []);
+   }
+
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
       where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
@@ -141,7 +171,7 @@ public abstract class SourceGeneratorTestsBase
       CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
       var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
-      errors.Should().BeEmpty();
+      errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
 
       return outputCompilation.SyntaxTrees
                               .Skip(1)

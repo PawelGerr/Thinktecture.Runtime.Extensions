@@ -51,4 +51,14 @@ public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSe
          return hashCode;
       }
    }
+
+   public static bool operator ==(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return !(left == right);
+   }
 }

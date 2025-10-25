@@ -41,6 +41,24 @@ public class RemoveAll
            .Should().BeEquivalentTo([1, 2, 3]);
    }
 
+   [Fact]
+   public void Should_handle_single_item_array_removal()
+   {
+      var array = ImmutableArray.CreateRange([1]);
+
+      array.RemoveAll(static (_, _) => true, 0)
+           .IsEmpty.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_handle_single_item_array_no_removal()
+   {
+      var array = ImmutableArray.CreateRange([1]);
+
+      array.RemoveAll(static (_, _) => false, 0)
+           .Should().BeEquivalentTo([1]);
+   }
+
    [Theory]
    [InlineData(1)]
    [InlineData(2)]

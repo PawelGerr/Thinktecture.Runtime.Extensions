@@ -8,11 +8,11 @@ public static class TypeParameterExtensions
 
       if (typeParam.HasReferenceTypeConstraint)
       {
-         (constraints ??= []).Add("class");
+         (constraints = []).Add("class");
       }
       else if (typeParam.HasValueTypeConstraint)
       {
-         (constraints ??= []).Add("struct");
+         (constraints = []).Add("struct");
       }
 
       foreach (var constraintType in typeParam.ConstraintTypes)

@@ -35,7 +35,7 @@ public sealed class GenericTypeParameterState : IEquatable<GenericTypeParameterS
       unchecked
       {
          var hashCode = Name.GetHashCode();
-         hashCode = (hashCode * 397) ^ Constraints.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ Constraints.ComputeHashCode(StringComparer.Ordinal);
          return hashCode;
       }
    }

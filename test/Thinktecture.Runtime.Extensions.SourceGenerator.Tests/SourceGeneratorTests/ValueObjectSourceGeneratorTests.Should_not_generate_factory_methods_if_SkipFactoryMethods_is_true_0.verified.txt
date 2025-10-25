@@ -23,8 +23,6 @@ namespace Thinktecture.Tests
             TryGetFromKey = null
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// The identifier of this object.
       /// </summary>
@@ -98,7 +96,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, this._value);
+         return this._value.GetHashCode();
       }
 
       /// <inheritdoc />

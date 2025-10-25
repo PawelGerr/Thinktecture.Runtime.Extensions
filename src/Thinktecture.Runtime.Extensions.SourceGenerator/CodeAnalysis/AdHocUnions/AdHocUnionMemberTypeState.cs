@@ -18,7 +18,7 @@ public sealed class AdHocUnionMemberTypeState
    public int TypeDuplicateCounter { get; }
 
    public ArgumentName ArgumentName { get; }
-   public string BackingFieldName { get; }
+   public BackingFieldName BackingFieldName { get; }
    public AdHocUnionMemberTypeSetting Setting { get; }
 
    public bool IsRecord => false;
@@ -34,8 +34,8 @@ public sealed class AdHocUnionMemberTypeState
       Name = name;
       ArgumentName = ArgumentName.Create(Name);
 
-      var backingFieldName = (typeDuplicateCounter == 0 ? Name : defaultName).MakeBackingFieldName();
-      BackingFieldName = backingFieldName == Name ? $"_{backingFieldName}" : backingFieldName;
+      var backingFieldName = typeDuplicateCounter == 0 ? Name : defaultName;
+      BackingFieldName = BackingFieldName.Create(backingFieldName, Name);
 
       TypeDuplicateCounter = typeDuplicateCounter;
       TypeFullyQualified = typeState.TypeFullyQualified;

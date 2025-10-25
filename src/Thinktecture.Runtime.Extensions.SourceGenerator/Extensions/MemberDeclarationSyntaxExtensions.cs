@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Thinktecture;
 
-internal static class MemberDeclarationSyntaxExtensions
+public static class MemberDeclarationSyntaxExtensions
 {
    public static bool IsPartial(this MemberDeclarationSyntax tds)
    {

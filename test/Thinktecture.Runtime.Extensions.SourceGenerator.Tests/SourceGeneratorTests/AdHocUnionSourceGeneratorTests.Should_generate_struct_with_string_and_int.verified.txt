@@ -22,8 +22,6 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly string? _string;
@@ -323,8 +321,8 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
+            1 => this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
+            2 => this._int32.GetHashCode(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

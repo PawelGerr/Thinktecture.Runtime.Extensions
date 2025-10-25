@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class Helper
+public static class Helper
 {
    public static string GetDefaultValueObjectKeyMemberName(AccessModifier accessModifier, MemberKind memberKind)
    {

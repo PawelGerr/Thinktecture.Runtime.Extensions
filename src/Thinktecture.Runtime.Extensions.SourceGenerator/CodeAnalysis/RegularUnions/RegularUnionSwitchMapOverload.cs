@@ -27,6 +27,6 @@ public sealed class RegularUnionSwitchMapOverload : IEquatable<RegularUnionSwitc
 
    public override int GetHashCode()
    {
-      return StopAtTypeNames.ComputeHashCode();
+      return StopAtTypeNames.ComputeHashCode(StringComparer.Ordinal);
    }
 }

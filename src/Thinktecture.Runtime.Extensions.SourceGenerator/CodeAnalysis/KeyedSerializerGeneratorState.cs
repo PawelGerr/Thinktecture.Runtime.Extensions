@@ -51,4 +51,14 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
          return hashCode;
       }
    }
+
+   public static bool operator ==(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return !(left == right);
+   }
 }

@@ -668,11 +668,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
    private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
       Location locationOfFirstDeclaration,
       TypedMemberStateFactory factory)
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
    {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {

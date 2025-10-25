@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Thinktecture.CodeAnalysis.Annotations;
 
 [Generator]
-public class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBase(1), IIncrementalGenerator
+public sealed class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBase(1), IIncrementalGenerator
 {
    private const string _INSTANT_HANDLE_ATTRIBUTE = "InstantHandleAttribute";
 
@@ -63,7 +63,7 @@ public class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBase(1), 
       }
    }
 
-   private void AddAnnotations(SourceProductionContext ctx)
+   private static void AddAnnotations(SourceProductionContext ctx)
    {
       ctx.AddSource("Thinktecture.Annotations.g.cs",
                     """
