@@ -42,6 +42,7 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 * [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/en/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
 * [Pattern Matching with Discriminated Unions in .NET](https://www.thinktecture.com/en/net/pattern-matching-with-discriminated-unions-in-net/)
 * [Discriminated Unions in .NET: Modeling States and Variants](https://www.thinktecture.com/en/net/discriminated-unions-in-net-modeling-states-and-variants/)
+* [Discriminated Unions in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/discriminated-unions-in-net-integration-with-frameworks-and-libraries/)
 
 # Requirements
 
