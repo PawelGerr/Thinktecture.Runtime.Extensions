@@ -11,25 +11,44 @@ public static class ContainingTypesExtensions
       bool skipRootContainingType,
       StringBuilder sb)
    {
-      var sbLength = sb.Length;
+      var originalLen = sb.Length;
 
       for (var i = skipRootContainingType ? 1 : 0; i < containingTypes.Count; i++)
-      {
-         var containingType = containingTypes[i];
-         sb.Append(containingType.Name);
-      }
+         sb.Append(containingTypes[i].Name);
 
       sb.Append(typeMemberName);
 
-      var firstChar = sb[sbLength];
+      // Nothing appended -> return empty string.
+      if (sb.Length == originalLen)
+         return string.Empty;
 
-      sb[sbLength] = firstChar != '_' || (sb.Length > sbLength && Char.IsDigit(sb[sbLength + 1]))
-                        ? Char.ToLowerInvariant(firstChar)
-                        : Char.ToLowerInvariant(sb[sbLength + 1]);
+      var len = sb.Length;
 
-      var argName = sb.ToString(sbLength, sb.Length - sbLength);
-      sb.Length = sbLength;
+      for (var i = originalLen; i < len; i++)
+      {
+         var ch = sb[i];
 
-      return argName;
+         if (!char.IsLetter(ch))
+            continue;
+
+         if (char.IsUpper(ch))
+         {
+            sb[i] = char.ToLowerInvariant(ch);
+
+            // Lowercase the rest of the initial consecutive uppercase run.
+            for (var j = i + 1; j < len && char.IsUpper(sb[j]); j++)
+            {
+               sb[j] = char.ToLowerInvariant(sb[j]);
+            }
+         }
+
+         // Either we handled the uppercase run or the first letter was already lowercase.
+         break;
+      }
+
+      var result = sb.ToString(originalLen, len - originalLen);
+      sb.Length = originalLen;
+
+      return result;
    }
 }

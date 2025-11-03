@@ -25,15 +25,15 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// <summary>
    /// Executes an action depending on the current type.
    /// </summary>
-   /// <param name="_1Test">The action to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
+   /// <param name="_1test">The action to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
-      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1test)
    {
       switch (this)
       {
          case global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test value:
-            @_1Test(value);
+            @_1test(value);
             return;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
@@ -46,11 +46,11 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// Executes an action depending on the current type.
    /// </summary>
    /// <param name="state">State to be passed to the callbacks.</param>
-   /// <param name="_1Test">The action to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
+   /// <param name="_1test">The action to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
-      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test> @_1test)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -58,7 +58,7 @@ abstract partial class _1TestUnionWithSpecialChars :
       switch (this)
       {
          case global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test value:
-            @_1Test(@state, value);
+            @_1test(@state, value);
             return;
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
@@ -70,10 +70,10 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// <summary>
    /// Executes a function depending on the current type.
    /// </summary>
-   /// <param name="_1Test">The function to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
+   /// <param name="_1test">The function to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
-      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1test)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -81,7 +81,7 @@ abstract partial class _1TestUnionWithSpecialChars :
       switch (this)
       {
          case global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test value:
-            return @_1Test(value);
+            return @_1test(value);
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -93,11 +93,11 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// Executes a function depending on the current type.
    /// </summary>
    /// <param name="state">State to be passed to the callbacks.</param>
-   /// <param name="_1Test">The function to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
+   /// <param name="_1test">The function to execute if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
-      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1Test)
+      [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test, TResult> @_1test)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 		where TState : allows ref struct
@@ -106,7 +106,7 @@ abstract partial class _1TestUnionWithSpecialChars :
       switch (this)
       {
          case global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test value:
-            return @_1Test(@state, value);
+            return @_1test(@state, value);
          default:
             throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
       }
@@ -117,10 +117,10 @@ abstract partial class _1TestUnionWithSpecialChars :
    /// <summary>
    /// Maps current instance to an instance of type <typeparamref name="TResult"/>.
    /// </summary>
-   /// <param name="_1Test">The instance to return if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
+   /// <param name="_1test">The instance to return if the current type is <see cref="global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test"/>.</param>
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
-      TResult @_1Test)
+      TResult @_1test)
 #if NET9_0_OR_GREATER
 		where TResult : allows ref struct
 #endif
@@ -128,7 +128,7 @@ abstract partial class _1TestUnionWithSpecialChars :
       switch (this)
       {
          case global::Thinktecture.Tests._1TestUnionWithSpecialChars._1Test value:
-               return @_1Test;
+               return @_1test;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
          }
