@@ -81,7 +81,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    {
       var metadata = MetadataLookup.FindMetadataForConversion(
          type,
-         f => f.UseForSerialization.HasFlag(SerializationFrameworks.Json),
+         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.Json),
          _ => false);
 
       return metadata is null ? type : type.NormalizeStructType(metadata.Value.KeyType);

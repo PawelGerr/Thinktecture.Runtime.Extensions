@@ -16,10 +16,10 @@ public abstract class MessagePackKeyedSerializerCodeGeneratorFactoryBase : IKeye
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
       if (state.AttributeInfo.HasMessagePackFormatterAttribute
-          || !state.SerializationFrameworks.HasFlag(SerializationFrameworks.MessagePack))
+          || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.MessagePack))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.MessagePack));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

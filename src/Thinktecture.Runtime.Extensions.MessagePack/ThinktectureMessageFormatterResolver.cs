@@ -73,7 +73,7 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
       {
          var metadata = MetadataLookup.FindMetadataForConversion(
             typeof(T),
-            f => f.UseForSerialization.HasFlag(SerializationFrameworks.MessagePack),
+            f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack),
             _ => true);
 
          if (metadata is null)

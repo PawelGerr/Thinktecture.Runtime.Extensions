@@ -167,10 +167,10 @@ public sealed class InstanceMemberInfo : IMemberState, IEquatable<InstanceMember
    public Location? GetIdentifierLocation(CancellationToken cancellationToken)
    {
       if (_symbol.Field is not null)
-         return _symbol.Field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+         return _symbol.Field.GetFieldLocation(cancellationToken);
 
       if (_symbol.Property is not null)
-         return _symbol.Property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+         return _symbol.Property.GetPropertyLocation(PropertyDeclarationSyntaxKind.All, cancellationToken);
 
       return null;
    }
