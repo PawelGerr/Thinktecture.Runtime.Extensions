@@ -20,7 +20,7 @@ public sealed class KeyedMessagePackCodeGenerator : CodeGeneratorBase
    {
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => f.UseForSerialization.Has(SerializationFrameworks.MessagePack));
+                                .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"

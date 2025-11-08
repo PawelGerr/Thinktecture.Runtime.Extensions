@@ -358,7 +358,7 @@ public static class TypeSymbolExtensions
       return enumType.GetMembers()
                      .SelectWhere(static (ISymbol m, ITypeSymbol type, [MaybeNullWhen(false)] out IFieldSymbol result) =>
                      {
-                        if (!m.IsStatic || m is not IFieldSymbol field || field.IsPropertyBackingField())
+                        if (!m.IsStatic || m is not IFieldSymbol field || field.IsImplicitlyDeclared) // skip backing fields
                         {
                            result = null;
                            return false;
@@ -487,7 +487,7 @@ public static class TypeSymbolExtensions
          (baseType, baseType.GetGenericTypeDefinition()),
          ref derivedTypes);
 
-      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>) [];
+      return derivedTypes ?? (IReadOnlyList<DerivedTypeInfo>)[];
    }
 
    private static void FindDerivedInnerTypes(
@@ -586,7 +586,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.FieldMustBeReadOnly;
-            location = field.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+            location = field.GetFieldLocation(cancellationToken);
          }
          else
          {
@@ -608,7 +608,7 @@ public static class TypeSymbolExtensions
          if (locationOfDerivedType is null)
          {
             descriptor = DiagnosticsDescriptors.PropertyMustBeReadOnly;
-            location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+            location = property.GetPropertyLocation(PropertyDeclarationSyntaxKind.All, cancellationToken);
          }
          else
          {
@@ -625,7 +625,7 @@ public static class TypeSymbolExtensions
             return;
 
          var descriptor = DiagnosticsDescriptors.InitAccessorMustBePrivate;
-         var location = property.GetIdentifier(cancellationToken)?.GetLocation() ?? Location.None;
+         var location = property.GetPropertyLocation(PropertyDeclarationSyntaxKind.All, cancellationToken);
 
          reportDiagnostic.Value.ReportDiagnostic(Diagnostic.Create(descriptor, location, effectiveSeverity: descriptor.DefaultSeverity, null, null, messageArgs: [property.Name, type.Name]));
       }
@@ -766,7 +766,7 @@ public static class TypeSymbolExtensions
                              : methodSymbol.ReturnType.ToFullyQualifiedDisplayString();
 
          var parameters = methodSymbol.Parameters.Length == 0
-                             ? (IReadOnlyList<ParameterState>) []
+                             ? (IReadOnlyList<ParameterState>)[]
                              : methodSymbol.Parameters
                                            .Select(p => new ParameterState(
                                                       p.Name,
@@ -786,7 +786,7 @@ public static class TypeSymbolExtensions
          (methodStates ??= []).Add(methodState);
       }
 
-      return methodStates ?? (IReadOnlyList<DelegateMethodState>) [];
+      return methodStates ?? (IReadOnlyList<DelegateMethodState>)[];
    }
 
    public static bool HasRequiredMembers(this INamedTypeSymbol type)

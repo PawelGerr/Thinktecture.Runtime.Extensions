@@ -17,10 +17,10 @@ public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase : IKeyedSerial
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
       if (state.AttributeInfo.HasJsonConverterAttribute
-          || !state.SerializationFrameworks.HasFlag(SerializationFrameworks.SystemTextJson))
+          || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.SystemTextJson))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.Has(SerializationFrameworks.SystemTextJson));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

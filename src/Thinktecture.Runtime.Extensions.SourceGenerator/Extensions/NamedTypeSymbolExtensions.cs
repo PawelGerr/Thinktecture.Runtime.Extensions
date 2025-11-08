@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -115,5 +116,37 @@ public static class NamedTypeSymbolExtensions
       }
 
       return false;
+   }
+
+   public static Location GetTypeIdentifierLocation(this INamedTypeSymbol type, CancellationToken cancellationToken)
+   {
+      Location? inSourceLocation = null;
+      Location? fallbackLocation = null;
+
+      for (var i = 0; i < type.DeclaringSyntaxReferences.Length; i++)
+      {
+         var node = type.DeclaringSyntaxReferences[i].GetSyntax(cancellationToken);
+
+         if (node is TypeDeclarationSyntax tds)
+         {
+            if (tds.SyntaxTree.IsGeneratedTree(cancellationToken))
+               continue;
+
+            return tds.Identifier.GetLocation();
+         }
+
+         var location = node.GetLocation();
+
+         if (location.IsInSource)
+         {
+            inSourceLocation ??= location;
+         }
+         else
+         {
+            fallbackLocation ??= location;
+         }
+      }
+
+      return inSourceLocation ?? fallbackLocation ?? Location.None;
    }
 }
