@@ -4,8 +4,8 @@ namespace Thinktecture;
 
 public static class SerializationFrameworksExtensions
 {
-   public static bool Has(this SerializationFrameworks value, SerializationFrameworks flag)
+   public static bool HasSerializationFramework(this SerializationFrameworks value, SerializationFrameworks serializationFrameworkToCheckFor)
    {
-      return (value & flag) == flag;
+      return (value & serializationFrameworkToCheckFor) == serializationFrameworkToCheckFor;
    }
 }

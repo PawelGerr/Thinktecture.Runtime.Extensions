@@ -107,7 +107,7 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
    {
       return MetadataLookup.FindMetadataForConversion(
          objectType,
-         f => f.UseForSerialization.HasFlag(SerializationFrameworks.NewtonsoftJson),
+         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson),
          _ => true);
    }
 }

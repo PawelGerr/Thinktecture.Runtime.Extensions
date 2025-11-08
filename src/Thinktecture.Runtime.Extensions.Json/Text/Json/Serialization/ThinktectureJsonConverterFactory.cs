@@ -174,7 +174,7 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
    {
       return MetadataLookup.FindMetadataForConversion(
          typeToConvert,
-         f => f.UseForSerialization.HasFlag(SerializationFrameworks.SystemTextJson),
+         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson),
          _ => true);
    }
 }
