@@ -80,6 +80,11 @@ public static class AttributeDataExtensions
    {
       return GetBooleanParameterValue(attributeData, "SkipIFormattable");
    }
+   
+   public static bool? FindSkipEqualityComparison(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, "SkipEqualityComparison");
+   }
 
    public static OperatorsGeneration FindAdditionOperators(this AttributeData attributeData)
    {

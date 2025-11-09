@@ -65,6 +65,27 @@ public class TTRESG049_ComplexValueObjectWithStringMembersNeedsDefaultEqualityCo
 
       await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
    }
+   
+   [Fact]
+   public async Task Should_not_trigger_when_SkipEqualityComparison_set()
+   {
+      var code = """
+
+         using System;
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ComplexValueObject(SkipEqualityComparison = true)]
+            public partial class {|#0:TestValueObject|}
+         	{
+               public string Property { get; }
+            }
+         }
+         """;
+
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+   }
 
    [Fact]
    public async Task Should_not_trigger_on_string_members_with_comparer()

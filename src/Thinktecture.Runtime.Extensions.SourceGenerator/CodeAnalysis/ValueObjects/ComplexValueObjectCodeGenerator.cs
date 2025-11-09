@@ -52,8 +52,16 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
-      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(@", bool>,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" :");
+
+      if (!_state.Settings.SkipEqualityComparison)
+      {
+          _sb.Append(@"
+      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
+      global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(", bool>,");
+      }
+
+      _sb.Append(@"
       global::Thinktecture.Internal.IMetadataOwner");
 
       if (_state.DisallowsDefaultValue)
@@ -105,9 +113,13 @@ namespace ").Append(_state.Namespace).Append(@"
       cancellationToken.ThrowIfCancellationRequested();
 
       GenerateConstructor();
-      GenerateEqualityOperators();
-      GenerateEquals();
-      GenerateGetHashCode();
+
+      if (!_state.Settings.SkipEqualityComparison)
+      {
+          GenerateEqualityOperators();
+          GenerateEquals();
+          GenerateGetHashCode();
+      }
 
       if (!_state.Settings.SkipToString)
          GenerateToString();

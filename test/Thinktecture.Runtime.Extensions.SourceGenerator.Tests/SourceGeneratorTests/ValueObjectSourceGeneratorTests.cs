@@ -227,6 +227,30 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_not_generate_equals_method_if_SkipEqualityComparison_is_true()
+   {
+       var source = """
+
+          using System;
+          using Thinktecture;
+
+          #nullable enable
+
+          namespace Thinktecture.Tests
+          {
+            [ComplexValueObject(SkipEqualityComparison = true)]
+            public partial struct TestValueObject
+            {
+            }
+          }
+
+          """;
+       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+       await VerifyAsync(output);
+   }
+
+   [Fact]
    public async Task Should_generate_complex_struct_without_members()
    {
       var source = """

@@ -73,4 +73,24 @@ public class TTRESG048_StringBasedValueObjectNeedsEqualityComparer
 
       await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly]);
    }
+
+   [Fact]
+   public async Task Should_not_trigger_on_string_based_value_object_with_SkipEqualityComparison_set()
+   {
+      var code = """
+
+         using System;
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ValueObject<string>(SkipEqualityComparison = true)]
+         	public partial class {|#0:TestValueObject|}
+         	{
+            }
+         }
+         """;
+
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly]);
+   }
 }

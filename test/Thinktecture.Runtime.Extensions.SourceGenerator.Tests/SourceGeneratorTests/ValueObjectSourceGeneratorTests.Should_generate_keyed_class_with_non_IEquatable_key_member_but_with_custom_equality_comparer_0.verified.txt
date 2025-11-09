@@ -5,7 +5,8 @@ namespace Thinktecture.Tests
 {
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.Foo, global::Thinktecture.ValidationError>))]
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+   sealed partial class TestValueObject :
+      global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::Thinktecture.IKeyedObject<global::Thinktecture.Tests.Foo>,
       global::Thinktecture.IConvertible<global::Thinktecture.Tests.Foo>,
       global::Thinktecture.Internal.IMetadataOwner,

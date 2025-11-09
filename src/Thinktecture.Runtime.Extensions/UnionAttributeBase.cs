@@ -60,6 +60,12 @@ public abstract class UnionAttributeBase : Attribute
    public bool UseSingleBackingField { get; set; }
 
    /// <summary>
+   /// Indication whether the generator should skip the implementation of <c>IEquatable{T}</c> and any comparison operators.
+   /// This includes the <c>Equals</c> and <c>GetHashCode</c> methods.
+   /// </summary>
+   public bool SkipEqualityComparison { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()

@@ -62,7 +62,15 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" : global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
+      
+      if (!_state.Settings.SkipEqualityComparison)
+      {
+          _sb.Append(@"
+      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">,");
+      }
+      
+      _sb.Append(@"
       global::Thinktecture.IKeyedObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
       global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
       global::Thinktecture.Internal.IMetadataOwner");
@@ -136,8 +144,12 @@ namespace ").Append(_state.Namespace).Append(@"
       cancellationToken.ThrowIfCancellationRequested();
 
       GenerateConstructor();
-      GenerateEquals();
-      GenerateGetHashCode();
+
+      if (!_state.Settings.SkipEqualityComparison)
+      {
+          GenerateEquals();
+          GenerateGetHashCode();
+      }
 
       if (!_state.Settings.SkipToString)
          GenerateToString();

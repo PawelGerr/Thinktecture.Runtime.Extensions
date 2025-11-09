@@ -58,7 +58,7 @@ namespace ").Append(_state.Namespace).Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
    ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
 
-      if (!_state.IsRefStruct)
+      if (!_state.IsRefStruct && !_state.Settings.SkipEqualityComparison)
       {
          _sb.Append(@"
       global::System.IEquatable<").AppendTypeFullyQualified(_state).Append(@">,
@@ -128,9 +128,13 @@ namespace ").Append(_state.Namespace).Append(@"
 
       GenerateConversionsFromValue();
       GenerateConversionsToValue();
-      GenerateEqualityOperators();
-      GenerateEquals();
-      GenerateGetHashCode();
+      
+      if (!_state.Settings.SkipEqualityComparison)
+      {
+          GenerateEqualityOperators();
+          GenerateEquals();
+          GenerateGetHashCode();
+      }
 
       if (!_state.Settings.SkipToString)
          GenerateToString();

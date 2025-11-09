@@ -2,7 +2,8 @@
 #nullable enable
 
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   sealed partial class TestValueObject : global::System.IEquatable<global::TestValueObject?>,
+   sealed partial class TestValueObject :
+      global::System.IEquatable<global::TestValueObject?>,
       global::System.Numerics.IEqualityOperators<global::TestValueObject, global::TestValueObject, bool>,
       global::Thinktecture.Internal.IMetadataOwner
    {

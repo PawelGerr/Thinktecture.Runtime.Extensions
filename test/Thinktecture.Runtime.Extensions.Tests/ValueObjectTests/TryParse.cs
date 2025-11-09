@@ -12,7 +12,7 @@ public class TryParse
       DecimalBasedClassValueObject.TryParse("1", null, out var item).Should().BeTrue();
       item.Should().Be(DecimalBasedClassValueObject.Create(1));
 
-      DecimalBasedClassValueObject.TryParse("1.0", null, out item).Should().BeTrue();
+      DecimalBasedClassValueObject.TryParse("1.0", CultureInfo.InvariantCulture, out item).Should().BeTrue();
       item.Should().Be(DecimalBasedClassValueObject.Create(1));
    }
 
