@@ -22,7 +22,7 @@ This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discr
 
 ### Core Components
 - **`src/Thinktecture.Runtime.Extensions`**: Core library with base interfaces, attributes, and runtime helpers
-  - Attributes: `SmartEnumAttribute<TKey>`, `SmartEnumAttribute`, `ValueObjectAttribute<TKey>`, `ComplexValueObjectAttribute`, `UnionAttribute<T1,T2,...>` (up to 5 type parameters), `UnionAttribute`, `ObjectFactoryAttribute<T>`
+  - Attributes: `SmartEnumAttribute<TKey>`, `SmartEnumAttribute`, `ValueObjectAttribute<TKey>`, `ComplexValueObjectAttribute`, `UnionAttribute<T1,T2,...>` (up to 5 type parameters), `AdHocUnionAttribute` (non-generic alternative to UnionAttribute), `UnionAttribute`, `ObjectFactoryAttribute<T>`
   - Additional attributes: `KeyMemberEqualityComparerAttribute`, `KeyMemberComparerAttribute`, `MemberEqualityComparerAttribute`, `IgnoreMemberAttribute`, `ValidationErrorAttribute`, `UseDelegateFromConstructorAttribute`, `UnionSwitchMapOverloadAttribute`
   - Key interfaces: `ISmartEnum<TKey>`, `IEnum`, `IKeyedObject<TKey>`, `IKeyedValueObject<TKey>`, `IComplexValueObject`, `IValidationError`, `IObjectFactory<T>`
   - Utility types: `ValidationError`, `ComparerAccessors`, collection helpers (EmptyDictionary, EmptyLookup, SingleItemReadOnlyDictionary, etc.)
@@ -53,7 +53,8 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
    - Supports arithmetic operators (`+`, `-`, `*`, `/`) when configured
    - Integrates with serializers (JSON, MessagePack, Newtonsoft.Json)
 
-3. **`AdHocUnionSourceGenerator`**: Generates code for ad-hoc unions annotated with `[Union<T1, T2, ...>]` (up to 5 types)
+3. **`AdHocUnionSourceGenerator`**: Generates code for ad-hoc unions annotated with `[Union<T1, T2, ...>]` or `[AdHocUnion(typeof(T1), typeof(T2), ...)]` (up to 5 types)
+   - Supports both generic and non-generic attribute syntaxes (identical functionality)
    - Creates implicit conversion operators for each union member type
    - Generates exhaustive `Switch`/`Map` methods for pattern matching
    - Provides type-safe value access with `IsT1`, `AsT1` properties and methods
@@ -147,16 +148,22 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 **Common settings**:
 - `SkipFactoryMethods`: Skip generation of `Create`, `TryCreate`, `Validate`
 - `SkipIParsable`, `SkipIComparable`, `SkipIFormattable`: Skip interface implementations
+- `SkipEqualityComparison`: Skip generation of equality members (`Equals`, `GetHashCode`, `==`, `!=`, `IEquatable<T>`) - also sets `ComparisonOperators` and `EqualityComparisonOperators` to `None`
 - Validation: Implement `ValidateFactoryArguments` (preferred) or `ValidateConstructorArguments`
 
 #### 3. Discriminated Unions
-**Ad-hoc Unions**: `[Union<T1, T2>]` through `[Union<T1, T2, T3, T4, T5>]`
+**Ad-hoc Unions**: `[Union<T1, T2>]` through `[Union<T1, T2, T3, T4, T5>]` OR `[AdHocUnion(typeof(T1), typeof(T2), ...)]`
 - Simple combination of 2-5 types without inheritance
+- Two syntaxes available:
+  - **Generic** (recommended): `[Union<string, int>]` - simpler syntax for most cases
+  - **Non-generic**: `[AdHocUnion(typeof(string), typeof(int))]` - use when generic attribute limitations are hit (e.g., nullable reference types in generic collections like `List<string?>`, or other C# generic attribute constraints)
+- Both syntaxes generate identical functionality and support the same customization options
 - Generates implicit conversion operators from each type to union (configurable via `ConversionFromValue`)
 - Type checking: `IsT1`, `IsT2`, etc. properties
 - Value access: `AsT1`, `AsT2`, etc. properties (throws if wrong type)
 - Configurable member names: `T1Name`, `T2Name`, etc.
 - Nullable reference types: `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, etc.
+- `SkipEqualityComparison`: Skip generation of equality members (`Equals`, `GetHashCode`, `==`, `!=`, `IEquatable<T>`) for ad-hoc unions only
 - Supports `Switch`/`Map` methods for exhaustive pattern matching
 
 **Regular (Inheritance-based) Unions**: `[Union]`

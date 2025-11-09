@@ -5,8 +5,6 @@ namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    sealed partial class TestUnion :
-      global::System.IEquatable<global::Thinktecture.Tests.TestUnion>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestUnion, global::Thinktecture.Tests.TestUnion, bool>,
       global::Thinktecture.IDisallowDefaultValue,
       global::Thinktecture.Internal.IMetadataOwner
    {
@@ -454,51 +452,6 @@ namespace Thinktecture.Tests
       public static explicit operator int?(global::Thinktecture.Tests.TestUnion obj)
       {
          return obj.AsNullableOfInt32;
-      }
-
-      /// <summary>
-      /// Compares two instances of <see cref="TestUnion"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
-      {
-         if (obj is null)
-            return other is null;
-
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares two instances of <see cref="TestUnion"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
-      {
-         return !(obj == other);
-      }
-
-      /// <inheritdoc />
-      public override bool Equals(object? other)
-      {
-         return other is global::Thinktecture.Tests.TestUnion obj && Equals(obj);
-      }
-
-      /// <inheritdoc />
-      public override int GetHashCode()
-      {
-         return this._valueIndex switch
-         {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((string?)this._obj)?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
-            3 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0),
-            4 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._boolean.GetHashCode()),
-            5 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._nullableOfInt32.GetHashCode()),
-            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
-         };
       }
 
       /// <inheritdoc />
