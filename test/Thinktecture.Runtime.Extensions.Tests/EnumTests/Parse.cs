@@ -11,7 +11,7 @@ public class Parse
    {
       SmartEnum_DecimalBased.Parse("1", null).Should().Be(SmartEnum_DecimalBased.Value1);
 
-      SmartEnum_DecimalBased.Parse("1.0", null).Should().Be(SmartEnum_DecimalBased.Value1);
+      SmartEnum_DecimalBased.Parse("1.0", CultureInfo.InvariantCulture).Should().Be(SmartEnum_DecimalBased.Value1);
    }
 
 #if NET9_0_OR_GREATER

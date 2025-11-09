@@ -12,7 +12,7 @@ public class TryParse
       SmartEnum_DecimalBased.TryParse("1", null, out var item).Should().BeTrue();
       item.Should().Be(SmartEnum_DecimalBased.Value1);
 
-      SmartEnum_DecimalBased.TryParse("1.0", null, out item).Should().BeTrue();
+      SmartEnum_DecimalBased.TryParse("1.0", CultureInfo.InvariantCulture, out item).Should().BeTrue();
       item.Should().Be(SmartEnum_DecimalBased.Value1);
 
       SmartEnum_CaseSensitive.TryParse("item", null, out var caseSensitiveItem).Should().BeTrue();

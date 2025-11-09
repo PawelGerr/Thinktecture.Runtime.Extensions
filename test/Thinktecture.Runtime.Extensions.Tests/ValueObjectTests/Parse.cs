@@ -11,7 +11,7 @@ public class Parse
    {
       DecimalBasedClassValueObject.Parse("1", null).Should().Be(DecimalBasedClassValueObject.Create(1));
 
-      DecimalBasedClassValueObject.Parse("1.0", null).Should().Be(DecimalBasedClassValueObject.Create(1));
+      DecimalBasedClassValueObject.Parse("1.0", CultureInfo.InvariantCulture).Should().Be(DecimalBasedClassValueObject.Create(1));
    }
 
    [Fact]

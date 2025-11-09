@@ -148,12 +148,12 @@ public class RoundTrip : JsonTestsBase
    public void Should_deserialize_float_from_string_with_corresponding_NumberHandling(float number)
    {
       var numberJson = number.ToString(CultureInfo.InvariantCulture);
-      var numberAsStringJson = $"\"{number}\"";
+      var numberAsStringJson = $"\"{numberJson}\"";
       var obj = TestValueObjectFloat.Create(number);
 
       Serialize<TestValueObjectFloat, float>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectFloat, float>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectFloat>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectFloat>($"\"{numberJson}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -167,12 +167,12 @@ public class RoundTrip : JsonTestsBase
    public void Should_deserialize_double_from_string_with_corresponding_NumberHandling(double number)
    {
       var numberJson = number.ToString(CultureInfo.InvariantCulture);
-      var numberAsStringJson = $"\"{number}\"";
+      var numberAsStringJson = $"\"{numberJson}\"";
       var obj = TestValueObjectDouble.Create(number);
 
       Serialize<TestValueObjectDouble, double>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectDouble, double>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectDouble>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectDouble>($"\"{numberJson}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Theory]
@@ -189,12 +189,12 @@ public class RoundTrip : JsonTestsBase
       var number = decimals[index];
 
       var numberJson = number.ToString(CultureInfo.InvariantCulture);
-      var numberAsStringJson = $"\"{number}\"";
+      var numberAsStringJson = $"\"{numberJson}\"";
       var obj = TestValueObjectDecimal.Create(number);
 
       Serialize<TestValueObjectDecimal, decimal>(obj).Should().Be(numberJson);
       Serialize<TestValueObjectDecimal, decimal>(obj, numberHandling: JsonNumberHandling.WriteAsString).Should().Be(numberAsStringJson);
-      Deserialize<TestValueObjectDecimal>($"\"{number}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
+      Deserialize<TestValueObjectDecimal>($"\"{numberJson}\"", numberHandling: JsonNumberHandling.AllowReadingFromString).Should().Be(obj);
    }
 
    [Fact]
