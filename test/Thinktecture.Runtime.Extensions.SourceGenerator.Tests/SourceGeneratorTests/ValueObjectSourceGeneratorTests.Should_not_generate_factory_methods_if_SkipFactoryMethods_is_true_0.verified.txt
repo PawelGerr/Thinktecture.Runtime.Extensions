@@ -4,7 +4,8 @@
 namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   sealed partial class TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
+   sealed partial class TestValueObject :
+      global::System.IEquatable<global::Thinktecture.Tests.TestValueObject?>,
       global::Thinktecture.IKeyedObject<int>,
       global::Thinktecture.IConvertible<int>,
       global::Thinktecture.Internal.IMetadataOwner

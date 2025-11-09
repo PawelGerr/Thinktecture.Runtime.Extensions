@@ -6,7 +6,8 @@ namespace Thinktecture.Tests
    [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<global::Thinktecture.Tests.TestValueObject, int, global::Thinktecture.ValidationError>))]
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+   readonly partial struct TestValueObject :
+      global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::Thinktecture.IKeyedObject<int>,
       global::Thinktecture.IConvertible<int>,
       global::Thinktecture.Internal.IMetadataOwner,

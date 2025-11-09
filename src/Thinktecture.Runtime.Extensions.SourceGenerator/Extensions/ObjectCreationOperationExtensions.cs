@@ -20,6 +20,11 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.SKIP_KEY_MEMBER);
    }
 
+   public static bool? FindSkipEqualityComparison(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.SKIP_EQUALITY_COMPARISON);
+   }
+
    public static bool? FindAllowDefaultStructs(this IObjectCreationOperation operation)
    {
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.ALLOW_DEFAULT_STRUCTS);

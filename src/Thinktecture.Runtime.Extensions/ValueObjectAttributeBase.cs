@@ -74,6 +74,12 @@ public abstract class ValueObjectAttributeBase : Attribute
    public SerializationFrameworks SerializationFrameworks { get; set; }
 
    /// <summary>
+   /// Indication whether the generator should skip the implementation of <c>IEquatable{T}</c> and any comparison operators.
+   /// This includes the <c>Equals</c> and <c>GetHashCode</c> methods.
+   /// </summary>
+   public bool SkipEqualityComparison { get; set; }
+
+   /// <summary>
    /// Initializes new instance of <see cref="ValueObjectAttributeBase"/>.
    /// </summary>
    private protected ValueObjectAttributeBase()

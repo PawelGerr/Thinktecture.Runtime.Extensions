@@ -15,6 +15,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
    public bool SkipIFormattable { get; }
+   public bool SkipEqualityComparison { get; }
    public bool SkipToString { get; }
    public OperatorsGeneration AdditionOperators { get; }
    public OperatorsGeneration SubtractionOperators { get; }
@@ -47,6 +48,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
       SkipIParsable = SkipFactoryMethods || (valueObjectAttribute.FindSkipIParsable() ?? false);
       SkipIFormattable = valueObjectAttribute.FindSkipIFormattable() ?? false;
+      SkipEqualityComparison = valueObjectAttribute.FindSkipEqualityComparison() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
       AdditionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindAdditionOperators();
       SubtractionOperators = SkipFactoryMethods ? OperatorsGeneration.None : valueObjectAttribute.FindSubtractionOperators();
@@ -65,6 +67,12 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       // Comparison operators depend on the equality comparison operators
       if (ComparisonOperators > EqualityComparisonOperators)
          EqualityComparisonOperators = ComparisonOperators;
+
+      if (SkipEqualityComparison)
+      {
+          ComparisonOperators = OperatorsGeneration.None;
+          EqualityComparisonOperators = OperatorsGeneration.None;
+      }
    }
 
    public override bool Equals(object? obj)
@@ -92,6 +100,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
              && SkipIFormattable == other.SkipIFormattable
+             && SkipEqualityComparison == other.SkipEqualityComparison
              && SkipToString == other.SkipToString
              && AdditionOperators == other.AdditionOperators
              && SubtractionOperators == other.SubtractionOperators
@@ -125,6 +134,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipEqualityComparison.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)AdditionOperators;
          hashCode = (hashCode * 397) ^ (int)SubtractionOperators;

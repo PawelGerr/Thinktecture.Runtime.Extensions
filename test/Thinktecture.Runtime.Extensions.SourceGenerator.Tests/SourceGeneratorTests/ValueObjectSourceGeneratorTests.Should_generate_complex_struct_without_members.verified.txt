@@ -4,7 +4,8 @@
 namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   readonly partial struct TestValueObject : global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
+   readonly partial struct TestValueObject :
+      global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.Internal.IMetadataOwner,
       global::Thinktecture.IDisallowDefaultValue

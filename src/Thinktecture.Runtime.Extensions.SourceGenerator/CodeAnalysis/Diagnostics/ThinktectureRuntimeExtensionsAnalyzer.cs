@@ -610,6 +610,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ValidateComparer(context, keyType, keyMemberComparerAttr, tdsLocation);
       ValidateComparer(context, keyType, keyMemberEqualityComparerAttr, tdsLocation);
 
+      var skipEqualityComparison = attributeOperation.FindSkipEqualityComparison() ?? false;
+
       if (keyMemberComparerAttr is not null && keyMemberEqualityComparerAttr is null)
       {
          ReportDiagnostic(context,
@@ -619,7 +621,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
       else if (stringBasedRequiresEqualityComparer
                && keyType.SpecialType == SpecialType.System_String
-               && keyMemberEqualityComparerAttr is null)
+               && keyMemberEqualityComparerAttr is null && !skipEqualityComparison)
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.StringBasedValueObjectNeedsEqualityComparer,
@@ -733,6 +735,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Location tdsLocation)
    {
       var allowDefaultStructs = attribute.FindAllowDefaultStructs() ?? false;
+      var skipEqualityComparison = attribute.FindSkipEqualityComparison() ?? false;
 
       List<string>? membersWithDisallowDefaultValue = null;
       var hasStringMembersWithoutComparer = false;
@@ -760,7 +763,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          CheckComparerTypes(context, assignableMember, tdsLocation);
       }
 
-      if (hasStringMembersWithoutComparer && !attribute.HasDefaultStringComparison())
+      if (hasStringMembersWithoutComparer && !attribute.HasDefaultStringComparison() && !skipEqualityComparison)
       {
          ReportDiagnostic(context,
                           DiagnosticsDescriptors.ComplexValueObjectWithStringMembersNeedsDefaultEqualityComparer,

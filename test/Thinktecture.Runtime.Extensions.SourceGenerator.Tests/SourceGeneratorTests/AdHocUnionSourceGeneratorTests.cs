@@ -533,4 +533,22 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_skip_equals_method_with_SkipEqualityComparison()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string, List<int>, bool, int?>(SkipEqualityComparison = true)]
+            public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

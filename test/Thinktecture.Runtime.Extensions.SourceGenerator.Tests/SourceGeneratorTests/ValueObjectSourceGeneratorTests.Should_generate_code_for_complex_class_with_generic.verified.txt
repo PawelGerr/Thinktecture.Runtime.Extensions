@@ -4,7 +4,8 @@
 namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   sealed partial class ComplexValueObject<T1, T2, T3> : global::System.IEquatable<global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>?>,
+   sealed partial class ComplexValueObject<T1, T2, T3> :
+      global::System.IEquatable<global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>?>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>, global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>, bool>,
       global::Thinktecture.Internal.IMetadataOwner
    {
