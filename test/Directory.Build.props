@@ -16,7 +16,7 @@
     <ReportAnalyzer>true</ReportAnalyzer>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TargetFramework></TargetFramework>
-    <TargetFrameworks>net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net7.0;net8.0;net9.0;net10.0;</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

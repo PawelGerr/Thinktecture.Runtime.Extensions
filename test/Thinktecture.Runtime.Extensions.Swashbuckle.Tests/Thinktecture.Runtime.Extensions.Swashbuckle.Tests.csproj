@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <TargetFrameworks>net9.0;</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0;</TargetFrameworks>
     <nullable>enable</nullable>
   </PropertyGroup>
 
@@ -16,6 +16,10 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Xunit.Extensions.Logging" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+    <PackageReference Update="Microsoft.AspNetCore.TestHost" VersionOverride="9.0.11" />
   </ItemGroup>
 
   <ItemGroup>

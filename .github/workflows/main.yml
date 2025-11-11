@@ -9,7 +9,7 @@ jobs:
 
     steps:
 
-      - name: install .NET Core 7/8/9 SDKs
+      - name: install .NET Core 7/8/9/10 SDKs
         uses: actions/setup-dotnet@v2
         with:
           include-prerelease: false
@@ -17,6 +17,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
 
       - name: .NET info
         run: dotnet --info
@@ -33,6 +34,9 @@ jobs:
 
       - name: dotnet restore
         run: dotnet restore
+
+      - name: build source generator
+        run: dotnet build --configuration Release --no-restore src/Thinktecture.Runtime.Extensions.SourceGenerator/Thinktecture.Runtime.Extensions.SourceGenerator.csproj
 
       - name: build
         run: dotnet build --configuration Release --no-restore
