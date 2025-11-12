@@ -6,6 +6,7 @@
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore7](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore7)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore8](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore8)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore8/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore9](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore9)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore9/)  
+[![Thinktecture.Runtime.Extensions.EntityFrameworkCore10](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore10.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore10)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore10/)  
 [![Thinktecture.Runtime.Extensions.Json](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Json.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.Json)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Json/)  
 [![Thinktecture.Runtime.Extensions.Newtonsoft.Json](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Newtonsoft.Json.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.Newtonsoft.Json)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Newtonsoft.Json/)  
 [![Thinktecture.Runtime.Extensions.MessagePack](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.MessagePack.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.MessagePack)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.MessagePack/)  
@@ -27,6 +28,7 @@ This library provides some interfaces, classes, [Roslyn Source Generators](https
 See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) for more documentation.
 
 **Value Objects articles**:
+
 * [Value Objects: Solving Primitive Obsession in .NET](https://www.thinktecture.com/en/net/value-objects-solving-primitive-obsession-in-net/)
 * [Handling Complexity: Introducing Complex Value Objects in .NET](https://www.thinktecture.com/en/net/handling-complexity-introducing-complex-value-objects-in-dotnet/)
 * [Value Objects in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/value-objects-in-net-integration-with-frameworks-and-libraries/)
@@ -34,11 +36,13 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 * [Advanced Value Object Patterns in .NET](https://www.thinktecture.com/en/net/advanced-value-object-patterns-in-net/)
 
 **Smart Enums articles**:
+
 * [Smart Enums: Beyond Traditional Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-beyond-traditional-enumerations-in-dotnet/)
 * [Smart Enums: Adding Domain Logic to Enumerations in .NET](https://www.thinktecture.com/en/net/smart-enums-adding-domain-logic-to-enumerations-in-dotnet/)
 * [Smart Enums in .NET: Integration with Frameworks and Libraries](https://www.thinktecture.com/en/net/smart-enums-in-net-integration-with-frameworks-and-libraries/)
 
 **Discriminated Unions articles**:
+
 * [Discriminated Unions: Representation of Alternative Types in .NET](https://www.thinktecture.com/en/net/discriminated-unions-representation-of-alternative-types-in-dotnet/)
 * [Pattern Matching with Discriminated Unions in .NET](https://www.thinktecture.com/en/net/pattern-matching-with-discriminated-unions-in-net/)
 * [Discriminated Unions in .NET: Modeling States and Variants](https://www.thinktecture.com/en/net/discriminated-unions-in-net-modeling-states-and-variants/)
@@ -85,6 +89,7 @@ Discriminated Unions:
 
 Smart Enums provide a powerful alternative to traditional C# enums, offering type-safety, extensibility, and rich behavior.
 Unlike regular C# enums which are limited to numeric values and lack extensibility, Smart Enums can:
+
 * Use any type as the underlying type (e.g., strings, integers) or none at all
 * Include additional fields, properties and behavior
 * Use polymorphism to define custom behavior for each value
@@ -110,6 +115,7 @@ Some of the Key Features are:
 Roslyn Analyzers and CodeFixes help the developers to implement the Smart Enums correctly
 
 Provides support for:
+
 * JSON (System.Text.Json and Newtonsoft)
 * Minimal Api Parameter Binding and ASP.NET Core Model Binding
 * Entity Framework Core
@@ -354,6 +360,7 @@ Value objects help solve several common problems in software development:
    ```
 
 Key Features:
+
 * Two types of value objects:
     * Simple value objects (wrapper around a single value with validation)
     * Complex value objects (multiple properties representing a single concept)
