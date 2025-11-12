@@ -36,6 +36,9 @@ public class SmartEnumDemos
       var productType = ProductType.Get("Groceries");
       logger.Information("Product type: {Type}", productType);
 
+      var productGroup = ProductGroup.Get(1);
+      productGroup = (ProductGroup)1;
+
       try
       {
          // Throws if the provided value is invalid/unknown

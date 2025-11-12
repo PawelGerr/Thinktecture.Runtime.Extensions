@@ -158,8 +158,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="_1Key">Value to covert.</param>
       /// <returns>An instance of <see cref="_1TestEnum"/> if the <paramref name="_1Key"/> is a known item.</returns>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("_1Key")]
-      public static explicit operator global::Thinktecture.Tests._1TestEnum?(int @_1Key)
+      public static explicit operator global::Thinktecture.Tests._1TestEnum(int @_1Key)
       {
          return global::Thinktecture.Tests._1TestEnum.Get(@_1Key);
       }

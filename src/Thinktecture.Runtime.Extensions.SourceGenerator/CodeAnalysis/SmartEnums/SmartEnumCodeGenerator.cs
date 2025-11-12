@@ -917,9 +917,16 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]
-      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(_state).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>");
+
+      if (keyProperty.IsReferenceType)
+      {
+         _sb.Append(@"
+      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]");
+      }
+
+      _sb.Append(@"
+      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualified(_state, nullable: keyProperty.IsReferenceType).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          return ").AppendTypeFullyQualified(_state).Append(".").Append(Constants.Methods.GET).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(@");
       }");
