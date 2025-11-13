@@ -4,6 +4,7 @@
     <ThinktectureRuntimeExtensions_SourceGenerator_Counter>enabled</ThinktectureRuntimeExtensions_SourceGenerator_Counter>
     <ThinktectureRuntimeExtensions_SourceGenerator_LogLevel>information</ThinktectureRuntimeExtensions_SourceGenerator_LogLevel>
     <ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize>1000</ThinktectureRuntimeExtensions_SourceGenerator_LogMessageInitialBufferSize>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />

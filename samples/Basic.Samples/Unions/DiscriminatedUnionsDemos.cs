@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Serilog;
-using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Unions;
 

@@ -1,6 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
-using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Unions;
 
