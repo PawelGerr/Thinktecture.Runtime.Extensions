@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Thinktecture.Logging;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
@@ -173,7 +174,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                       .Select(static (states, _) => states.IsDefaultOrEmpty
                                                        ? ImmutableArray<SmartEnumSourceGeneratorState>.Empty
                                                        : states.Distinct(TypeOnlyComparer.Instance))
-                      .WithComparer(new SetComparer<SmartEnumSourceGeneratorState>())
+                      .WithComparer(SetComparer<SmartEnumSourceGeneratorState>.Instance)
                       .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(enumTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, SmartEnumCodeGeneratorFactory.Instance));
@@ -181,13 +182,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
    private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
-      var serializerGeneratorFactories = context.MetadataReferencesProvider
-                                                .SelectMany((reference, _) => GetSerializerCodeGeneratorFactories(reference))
-                                                .Collect()
-                                                .Select(static (states, _) => states.IsDefaultOrEmpty
-                                                                                 ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
-                                                                                 : states.Distinct())
-                                                .WithComparer(new SetComparer<IKeyedSerializerCodeGeneratorFactory>());
+      var factoriesOrError = context.MetadataReferencesProvider
+                                    .Select((reference, _) => GetSerializerCodeGeneratorFactories(reference));
+
+      var serializerGeneratorFactories = factoriesOrError
+                                         .Where(f => f.Factories is not null)
+                                         .SelectMany<SerializerCodeGeneratorFactoriesContext, IKeyedSerializerCodeGeneratorFactory>((f, _) => f.Factories!)
+                                         .Collect()
+                                         .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                                          ? ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty
+                                                                          : states.Distinct())
+                                         .WithComparer(SetComparer<IKeyedSerializerCodeGeneratorFactory>.Instance);
 
       var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(
                                                             state.State,
@@ -196,19 +201,16 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                             state.Settings.SerializationFrameworks))
                                                  .Combine(serializerGeneratorFactories)
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
-                                                 .Where(tuple =>
-                                                 {
-                                                    if (tuple.Factory.MustGenerateCode(tuple.State))
-                                                    {
-                                                       Logger.LogDebug("Code generator must generate code.", null, tuple.State, factory: tuple.Factory);
-                                                       return true;
-                                                    }
-
-                                                    Logger.LogInformation("Code generator must not generate code.", null, tuple.State, factory: tuple.Factory);
-                                                    return false;
-                                                 });
+                                                 .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));
 
       context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
+      context.RegisterImplementationSourceOutput(factoriesOrError.Where(f => f.Exception is not null), (ctx, factoryOrError) =>
+      {
+         var exception = factoryOrError.Exception!;
+         ctx.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringModulesAnalysis,
+                                                Location.None,
+                                                exception.ToString()));
+      });
    }
 
    private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
@@ -227,37 +229,37 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private ImmutableArray<IKeyedSerializerCodeGeneratorFactory> GetSerializerCodeGeneratorFactories(MetadataReference reference)
+   private SerializerCodeGeneratorFactoriesContext GetSerializerCodeGeneratorFactories(MetadataReference reference)
    {
-      var factories = ImmutableArray<IKeyedSerializerCodeGeneratorFactory>.Empty;
-
       try
       {
+         var factories = new List<IKeyedSerializerCodeGeneratorFactory>(3);
+
          foreach (var module in reference.GetModules())
          {
             switch (module.Name)
             {
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_JSON:
-                  Logger.LogInformation("Code generator for System.Text.Json will participate in code generation");
-                  factories = factories.Add(JsonSmartEnumCodeGeneratorFactory.Instance);
+                  Logger.Log(LogLevel.Information, "Code generator for System.Text.Json will participate in code generation");
+                  factories.Add(JsonSmartEnumCodeGeneratorFactory.Instance);
                   break;
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_NEWTONSOFT_JSON:
-                  Logger.LogInformation("Code generator for Newtonsoft.Json will participate in code generation");
-                  factories = factories.Add(NewtonsoftJsonSmartEnumCodeGeneratorFactory.Instance);
+                  Logger.Log(LogLevel.Information, "Code generator for Newtonsoft.Json will participate in code generation");
+                  factories.Add(NewtonsoftJsonSmartEnumCodeGeneratorFactory.Instance);
                   break;
                case Constants.Modules.THINKTECTURE_RUNTIME_EXTENSIONS_MESSAGEPACK:
-                  Logger.LogInformation("Code generator for MessagePack will participate in code generation");
-                  factories = factories.Add(MessagePackSmartEnumCodeGeneratorFactory.Instance);
+                  Logger.Log(LogLevel.Information, "Code generator for MessagePack will participate in code generation");
+                  factories.Add(MessagePackSmartEnumCodeGeneratorFactory.Instance);
                   break;
             }
          }
+
+         return new(factories);
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during checking referenced modules", exception: ex);
+         return new(ex);
       }
-
-      return factories;
    }
 
    private static bool IsSmartEnumCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
@@ -274,63 +276,39 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
          if (type.TypeKind == TypeKind.Error)
-         {
-            Logger.LogDebug("Type from semantic model is erroneous", tds);
             return null;
-         }
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
 
          if (context.Attributes.Length > 1)
-         {
-            Logger.LogDebug($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds);
-            return null;
-         }
+            return new SourceGenContext(new SourceGenError($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds));
 
          if (type.IsNestedInGenericClass())
-         {
-            Logger.LogDebug("Type must not be inside a generic class", tds);
-            return null;
-         }
+            return new SourceGenContext(new SourceGenError("Type must not be inside a generic class", tds));
 
          ITypeSymbol? keyMemberType = null;
 
          if (isKeyed)
          {
-            var attributetype = context.Attributes[0].AttributeClass;
+            var attributeType = context.Attributes[0].AttributeClass;
 
-            if (attributetype is null)
-            {
-               Logger.LogDebug("The attribute type is null", tds);
-               return null;
-            }
+            if (attributeType is null)
+               return new SourceGenContext(new SourceGenError("Could not resolve SmartEnum attribute type", tds));
 
-            if (attributetype.TypeKind == TypeKind.Error)
-            {
-               Logger.LogDebug("The attribute type is erroneous", tds);
-               return null;
-            }
+            if (attributeType.TypeKind == TypeKind.Error)
+               return new SourceGenContext(new SourceGenError("SmartEnumAttribute type has TypeKind=Error", tds));
 
-            if (attributetype.Arity != 1)
-            {
-               Logger.LogDebug($"Expected the attribute type to have 1 type argument but found {attributetype.Arity.ToString()}", tds);
-               return null;
-            }
+            if (attributeType.Arity != 1)
+               return new SourceGenContext(new SourceGenError("SmartEnumAttribute must have exactly one type argument", tds));
 
-            keyMemberType = attributetype.TypeArguments[0];
+            keyMemberType = attributeType.TypeArguments[0];
 
             if (keyMemberType.TypeKind == TypeKind.Error)
-            {
-               Logger.LogDebug("Type of the key member is erroneous", tds);
-               return null;
-            }
+               return new SourceGenContext(new SourceGenError("SmartEnum key member type could not be resolved", tds));
 
             if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
-            {
-               Logger.LogDebug("Type of the key member must not be nullable", tds);
-               return null;
-            }
+               return new SourceGenContext(new SourceGenError("SmartEnum key member type must be non-nullable", tds));
          }
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
@@ -341,10 +319,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
 
          if (errorMessage is not null)
-         {
-            Logger.LogDebug(errorMessage, tds);
-            return null;
-         }
+            return new SourceGenContext(new SourceGenError(errorMessage, tds));
 
          var settings = new AllEnumSettings(context.Attributes[0]);
          KeyMemberState? keyMember = null;
@@ -362,8 +337,6 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                            new SmartEnumSettings(settings, attributeInfo),
                                                            type.FindDerivedInnerTypes().Count > 0,
                                                            cancellationToken);
-
-         Logger.LogDebug("The type declaration is a valid smart enum", null, enumState);
 
          return new SourceGenContext(new ValidSourceGenState(enumState, settings, keyMember, attributeInfo));
       }
@@ -399,6 +372,21 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
 
       public SourceGenContext(SourceGenError errorMessage)
          : this(null, null, errorMessage)
+      {
+      }
+   }
+
+   private readonly record struct SerializerCodeGeneratorFactoriesContext(
+      IReadOnlyList<IKeyedSerializerCodeGeneratorFactory>? Factories,
+      Exception? Exception = null)
+   {
+      public SerializerCodeGeneratorFactoriesContext(IReadOnlyList<IKeyedSerializerCodeGeneratorFactory> factories)
+         : this(factories, null)
+      {
+      }
+
+      public SerializerCodeGeneratorFactoriesContext(Exception exception)
+         : this(null, exception)
       {
       }
    }

@@ -1,25 +1,18 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Thinktecture.CodeAnalysis.SmartEnums;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class InterfaceCodeGeneratorFactory<T, TType> : ICodeGeneratorFactory<T>
+public sealed class InterfaceCodeGeneratorFactory<T, TType>(IInterfaceCodeGenerator<T> interfaceCodeGenerator)
+   : ICodeGeneratorFactory<T>
    where T : ITypeInformationProvider<TType>
    where TType : ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {
-   private readonly IInterfaceCodeGenerator<T> _interfaceCodeGenerator;
-
-   public string CodeGeneratorName => _interfaceCodeGenerator.CodeGeneratorName;
-
-   public InterfaceCodeGeneratorFactory(IInterfaceCodeGenerator<T> interfaceCodeGenerator)
-   {
-      _interfaceCodeGenerator = interfaceCodeGenerator;
-   }
+   public string CodeGeneratorName => interfaceCodeGenerator.CodeGeneratorName;
 
    public CodeGeneratorBase Create(T state, StringBuilder stringBuilder)
    {
-      return new InterfaceCodeGenerator<T, TType>(_interfaceCodeGenerator, state, stringBuilder);
+      return new InterfaceCodeGenerator<T, TType>(interfaceCodeGenerator, state, stringBuilder);
    }
 
    public bool Equals(ICodeGeneratorFactory<T> other)
@@ -38,7 +31,9 @@ public static class InterfaceCodeGeneratorFactory
 
    public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Comparable(string? comparerAccessor)
    {
-      return String.IsNullOrWhiteSpace(comparerAccessor) ? _comparable : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
+      return String.IsNullOrWhiteSpace(comparerAccessor)
+                ? _comparable
+                : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
    }
 
    public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(bool forEnum)

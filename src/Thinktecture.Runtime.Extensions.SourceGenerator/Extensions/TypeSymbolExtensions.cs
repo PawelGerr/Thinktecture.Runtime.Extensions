@@ -9,16 +9,21 @@ namespace Thinktecture;
 public static class TypeSymbolExtensions
 {
    private static readonly SymbolDisplayFormat _fullyQualifiedDisplayFormat = SymbolDisplayFormat.FullyQualifiedFormat
-                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
+                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier)
+                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.ExpandValueTuple);
 
    public static string ToFullyQualifiedDisplayString(this ITypeSymbol type)
    {
       return type.ToDisplayString(_fullyQualifiedDisplayFormat);
    }
 
-   public static bool IsNullOrObject([NotNullWhen(false)] this ITypeSymbol? type)
+   public static bool IsNullOrDotnetBaseType([NotNullWhen(false)] this ITypeSymbol? type)
    {
-      return type is null || type.SpecialType == SpecialType.System_Object;
+      return type is null
+             || type.SpecialType == SpecialType.System_Object
+             || type.SpecialType == SpecialType.System_ValueType
+             || type.SpecialType == SpecialType.System_Enum
+             || type.SpecialType == SpecialType.System_MulticastDelegate;
    }
 
    /// <summary>
@@ -38,6 +43,30 @@ public static class TypeSymbolExtensions
                                                                                         || attributeClass.IsComplexValueObjectAttribute());
 
       return valueObjectAttributeBase is not null;
+   }
+
+   public static bool IsInternalsVisibleToAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
+   {
+      if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
+         return false;
+
+      return attributeType is
+      {
+         Name: "InternalsVisibleToAttribute",
+         ContainingNamespace:
+         {
+            Name: "CompilerServices",
+            ContainingNamespace:
+            {
+               Name: "Runtime",
+               ContainingNamespace:
+               {
+                  Name: "System",
+                  ContainingNamespace.IsGlobalNamespace: true
+               }
+            }
+         }
+      };
    }
 
    /// <summary>
@@ -100,7 +129,7 @@ public static class TypeSymbolExtensions
       return attributeType.ContainingNamespace is { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
              && (
                    attributeType.Name == Constants.Attributes.Union.NAME && namedType.Arity > 0
-                   || attributeType.Name == Constants.Attributes.Union.NAME_AD_HOCH && namedType.Arity == 0
+                   || attributeType.Name == Constants.Attributes.Union.NAME_AD_HOC && namedType.Arity == 0
                 );
    }
 
@@ -126,7 +155,7 @@ public static class TypeSymbolExtensions
 
       return attributeType is
       {
-         Name: Constants.Attributes.Union.NAME or Constants.Attributes.Union.NAME_AD_HOCH,
+         Name: Constants.Attributes.Union.NAME or Constants.Attributes.Union.NAME_AD_HOC,
          ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
    }
@@ -149,8 +178,8 @@ public static class TypeSymbolExtensions
          Name: Constants.Attributes.SmartEnum.NAME
          or Constants.Attributes.ValueObject.KEYED_NAME
          or Constants.Attributes.ValueObject.COMPLEX_NAME
-         or Constants.Attributes.Union.NAME          // both regular and generic ad-hoc
-         or Constants.Attributes.Union.NAME_AD_HOCH, // non-generic ad-hoc
+         or Constants.Attributes.Union.NAME         // both regular and generic ad-hoc
+         or Constants.Attributes.Union.NAME_AD_HOC, // non-generic ad-hoc
          ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
    }
@@ -245,13 +274,13 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.UseDelegateFromConstructor.NAME, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsEnum(
+   public static bool IsSmartEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType)
    {
-      return IsEnum(enumType, out _);
+      return IsSmartEnum(enumType, out _);
    }
 
-   public static bool IsEnum(
+   public static bool IsSmartEnum(
       [NotNullWhen(true)] this ITypeSymbol? enumType,
       [NotNullWhen(true)] out AttributeData? smartEnumAttribute)
    {
@@ -268,17 +297,31 @@ public static class TypeSymbolExtensions
 
    public static bool IsMessagePackFormatterAttribute(this ITypeSymbol type)
    {
-      return type is { Name: "MessagePackFormatterAttribute", ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is
+      {
+         Name: "MessagePackFormatterAttribute",
+         ContainingNamespace: { Name: "MessagePack", ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsObjectFactoryAttribute(this INamedTypeSymbol type)
    {
-      return type is { Name: Constants.Attributes.ObjectFactory.NAME or Constants.Attributes.ObjectFactory.NAME_OBSOLETE, TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is
+      {
+         Name: Constants.Attributes.ObjectFactory.NAME or Constants.Attributes.ObjectFactory.NAME_OBSOLETE,
+         TypeArguments.Length: 1,
+         ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsValidationErrorAttribute(this INamedTypeSymbol type)
    {
-      return type is { Name: "ValidationErrorAttribute" or "ValueObjectValidationErrorAttribute", TypeArguments.Length: 1, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return type is
+      {
+         Name: "ValidationErrorAttribute" or "ValueObjectValidationErrorAttribute",
+         TypeArguments.Length: 1,
+         ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsKeyMemberComparerAttribute(this INamedTypeSymbol? attributeType)
@@ -286,7 +329,12 @@ public static class TypeSymbolExtensions
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
 
-      return attributeType is { Name: "KeyMemberComparerAttribute" or "ValueObjectKeyMemberComparerAttribute", TypeArguments.Length: 2, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
+      return attributeType is
+      {
+         Name: "KeyMemberComparerAttribute" or "ValueObjectKeyMemberComparerAttribute",
+         TypeArguments.Length: 2,
+         ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+      };
    }
 
    public static bool IsKeyMemberEqualityComparerAttribute(this INamedTypeSymbol? attributeType)
@@ -536,7 +584,7 @@ public static class TypeSymbolExtensions
       this ITypeSymbol? type,
       (INamedTypeSymbol Type, INamedTypeSymbol TypeDef) baseType)
    {
-      while (!type.IsNullOrObject())
+      while (!type.IsNullOrDotnetBaseType())
       {
          if (baseType.Type.TypeKind == TypeKind.Interface)
          {
@@ -652,10 +700,10 @@ public static class TypeSymbolExtensions
                     {
                        case IFieldSymbol field:
                        {
-                          if (field.IsIgnored())
+                          if (field.IsConst || field.IsIgnored())
                              return null;
 
-                          if (field is { IsReadOnly: false, IsConst: false })
+                          if (field is { IsReadOnly: false })
                              ReportField(field);
 
                           return (field, null);
@@ -664,6 +712,10 @@ public static class TypeSymbolExtensions
                        case IPropertySymbol property:
                        {
                           if (property.IsIgnored())
+                             return null;
+
+                          // Skip EqualityContract property from records
+                          if (property.Name == "EqualityContract" && property.IsVirtual && property.ContainingType.IsRecord)
                              return null;
 
                           // other assembly
@@ -677,8 +729,17 @@ public static class TypeSymbolExtensions
                           {
                              var syntax = (PropertyDeclarationSyntax)property.DeclaringSyntaxReferences.Single().GetSyntax(cancellationToken);
 
-                             if (syntax.ExpressionBody is not null) // public int Foo => 42; OR public int Foo => field;
-                                return null;
+                             // public int Foo => 42; (exclude) OR public int Foo => field; (include)
+                             if (syntax.ExpressionBody is not null)
+                             {
+                                var hasFieldKeyword = syntax.ExpressionBody.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword) || (t.IsKind(SyntaxKind.IdentifierToken) && t.ValueText == "field"));
+
+                                if (!hasFieldKeyword)
+                                   return null;
+
+                                // Has field keyword in expression body, include it
+                                return (null, property);
+                             }
 
                              if (syntax.AccessorList is null)
                                 return null;
@@ -747,14 +808,22 @@ public static class TypeSymbolExtensions
       if (accessor is null)
          return false;
 
-      return (accessor.Body is null || accessor.Body.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword)))
-             && (accessor.ExpressionBody is null || accessor.ExpressionBody.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword)));
+      // Check for field keyword in regular body (if present)
+      var hasBodyWithField = accessor.Body is not null && accessor.Body.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword) || (t.IsKind(SyntaxKind.IdentifierToken) && t.ValueText == "field"));
+
+      // Check for field keyword in expression body (if present)
+      var hasExpressionBodyWithField = accessor.ExpressionBody is not null && accessor.ExpressionBody.DescendantTokens().Any(t => t.IsKind(SyntaxKind.FieldKeyword) || (t.IsKind(SyntaxKind.IdentifierToken) && t.ValueText == "field"));
+
+      // Check for default accessor (no body and no expression body - auto-implemented)
+      var isDefaultAccessor = accessor.Body is null && accessor.ExpressionBody is null;
+
+      return isDefaultAccessor || hasBodyWithField || hasExpressionBodyWithField;
    }
 
-   public static IReadOnlyList<DelegateMethodState> GetDelegateMethods(
+   public static ImmutableArray<DelegateMethodState> GetDelegateMethods(
       this INamedTypeSymbol typeSymbol)
    {
-      List<DelegateMethodState>? methodStates = null;
+      ImmutableArray<DelegateMethodState>.Builder? methodStates = null;
 
       foreach (var member in typeSymbol.GetMembers())
       {
@@ -778,13 +847,12 @@ public static class TypeSymbolExtensions
                              : methodSymbol.ReturnType.ToFullyQualifiedDisplayString();
 
          var parameters = methodSymbol.Parameters.Length == 0
-                             ? (IReadOnlyList<ParameterState>)[]
-                             : methodSymbol.Parameters
-                                           .Select(p => new ParameterState(
-                                                      p.Name,
-                                                      p.Type.ToFullyQualifiedDisplayString(),
-                                                      p.RefKind))
-                                           .ToList();
+                             ? []
+                             : ImmutableArray.CreateRange(methodSymbol.Parameters,
+                                                          static p => new ParameterState(
+                                                             p.Name,
+                                                             p.Type.ToFullyQualifiedDisplayString(),
+                                                             p.RefKind));
 
          var customDelegateName = useDelegateFromConstructorAttribute.FindDelegateName();
 
@@ -795,10 +863,10 @@ public static class TypeSymbolExtensions
             parameters,
             customDelegateName);
 
-         (methodStates ??= []).Add(methodState);
+         (methodStates ??= ImmutableArray.CreateBuilder<DelegateMethodState>()).Add(methodState);
       }
 
-      return methodStates ?? (IReadOnlyList<DelegateMethodState>)[];
+      return methodStates?.DrainToImmutable() ?? [];
    }
 
    public static bool HasRequiredMembers(this INamedTypeSymbol type)
@@ -829,6 +897,12 @@ public static class TypeSymbolExtensions
       this INamedTypeSymbol type,
       [MaybeNullWhen(false)] out string name)
    {
+      if (type.TypeKind == TypeKind.Error)
+      {
+         name = null;
+         return false;
+      }
+
       if (!type.IsGenericType)
       {
          if (type.Name.Length == 0)
@@ -885,7 +959,19 @@ public static class TypeSymbolExtensions
          return false;
       }
 
-      name = $"{elementName}Array";
+      name = type.Rank switch
+      {
+         1 => $"{elementName}Array",
+         _ => $"{elementName}Array{type.Rank}D"
+      };
+      return true;
+   }
+
+   public static bool TryBuildMemberName(
+      this ITypeParameterSymbol type,
+      [MaybeNullWhen(false)] out string name)
+   {
+      name = type.Name;
       return true;
    }
 
@@ -899,16 +985,23 @@ public static class TypeSymbolExtensions
       {
          IArrayTypeSymbol arrayTypeSymbol => TryBuildMemberName(arrayTypeSymbol, out name),
          INamedTypeSymbol namedTypeSymbol => TryBuildMemberName(namedTypeSymbol, out name),
+         ITypeParameterSymbol typeParameterSymbol => TryBuildMemberName(typeParameterSymbol, out name),
          _ => false
       };
    }
 
    public static bool IsIDisallowDefaultValue(this ITypeSymbol? type)
    {
-      return type is
+      if (type is not INamedTypeSymbol namedType)
+         return false;
+
+      return namedType is
       {
-         Name: Constants.Interfaces.DisallowDefaultStructs.NAME,
-         ContainingNamespace: { Name: Constants.Interfaces.DisallowDefaultStructs.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+         TypeKind: TypeKind.Interface,
+         Arity: 0,             // not generic
+         ContainingType: null, // not nested
+         Name: Constants.Interfaces.IDisallowDefaultValue.NAME,
+         ContainingNamespace: { Name: Constants.Interfaces.IDisallowDefaultValue.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
    }
 

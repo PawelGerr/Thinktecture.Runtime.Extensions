@@ -1,8 +1,11 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class AdHocUnionCodeGeneratorFactory : ICodeGeneratorFactory<AdHocUnionSourceGenState>
+public sealed class AdHocUnionCodeGeneratorFactory
+   : ICodeGeneratorFactory<AdHocUnionSourceGenState>,
+     IEquatable<AdHocUnionCodeGeneratorFactory>
 {
    public static readonly ICodeGeneratorFactory<AdHocUnionSourceGenState> Instance = new AdHocUnionCodeGeneratorFactory();
 
@@ -17,8 +20,9 @@ public class AdHocUnionCodeGeneratorFactory : ICodeGeneratorFactory<AdHocUnionSo
       return new AdHocUnionCodeGenerator(state, stringBuilder);
    }
 
-   public bool Equals(ICodeGeneratorFactory<AdHocUnionSourceGenState> other)
-   {
-      return ReferenceEquals(this, other);
-   }
+   public bool Equals(ICodeGeneratorFactory<AdHocUnionSourceGenState>? other) => ReferenceEquals(this, other);
+   public bool Equals(AdHocUnionCodeGeneratorFactory? other) => ReferenceEquals(this, other);
+   public override bool Equals(object? obj) => ReferenceEquals(this, obj);
+
+   public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 }

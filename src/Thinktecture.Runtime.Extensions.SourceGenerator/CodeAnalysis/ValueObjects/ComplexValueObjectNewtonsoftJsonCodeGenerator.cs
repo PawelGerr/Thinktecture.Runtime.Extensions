@@ -6,7 +6,7 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator<T> : CodeGener
    where T : ITypeInformation, IHasGenerics
 {
    private readonly T _type;
-   private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
+   private readonly ImmutableArray<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "Complex-ValueObject-NewtonsoftJson-CodeGenerator";
@@ -14,7 +14,7 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator<T> : CodeGener
 
    public ComplexValueObjectNewtonsoftJsonCodeGenerator(
       T type,
-      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      ImmutableArray<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
       _type = type;
@@ -27,7 +27,7 @@ public sealed class ComplexValueObjectNewtonsoftJsonCodeGenerator<T> : CodeGener
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      var isGeneric = _type.GenericParameters.Count > 0;
+      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty;
 
       if (_type.Namespace is not null)
       {
@@ -117,11 +117,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          }
 ");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
+         if (memberInfo is { IsReferenceTypeOrNullableStruct: false, DisallowsDefaultValue: true })
          {
             _sb.Append(@"
          global::Thinktecture.Argument<").AppendTypeFullyQualified(memberInfo).Append("> ").AppendEscaped(memberInfo.ArgumentName).Append(" = default;");
@@ -171,7 +171,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -192,7 +192,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             }");
       }
 
-      if (_assignableInstanceFieldsAndProperties.Count > 0)
+      if (_assignableInstanceFieldsAndProperties.Length > 0)
       {
          _sb.Append(@"
             else
@@ -211,11 +211,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       _sb.Append(@"
          }");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
+         if (memberInfo is { IsReferenceTypeOrNullableStruct: false, DisallowsDefaultValue: true })
          {
             _sb.Append(@"
 
@@ -239,7 +239,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -281,7 +281,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 

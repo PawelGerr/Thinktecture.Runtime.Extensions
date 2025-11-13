@@ -8,7 +8,10 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    private static readonly IInterfaceCodeGenerator _default = new DivisionOperatorsCodeGenerator(ImplementedOperators.All, false);
    private static readonly IInterfaceCodeGenerator _defaultWithKeyTypeOverloads = new DivisionOperatorsCodeGenerator(ImplementedOperators.All, true);
 
-   public static bool TryGet(ImplementedOperators keyMemberOperators, OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
+   public static bool TryGet(
+      ImplementedOperators keyMemberOperators,
+      OperatorsGeneration operatorsGeneration,
+      [NotNullWhen(true)] out IInterfaceCodeGenerator? generator)
    {
       switch (operatorsGeneration)
       {
@@ -30,10 +33,10 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
       }
    }
 
-   private const string _LEFT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+   private const string _LEFT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(left);
       ";
 
-   private const string _RIGHT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+   private const string _RIGHT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(right);
       ";
 
    private readonly ImplementedOperators _keyMemberOperators;
@@ -66,7 +69,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    public void GenerateImplementation(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
       var typeLeftNullCheck = state.Type.IsReferenceType ? _LEFT_NULL_CHECK : null;
-      var typeLightNullCheck = state.Type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
+      var typeRightNullCheck = state.Type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
       var needsCastToResultType = state.KeyMember.DoesArithmeticOperationYieldDifferentType();
 
       if (_keyMemberOperators.HasOperator(ImplementedOperators.Default))
@@ -75,7 +78,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
 
@@ -86,19 +89,19 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@")));
+      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@")));
    }");
       }
 
       if (_withKeyTypeOverloads)
-         GenerateOverloadsForKeyType(sb, state, typeLeftNullCheck, typeLightNullCheck, needsCastToResultType);
+         GenerateOverloadsForKeyType(sb, state, typeLeftNullCheck, typeRightNullCheck, needsCastToResultType);
    }
 
    private void GenerateOverloadsForKeyType(
       StringBuilder sb,
       InterfaceCodeGeneratorState state,
       string? typeLeftNullCheck,
-      string? typeLightNullCheck,
+      string? typeRightNullCheck,
       bool needsCastToResultType)
    {
       var memberLeftNullCheck = state.KeyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
@@ -117,7 +120,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator /(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@"));
    }");
       }
 
@@ -134,7 +137,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked /(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeLightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@")));
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@")));
    }");
       }
    }

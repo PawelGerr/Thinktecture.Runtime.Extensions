@@ -54,7 +54,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
       DiagnosticsDescriptors.ObjectFactoryMustHaveCorrespondingConstructor,
-      DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor,
+      DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor,
    ];
 
    /// <inheritdoc />
@@ -240,6 +240,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                return false;
 
             case OperationKind.Conversion:
+            case OperationKind.Conditional: // ternary: condition ? default : value
+            case OperationKind.ArrayInitializer:
                operation = operation.Parent;
                break;
 
@@ -250,7 +252,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             case OperationKind.CompoundAssignment:
             case OperationKind.DeconstructionAssignment:
             case OperationKind.Argument:
-            case OperationKind.Tuple: // (42, default(MyUnion))
+            case OperationKind.Tuple:         // (42, default(MyUnion))
+            case OperationKind.Return:        // return default;
+            case OperationKind.ArrayCreation: // new[] { default }
                return true;
 
             default:
@@ -278,7 +282,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var declaredType = operation.TargetMethod.ContainingType;
 
-      if (declaredType.IsEnum(out var attribute))
+      if (declaredType.IsSmartEnum(out var attribute))
       {
          var items = declaredType.GetEnumItems();
 
@@ -663,7 +667,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var keyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
       var keyMemberKind = attribute.FindKeyMemberKind() ?? Constants.ValueObject.DEFAULT_KEY_MEMBER_KIND;
-      var keyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultValueObjectKeyMemberName(keyMemberAccessModifier, keyMemberKind);
+      var keyMemberName = attribute.FindKeyMemberName() ?? keyMemberAccessModifier.GetDefaultValueObjectKeyMemberName(keyMemberKind);
 
       ValidateCustomKeyMemberImplementation(context, keyType, assignableMembers, keyMemberName, tdsLocation);
    }
@@ -695,7 +699,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
-   private static IReadOnlyList<InstanceMemberInfo>? ValidateSharedValueObject(
+   private static List<InstanceMemberInfo>? ValidateSharedValueObject(
       OperationAnalysisContext context,
       INamedTypeSymbol type,
       Location tdsLocation,
@@ -717,7 +721,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var baseClass = type.BaseType;
 
-      while (!baseClass.IsNullOrObject())
+      while (!baseClass.IsNullOrDotnetBaseType())
       {
          baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, tdsLocation, context).Enumerate();
 
@@ -729,7 +733,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void CheckAssignableMembers(
       OperationAnalysisContext context,
-      IReadOnlyList<InstanceMemberInfo> assignableMembers,
+      List<InstanceMemberInfo> assignableMembers,
       INamedTypeSymbol type,
       IObjectCreationOperation attribute,
       Location tdsLocation)
@@ -807,7 +811,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             var location = objectType.GetTypeIdentifierLocation(context.CancellationToken);
 
-            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor, location, objectType, valueType);
+            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor, location, objectType, valueType);
          }
          else
          {
@@ -852,11 +856,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       Check_ItemLike_StaticProperties(context, enumType);
       EnumItemsMustBePublic(context, enumType, items);
 
-      enumType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, false, context.CancellationToken, context).Enumerate();
+      enumType.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, reportDiagnostic: context).Enumerate();
 
       var baseClass = enumType.BaseType;
 
-      while (!baseClass.IsNullOrObject())
+      while (!baseClass.IsNullOrDotnetBaseType())
       {
          baseClass.IterateAssignableFieldsAndPropertiesAndCheckForReadOnly(false, context.CancellationToken, tdsLocation, context).Enumerate();
 
@@ -949,7 +953,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             ReportDiagnostic(context, DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic, derivedType.GetTypeIdentifierLocation(context.CancellationToken), derivedType);
          }
 
-         if (!derivedType.BaseType.IsNullOrObject())
+         if (!derivedType.BaseType.IsNullOrDotnetBaseType())
             typesToLeaveOpen = typesToLeaveOpen.Add(derivedType.BaseType);
       }
 

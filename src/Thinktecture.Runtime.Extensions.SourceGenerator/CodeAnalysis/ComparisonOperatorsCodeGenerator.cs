@@ -34,10 +34,10 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
       }
    }
 
-   private const string _LEFT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(nameof(left));
+   private const string _LEFT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(left);
       ";
 
-   private const string _RIGHT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+   private const string _RIGHT_NULL_CHECK = @"global::System.ArgumentNullException.ThrowIfNull(right);
       ";
 
    private readonly bool _withKeyTypeOverloads;

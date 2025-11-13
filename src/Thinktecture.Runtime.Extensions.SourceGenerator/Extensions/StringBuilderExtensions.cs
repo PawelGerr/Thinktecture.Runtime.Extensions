@@ -88,17 +88,22 @@ public static class StringBuilderExtensions
    {
       switch (accessibility)
       {
+         case Accessibility.NotApplicable:
+            break;
          case Accessibility.Private:
             sb.Append("private");
             break;
          case Accessibility.ProtectedAndInternal:
-            sb.Append("protected internal");
+            sb.Append("private protected");
             break;
          case Accessibility.Protected:
             sb.Append("protected");
             break;
          case Accessibility.Internal:
             sb.Append("internal");
+            break;
+         case Accessibility.ProtectedOrInternal:
+            sb.Append("protected internal");
             break;
          case Accessibility.Public:
             sb.Append("public");
@@ -110,12 +115,12 @@ public static class StringBuilderExtensions
 
    public static StringBuilder RenderArguments(
       this StringBuilder sb,
-      IReadOnlyList<InstanceMemberInfo> members,
+      ImmutableArray<InstanceMemberInfo> members,
       string? prefix = null,
       string? comma = ", ",
       bool leadingComma = false)
    {
-      for (var i = 0; i < members.Count; i++)
+      for (var i = 0; i < members.Length; i++)
       {
          if (leadingComma || i > 0)
             sb.Append(comma);
@@ -136,14 +141,14 @@ public static class StringBuilderExtensions
 
    public static StringBuilder RenderArgumentsWithType(
       this StringBuilder sb,
-      IReadOnlyList<InstanceMemberInfo> members,
+      ImmutableArray<InstanceMemberInfo> members,
       string? prefix = null,
       string comma = ", ",
       bool leadingComma = false,
       bool trailingComma = false,
       bool useNullableTypes = false)
    {
-      for (var i = 0; i < members.Count; i++)
+      for (var i = 0; i < members.Length; i++)
       {
          if (leadingComma || i > 0)
             sb.Append(comma);
@@ -151,7 +156,7 @@ public static class StringBuilderExtensions
          sb.RenderArgumentWithType(members[i], prefix, useNullableTypes);
       }
 
-      if (trailingComma && members.Count > 0)
+      if (trailingComma && members.Length > 0)
          sb.Append(comma);
 
       return sb;
@@ -197,86 +202,290 @@ public static class StringBuilderExtensions
          return sb;
       }
 
-      switch (name.Length)
+      if (name.Length == 0)
+         return sb;
+
+      var index = 0;
+
+      // Handle leading underscores:
+      // - If the name starts with '_' and is followed by a letter, drop all leading underscores.
+      // - Otherwise, keep underscores (e.g., "_", "__", or "__1").
+      if (name[0] == '_')
       {
-         case 0:
-            break;
-         case 1:
-            sb.Append(Char.ToLowerInvariant(name[0]));
-            break;
-         default:
-            sb.ToCamelCase(name, false);
-            break;
+         var j = 0;
+
+         while (j < name.Length && name[j] == '_')
+         {
+            j++;
+         }
+
+         if (j < name.Length && Char.IsLetter(name[j]))
+         {
+            // Drop underscores if immediately followed by a letter
+            index = j;
+         }
+         else
+         {
+            // Keep underscores as-is and continue processing after them
+            sb.Append(name, 0, j);
+            index = j;
+         }
       }
+
+      // Keep other non-letter prefixes (e.g., digits, '$') verbatim.
+      while (index < name.Length && !Char.IsLetter(name[index]))
+      {
+         sb.Append(name[index]);
+         index++;
+      }
+
+      // No letters found, we're done.
+      if (index >= name.Length)
+         return sb;
+
+      // If the first letter is already lowercase, append the remainder as-is.
+      if (Char.IsLower(name[index]))
+      {
+         sb.Append(name, index, name.Length - index);
+         return sb;
+      }
+
+      // Lowercase with look-ahead to preserve the last uppercase before a lowercase (acronyms).
+      // Detect initial consecutive uppercase run starting at 'index'.
+      var runEnd = index;
+
+      while (runEnd < name.Length && char.IsUpper(name[runEnd]))
+      {
+         runEnd++;
+      }
+
+      var runLen = runEnd - index;
+
+      if (runLen == 1)
+      {
+         // Single uppercase followed by non-uppercase -> just lowercase the first letter.
+         sb.Append(char.ToLowerInvariant(name[index]));
+      }
+      else
+      {
+         // Multi-letter uppercase run.
+         var nextIsLower = runEnd < name.Length && char.IsLower(name[runEnd]);
+
+         // Lowercase the first letter.
+         sb.Append(char.ToLowerInvariant(name[index]));
+
+         // Lowercase subsequent uppercase letters only while the next char is also uppercase.
+         var endExclusive = nextIsLower ? runEnd - 1 : runEnd;
+
+         for (var i2 = index + 1; i2 < endExclusive; i2++)
+         {
+            sb.Append(char.ToLowerInvariant(name[i2]));
+         }
+
+         // Preserve the last uppercase letter that precedes a lowercase (e.g., URLValue -> urlValue).
+         if (nextIsLower)
+         {
+            sb.Append(name[runEnd - 1]);
+         }
+      }
+
+      // Append the remainder.
+      if (runEnd < name.Length)
+         sb.Append(name, runEnd, name.Length - runEnd);
 
       return sb;
    }
 
-   private static void ToCamelCase(
+   public static StringBuilder AppendBackingFieldName(
       this StringBuilder sb,
-      string name,
-      bool leadingUnderscore)
+      BackingFieldName fieldName)
    {
-      var startsWithUnderscore = name[0] == '_';
+      var name = fieldName.Name;
+      var start = sb.Length;
 
-      for (var i = 0; i < name.Length; i++)
+      if (string.IsNullOrEmpty(name))
       {
-         var charValue = name[i];
-
-         if (Char.IsDigit(charValue))
+         // nothing to append
+      }
+      else if (name.Length == 1)
+      {
+         if (name[0] == '_')
          {
             sb.Append(name);
+         }
+         else
+         {
+            sb.Append('_').Append(char.ToLowerInvariant(name[0]));
+         }
+      }
+      else
+      {
+         // Determine leading underscores to preserve (do not add more),
+         // but ensure at least one underscore if none exist.
+         var underscoreCount = 0;
+
+         while (underscoreCount < name.Length && name[underscoreCount] == '_')
+         {
+            underscoreCount++;
+         }
+
+         if (underscoreCount > 0)
+         {
+            sb.Append(name, 0, underscoreCount);
+         }
+         else
+         {
+            sb.Append('_');
+         }
+
+         var remainderIndex = underscoreCount;
+
+         if (remainderIndex >= name.Length)
+         {
+            // only underscores -> prefix already appended
+         }
+         else
+         {
+            // If the remainder starts with non-letter (e.g., digit), keep non-letter prefix,
+            // then camelize the first letter segment after that.
+            if (!char.IsLetter(name[remainderIndex]))
+            {
+               // Find first letter
+               var index = remainderIndex;
+
+               while (index < name.Length && !char.IsLetter(name[index]))
+               {
+                  index++;
+               }
+
+               if (index == name.Length)
+               {
+                  // No letters at all -> keep as-is
+                  sb.Append(name, remainderIndex, name.Length - remainderIndex);
+               }
+               else
+               {
+                  // Append non-letter prefix as-is
+                  sb.Append(name, remainderIndex, index - remainderIndex);
+                  // Camelize the letter part
+                  AppendCamelize(sb, name, index, name.Length - index);
+               }
+            }
+            else
+            {
+               // Starts with a letter -> camelize the entire remainder
+               AppendCamelize(sb, name, remainderIndex, name.Length - remainderIndex);
+            }
+         }
+      }
+
+      // Special case: if the rendered backing field name equals the PropertyName exactly,
+      // then prefix the result with an additional underscore to avoid collision.
+      var propName = fieldName.PropertyName;
+      var writtenLength = sb.Length - start;
+
+      if (propName.Length == writtenLength)
+      {
+         var equals = true;
+
+         for (var i = 0; i < writtenLength; i++)
+         {
+            if (sb[start + i] != propName[i])
+            {
+               equals = false;
+               break;
+            }
+         }
+
+         if (equals)
+         {
+            sb.Insert(start, "_");
+         }
+      }
+
+      return sb;
+
+      // Helper that camelizes a string segment starting at a letter, with acronym handling,
+      // and appends the result to the provided StringBuilder.
+      static void AppendCamelize(StringBuilder sb, string s, int startIndex, int length)
+      {
+         if (length <= 0)
+            return;
+
+         var character = s[startIndex];
+
+         // If first is not a letter, keep as-is
+         if (!char.IsLetter(character))
+         {
+            sb.Append(s, startIndex, length);
             return;
          }
 
-         if (Char.IsLower(charValue))
-            break;
-
-         if (!Char.IsLetter(charValue))
-            continue;
-
-         if (i == 0)
+         if (length == 1)
          {
-            if (leadingUnderscore)
-               sb.Append("_");
+            sb.Append(char.ToLowerInvariant(character));
+            return;
+         }
 
-            sb.Append(Char.ToLowerInvariant(charValue));
-            sb.Append(name.Substring(1));
+         // If second is lowercase -> PascalCase -> lower only first char
+         if (char.IsLower(s[startIndex + 1]))
+         {
+            sb.Append(char.ToLowerInvariant(character));
+            sb.Append(s, startIndex + 1, length - 1);
+            return;
+         }
+
+         // Compute length of initial uppercase run
+         var run = 1;
+         var end = startIndex + length;
+
+         var i = startIndex + 1;
+
+         while (i < end && char.IsUpper(s[i]))
+         {
+            run++;
+            i++;
+         }
+
+         if (run == length)
+         {
+            // Entire segment is uppercase -> lowercase all
+            for (var j = startIndex; j < end; j++)
+            {
+               sb.Append(char.ToLowerInvariant(s[j]));
+            }
 
             return;
          }
 
-         if (leadingUnderscore && !startsWithUnderscore)
-            sb.Append("_");
+         // Multi-letter uppercase run with a following non-uppercase character.
+         // Apply look-ahead rule: lowercase first letter, then lowercase subsequent
+         // uppercase letters only while the next character is also uppercase.
+         var nextIsLower = run < length && char.IsLower(s[startIndex + run]);
 
-         sb.Append(name.Substring(startsWithUnderscore ? 1 : 0, i))
-           .Append(Char.ToLowerInvariant(charValue));
+         // Lowercase the first letter.
+         sb.Append(char.ToLowerInvariant(s[startIndex]));
 
-         if (i != name.Length - 1)
+         if (run > 1)
          {
-            sb.Append(name.Substring(i));
+            var endExclusive = nextIsLower ? startIndex + run - 1 : startIndex + run;
+
+            for (var j = startIndex + 1; j < endExclusive; j++)
+            {
+               sb.Append(char.ToLowerInvariant(s[j]));
+            }
+
+            // Preserve the last uppercase letter of the run if followed by a lowercase (e.g., URLValue -> urlValue).
+            if (nextIsLower)
+               sb.Append(s[startIndex + run - 1]);
          }
 
-         return;
+         // Append the remainder of the segment.
+         if (run < length)
+         {
+            sb.Append(s, startIndex + run, length - run);
+         }
       }
-
-      if (leadingUnderscore)
-      {
-         if (!startsWithUnderscore)
-            sb.Append("_");
-
-         sb.Append(name);
-
-         return;
-      }
-
-      if (startsWithUnderscore && name.Length > 1)
-      {
-         sb.Append(name.Substring(1));
-         return;
-      }
-
-      sb.Append(name);
    }
 
    public static StringBuilder AppendCast(
@@ -290,10 +499,11 @@ public static class StringBuilderExtensions
       return sb;
    }
 
-   public static StringBuilder AppendTypeForXmlComment(
+   public static StringBuilder AppendMemberTypeForXmlComment<T>(
       this StringBuilder sb,
-      IMemberState member,
+      T member,
       (string Text, string? Separator)? suffix = null)
+      where T : IMemberState
    {
       return sb.AppendTypeForXmlComment(member.TypeFullyQualified,
                                         member.IsTypeParameter,
@@ -305,15 +515,16 @@ public static class StringBuilderExtensions
       ITypeInformation type,
       (string Text, string? Separator)? suffix = null)
    {
-      return sb.AppendTypeForXmlComment(type.ContainingTypes.Count == 0 ? type.TypeMinimallyQualified : type.TypeFullyQualified,
+      return sb.AppendTypeForXmlComment(type.ContainingTypes.IsDefaultOrEmpty ? type.TypeMinimallyQualified : type.TypeFullyQualified,
                                         false,
                                         suffix);
    }
 
-   public static StringBuilder AppendTypeForXmlComment(
+   public static StringBuilder AppendTypeFullyQualifiedForXmlComment<T>(
       this StringBuilder sb,
-      ITypeFullyQualified type,
+      T type,
       (string Text, string? Separator)? suffix = null)
+      where T : ITypeFullyQualified
    {
       return sb.AppendTypeForXmlComment(type.TypeFullyQualified, false, suffix);
    }
@@ -354,17 +565,19 @@ public static class StringBuilderExtensions
       return sb.Append(type.TypeMinimallyQualified);
    }
 
-   public static StringBuilder AppendTypeFullyQualified(
+   public static StringBuilder AppendTypeFullyQualified<T>(
       this StringBuilder sb,
-      ITypeFullyQualified type)
+      T type)
+      where T : ITypeFullyQualified
    {
       return sb.Append(type.TypeFullyQualified);
    }
 
-   public static StringBuilder AppendTypeFullyQualified(
+   public static StringBuilder AppendTypeFullyQualified<T>(
       this StringBuilder sb,
-      INamespaceAndName type,
-      IReadOnlyList<ContainingTypeState> containingTypes)
+      T type,
+      ImmutableArray<ContainingTypeState> containingTypes)
+      where T : INamespaceAndName
    {
       sb.Append("global::");
 
@@ -409,7 +622,7 @@ public static class StringBuilderExtensions
    {
       sb.AppendTypeFullyQualified(type);
 
-      if ((type.IsReferenceType || type is { IsTypeParameter: true, IsStruct: false }) && type.NullableAnnotation != NullableAnnotation.Annotated)
+      if ((type.IsReferenceType || type is { IsTypeParameter: true, IsValueType: false }) && type.NullableAnnotation != NullableAnnotation.Annotated)
          sb.Append("?");
 
       return sb;
@@ -429,9 +642,9 @@ public static class StringBuilderExtensions
 
    public static StringBuilder RenderContainingTypesStart(
       this StringBuilder sb,
-      IReadOnlyList<ContainingTypeState> containingTypes)
+      ImmutableArray<ContainingTypeState> containingTypes)
    {
-      for (var i = 0; i < containingTypes.Count; i++)
+      for (var i = 0; i < containingTypes.Length; i++)
       {
          var containingType = containingTypes[i];
          var typeKind = containingType.IsRecord
@@ -448,9 +661,9 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
 
    public static StringBuilder RenderContainingTypesEnd(
       this StringBuilder sb,
-      IReadOnlyList<ContainingTypeState> containingTypes)
+      ImmutableArray<ContainingTypeState> containingTypes)
    {
-      for (var i = 0; i < containingTypes.Count; i++)
+      for (var i = 0; i < containingTypes.Length; i++)
       {
          sb.Append(@"
 }");
@@ -514,7 +727,7 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
          sb.Append("global::System.Action");
       }
 
-      if (method.Parameters.Count == 0)
+      if (method.Parameters.Length == 0)
       {
          return isFunc
                    ? sb.Append("<").Append(method.ReturnType).Append(">")
@@ -523,7 +736,7 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
 
       sb.Append("<");
 
-      for (var i = 0; i < method.Parameters.Count; i++)
+      for (var i = 0; i < method.Parameters.Length; i++)
       {
          if (i > 0)
             sb.Append(", ");
@@ -537,17 +750,18 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
       return sb.Append(">");
    }
 
-   public static StringBuilder AppendGenericTypeParameters(
+   public static StringBuilder AppendGenericTypeParameters<T>(
       this StringBuilder sb,
-      IHasGenerics type,
+      T type,
       bool constructOpenGeneric = false)
+      where T : IHasGenerics
    {
-      if (type.GenericParameters.Count <= 0)
+      if (type.GenericParameters.IsDefaultOrEmpty)
          return sb;
 
       sb.Append("<");
 
-      for (var i = 0; i < type.GenericParameters.Count; i++)
+      for (var i = 0; i < type.GenericParameters.Length; i++)
       {
          if (i > 0)
             sb.Append(constructOpenGeneric ? "," : ", ");
@@ -564,14 +778,14 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
       IHasGenerics type,
       string prefix)
    {
-      if (type.GenericParameters.Count <= 0)
+      if (type.GenericParameters.IsDefaultOrEmpty)
          return sb;
 
-      for (var i = 0; i < type.GenericParameters.Count; i++)
+      for (var i = 0; i < type.GenericParameters.Length; i++)
       {
          var parameter = type.GenericParameters[i];
 
-         if (parameter.Constraints.Count == 0)
+         if (parameter.Constraints.IsDefaultOrEmpty)
             continue;
 
          sb.Append(@"
@@ -583,12 +797,12 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
 
    public static StringBuilder AppendGenericConstraints(
       this StringBuilder sb,
-      IReadOnlyList<string> constraints)
+      ImmutableArray<string> constraints)
    {
-      if (constraints.Count <= 0)
+      if (constraints.IsDefaultOrEmpty)
          return sb;
 
-      for (var i = 0; i < constraints.Count; i++)
+      for (var i = 0; i < constraints.Length; i++)
       {
          if (i > 0)
             sb.Append(", ");
@@ -599,9 +813,10 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
       return sb;
    }
 
-   public static StringBuilder AppendTypeKind(
+   public static StringBuilder AppendTypeKind<T>(
       this StringBuilder sb,
-      ITypeKindInformation type)
+      T type)
+      where T : ITypeKindInformation
    {
       if (type.IsReferenceType)
       {

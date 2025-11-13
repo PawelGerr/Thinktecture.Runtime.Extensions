@@ -2,129 +2,68 @@ namespace Thinktecture;
 
 public static class ImmutableArrayExtensions
 {
-   public static bool Contains<T>(this ImmutableArray<T> array, T item, IEqualityComparer<T> comparer)
-   {
-      if (array.IsDefaultOrEmpty)
-         return false;
-
-      return array.IndexOf(item, 0, comparer) >= 0;
-   }
-
    public static ImmutableArray<T> RemoveAll<T, TArg>(this ImmutableArray<T> array, Func<T, TArg, bool> predicate, TArg arg)
    {
       if (array.IsDefaultOrEmpty)
          return ImmutableArray<T>.Empty;
 
-      ImmutableArray<T> newArray;
-      var all = true;
-      var none = true;
+      var length = array.Length;
 
-      for (var i = 0; i < array.Length; i++)
+      // Find first element to remove (fast-path to return original if none)
+      var index = 0;
+
+      for (; index < length; index++)
       {
-         var item = array[i];
-
-         if (predicate(item, arg))
-         {
-            all = false;
-
-            if (none || !newArray.IsDefault)
-               continue;
-
-            newArray = ImmutableArray.CreateRange(array, 0, i, elem => elem);
-         }
-         else
-         {
-            none = false;
-
-            if (!newArray.IsDefault)
-            {
-               newArray = newArray.Add(item);
-            }
-            else if (!all)
-            {
-               newArray = [item];
-            }
-         }
+         if (predicate(array[index], arg))
+            break;
       }
 
-      if (none)
-         return ImmutableArray<T>.Empty;
+      if (index == length)
+         return array;
 
-      return all || newArray.IsDefault ? array : newArray;
-   }
+      var builder = ImmutableArray.CreateBuilder<T>(length - 1);
 
-   public static ImmutableArray<T> Where<T>(this ImmutableArray<T> array, Func<T, bool> predicate)
-   {
-      return array.Where(predicate, null, 0);
-   }
-
-   public static ImmutableArray<T> Where<T, TArg>(
-      this ImmutableArray<T> array,
-      Func<T, TArg, bool>? predicate,
-      TArg arg)
-   {
-      return array.Where(null, predicate, arg);
-   }
-
-   private static ImmutableArray<T> Where<T, TArg>(
-      this ImmutableArray<T> array,
-      Func<T, bool>? predicate,
-      Func<T, TArg, bool>? predicateWithArg,
-      TArg arg)
-   {
-      if (array.IsDefaultOrEmpty)
-         return ImmutableArray<T>.Empty;
-
-      ImmutableArray<T> newArray;
-      var all = true;
-      var none = true;
-
-      for (var i = 0; i < array.Length; i++)
+      // Copy prefix [0, index) in one shot if possible
+      if (index > 0)
       {
-         var item = array[i];
-
-         if (predicateWithArg?.Invoke(item, arg)
-             ?? predicate?.Invoke(item)
-             ?? throw new Exception("Both predicates must not be null"))
-         {
-            none = false;
-
-            if (!newArray.IsDefault)
-            {
-               newArray = newArray.Add(item);
-            }
-            else if (!all)
-            {
-               newArray = [item];
-            }
-         }
-         else
-         {
-            all = false;
-
-            if (none || !newArray.IsDefault)
-               continue;
-
-            newArray = ImmutableArray.CreateRange(array, 0, i, static elem => elem);
-         }
+         builder.AddRange(array.AsSpan(0, index));
       }
 
-      if (none)
-         return ImmutableArray<T>.Empty;
+      // For the suffix, add contiguous keep-runs via AddRange to minimize per-item Add overhead
+      var segmentStart = index + 1;
 
-      return all || newArray.IsDefault ? array : newArray;
+      for (var i = segmentStart; i < length; i++)
+      {
+         if (!predicate(array[i], arg))
+            continue;
+
+         var runLength = i - segmentStart;
+
+         if (runLength > 0)
+            builder.AddRange(array.AsSpan(segmentStart, runLength));
+
+         segmentStart = i + 1;
+      }
+
+      // Tail run
+      if (segmentStart < length)
+      {
+         builder.AddRange(array.AsSpan(segmentStart, length - segmentStart));
+      }
+
+      return builder.Count == 0 ? ImmutableArray<T>.Empty : builder.DrainToImmutable();
    }
 
    public static ImmutableArray<TResult> SelectWhere<T, TResult>(
       this ImmutableArray<T> array,
-      SelectWhereDelegate<T, TResult> predicate)
+      SelectWhere<T, TResult> predicate)
    {
-      return array.SelectWhere(predicate, null, 0);
+      return array.SelectWhere<T, object?, TResult>(predicate, null, null);
    }
 
    public static ImmutableArray<TResult> SelectWhere<T, TArg, TResult>(
       this ImmutableArray<T> array,
-      SelectWhereDelegate<T, TArg, TResult> predicate,
+      SelectWhere<T, TArg, TResult> predicate,
       TArg arg)
    {
       return array.SelectWhere(null, predicate, arg);
@@ -132,44 +71,33 @@ public static class ImmutableArrayExtensions
 
    private static ImmutableArray<TResult> SelectWhere<T, TArg, TResult>(
       this ImmutableArray<T> array,
-      SelectWhereDelegate<T, TResult>? predicate,
-      SelectWhereDelegate<T, TArg, TResult>? predicateWithArg,
+      SelectWhere<T, TResult>? predicate,
+      SelectWhere<T, TArg, TResult>? predicateWithArg,
       TArg arg)
    {
       if (array.IsDefaultOrEmpty)
          return ImmutableArray<TResult>.Empty;
 
-      var newArray = ImmutableArray<TResult>.Empty;
+      var length = array.Length;
+      ImmutableArray<TResult>.Builder? builder = null;
 
-      for (var i = 0; i < array.Length; i++)
+      for (var i = 0; i < length; i++)
       {
          var item = array[i];
 
          if (predicateWithArg?.Invoke(item, arg, out var newItem)
              ?? predicate?.Invoke(item, out newItem)
-             ?? throw new Exception("Both predicates must not be null"))
+             ?? throw new InvalidOperationException("Both predicates must not be null"))
          {
-            newArray = newArray.Add(newItem);
+            builder ??= ImmutableArray.CreateBuilder<TResult>(length - i);
+            builder.Add(newItem);
          }
       }
 
-      return newArray;
-   }
+      if (builder is null || builder.Count == 0)
+         return ImmutableArray<TResult>.Empty;
 
-   public static T? FirstOrDefault<T, TArg>(this ImmutableArray<T> array, Func<T, TArg, bool> predicate, TArg arg)
-   {
-      if (array.IsDefaultOrEmpty)
-         return default;
-
-      for (var i = 0; i < array.Length; i++)
-      {
-         var item = array[i];
-
-         if (predicate(item, arg))
-            return item;
-      }
-
-      return default;
+      return builder.DrainToImmutable();
    }
 
    public static int ComputeHashCode<T>(this ImmutableArray<T> collection)
@@ -178,42 +106,12 @@ public static class ImmutableArrayExtensions
       if (collection.IsDefaultOrEmpty)
          return 0;
 
-      var hashCode = typeof(T).GetHashCode();
+      var hashCode = 0;
+      var count = collection.Length;
 
-      for (var i = 0; i < collection.Length; i++)
+      for (var i = 0; i < count; i++)
       {
-         hashCode = (hashCode * 397) ^ collection[i].GetHashCode();
-      }
-
-      return hashCode;
-   }
-
-   public static int ComputeHashCode<T, TProperty>(this ImmutableArray<T> collection, Func<T, TProperty> selector)
-      where TProperty : IHashCodeComputable
-   {
-      if (collection.IsDefaultOrEmpty)
-         return 0;
-
-      var hashCode = typeof(T).GetHashCode();
-
-      for (var i = 0; i < collection.Length; i++)
-      {
-         hashCode = (hashCode * 397) ^ (selector(collection[i])?.GetHashCode() ?? 0);
-      }
-
-      return hashCode;
-   }
-
-   public static int ComputeHashCode<T>(this ImmutableArray<T> collection, Func<T, string> selector)
-   {
-      if (collection.IsDefaultOrEmpty)
-         return 0;
-
-      var hashCode = typeof(T).GetHashCode();
-
-      for (var i = 0; i < collection.Length; i++)
-      {
-         hashCode = (hashCode * 397) ^ (selector(collection[i])?.GetHashCode() ?? 0);
+         hashCode = unchecked(hashCode * 397) ^ collection[i].GetHashCode();
       }
 
       return hashCode;
@@ -236,31 +134,42 @@ public static class ImmutableArrayExtensions
          return array;
 
       var set = SetForDistinct<T>.Instance.Lease(comparer);
-      ImmutableArray<T> distinctArray;
+
+      // First pass: count unique items
+      var uniqueCount = 0;
 
       for (var i = 0; i < array.Length; i++)
       {
-         var arrayItem = array[i];
+         if (set.Add(array[i]))
+            uniqueCount++;
+      }
 
-         // unique item
-         if (set.Add(arrayItem))
-         {
-            if (!distinctArray.IsDefault)
-               distinctArray = distinctArray.Add(arrayItem);
-         }
-         // duplicate
-         else if (distinctArray.IsDefault)
-         {
-            distinctArray = ImmutableArray.CreateRange(array, 0, i, static arg => arg);
-         }
+      // No duplicates -> return original
+      if (uniqueCount == array.Length)
+      {
+         SetForDistinct<T>.Instance.Return(set);
+         return array;
+      }
+
+      // Prepare for second pass
+      set.Clear();
+
+      var builder = ImmutableArray.CreateBuilder<T>(uniqueCount);
+
+      for (var i = 0; i < array.Length; i++)
+      {
+         var item = array[i];
+
+         if (set.Add(item))
+            builder.Add(item);
       }
 
       SetForDistinct<T>.Instance.Return(set);
 
-      return distinctArray.IsDefault ? array : distinctArray;
+      return builder.DrainToImmutable();
    }
 
-   private class SetForDistinct<T> : ReusableHashSet<T>
+   private sealed class SetForDistinct<T> : ReusableHashSet<T>
    {
       private static readonly ThreadLocal<SetForDistinct<T>> _instance = new(() => new SetForDistinct<T>(1000));
 

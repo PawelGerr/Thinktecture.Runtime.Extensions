@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionCodeGenerator : CodeGeneratorBase
+public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "RegularUnion-CodeGenerator";
    public override string FileNameSuffix => ".RegularUnion";
@@ -33,7 +33,7 @@ public class RegularUnionCodeGenerator : CodeGeneratorBase
       var unsortedTypeMembers = new List<RegularUnionTypeMemberState>();
 
       // Reversed for-loop because whole collection will be reversed again by the caller
-      for (var i = _state.TypeMembers.Count - 1; i >= 0; i--)
+      for (var i = _state.TypeMembers.Length - 1; i >= 0; i--)
       {
          var typeMember = _state.TypeMembers[i];
 
@@ -189,7 +189,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.None)
          return;
 
-      for (var i = 0; i < _state.TypeMembers.Count; i++)
+      for (var i = 0; i < _state.TypeMembers.Length; i++)
       {
          var memberType = _state.TypeMembers[i];
 
@@ -199,7 +199,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
              || memberType.HasRequiredMembers)
             continue;
 
-         for (var j = 0; j < memberType.UniqueSingleArgumentConstructors.Count; j++)
+         for (var j = 0; j < memberType.UniqueSingleArgumentConstructors.Length; j++)
          {
             var ctorArg = memberType.UniqueSingleArgumentConstructors[j];
 
@@ -209,10 +209,10 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
             _sb.Append(@"
 
    /// <summary>
-   /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(ctorArg).Append(@".
+   /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendMemberTypeForXmlComment(ctorArg).Append(@".
    /// </summary>
-   /// <param name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@""">Value to covert from.</param>
-   /// <returns>A new instance of ").AppendTypeForXmlComment(memberType).Append(@" converted from <paramref name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@"""/>.</returns>
+   /// <param name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@""">Value to convert from.</param>
+   /// <returns>A new instance of ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@" converted from <paramref name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@"""/>.</returns>
    public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
    {
       return new ").AppendTypeFullyQualified(memberType).Append("(").AppendEscaped(ctorArg.ArgumentName).Append(@");
@@ -247,7 +247,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The action to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
+   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The action to execute if the current type is ").AppendTypeFullyQualifiedForXmlComment(typeMember.State).Append(".</param>");
       }
 
       _sb.Append(@"
@@ -408,7 +408,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The function to execute if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
+   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The function to execute if the current type is ").AppendTypeFullyQualifiedForXmlComment(typeMember.State).Append(".</param>");
       }
 
       _sb.Append(@"
@@ -563,7 +563,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The instance to return if the current type is ").AppendTypeForXmlComment(typeMember.State).Append(".</param>");
+   /// <param name=""").Append(typeMember.ArgumentName).Append(@""">The instance to return if the current type is ").AppendTypeFullyQualifiedForXmlComment(typeMember.State).Append(".</param>");
       }
 
       _sb.Append(@"
@@ -679,7 +679,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       return typeMembers;
    }
 
-   private void RemoveDerivedTypes(List<TypeMember> typeMembers, TypeMember stopType)
+   private static void RemoveDerivedTypes(List<TypeMember> typeMembers, TypeMember stopType)
    {
       for (var i = 0; i < stopType.DerivedTypes.Count; i++)
       {
@@ -768,7 +768,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       TypeMember? BaseType,
       List<TypeMember> DerivedTypes);
 
-   private class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>
+   private sealed class TypeMembersEqualityComparer : IEqualityComparer<IReadOnlyList<TypeMember>>
    {
       public static TypeMembersEqualityComparer Instance { get; } = new();
 
@@ -788,7 +788,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          return obj is null ? 0 : obj.ComputeHashCode(TypeMemberComparer.TypeMemberComparerInstance);
       }
 
-      private class TypeMemberComparer : IEqualityComparer<TypeMember>
+      private sealed class TypeMemberComparer : IEqualityComparer<TypeMember>
       {
          public static readonly TypeMemberComparer TypeMemberComparerInstance = new();
 
@@ -807,9 +807,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
 file static class Extensions
 {
-   public static StringBuilder AppendTypeMembers(this StringBuilder sb, IReadOnlyList<RegularUnionTypeMemberState> typeMembers)
+   public static StringBuilder AppendTypeMembers(this StringBuilder sb, ImmutableArray<RegularUnionTypeMemberState> typeMembers)
    {
-      for (var i = 0; i < typeMembers.Count; i++)
+      for (var i = 0; i < typeMembers.Length; i++)
       {
          var member = typeMembers[i];
 

@@ -23,6 +23,9 @@ public sealed class KeyedMessagePackCodeGenerator : CodeGeneratorBase
                                 .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
+      if (keyType is null)
+         return;
+
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 

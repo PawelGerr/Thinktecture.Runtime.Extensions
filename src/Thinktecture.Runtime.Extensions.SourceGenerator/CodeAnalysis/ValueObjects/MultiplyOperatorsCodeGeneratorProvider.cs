@@ -10,7 +10,10 @@ public class MultiplyOperatorsCodeGeneratorProvider : IOperatorsCodeGeneratorPro
    {
    }
 
-   public bool TryGet(ImplementedOperators keyMemberOperators, OperatorsGeneration operatorsGeneration, [MaybeNullWhen(false)] out IInterfaceCodeGenerator generator)
+   public bool TryGet(
+      ImplementedOperators keyMemberOperators,
+      OperatorsGeneration operatorsGeneration,
+      [NotNullWhen(true)] out IInterfaceCodeGenerator? generator)
    {
       return MultiplyOperatorsCodeGenerator.TryGet(keyMemberOperators, operatorsGeneration, out generator);
    }

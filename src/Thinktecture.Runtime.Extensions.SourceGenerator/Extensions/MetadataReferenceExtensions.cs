@@ -10,14 +10,15 @@ public static class MetadataReferenceExtensions
    /// <exception cref="FileNotFoundException">MissingMetadataReference throws if DLL could not be loaded.</exception>
    public static IEnumerable<ModuleInfo> GetModules(this MetadataReference metadataReference)
    {
-      // Project reference (ISymbol)
-      if (metadataReference is CompilationReference compilationReference)
-         return compilationReference.Compilation.Assembly.Modules.Select(m => new ModuleInfo(m.Name));
-
-      // DLL
-      if (metadataReference is PortableExecutableReference portable && portable.GetMetadata() is AssemblyMetadata assemblyMetadata)
-         return assemblyMetadata.GetModules().Select(m => new ModuleInfo(m.Name));
-
-      return [];
+      return metadataReference switch
+      {
+         // Project reference (ISymbol)
+         CompilationReference compilationReference => compilationReference.Compilation.Assembly.Modules.Select(m => new ModuleInfo(m.Name)),
+         // DLL (assembly with potentially multiple modules)
+         PortableExecutableReference portable when portable.GetMetadata() is AssemblyMetadata assemblyMetadata => assemblyMetadata.GetModules().Select(m => new ModuleInfo(m.Name)),
+         // Netmodule (single module reference)
+         PortableExecutableReference portable when portable.GetMetadata() is ModuleMetadata moduleMetadata => [new ModuleInfo(moduleMetadata.Name)],
+         _ => []
+      };
    }
 }

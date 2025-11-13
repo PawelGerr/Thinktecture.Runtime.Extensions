@@ -1,8 +1,11 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis.ObjectFactories;
 
-public class ObjectFactoryCodeGeneratorFactory : ICodeGeneratorFactory<ObjectFactorySourceGeneratorState>
+public sealed class ObjectFactoryCodeGeneratorFactory
+   : ICodeGeneratorFactory<ObjectFactorySourceGeneratorState>,
+     IEquatable<ObjectFactoryCodeGeneratorFactory>
 {
    public static readonly ICodeGeneratorFactory<ObjectFactorySourceGeneratorState> Instance = new ObjectFactoryCodeGeneratorFactory();
 
@@ -17,8 +20,9 @@ public class ObjectFactoryCodeGeneratorFactory : ICodeGeneratorFactory<ObjectFac
       return new ObjectFactoryCodeGenerator(state, stringBuilder);
    }
 
-   public bool Equals(ICodeGeneratorFactory<ObjectFactorySourceGeneratorState> other)
-   {
-      return ReferenceEquals(this, other);
-   }
+   public bool Equals(ICodeGeneratorFactory<ObjectFactorySourceGeneratorState>? other) => ReferenceEquals(this, other);
+   public bool Equals(ObjectFactoryCodeGeneratorFactory? other) => ReferenceEquals(this, other);
+   public override bool Equals(object? obj) => ReferenceEquals(this, obj);
+
+   public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
 }

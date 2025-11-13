@@ -22,7 +22,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_3_TYPES);
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_4_TYPES);
       InitializeGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_5_TYPES);
-      InitializeNonGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_AD_HOCH);
+      InitializeNonGenericUnionSourceGen(context, options, Constants.Attributes.Union.FULL_NAME_AD_HOC);
    }
 
    private void InitializeGenericUnionSourceGen(
@@ -79,7 +79,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
    {
       return GetSourceGenContextOrNull(
          context,
-         static (attributeClass, _) => attributeClass.TypeArguments.IsDefaultOrEmpty ? null : attributeClass.TypeArguments,
+         static (attributeClass, _) => attributeClass.TypeArguments.IsDefaultOrEmpty ? [] : attributeClass.TypeArguments,
          cancellationToken);
    }
 
@@ -90,9 +90,9 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          static (_, constructorArguments) =>
          {
             if (constructorArguments.IsDefaultOrEmpty)
-               return null;
+               return [];
 
-            var types = new List<ITypeSymbol>(constructorArguments.Length);
+            ImmutableArray<ITypeSymbol>.Builder? types = null;
             var foundNull = false;
 
             for (var i = 0; i < constructorArguments.Length; i++)
@@ -105,20 +105,20 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                   continue;
                }
 
-               if (foundNull || argument.Value is not ITypeSymbol type || type.TypeKind == TypeKind.Error)
-                  return null;
+               if (foundNull || argument.Value is not ITypeSymbol type)
+                  return [];
 
-               types.Add(type);
+               (types ??= ImmutableArray.CreateBuilder<ITypeSymbol>(constructorArguments.Length)).Add(type);
             }
 
-            return types.Count > 0 ? types : null;
+            return types?.Count > 0 ? types.DrainToImmutable() : [];
          },
          cancellationToken);
    }
 
    private SourceGenContext? GetSourceGenContextOrNull(
       GeneratorAttributeSyntaxContext context,
-      Func<INamedTypeSymbol, ImmutableArray<TypedConstant>, IReadOnlyList<ITypeSymbol>?> getMemberTypes,
+      Func<INamedTypeSymbol, ImmutableArray<TypedConstant>, ImmutableArray<ITypeSymbol>> getMemberTypes,
       CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
@@ -127,11 +127,14 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       {
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
-         if (type.TypeKind == TypeKind.Error
-             || context.Attributes.IsDefaultOrEmpty
-             || context.Attributes.Length != 1)
+         if (type.TypeKind == TypeKind.Error)
          {
             return null;
+         }
+
+         if (context.Attributes.IsDefaultOrEmpty || context.Attributes.Length != 1)
+         {
+            return new SourceGenContext(new SourceGenError("Ad-hoc union requires exactly one Union attribute", tds));
          }
 
          var attributeData = context.Attributes[0];
@@ -144,10 +147,9 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
          var memberTypeSymbols = getMemberTypes(attributeData.AttributeClass, attributeData.ConstructorArguments);
 
-         if (memberTypeSymbols is null
-             || memberTypeSymbols.Count < 2)
+         if (memberTypeSymbols.Length < 2)
          {
-            return null;
+            return new SourceGenContext(new SourceGenError("Ad-hoc union must define at least two member types", tds));
          }
 
          var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
@@ -161,15 +163,15 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               memberTypeSymbols.Count);
-         var memberTypeStates = new AdHocUnionMemberTypeState[memberTypeSymbols.Count];
+                                               memberTypeSymbols.Length);
+         var memberTypeStates = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeState>(memberTypeSymbols.Length);
 
-         for (var i = 0; i < memberTypeSymbols.Count; i++)
+         for (var i = 0; i < memberTypeSymbols.Length; i++)
          {
             var memberType = memberTypeSymbols[i];
 
             if (memberType.TypeKind == TypeKind.Error)
-               return null;
+               return new SourceGenContext(new SourceGenError("Type of the member must be a named type or array type", tds));
 
             var memberTypeSettings = settings.MemberTypeSettings[i];
             memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
@@ -177,7 +179,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
             var typeDuplicateCounter = 0;
 
-            for (var j = 0; j < memberTypeSymbols.Count; j++)
+            for (var j = 0; j < memberTypeSymbols.Length; j++)
             {
                if (j == i)
                {
@@ -205,17 +207,17 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                        (typeDuplicateCounter == 0 ? defaultName : defaultName + typeDuplicateCounter);
 
             if (String.IsNullOrWhiteSpace(name))
-               return null;
+               return new SourceGenContext(new SourceGenError("Ad-hoc union member name cannot be null or whitespace", tds));
 
-            memberTypeStates[i] = new AdHocUnionMemberTypeState(name,
-                                                                defaultName,
-                                                                typeDuplicateCounter,
-                                                                typeState,
-                                                                memberTypeSettings);
+            memberTypeStates.Add(new AdHocUnionMemberTypeState(name,
+                                                               defaultName,
+                                                               typeDuplicateCounter,
+                                                               typeState,
+                                                               memberTypeSettings));
          }
 
          var unionState = new AdHocUnionSourceGenState(type,
-                                                       memberTypeStates,
+                                                       memberTypeStates.DrainToImmutable(),
                                                        settings,
                                                        attributeInfo);
 
@@ -243,7 +245,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                        .Select(static (states, _) => states.IsDefaultOrEmpty
                                                         ? ImmutableArray<AdHocUnionSourceGenState>.Empty
                                                         : states.Distinct(TypeOnlyComparer.Instance))
-                       .WithComparer(new SetComparer<AdHocUnionSourceGenState>())
+                       .WithComparer(SetComparer<AdHocUnionSourceGenState>.Instance)
                        .SelectMany((states, _) => states);
 
       context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, AdHocUnionCodeGeneratorFactory.Instance));

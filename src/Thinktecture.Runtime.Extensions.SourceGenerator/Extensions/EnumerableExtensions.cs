@@ -1,6 +1,6 @@
 namespace Thinktecture;
 
-public static class EnumerableExtension
+public static class EnumerableExtensions
 {
    public static void Enumerate<T>(this IEnumerable<T> enumerable)
    {

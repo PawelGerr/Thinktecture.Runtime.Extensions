@@ -6,7 +6,15 @@ public static class DelegateMethodStateExtensions
 {
    public static bool NeedsCustomDelegate(this DelegateMethodState method)
    {
-      return method.DelegateName != null
-             || method.Parameters.Any(p => p.RefKind != RefKind.None);
+      if (method.DelegateName != null)
+         return true;
+
+      for (var i = 0; i < method.Parameters.Length; i++)
+      {
+         if (method.Parameters[i].RefKind != RefKind.None)
+            return true;
+      }
+
+      return false;
    }
 }

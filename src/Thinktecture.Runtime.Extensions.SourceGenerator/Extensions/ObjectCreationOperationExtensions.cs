@@ -58,7 +58,13 @@ public static class ObjectCreationOperationExtensions
    public static bool HasDefaultStringComparison(this IObjectCreationOperation operation)
    {
       return operation.Initializer is not null
-             && HasInitialization(operation.Initializer.Initializers, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON);
+             && GetEnumParameterValue<StringComparison>(operation, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON) is not null;
+   }
+
+   private static T? GetEnumParameterValue<T>(IObjectCreationOperation initializer, string name)
+      where T : struct, Enum
+   {
+      return initializer.Initializer?.Initializers.FindInitialization(name) is int value ? value.GetValidValue<T>() : null;
    }
 
    private static bool? GetBooleanParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
@@ -68,7 +74,17 @@ public static class ObjectCreationOperationExtensions
 
    private static int? GetIntegerParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
    {
-      return (int?)initializer?.Initializers.FindInitialization(name);
+      var obj = initializer?.Initializers.FindInitialization(name);
+
+      return obj switch
+      {
+         int i => i,
+         byte b => b,
+         short s => s,
+         long l when l >= int.MinValue && l <= int.MaxValue => (int)l,
+         Enum e => Convert.ToInt32(e, System.Globalization.CultureInfo.InvariantCulture),
+         _ => null
+      };
    }
 
    private static string? GetStringParameterValue(IObjectOrCollectionInitializerOperation? initializer, string name)
@@ -100,29 +116,5 @@ public static class ObjectCreationOperationExtensions
       }
 
       return null;
-   }
-
-   private static bool HasInitialization(this ImmutableArray<IOperation> initializations, string name)
-   {
-      if (initializations.IsDefaultOrEmpty)
-         return false;
-
-      for (var i = 0; i < initializations.Length; i++)
-      {
-         var init = initializations[i];
-
-         if (init.Kind != OperationKind.SimpleAssignment || init is not ISimpleAssignmentOperation simpleAssignment)
-            continue;
-
-         if (simpleAssignment.Target.Kind != OperationKind.PropertyReference || simpleAssignment.Target is not IPropertyReferenceOperation propRef)
-            continue;
-
-         if (propRef.Property.Name != name)
-            continue;
-
-         return true;
-      }
-
-      return false;
    }
 }

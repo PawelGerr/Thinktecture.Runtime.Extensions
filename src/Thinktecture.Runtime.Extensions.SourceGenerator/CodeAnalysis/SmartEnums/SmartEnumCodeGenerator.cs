@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using System.Globalization;
 using System.Text;
 
 namespace Thinktecture.CodeAnalysis.SmartEnums;
@@ -135,7 +135,7 @@ namespace ").Append(_state.Namespace).Append(@"
                }
          };
 
-      private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+      private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
       /// <summary>
       /// Gets all valid items.
@@ -178,7 +178,7 @@ namespace ").Append(_state.Namespace).Append(@"
          };
 
       private static readonly global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@">> _items
-                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@">>(GetItems, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+                                             = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@">>(GetItems, global::System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
       /// <summary>
       /// Gets all valid items.
@@ -188,8 +188,13 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-      private readonly int _hashCode;
-      private readonly global::System.Lazy<int> _itemIndex;");
+      private readonly int _hashCode;");
+
+      if (_state.Items.Count != 0)
+      {
+         _sb.Append(@"
+      private readonly global::Thinktecture.Internal.WriteOnceInt _itemIndex;");
+      }
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -250,35 +255,43 @@ namespace ").Append(_state.Namespace).Append(@"
 
       var hasSaneNumberOfItems = _state.Items.Count < 1000;
 
-      if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None && hasSaneNumberOfItems)
+      if (hasSaneNumberOfItems && _state.Items.Count != 0)
       {
-         GenerateSwitchForAction(false, false);
+         if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None || _state.Settings.MapMethods != SwitchMapMethodsGeneration.None)
+         {
+            GenerateGetIndexMethod();
+         }
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForAction(false, true);
+         if (_state.Settings.SwitchMethods != SwitchMapMethodsGeneration.None)
+         {
+            GenerateSwitchForAction(false, false);
 
-         GenerateSwitchForAction(true, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForAction(false, true);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForAction(true, true);
+            GenerateSwitchForAction(true, false);
 
-         GenerateSwitchForFunc(false, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForAction(true, true);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForFunc(false, true);
+            GenerateSwitchForFunc(false, false);
 
-         GenerateSwitchForFunc(true, false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForFunc(false, true);
 
-         if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateSwitchForFunc(true, true);
-      }
+            GenerateSwitchForFunc(true, false);
 
-      if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None && hasSaneNumberOfItems)
-      {
-         GenerateMap(false);
+            if (_state.Settings.SwitchMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateSwitchForFunc(true, true);
+         }
 
-         if (_state.Settings.MapMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
-            GenerateMap(true);
+         if (_state.Settings.MapMethods != SwitchMapMethodsGeneration.None)
+         {
+            GenerateMap(false);
+
+            if (_state.Settings.MapMethods == SwitchMapMethodsGeneration.DefaultWithPartialOverloads)
+               GenerateMap(true);
+         }
       }
 
       if (_state.KeyMember is not null)
@@ -294,9 +307,26 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
+   private void GenerateGetIndexMethod()
+   {
+      _sb.Append(@"
+
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private int GetItemIndex()
+      {
+         var index = _itemIndex.Value; // fast-path (may be stale)
+
+         if (index >= 0)
+            return index;
+
+         _ = Items;
+         return _itemIndex.ReadVolatile();
+      }");
+   }
+
    private void GenerateCustomDelegateTypes()
    {
-      for (var i = 0; i < _state.DelegateMethods.Count; i++)
+      for (var i = 0; i < _state.DelegateMethods.Length; i++)
       {
          var method = _state.DelegateMethods[i];
 
@@ -306,7 +336,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
       private delegate ").Append(method.ReturnType ?? "void").Append(" ").AppendDelegateType(method).Append("(");
 
-         for (var j = 0; j < method.Parameters.Count; j++)
+         for (var j = 0; j < method.Parameters.Length; j++)
          {
             if (j > 0)
                _sb.Append(", ");
@@ -319,7 +349,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(");");
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
          _sb.AppendLine();
    }
 
@@ -331,7 +361,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       ").AppendAccessibility(method.Accessibility).Append(" partial ").Append(method.ReturnType ?? "void").Append(" ").Append(method.MethodName).Append("(");
 
-         for (var i = 0; i < method.Parameters.Count; i++)
+         for (var i = 0; i < method.Parameters.Length; i++)
          {
             if (i > 0)
                _sb.Append(", ");
@@ -349,7 +379,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append("_").AppendArgumentName(method.ArgumentName).Append("(");
 
-         for (var i = 0; i < method.Parameters.Count; i++)
+         for (var i = 0; i < method.Parameters.Length; i++)
          {
             if (i > 0)
                _sb.Append(", ");
@@ -376,9 +406,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateSwitchForAction(bool withState, bool isPartially)
    {
-      if (_state.Items.Count == 0)
-         return;
-
       _sb.Append(@"
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
@@ -476,7 +503,7 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateIndexBasedActionSwitchBody(bool withState, bool isPartially)
    {
       _sb.Append(@"
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {");
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -522,9 +549,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateSwitchForFunc(bool withState, bool isPartially)
    {
-      if (_state.Items.Count == 0)
-         return;
-
       _sb.Append(@"
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
@@ -627,7 +651,7 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateIndexBasedFuncSwitchBody(bool withState, bool isPartially)
    {
       _sb.Append(@"
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {");
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -672,9 +696,6 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateMap(bool isPartially)
    {
-      if (_state.Items.Count == 0)
-         return;
-
       _sb.Append(@"
 
       /// <summary>
@@ -742,7 +763,7 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateIndexBasedMapSwitchBody(bool isPartially)
    {
       _sb.Append(@"
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {");
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -780,7 +801,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   private void GenerateTryGet(IMemberState keyProperty)
+   private void GenerateTryGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -811,7 +832,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateTryGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateTryGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -829,7 +850,7 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif");
    }
 
-   private void GenerateValidate(IMemberState keyProperty)
+   private void GenerateValidate(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -841,7 +862,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -855,7 +876,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateValidateForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateValidateForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -868,7 +889,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
-      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -893,9 +914,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyProperty).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
-      /// <param name=""item"">Item to covert.</param>
+      /// <param name=""item"">Item to convert.</param>
       /// <returns>The ").AppendTypeForXmlComment(_state, (keyProperty.Name, ".")).Append(@" of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
@@ -914,9 +935,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyProperty).Append(@".
+      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendMemberTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
-      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">Value to covert.</param>
+      /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">Value to convert.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>");
 
       if (keyProperty.IsReferenceType)
@@ -988,6 +1009,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.ArgumentException($""The type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" has multiple items with the identifier \""{item.").Append(keyMember.Name).Append(@"}\""."");
 
             lookup.Add(item.").Append(keyMember.Name).Append(@", item);
+            item._itemIndex.Set(list.Count);
             list.Add(item);
          }
 ");
@@ -1072,6 +1094,7 @@ namespace ").Append(_state.Namespace).Append(@"
             if (item is null)
                throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 
+            item._itemIndex.Set(list.Count);
             list.Add(item);
          }
 ");
@@ -1091,22 +1114,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateEnsureValid(IMemberState keyProperty)
-   {
-      _sb.Append(@"
-
-      /// <summary>
-      /// Checks whether current enumeration item is valid.
-      /// </summary>
-      /// <exception cref=""System.InvalidOperationException"">The enumeration item is not valid.</exception>
-      public void EnsureValid()
-      {
-         if (!IsValid)
-            throw new global::System.InvalidOperationException($""The current enumeration item of type \""").Append(_state.Name).Append(@"\"" with identifier \""{this.").Append(keyProperty.Name).Append(@"}\"" is not valid."");
-      }");
-   }
-
-   private void GenerateToValue(IMemberState keyProperty)
+   private void GenerateToValue(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1120,7 +1128,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGet(IMemberState keyProperty)
+   private void GenerateGet(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1159,7 +1167,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateGetForReadOnlySpanOfChar(IMemberState keyProperty)
+   private void GenerateGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
       _sb.Append(@"
 
@@ -1191,11 +1199,11 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.BaseType is null)
       {
-         GenerateConstructor(ownCtorArgs, Array.Empty<ConstructorArgument>());
+         GenerateConstructor(ownCtorArgs, []);
          return;
       }
 
-      var baseCtorArgs = _state.BaseType.Constructors
+      var baseCtorArgs = _state.BaseType.Value.Constructors
                                .Select(ctor =>
                                {
                                   if (ctor.Arguments.Length == 0)
@@ -1210,7 +1218,7 @@ namespace ").Append(_state.Namespace).Append(@"
                                                 while (_state.KeyMember?.ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase) == true || ContainsArgument(ownCtorArgs, argName))
                                                 {
                                                    counter++;
-                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString()}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
+                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString(CultureInfo.InvariantCulture)}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
                                                 }
 
                                                 return new ConstructorArgument(a.TypeFullyQualified, argName);
@@ -1225,7 +1233,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, ArgumentName argName)
    {
       for (var i = 0; i < ownCtorArgs.Count; i++)
@@ -1270,9 +1277,9 @@ namespace ").Append(_state.Namespace).Append(@"
          ").AppendTypeFullyQualified(member).Append(" ").AppendEscaped(member.ArgumentName);
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
       {
-         for (var i = 0; i < _state.DelegateMethods.Count; i++)
+         for (var i = 0; i < _state.DelegateMethods.Length; i++)
          {
             var method = _state.DelegateMethods[i];
 
@@ -1330,7 +1337,7 @@ namespace ").Append(_state.Namespace).Append(@"
          this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
       }
 
-      if (_state.DelegateMethods.Count > 0)
+      if (_state.DelegateMethods.Length > 0)
       {
          foreach (var method in _state.DelegateMethods)
          {
@@ -1339,10 +1346,16 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
+      if (_state.Items.Count != 0)
+      {
+         _sb.Append(@"
+         this._itemIndex = new global::Thinktecture.Internal.WriteOnceInt();");
+      }
+
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
-         this._hashCode = global::System.HashCode.Combine(typeof(").AppendTypeFullyQualified(_state).Append("), ");
+         this._hashCode = ");
 
          if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
          {
@@ -1357,36 +1370,13 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.AppendEscaped(_state.KeyMember.ArgumentName).Append(".GetHashCode()");
          }
 
-         _sb.Append(");");
+         _sb.Append(";");
       }
       else
       {
          _sb.Append(@"
          this._hashCode = base.GetHashCode();");
       }
-
-      _sb.Append(@"
-         this._itemIndex = new global::System.Lazy<int>(() =>
-                                                        {
-                                                           for (var i = 0; i < Items.Count; i++)
-                                                           {
-                                                              if (this == Items[i])
-                                                                 return i;
-                                                           }
-
-                                                           throw new global::System.Exception($""Current item '{");
-
-      if (_state.KeyMember is null)
-      {
-         _sb.Append("this");
-      }
-      else
-      {
-         _sb.AppendEscaped(_state.KeyMember.ArgumentName);
-      }
-
-      _sb.Append(@"}' not found in 'Items'."");
-                                                        }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);");
 
       _sb.Append(@"
       }

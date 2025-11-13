@@ -17,7 +17,7 @@ public sealed class MessagePackValueObjectCodeGeneratorFactory : MessagePackKeye
    {
       return !state.AttributeInfo.HasMessagePackFormatterAttribute
              && state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.MessagePack)
-             && !state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
+             && !state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)

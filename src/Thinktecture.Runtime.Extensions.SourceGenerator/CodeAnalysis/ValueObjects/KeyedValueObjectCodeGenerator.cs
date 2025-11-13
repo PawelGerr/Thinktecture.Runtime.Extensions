@@ -103,11 +103,9 @@ namespace ").Append(_state.Namespace).Append(@"
             ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
             ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
             TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
-         };
+         };");
 
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(").GetHashCode();");
-
-      if (_state is { IsReferenceType: false, Settings.AllowDefaultStructs: true })
+      if (_state is { IsValueType: true, DisallowsDefaultValue: false })
       {
          _sb.Append(@"
 
@@ -184,9 +182,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
-      /// <param name=""obj"">Object to covert.</param>
+      /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullable(keyMember).Append("(").AppendTypeFullyQualifiedNullable(_state).Append(@" obj)
@@ -202,9 +200,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
-      /// <param name=""obj"">Object to covert.</param>
+      /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
@@ -226,12 +224,11 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
-      /// <param name=""obj"">Object to covert.</param>
+      /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       /// <exception cref=""System.NullReferenceException"">If <paramref name=""obj""/> is <c>null</c>.</exception>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
       public static ").AppendConversionOperator(_state.Settings.UnsafeConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          if(obj is null)
@@ -256,9 +253,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendTypeForXmlComment(keyMember).Append(@".
+      /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
-      /// <param name=""").AppendArgumentName(keyMember.ArgumentName).Append(@""">Value to covert.</param>
+      /// <param name=""").AppendArgumentName(keyMember.ArgumentName).Append(@""">Value to convert.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(".</returns>");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
@@ -372,10 +369,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Validates the provided value and attempts to create an instance of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to validate.</param>
-      /// <param name=""provider"">The format provider for parsing or validation, if applicable.</param>
+      /// <param name=""").Append(providerArgumentName).Append(@""">The format provider for parsing or validation, if applicable.</param>
       /// <param name=""obj"">When the method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation succeeds; otherwise, <c>null</c>.</param>
       /// <returns>
-      /// A ").AppendTypeForXmlComment(_state.ValidationError).Append(@" representing the validation error if validation fails; otherwise, <c>null</c>.
+      /// A ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" representing the validation error if validation fails; otherwise, <c>null</c>.
       /// </returns>
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullKeyMemberInput).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {");
@@ -527,7 +524,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, ");
+         return ");
 
       if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
       {
@@ -539,10 +536,10 @@ namespace ").Append(_state.Namespace).Append(@"
       }
       else
       {
-         _sb.Append("this.").Append(_state.KeyMember.Name);
+         _sb.Append("this.").Append(_state.KeyMember.Name).Append(".GetHashCode()");
       }
 
-      _sb.Append(@");
+      _sb.Append(@";
       }");
    }
 
@@ -586,7 +583,7 @@ file static class Extensions
          sb.Append(@"
                (object? key,
                 out object? obj,
-                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+                [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out object? error) =>
                {
                   error = ").AppendTypeFullyQualified(state).Append(".Validate(key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item);
                   obj = item;

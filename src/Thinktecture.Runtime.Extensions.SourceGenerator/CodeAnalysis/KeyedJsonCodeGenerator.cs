@@ -21,7 +21,12 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
                                 .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
+
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
+
+      if (keyType is null)
+         return;
+
       var isString = customFactory is null
                         ? _state.KeyMember?.SpecialType == SpecialType.System_String
                         : customFactory.SpecialType == SpecialType.System_String;

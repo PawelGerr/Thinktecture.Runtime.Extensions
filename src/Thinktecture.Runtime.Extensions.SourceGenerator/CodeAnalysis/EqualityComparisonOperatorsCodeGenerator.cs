@@ -178,7 +178,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeFullyQualifiedForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
@@ -189,7 +189,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeFullyQualifiedForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
@@ -200,7 +200,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeForXmlComment(state.KeyMember).Append(@".
+      /// Compares an instance of ").AppendTypeForXmlComment(state.Type).Append(" with ").AppendTypeFullyQualifiedForXmlComment(state.KeyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
@@ -211,7 +211,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       }
 
       /// <summary>
-      /// Compares an instance of ").AppendTypeForXmlComment(state.KeyMember).Append(" with ").AppendTypeForXmlComment(state.Type).Append(@".
+      /// Compares an instance of ").AppendTypeFullyQualifiedForXmlComment(state.KeyMember).Append(" with ").AppendTypeForXmlComment(state.Type).Append(@".
       /// </summary>
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>

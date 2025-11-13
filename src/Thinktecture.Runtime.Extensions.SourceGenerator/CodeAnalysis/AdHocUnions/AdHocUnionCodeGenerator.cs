@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
-public class AdHocUnionCodeGenerator : CodeGeneratorBase
+public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
 {
    public override string CodeGeneratorName => "AdHocUnion-CodeGenerator";
    public override string FileNameSuffix => ".AdHocUnion";
@@ -83,8 +83,6 @@ namespace ").Append(_state.Namespace).Append(@"
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(").AppendTypeFullyQualified(_state).Append(@").GetHashCode();
-
       private readonly int _valueIndex;
 "); // index is 1-based
 
@@ -158,9 +156,9 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to covert from.</param>
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to convert from.</param>
       /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.</returns>
       public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
@@ -184,11 +182,11 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionToValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to type ").AppendTypeForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionToValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <param name=""obj"">Object to covert.</param>
-      /// <returns>Inner value of type ").AppendTypeForXmlComment(memberType).Append(@".</returns>
-      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendTypeForXmlComment(memberType).Append(@".</exception>
+      /// <param name=""obj"">Object to convert.</param>
+      /// <returns>Inner value of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</returns>
+      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</exception>
       public static ").AppendConversionOperator(_state.Settings.ConversionToValue).Append(" operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.As").Append(memberType.Name).Append(@";
@@ -249,7 +247,7 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -289,14 +287,14 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.Append("global::System.HashCode.Combine(").AppendTypeFullyQualified(_state).Append("._typeHashCode, ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -304,14 +302,14 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(".GetHashCode(");
 
          if (memberType.SpecialType == SpecialType.System_String)
-            _sb.Append("global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
+            _sb.Append("global::System.StringComparison.").Append(_state.Settings.DefaultStringComparison);
 
          _sb.Append(")");
 
          if (memberType.IsReferenceType)
             _sb.Append(" ?? 0");
 
-         _sb.Append("),");
+         _sb.Append(",");
       }
 
       _sb.Append(@"
@@ -370,7 +368,7 @@ namespace ").Append(_state.Namespace).Append(@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
@@ -391,7 +389,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
 
          if (memberType.SpecialType == SpecialType.System_String)
-            _sb.Append(", global::System.StringComparison.").Append(Enum.GetName(typeof(StringComparison), _state.Settings.DefaultStringComparison));
+            _sb.Append(", global::System.StringComparison.").Append(_state.Settings.DefaultStringComparison);
 
          _sb.Append("),");
       }
@@ -423,12 +421,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The action to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -462,7 +460,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?>? @default = null,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -519,7 +517,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -583,12 +581,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The function to execute if no value-specific action is provided.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -622,7 +620,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object?, TResult> @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -682,7 +680,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -738,12 +736,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""default"">The instance to return if no value is provided for the current value.</param>");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -762,7 +760,7 @@ namespace ").Append(_state.Namespace).Append(@"
          TResult @default,");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          if (i != 0)
             _sb.Append(",");
@@ -809,7 +807,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."");");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -850,7 +848,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var valueArgName = ArgumentName.Create("value", renderAsIs: true);
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -906,7 +904,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateFactoriesForTypeDuplicates()
    {
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -933,7 +931,7 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var objBackingFieldWritten = false;
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -955,30 +953,30 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append(memberType.BackingFieldName).Append(";");
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").AppendBackingFieldName(memberType.BackingFieldName).Append(";");
          }
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
 
       /// <summary>
-      /// Indication whether the current value is of type ").AppendTypeForXmlComment(memberType).Append(@".
+      /// Indication whether the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
       /// </summary>
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
          _sb.Append(@"
 
       /// <summary>
-      /// Gets the current value as ").AppendTypeForXmlComment(memberType).Append(@".
+      /// Gets the current value as ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeForXmlComment(memberType).Append(@".</exception>
+      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
             .Append(" ? ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
             .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
@@ -1019,7 +1017,7 @@ namespace ").Append(_state.Namespace).Append(@"
          0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
       }
 
-      for (var i = 0; i < _state.MemberTypes.Count; i++)
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
@@ -1035,9 +1033,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
 file static class Extensions
 {
-   public static StringBuilder AppendMemberTypes(this StringBuilder sb, IReadOnlyList<AdHocUnionMemberTypeState> memberTypes)
+   public static StringBuilder AppendMemberTypes(this StringBuilder sb, ImmutableArray<AdHocUnionMemberTypeState> memberTypes)
    {
-      for (var i = 0; i < memberTypes.Count; i++)
+      for (var i = 0; i < memberTypes.Length; i++)
       {
          var member = memberTypes[i];
 
@@ -1113,7 +1111,7 @@ file static class Extensions
       }
       else
       {
-         sb.Append(qualifier).Append(".").Append(memberType.BackingFieldName);
+         sb.Append(qualifier).Append(".").AppendBackingFieldName(memberType.BackingFieldName);
       }
 
       return sb;
@@ -1135,6 +1133,8 @@ file static class Extensions
       bool useSharedObjectBackingField,
       AdHocUnionMemberTypeState memberType)
    {
-      return sb.Append(useSharedObjectBackingField ? "_obj" : memberType.BackingFieldName);
+      return useSharedObjectBackingField
+                ? sb.Append("_obj")
+                : sb.AppendBackingFieldName(memberType.BackingFieldName);
    }
 }

@@ -4,7 +4,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBase
 {
-   protected void GenerateKeyMember(StringBuilder sb, KeyMemberState keyMember, bool isEnum)
+   protected static void GenerateKeyMember(StringBuilder sb, KeyMemberState keyMember, bool isEnum)
    {
       sb.Append(@"
 
@@ -14,7 +14,7 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
       ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == MemberKind.Field ? "readonly " : null).AppendTypeFullyQualified(keyMember).Append(" ").Append(keyMember.Name).Append(keyMember.Kind == MemberKind.Property ? " { get; }" : ";");
    }
 
-   protected void GenerateKeyMemberEqualityComparison(StringBuilder sb, KeyMemberState keyMember, string? keyMemberEqualityComparerAccessor)
+   protected static void GenerateKeyMemberEqualityComparison(StringBuilder sb, KeyMemberState keyMember, string? keyMemberEqualityComparerAccessor)
    {
       sb.Append(@"
          return ");

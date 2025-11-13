@@ -6,7 +6,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
    where T : ITypeInformation, IHasGenerics
 {
    private readonly T _type;
-   private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
+   private readonly ImmutableArray<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
    private readonly int _nextFreeKey;
    private readonly int _headerValue;
@@ -16,7 +16,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
 
    public ComplexValueObjectMessagePackCodeGenerator(
       T type,
-      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      ImmutableArray<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
       _type = type;
@@ -26,12 +26,12 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
       (_headerValue, _nextFreeKey) = GetKeys(assignableInstanceFieldsAndProperties);
    }
 
-   private static (int MaxKey, int NextFreeKey) GetKeys(IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties)
+   private static (int MaxKey, int NextFreeKey) GetKeys(ImmutableArray<InstanceMemberInfo> assignableInstanceFieldsAndProperties)
    {
       var nextFreeKey = -1;
       var numberOfMembersWithoutKey = 0;
 
-      for (var i = 0; i < assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = assignableInstanceFieldsAndProperties[i];
 
@@ -45,7 +45,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
             nextFreeKey = memberInfo.MessagePackKey.Value;
       }
 
-      return (nextFreeKey == -1 ? assignableInstanceFieldsAndProperties.Count : nextFreeKey + numberOfMembersWithoutKey + 1, nextFreeKey + 1);
+      return (nextFreeKey == -1 ? assignableInstanceFieldsAndProperties.Length : nextFreeKey + numberOfMembersWithoutKey + 1, nextFreeKey + 1);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      var isGeneric = _type.GenericParameters.Count > 0;
+      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty;
 
       if (_type.Namespace is not null)
       {
@@ -114,11 +114,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          global::MessagePack.IFormatterResolver resolver = options.Resolver;
 ");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
+         if (memberInfo is { IsReferenceTypeOrNullableStruct: false, DisallowsDefaultValue: true })
          {
             _sb.Append(@"
          global::Thinktecture.Argument<").AppendTypeFullyQualified(memberInfo).Append("> ").AppendEscaped(memberInfo.ArgumentName).Append(" = default;");
@@ -143,7 +143,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
                switch (i)
                {");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
          var key = memberInfo.MessagePackKey ?? nextFreeKey++;
@@ -169,7 +169,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
                }
             }");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -188,7 +188,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -263,7 +263,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    {
       var skippedMembersWithoutKey = 0;
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 

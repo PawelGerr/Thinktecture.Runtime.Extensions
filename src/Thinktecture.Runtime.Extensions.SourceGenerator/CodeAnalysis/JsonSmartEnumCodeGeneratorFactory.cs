@@ -2,17 +2,9 @@ using System.Text;
 
 namespace Thinktecture.CodeAnalysis;
 
-public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase : IKeyedSerializerCodeGeneratorFactory
+public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase(bool isForObjectFactories) : IKeyedSerializerCodeGeneratorFactory
 {
-   private readonly bool _isForObjectFactories;
-
    public abstract string CodeGeneratorName { get; }
-
-   protected JsonKeyedSerializerCodeGeneratorFactoryBase(
-      bool isForObjectFactories)
-   {
-      _isForObjectFactories = isForObjectFactories;
-   }
 
    public bool MustGenerateCode(KeyedSerializerGeneratorState state)
    {
@@ -20,9 +12,9 @@ public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase : IKeyedSerial
           || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.SystemTextJson))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
 
-      if (_isForObjectFactories)
+      if (isForObjectFactories)
          return hasObjectFactory;
 
       return state.KeyMember is not null && !hasObjectFactory;

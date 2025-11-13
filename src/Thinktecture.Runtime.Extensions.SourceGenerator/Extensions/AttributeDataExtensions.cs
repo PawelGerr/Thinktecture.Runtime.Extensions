@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.Json;
 
@@ -8,12 +7,12 @@ public static class AttributeDataExtensions
 {
    public static string? FindDefaultInstancePropertyName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "DefaultInstancePropertyName");
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.DEFAULT_INSTANCE_PROPERTY_NAME);
    }
 
    public static string? FindDelegateName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "DelegateName");
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.DELEGATE_NAME);
    }
 
    public static bool? FindSkipKeyMember(this AttributeData attributeData)
@@ -23,7 +22,7 @@ public static class AttributeDataExtensions
 
    public static bool? FindSkipFactoryMethods(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipFactoryMethods");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_FACTORY_METHODS);
    }
 
    public static AccessModifier? FindKeyMemberAccessModifier(this AttributeData attributeData)
@@ -48,22 +47,22 @@ public static class AttributeDataExtensions
 
    public static string? FindCreateFactoryMethodName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "CreateFactoryMethodName");
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.CREATE_FACTORY_METHOD_NAME);
    }
 
    public static string? FindTryCreateFactoryMethodName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "TryCreateFactoryMethodName");
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.TRY_CREATE_FACTORY_METHOD_NAME);
    }
 
    public static bool? FindEmptyStringInFactoryMethodsYieldsNull(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "EmptyStringInFactoryMethodsYieldsNull");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.EMPTY_STRING_IN_FACTORY_METHODS_YIELDS_NULL);
    }
 
    public static bool? FindNullInFactoryMethodsYieldsNull(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "NullInFactoryMethodsYieldsNull");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.NULL_IN_FACTORY_METHODS_YIELDS_NULL);
    }
 
    public static bool? FindSkipIComparable(this AttributeData attributeData)
@@ -73,12 +72,12 @@ public static class AttributeDataExtensions
 
    public static bool? FindSkipIParsable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIParsable");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_IPARSABLE);
    }
 
    public static bool? FindSkipIFormattable(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipIFormattable");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_IFORMATTABLE);
    }
    
    public static bool? FindSkipEqualityComparison(this AttributeData attributeData)
@@ -88,105 +87,116 @@ public static class AttributeDataExtensions
 
    public static OperatorsGeneration FindAdditionOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "AdditionOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.ADDITION_OPERATORS);
    }
 
    public static OperatorsGeneration FindSubtractionOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "SubtractionOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.SUBTRACTION_OPERATORS);
    }
 
    public static OperatorsGeneration FindMultiplyOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "MultiplyOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.MULTIPLY_OPERATORS);
    }
 
    public static OperatorsGeneration FindDivisionOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "DivisionOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.DIVISION_OPERATORS);
    }
 
    public static OperatorsGeneration FindComparisonOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "ComparisonOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.COMPARISON_OPERATORS);
    }
 
    public static OperatorsGeneration FindEqualityComparisonOperators(this AttributeData attributeData)
    {
-      return GetOperatorsGeneration(attributeData, "EqualityComparisonOperators");
+      return GetOperatorsGeneration(attributeData, Constants.Attributes.Properties.EQUALITY_COMPARISON_OPERATORS);
    }
 
    public static bool? FindSkipToString(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipToString");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_TO_STRING);
    }
 
    public static SwitchMapMethodsGeneration FindSwitchMethods(this AttributeData attributeData)
    {
-      return GetSwitchMapGeneration(attributeData, "SwitchMethods");
+      return GetSwitchMapGeneration(attributeData, Constants.Attributes.Properties.SWITCH_METHODS);
    }
 
    public static SwitchMapMethodsGeneration FindMapMethods(this AttributeData attributeData)
    {
-      return GetSwitchMapGeneration(attributeData, "MapMethods");
+      return GetSwitchMapGeneration(attributeData, Constants.Attributes.Properties.MAP_METHODS);
    }
 
    public static ConversionOperatorsGeneration? FindConversionFromValue(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionFromValue");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, Constants.Attributes.Properties.CONVERSION_FROM_VALUE);
    }
 
    public static ConversionOperatorsGeneration? FindConversionToValue(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionToValue");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, Constants.Attributes.Properties.CONVERSION_TO_VALUE);
    }
 
    public static ConversionOperatorsGeneration? FindConversionToKeyMemberType(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionToKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, Constants.Attributes.Properties.CONVERSION_TO_KEY_MEMBER_TYPE);
    }
 
    public static ConversionOperatorsGeneration? FindUnsafeConversionToKeyMemberType(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "UnsafeConversionToKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, Constants.Attributes.Properties.UNSAFE_CONVERSION_TO_KEY_MEMBER_TYPE);
    }
 
    public static ConversionOperatorsGeneration? FindConversionFromKeyMemberType(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, "ConversionFromKeyMemberType");
+      return GetEnumParameterValue<ConversionOperatorsGeneration>(attributeData, Constants.Attributes.Properties.CONVERSION_FROM_KEY_MEMBER_TYPE);
    }
 
    public static SerializationFrameworks FindUseForSerialization(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<SerializationFrameworks>(attributeData, "UseForSerialization")
+      return GetEnumParameterValue<SerializationFrameworks>(attributeData, Constants.Attributes.Properties.USE_FOR_SERIALIZATION)
              ?? SerializationFrameworks.None;
    }
 
    public static SerializationFrameworks FindSerializationFrameworks(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<SerializationFrameworks>(attributeData, "SerializationFrameworks")
+      return GetEnumParameterValue<SerializationFrameworks>(attributeData, Constants.Attributes.Properties.SERIALIZATION_FRAMEWORKS)
              ?? SerializationFrameworks.All;
    }
 
    public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<StringComparison>(attributeData, "DefaultStringComparison")
+      return GetEnumParameterValue<StringComparison>(attributeData, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON)
              ?? StringComparison.OrdinalIgnoreCase;
    }
 
    public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)
    {
-      return GetBooleanParameterValue(attributeData, $"T{index}IsNullableReferenceType") ?? false;
+      var name = index switch
+      {
+         0 => "T0IsNullableReferenceType",
+         1 => "T1IsNullableReferenceType",
+         2 => "T2IsNullableReferenceType",
+         3 => "T3IsNullableReferenceType",
+         4 => "T4IsNullableReferenceType",
+         5 => "T5IsNullableReferenceType",
+         _ => $"T{index}IsNullableReferenceType",
+      };
+
+      return GetBooleanParameterValue(attributeData, name) ?? false;
    }
 
    public static bool FindUseWithEntityFramework(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "UseWithEntityFramework") ?? false;
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_WITH_ENTITY_FRAMEWORK) ?? false;
    }
 
    public static bool FindUseForModelBinding(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "UseForModelBinding") ?? false;
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_FOR_MODEL_BINDING) ?? false;
    }
 
    public static bool FindHasCorrespondingConstructor(this AttributeData attributeData)
@@ -196,28 +206,39 @@ public static class AttributeDataExtensions
 
    public static string? FindTxName(this AttributeData attributeData, int index)
    {
-      return GetStringParameterValue(attributeData, $"T{index}Name");
+      var name = index switch
+      {
+         0 => "T0Name",
+         1 => "T1Name",
+         2 => "T2Name",
+         3 => "T3Name",
+         4 => "T4Name",
+         5 => "T5Name",
+         _ => $"T{index}Name",
+      };
+
+      return GetStringParameterValue(attributeData, name);
    }
 
    public static string FindSwitchMapStateParameterName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, "SwitchMapStateParameterName") ?? "state";
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.SWITCH_MAP_STATE_PARAMETER_NAME) ?? "state";
    }
 
    public static UnionConstructorAccessModifier FindUnionConstructorAccessModifier(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<UnionConstructorAccessModifier>(attributeData, "ConstructorAccessModifier")
+      return GetEnumParameterValue<UnionConstructorAccessModifier>(attributeData, Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER)
              ?? UnionConstructorAccessModifier.Public;
    }
 
    public static bool? FindUseSingleBackingField(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "UseSingleBackingField");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_SINGLE_BACKING_FIELD);
    }
 
    public static JsonIgnoreCondition? FindJsonIgnoreCondition(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<JsonIgnoreCondition>(attributeData, "Condition");
+      return GetEnumParameterValue<JsonIgnoreCondition>(attributeData, Constants.Attributes.Properties.CONDITION);
    }
 
    public static bool FindAllowDefaultStructs(this AttributeData attributeData)
@@ -227,7 +248,7 @@ public static class AttributeDataExtensions
 
    public static IReadOnlyList<string> FindUnionSwitchMapOverloadStopAtTypes(this AttributeData attributeData)
    {
-      var stopAtArgument = attributeData.FindNamedAttribute("StopAt");
+      var stopAtArgument = attributeData.FindNamedAttributeValue(Constants.Attributes.Properties.STOP_AT);
 
       if (stopAtArgument.Kind != TypedConstantKind.Array)
          return [];
@@ -248,7 +269,7 @@ public static class AttributeDataExtensions
             continue;
 
          if (typeSymbol.TypeKind == TypeKind.Error)
-            return [];
+            continue;
 
          result.Add(typeSymbol.ToFullyQualifiedDisplayString());
       }
@@ -275,45 +296,53 @@ public static class AttributeDataExtensions
       return (comparerAccessorTypes, keyType);
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static string? GetStringParameterValue(AttributeData attributeData, string name)
    {
-      if (attributeData.FindNamedAttribute(name).Value is not string value)
+      if (attributeData.FindNamedAttributeValue(name).Value is not string value)
          return null;
 
       value = value.Trim();
       return value.Length == 0 ? null : value;
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static OperatorsGeneration GetOperatorsGeneration(AttributeData attributeData, string name)
    {
       return GetEnumParameterValue<OperatorsGeneration>(attributeData, name)
              ?? OperatorsGeneration.Default;
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static SwitchMapMethodsGeneration GetSwitchMapGeneration(AttributeData attributeData, string name)
    {
       return GetEnumParameterValue<SwitchMapMethodsGeneration>(attributeData, name)
              ?? SwitchMapMethodsGeneration.Default;
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static T? GetEnumParameterValue<T>(AttributeData attributeData, string name)
       where T : struct, Enum
    {
-      return attributeData.FindNamedAttribute(name).Value is int value ? value.GetValidValue<T>() : null;
+      var typedConstant = attributeData.FindNamedAttributeValue(name);
+
+      // Roslyn boxes enum values using their underlying integral type
+      return typedConstant.Value switch
+      {
+         int intValue => intValue.GetValidValue<T>(),
+         byte byteValue => byteValue.GetValidValue<T>(),
+         sbyte sbyteValue => sbyteValue.GetValidValue<T>(),
+         short shortValue => shortValue.GetValidValue<T>(),
+         ushort ushortValue => ushortValue.GetValidValue<T>(),
+         uint uintValue => uintValue.GetValidValue<T>(),
+         long longValue => longValue.GetValidValue<T>(),
+         ulong ulongValue => ulongValue.GetValidValue<T>(),
+         _ => null
+      };
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    private static bool? GetBooleanParameterValue(AttributeData attributeData, string name)
    {
-      return attributeData.FindNamedAttribute(name).Value as bool?;
+      return attributeData.FindNamedAttributeValue(name).Value as bool?;
    }
 
-   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   private static TypedConstant FindNamedAttribute(this AttributeData attributeData, string name)
+   private static TypedConstant FindNamedAttributeValue(this AttributeData attributeData, string name)
    {
       for (var i = 0; i < attributeData.NamedArguments.Length; i++)
       {

@@ -2,7 +2,7 @@ namespace Thinktecture;
 
 public static class SyntaxListExtensions
 {
-   public static T? FirstOrDefault<T>(this SyntaxList<T> list, Func<T, bool> predicate)
+   public static T? FirstNodeOrDefault<T>(this in SyntaxList<T> list, Func<T, bool> predicate)
       where T : SyntaxNode
    {
       for (var i = 0; i < list.Count; i++)
@@ -13,6 +13,6 @@ public static class SyntaxListExtensions
             return node;
       }
 
-      return default;
+      return null;
    }
 }

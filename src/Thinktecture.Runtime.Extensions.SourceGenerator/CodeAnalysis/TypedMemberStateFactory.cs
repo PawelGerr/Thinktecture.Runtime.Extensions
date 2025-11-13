@@ -1,9 +1,15 @@
+using System.Collections.Frozen;
+
 namespace Thinktecture.CodeAnalysis;
 
-public class TypedMemberStateFactory
+public sealed class TypedMemberStateFactory
 {
    private const string _SYSTEM_RUNTIME_DLL = "System.Runtime.dll";
    private const string _SYSTEM_CORELIB_DLL = "System.Private.CoreLib.dll";
+   private const string _SYSTEM_PRIVATE_URI_DLL = "System.Private.Uri.dll";
+   private const string _SYSTEM_RUNTIME_NUMERICS_DLL = "System.Runtime.Numerics.dll";
+   private const string _SYSTEM_NUMERICS_DLL = "System.Numerics.dll";
+   private const string _SYSTEM_NET_PRIMITIVES_DLL = "System.Net.Primitives.dll";
 
    private readonly TypedMemberStates _boolean;
    private readonly TypedMemberStates _char;
@@ -21,7 +27,7 @@ public class TypedMemberStateFactory
    private readonly TypedMemberStates _string;
    private readonly TypedMemberStates _dateTime;
 
-   private readonly IReadOnlyDictionary<(string ModuleName, int MetadataToken), TypedMemberStates> _statesByTokens;
+   private readonly FrozenDictionary<(string, int), TypedMemberStates> _statesByTokens;
 
    private TypedMemberStateFactory(Compilation compilation)
    {
@@ -42,12 +48,22 @@ public class TypedMemberStateFactory
       _dateTime = CreateStates(compilation, SpecialType.System_DateTime);
 
       var lookup = new Dictionary<(string, int), TypedMemberStates>();
-      _statesByTokens = lookup;
 
       CreateAndAddStatesForSystemRuntime(compilation, "System.DateOnly", lookup);
       CreateAndAddStatesForSystemRuntime(compilation, "System.TimeOnly", lookup);
       CreateAndAddStatesForSystemRuntime(compilation, "System.TimeSpan", lookup);
       CreateAndAddStatesForSystemRuntime(compilation, "System.Guid", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.DateTimeOffset", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.Version", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.Half", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.Int128", lookup);
+      CreateAndAddStatesForSystemRuntime(compilation, "System.UInt128", lookup);
+      CreateAndAddStatesForWhitelistedModules(compilation, "System.Uri", [_SYSTEM_PRIVATE_URI_DLL], lookup);
+      CreateAndAddStatesForWhitelistedModules(compilation, "System.Numerics.BigInteger", [_SYSTEM_RUNTIME_NUMERICS_DLL, _SYSTEM_NUMERICS_DLL], lookup);
+      CreateAndAddStatesForWhitelistedModules(compilation, "System.Net.IPAddress", [_SYSTEM_NET_PRIMITIVES_DLL], lookup);
+      CreateAndAddStatesForWhitelistedModules(compilation, "System.Net.IPEndPoint", [_SYSTEM_NET_PRIMITIVES_DLL], lookup);
+
+      _statesByTokens = lookup.ToFrozenDictionary();
    }
 
    private static TypedMemberStates CreateStates(Compilation compilation, SpecialType specialType)
@@ -95,6 +111,58 @@ public class TypedMemberStateFactory
       lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(compilation, type));
    }
 
+   private static void CreateAndAddStatesForWhitelistedModules(Compilation compilation, string fullName, string[] whitelistedModules, Dictionary<(string, int), TypedMemberStates> lookup)
+   {
+      var types = compilation.GetTypesByMetadataName(fullName);
+
+      if (types.IsDefaultOrEmpty)
+         return;
+
+      INamedTypeSymbol? type = null;
+
+      if (types.Length == 1)
+      {
+         var t = types[0];
+
+         if (!IsWhitelisted(t.ContainingModule.MetadataName))
+            return;
+
+         type = t;
+      }
+      else
+      {
+         for (var i = 0; i < types.Length; i++)
+         {
+            var candidate = types[i];
+
+            if (!IsWhitelisted(candidate.ContainingModule.MetadataName))
+               continue;
+
+            // duplicate?
+            if (type is not null)
+               return;
+
+            type = candidate;
+         }
+      }
+
+      if (type is null || type.TypeKind == TypeKind.Error)
+         return;
+
+      lookup.Add((type.ContainingModule.MetadataName, type.MetadataToken), CreateStates(compilation, type));
+
+      bool IsWhitelisted(string moduleName)
+      {
+         for (var i = 0; i < whitelistedModules.Length; i++)
+         {
+            if (moduleName == whitelistedModules[i])
+               return true;
+         }
+
+         return false;
+      }
+   }
+
    private static TypedMemberStates CreateStates(Compilation compilation, INamedTypeSymbol type)
    {
       var nullableType = type.IsReferenceType
@@ -109,7 +177,17 @@ public class TypedMemberStateFactory
 
    public ITypedMemberState Create(ITypeSymbol type)
    {
-      var cachedStates = type.SpecialType switch
+      // Detect Nullable<T> value types and route lookup to the underlying T
+      var isNullableValueType = false;
+      ITypeSymbol lookupType = type;
+
+      if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } namedNullable)
+      {
+         isNullableValueType = true;
+         lookupType = namedNullable.TypeArguments[0];
+      }
+
+      var cachedStates = lookupType.SpecialType switch
       {
          SpecialType.System_Boolean => _boolean,
          SpecialType.System_Char => _char,
@@ -127,13 +205,13 @@ public class TypedMemberStateFactory
          SpecialType.System_String => _string,
          SpecialType.System_DateTime => _dateTime,
          // Array types have no ContainingModule
-         _ => type.ContainingModule is not null && _statesByTokens.TryGetValue((type.ContainingModule.MetadataName, type.MetadataToken), out var states) ? states : default
+         _ => lookupType.ContainingModule is not null && _statesByTokens.TryGetValue((lookupType.ContainingModule.MetadataName, lookupType.MetadataToken), out var states) ? states : default
       };
 
       if (cachedStates == default)
          return new TypedMemberState(type);
 
-      return type.NullableAnnotation == NullableAnnotation.Annotated
+      return (isNullableValueType || type.NullableAnnotation == NullableAnnotation.Annotated)
                 ? cachedStates.Nullable
                 : cachedStates.NotNullable;
    }

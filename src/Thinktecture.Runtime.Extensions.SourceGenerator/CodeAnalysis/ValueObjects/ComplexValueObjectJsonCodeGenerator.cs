@@ -7,7 +7,7 @@ public sealed class ComplexValueObjectJsonCodeGenerator<T> : CodeGeneratorBase
    where T : ITypeInformation, IHasGenerics
 {
    private readonly T _type;
-   private readonly IReadOnlyList<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
+   private readonly ImmutableArray<InstanceMemberInfo> _assignableInstanceFieldsAndProperties;
    private readonly StringBuilder _sb;
 
    public override string CodeGeneratorName => "Complex-ValueObject-SystemTextJson-CodeGenerator";
@@ -15,7 +15,7 @@ public sealed class ComplexValueObjectJsonCodeGenerator<T> : CodeGeneratorBase
 
    public ComplexValueObjectJsonCodeGenerator(
       T type,
-      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      ImmutableArray<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       StringBuilder stringBuilder)
    {
       _type = type;
@@ -59,7 +59,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -89,7 +89,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -130,7 +130,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -168,7 +168,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -211,7 +211,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             }");
       }
 
-      if (_assignableInstanceFieldsAndProperties.Count > 0)
+      if (_assignableInstanceFieldsAndProperties.Length > 0)
       {
          _sb.Append(@"
             else
@@ -223,11 +223,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       _sb.Append(@"
          }");
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
-         if (!memberInfo.IsReferenceTypeOrNullableStruct && memberInfo.DisallowsDefaultValue)
+         if (memberInfo is { IsReferenceTypeOrNullableStruct: false, DisallowsDefaultValue: true })
          {
             _sb.Append(@"
 
@@ -242,7 +242,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -270,7 +270,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       cancellationToken.ThrowIfCancellationRequested();
 
-      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Count; i++)
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
       {
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
@@ -333,7 +333,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
    private void GenerateFactory()
    {
-      var isGeneric = _type.GenericParameters.Count > 0;
+      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty;
 
       _sb.Append(@"
 
