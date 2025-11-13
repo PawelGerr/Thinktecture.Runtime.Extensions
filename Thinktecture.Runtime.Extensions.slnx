@@ -10,6 +10,7 @@
     <File Path="LICENSE.md" />
     <File Path="README.md" />
     <File Path="CLAUDE.md" />
+    <File Path=".clinerules" />
   </Folder>
   <Folder Name="/assets/.github/">
     <File Path=".github\workflows\claude.yml" />

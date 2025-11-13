@@ -20,7 +20,7 @@ When reviewing a newly implemented feature, you will:
 
 **For Smart Enums:**
 - Confirm the type is marked `partial` and uses appropriate attribute (`[SmartEnum]` or `[SmartEnum<TKey>]`)
-- Verify items are public static readonly/const fields or properties
+- Verify items are public static readonly fields
 - Check that keyed enums specify appropriate key member configuration
 - Ensure sealed modifier is present if no derived types exist
 - Validate that comparison operators are only used with keyed enums
