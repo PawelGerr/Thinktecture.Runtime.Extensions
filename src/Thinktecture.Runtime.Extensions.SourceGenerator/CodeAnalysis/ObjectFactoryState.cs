@@ -34,7 +34,8 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public bool Equals(ObjectFactoryState? other)
    {
       return Equals((ITypeFullyQualified?)other)
-             && (int)UseForSerialization == (int)other.UseForSerialization
+             && SpecialType == other.SpecialType
+             && UseForSerialization == other.UseForSerialization
              && UseWithEntityFramework == other.UseWithEntityFramework
              && UseForModelBinding == other.UseForModelBinding
              && HasCorrespondingConstructor == other.HasCorrespondingConstructor;
@@ -53,6 +54,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
       unchecked
       {
          var hashCode = TypeFullyQualified.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ (int)UseForSerialization;
          hashCode = (hashCode * 397) ^ UseWithEntityFramework.GetHashCode();
          hashCode = (hashCode * 397) ^ UseForModelBinding.GetHashCode();

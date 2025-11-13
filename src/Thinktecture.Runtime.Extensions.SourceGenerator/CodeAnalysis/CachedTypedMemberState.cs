@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
+public sealed class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
 {
    private readonly int _hashCode;
 
@@ -9,7 +9,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
    public SpecialType SpecialType { get; }
    public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
-   public bool IsStruct { get; }
+   public bool IsValueType { get; }
    public bool IsTypeParameter { get; }
    public bool IsReferenceTypeOrNullableStruct { get; }
    public bool IsNullableStruct { get; }
@@ -33,7 +33,7 @@ public class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITyped
       SpecialType = typedMemberState.SpecialType;
       TypeKind = typedMemberState.TypeKind;
       IsReferenceType = typedMemberState.IsReferenceType;
-      IsStruct = typedMemberState.IsStruct;
+      IsValueType = typedMemberState.IsValueType;
       IsTypeParameter = typedMemberState.IsTypeParameter;
       IsReferenceTypeOrNullableStruct = typedMemberState.IsReferenceTypeOrNullableStruct;
       IsNullableStruct = typedMemberState.IsNullableStruct;

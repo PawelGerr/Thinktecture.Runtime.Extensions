@@ -1,38 +1,32 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
+public sealed class SmartEnumSettings(
+   AllEnumSettings settings,
+   AttributeInfo attributeInfo) : IEquatable<SmartEnumSettings>
 {
-   private readonly AllEnumSettings _settings;
-   private readonly AttributeInfo _attributeInfo;
-
-   public bool SkipToString => _settings.SkipToString;
-   public SwitchMapMethodsGeneration SwitchMethods => _settings.SwitchMethods;
-   public SwitchMapMethodsGeneration MapMethods => _settings.MapMethods;
-   public string SwitchMapStateParameterName => _settings.SwitchMapStateParameterName;
-   public ConversionOperatorsGeneration ConversionToKeyMemberType => _settings.ConversionToKeyMemberType;
-   public ConversionOperatorsGeneration ConversionFromKeyMemberType => _settings.ConversionFromKeyMemberType;
-   public bool HasStructLayoutAttribute => _attributeInfo.HasStructLayoutAttribute;
-   public string? KeyMemberEqualityComparerAccessor => _attributeInfo.KeyMemberEqualityComparerAccessor;
-
-   public SmartEnumSettings(AllEnumSettings settings, AttributeInfo attributeInfo)
-   {
-      _settings = settings;
-      _attributeInfo = attributeInfo;
-   }
+   public bool SkipToString => settings.SkipToString;
+   public SwitchMapMethodsGeneration SwitchMethods => settings.SwitchMethods;
+   public SwitchMapMethodsGeneration MapMethods => settings.MapMethods;
+   public string SwitchMapStateParameterName => settings.SwitchMapStateParameterName;
+   public ConversionOperatorsGeneration ConversionToKeyMemberType => settings.ConversionToKeyMemberType;
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType => settings.ConversionFromKeyMemberType;
+   public string? KeyMemberEqualityComparerAccessor => attributeInfo.KeyMemberEqualityComparerAccessor;
 
    public override bool Equals(object? obj)
    {
       return obj is SmartEnumSettings enumSettings && Equals(enumSettings);
    }
 
-   public bool Equals(SmartEnumSettings other)
+   public bool Equals(SmartEnumSettings? other)
    {
+      if (other is null)
+         return false;
+
       return SkipToString == other.SkipToString
              && SwitchMethods == other.SwitchMethods
              && MapMethods == other.MapMethods
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
              && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
-             && HasStructLayoutAttribute == other.HasStructLayoutAttribute
              && KeyMemberEqualityComparerAccessor == other.KeyMemberEqualityComparerAccessor
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName;
    }
@@ -42,11 +36,10 @@ public sealed class SmartEnumSettings : IEquatable<SmartEnumSettings>
       unchecked
       {
          var hashCode = SkipToString.GetHashCode();
-         hashCode = (hashCode * 397) ^ SwitchMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ ConversionFromKeyMemberType.GetHashCode();
-         hashCode = (hashCode * 397) ^ ConversionToKeyMemberType.GetHashCode();
-         hashCode = (hashCode * 397) ^ HasStructLayoutAttribute.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)SwitchMethods;
+         hashCode = (hashCode * 397) ^ (int)MapMethods;
+         hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
+         hashCode = (hashCode * 397) ^ (int)ConversionToKeyMemberType;
          hashCode = (hashCode * 397) ^ (KeyMemberEqualityComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
 

@@ -1,21 +1,21 @@
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSerializerGeneratorState<T>>, INamespaceAndName
-   where T : ITypeInformation, IHasGenerics
+   where T : ITypeInformation, IHasGenerics, IEquatable<T>
 {
    public T Type { get; }
-   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
+   public ImmutableArray<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
    public AttributeInfo AttributeInfo { get; }
    public SerializationFrameworks SerializationFrameworks { get; }
 
    public string? Namespace => Type.Namespace;
-   public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
+   public ImmutableArray<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
-   public int NumberOfGenerics => 0;
+   public int NumberOfGenerics => Type.NumberOfGenerics;
 
    public ComplexSerializerGeneratorState(
       T type,
-      IReadOnlyList<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
+      ImmutableArray<InstanceMemberInfo> assignableInstanceFieldsAndProperties,
       AttributeInfo attributeInfo,
       SerializationFrameworks serializationFrameworks)
    {
@@ -27,7 +27,7 @@ public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSe
 
    public bool Equals(ComplexSerializerGeneratorState<T> other)
    {
-      return TypeInformationComparer.Instance.Equals(Type, other.Type)
+      return Type.Equals(other.Type)
              && SerializationFrameworks == other.SerializationFrameworks
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
              && ContainingTypes.SequenceEqual(other.ContainingTypes)
@@ -50,5 +50,15 @@ public readonly struct ComplexSerializerGeneratorState<T> : IEquatable<ComplexSe
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          return hashCode;
       }
+   }
+
+   public static bool operator ==(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ComplexSerializerGeneratorState<T> left, ComplexSerializerGeneratorState<T> right)
+   {
+      return !(left == right);
    }
 }

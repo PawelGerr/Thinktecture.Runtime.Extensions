@@ -22,7 +22,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    {
       KeyMemberAccessModifier = attribute.FindKeyMemberAccessModifier() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_ACCESS_MODIFIER;
       KeyMemberKind = attribute.FindKeyMemberKind() ?? Constants.SmartEnum.DEFAULT_KEY_MEMBER_KIND;
-      KeyMemberName = attribute.FindKeyMemberName() ?? Helper.GetDefaultSmartEnumKeyMemberName(KeyMemberAccessModifier, KeyMemberKind);
+      KeyMemberName = attribute.FindKeyMemberName() ?? KeyMemberAccessModifier.GetDefaultSmartEnumKeyMemberName(KeyMemberKind);
       SkipIComparable = attribute.FindSkipIComparable() ?? false;
       SkipIParsable = attribute.FindSkipIParsable() ?? false;
       ComparisonOperators = attribute.FindComparisonOperators();

@@ -74,7 +74,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       }
    }
 
-   private void GenerateParse(StringBuilder sb, ParsableGeneratorState state)
+   private static void GenerateParse(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
 

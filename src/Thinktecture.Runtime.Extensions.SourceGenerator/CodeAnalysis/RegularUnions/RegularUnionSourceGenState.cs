@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionSourceGenState
+public sealed class RegularUnionSourceGenState
    : IEquatable<RegularUnionSourceGenState>,
      ITypeFullyQualified,
      ITypeKindInformation,
@@ -17,18 +17,18 @@ public class RegularUnionSourceGenState
 
    public bool IsTypeParameter => false;
    public bool IsReferenceType => true;
-   public bool IsStruct => false;
+   public bool IsValueType => false;
 
-   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public IReadOnlyList<RegularUnionTypeMemberState> TypeMembers { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<RegularUnionTypeMemberState> TypeMembers { get; }
    public RegularUnionSettings Settings { get; }
 
-   public int NumberOfGenerics => GenericParameters.Count;
+   public int NumberOfGenerics => GenericParameters.Length;
 
    public RegularUnionSourceGenState(
       INamedTypeSymbol type,
-      IReadOnlyList<RegularUnionTypeMemberState> typeMembers,
+      ImmutableArray<RegularUnionTypeMemberState> typeMembers,
       RegularUnionSettings settings)
    {
       Name = type.Name;
@@ -42,6 +42,11 @@ public class RegularUnionSourceGenState
       IsRecord = type.IsRecord;
       TypeMembers = typeMembers;
       Settings = settings;
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return Equals(obj as RegularUnionSourceGenState);
    }
 
    public bool Equals(RegularUnionSourceGenState? other)

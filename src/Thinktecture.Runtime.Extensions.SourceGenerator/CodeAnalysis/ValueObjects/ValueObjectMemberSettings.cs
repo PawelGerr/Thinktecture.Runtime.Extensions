@@ -16,7 +16,6 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
    }
 
    private ValueObjectMemberSettings(
-      bool isExplicitlyDeclared,
       SyntaxReference? equalityComparerAttr,
       string? equalityComparerAccessorType,
       bool hasInvalidEqualityComparerType)
@@ -24,7 +23,6 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
    {
       _equalityComparerAttr = equalityComparerAttr;
 
-      IsExplicitlyDeclared = isExplicitlyDeclared;
       HasInvalidEqualityComparerType = hasInvalidEqualityComparerType;
       EqualityComparerAccessor = equalityComparerAccessorType;
    }
@@ -46,8 +44,7 @@ public sealed class ValueObjectMemberSettings : IEquatable<ValueObjectMemberSett
       var equalityComparerAccessorType = equalityComparerGenericTypes?.ComparerType?.ToFullyQualifiedDisplayString();
       var hasInvalidEqualityComparerType = equalityComparerGenericTypes is not null && !SymbolEqualityComparer.Default.Equals(equalityComparerGenericTypes.Value.ItemType, type);
 
-      return new ValueObjectMemberSettings(true,
-                                           canCaptureSymbols ? equalityComparerAttr.ApplicationSyntaxReference : null,
+      return new ValueObjectMemberSettings(canCaptureSymbols ? equalityComparerAttr.ApplicationSyntaxReference : null,
                                            equalityComparerAccessorType,
                                            hasInvalidEqualityComparerType);
    }

@@ -5,7 +5,7 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
    public Accessibility Accessibility { get; }
    public string MethodName { get; }
    public string? ReturnType { get; }
-   public IReadOnlyList<ParameterState> Parameters { get; }
+   public ImmutableArray<ParameterState> Parameters { get; }
    public ArgumentName ArgumentName { get; }
    public string? DelegateName { get; }
 
@@ -13,7 +13,7 @@ public sealed class DelegateMethodState : IEquatable<DelegateMethodState>, IHash
       Accessibility accessibility,
       string methodName,
       string? returnType,
-      IReadOnlyList<ParameterState> parameters,
+      ImmutableArray<ParameterState> parameters,
       string? delegateName)
    {
       Accessibility = accessibility;

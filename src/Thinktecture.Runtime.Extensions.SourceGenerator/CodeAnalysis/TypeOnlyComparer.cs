@@ -6,7 +6,7 @@ using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 
-public class TypeOnlyComparer
+public sealed class TypeOnlyComparer
    : IEqualityComparer<FormattableGeneratorState>,
      IEqualityComparer<ComparableGeneratorState>,
      IEqualityComparer<ParsableGeneratorState>,
@@ -14,7 +14,6 @@ public class TypeOnlyComparer
      IEqualityComparer<EqualityComparisonOperatorsGeneratorState>,
      IEqualityComparer<OperatorsGeneratorState>,
      IEqualityComparer<SmartEnumSourceGeneratorState>,
-     IEqualityComparer<SmartEnumDerivedTypes>,
      IEqualityComparer<KeyedValueObjectSourceGeneratorState>,
      IEqualityComparer<ComplexValueObjectSourceGeneratorState>,
      IEqualityComparer<AdHocUnionSourceGenState>,
@@ -30,7 +29,6 @@ public class TypeOnlyComparer
    public bool Equals(EqualityComparisonOperatorsGeneratorState x, EqualityComparisonOperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(OperatorsGeneratorState x, OperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(SmartEnumSourceGeneratorState x, SmartEnumSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
-   public bool Equals(SmartEnumDerivedTypes x, SmartEnumDerivedTypes y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(KeyedValueObjectSourceGeneratorState x, KeyedValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(ComplexValueObjectSourceGeneratorState x, ComplexValueObjectSourceGeneratorState y) => x.TypeFullyQualified == y.TypeFullyQualified;
    public bool Equals(AdHocUnionSourceGenState x, AdHocUnionSourceGenState y) => x.TypeFullyQualified == y.TypeFullyQualified;
@@ -44,7 +42,6 @@ public class TypeOnlyComparer
    public int GetHashCode(EqualityComparisonOperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(OperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(SmartEnumSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
-   public int GetHashCode(SmartEnumDerivedTypes obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(KeyedValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComplexValueObjectSourceGeneratorState obj) => obj.TypeFullyQualified.GetHashCode();
    public int GetHashCode(AdHocUnionSourceGenState obj) => obj.TypeFullyQualified.GetHashCode();

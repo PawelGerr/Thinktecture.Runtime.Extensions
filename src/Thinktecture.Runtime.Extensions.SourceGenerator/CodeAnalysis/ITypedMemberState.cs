@@ -7,7 +7,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    SpecialType SpecialType { get; }
    TypeKind TypeKind { get; }
    bool IsReferenceType { get; }
-   bool IsStruct { get; }
+   bool IsValueType { get; }
    bool IsTypeParameter { get; }
    bool IsReferenceTypeOrNullableStruct { get; }
    bool IsNullableStruct { get; }

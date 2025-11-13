@@ -8,7 +8,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public SerializationFrameworks SerializationFrameworks { get; }
 
    public string? Namespace => Type.Namespace;
-   public IReadOnlyList<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
+   public ImmutableArray<ContainingTypeState> ContainingTypes => Type.ContainingTypes;
    public string Name => Type.Name;
    public int NumberOfGenerics => 0;
 
@@ -27,7 +27,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public bool Equals(KeyedSerializerGeneratorState other)
    {
       return Type.Equals(other.Type)
-             && KeyMember?.TypeFullyQualified == other.KeyMember?.TypeFullyQualified
+             && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && SerializationFrameworks == other.SerializationFrameworks
              && ContainingTypes.SequenceEqual(other.ContainingTypes)
              && AttributeInfo.Equals(other.AttributeInfo);
@@ -43,12 +43,22 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
       unchecked
       {
          var hashCode = Type.GetHashCode();
-         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : KeyMember.TypeFullyQualified.GetHashCode());
+         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
 
          return hashCode;
       }
+   }
+
+   public static bool operator ==(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(KeyedSerializerGeneratorState left, KeyedSerializerGeneratorState right)
+   {
+      return !(left == right);
    }
 }

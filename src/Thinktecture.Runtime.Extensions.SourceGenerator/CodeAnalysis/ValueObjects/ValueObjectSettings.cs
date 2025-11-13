@@ -85,4 +85,14 @@ public readonly struct ValueObjectSettings : IEquatable<ValueObjectSettings>
          return hashCode;
       }
    }
+
+   public static bool operator ==(ValueObjectSettings left, ValueObjectSettings right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ValueObjectSettings left, ValueObjectSettings right)
+   {
+      return !(left == right);
+   }
 }

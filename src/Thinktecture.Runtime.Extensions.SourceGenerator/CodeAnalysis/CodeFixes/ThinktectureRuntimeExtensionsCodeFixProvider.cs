@@ -78,7 +78,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.InitAccessorMustBePrivate.Id)
          {
-            context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
+            context.RegisterCodeFix(CodeAction.Create(_MAKE_INIT_PRIVATE, _ => ChangeAccessibilityAsync(context.Document, root, GetCodeFixesContext().PropertyDeclaration?.AccessorList?.Accessors.FirstNodeOrDefault(a => a.IsKind(SyntaxKind.InitAccessorDeclaration)), SyntaxKind.PrivateKeyword), _MAKE_INIT_PRIVATE), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.InnerSmartEnumOnFirstLevelMustBePrivate.Id)
          {
@@ -209,7 +209,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       if (modifiers.Count > 0)
       {
-         var firstModifier = modifiers.FirstOrDefault();
+         var firstModifier = modifiers.FirstTokenOrDefault();
          var isFirstModiferRemoved = false;
 
          foreach (var currentModifier in newModifiers)
@@ -256,7 +256,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (declaration is null)
          return Task.FromResult(document);
 
-      var setter = declaration.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+      var setter = declaration.AccessorList?.Accessors.FirstNodeOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
 
       if (setter is not null)
       {
@@ -315,11 +315,11 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if ((!valueObjectType.IsValueObjectType(out var keyedAttribute)
            || keyedAttribute.AttributeClass?.IsKeyedValueObjectAttribute() != true)
-          && !valueObjectType.IsEnum(out keyedAttribute))
+          && !valueObjectType.IsSmartEnum(out keyedAttribute))
       {
          return document;
       }
@@ -367,7 +367,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (model is null)
          return document;
 
-      var valueObjectType = model.GetDeclaredSymbol(declaration);
+      var valueObjectType = model.GetDeclaredSymbol(declaration, cancellationToken);
 
       if (!valueObjectType.IsValueObjectType(out var valueObjectAttribute)
           || valueObjectAttribute.ApplicationSyntaxReference is null
@@ -402,11 +402,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return throwStatement;
    }
 
-   private sealed class CodeFixesContext
+   private sealed class CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
    {
-      private readonly Diagnostic _diagnostic;
-      private readonly SyntaxNode _root;
-
       private TypeDeclarationSyntax? _typeDeclaration;
       public TypeDeclarationSyntax? TypeDeclaration => _typeDeclaration ??= GetDeclaration<TypeDeclarationSyntax>();
 
@@ -422,17 +419,11 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       private MethodDeclarationSyntax? _methodDeclaration;
       public MethodDeclarationSyntax? MethodDeclaration => _methodDeclaration ??= GetDeclaration<MethodDeclarationSyntax>();
 
-      public CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
-      {
-         _diagnostic = diagnostic;
-         _root = root;
-      }
-
       private T? GetDeclaration<T>()
          where T : MemberDeclarationSyntax
       {
-         var diagnosticSpan = _diagnostic.Location.SourceSpan;
-         return _root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>().First();
+         var diagnosticSpan = diagnostic.Location.SourceSpan;
+         return root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>().FirstOrDefault();
       }
    }
 }

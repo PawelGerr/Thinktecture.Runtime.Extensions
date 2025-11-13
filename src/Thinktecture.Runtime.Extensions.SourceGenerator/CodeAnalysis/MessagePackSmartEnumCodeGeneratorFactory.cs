@@ -19,7 +19,7 @@ public abstract class MessagePackKeyedSerializerCodeGeneratorFactoryBase : IKeye
           || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.MessagePack))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis.RegularUnions;
 
-public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberState>, ITypeFullyQualified, IHashCodeComputable
+public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberState>, ITypeFullyQualified, IHashCodeComputable
 {
    public string TypeFullyQualified { get; }
    public string TypeDefinitionFullyQualified { get; }
@@ -11,13 +11,13 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
    public bool HasRequiredMembers { get; }
    public string BaseTypeFullyQualified { get; }
    public string BaseTypeDefinitionFullyQualified { get; }
-   public IReadOnlyList<DefaultMemberState> UniqueSingleArgumentConstructors { get; }
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<DefaultMemberState> UniqueSingleArgumentConstructors { get; }
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
 
    public RegularUnionTypeMemberState(
       INamedTypeSymbol type,
       INamedTypeSymbol typeDefinition,
-      IReadOnlyList<DefaultMemberState> uniqueSingleArgumentConstructors)
+      ImmutableArray<DefaultMemberState> uniqueSingleArgumentConstructors)
    {
       if (type.BaseType is null)
          throw new InvalidOperationException($"Inner union type ''{TypeFullyQualified} must have a base type.");
@@ -34,6 +34,11 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
       HasRequiredMembers = type.HasRequiredMembers();
 
       ContainingTypes = type.GetContainingTypes();
+   }
+
+   public override bool Equals(object? obj)
+   {
+      return Equals(obj as RegularUnionTypeMemberState);
    }
 
    public bool Equals(RegularUnionTypeMemberState? other)
@@ -61,7 +66,7 @@ public class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMemberStat
          hashCode = (hashCode * 397) ^ BaseTypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
-         hashCode = (hashCode * 397) ^ SpecialType.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ HasRequiredMembers.GetHashCode();
          hashCode = (hashCode * 397) ^ UniqueSingleArgumentConstructors.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();

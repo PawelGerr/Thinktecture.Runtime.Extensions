@@ -10,7 +10,7 @@ public sealed class AdHocUnionMemberTypeState
    public string TypeMinimallyQualified { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
-   public bool IsStruct { get; }
+   public bool IsValueType { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
    public SpecialType SpecialType { get; }
@@ -18,7 +18,7 @@ public sealed class AdHocUnionMemberTypeState
    public int TypeDuplicateCounter { get; }
 
    public ArgumentName ArgumentName { get; }
-   public string BackingFieldName { get; }
+   public BackingFieldName BackingFieldName { get; }
    public AdHocUnionMemberTypeSetting Setting { get; }
 
    public bool IsRecord => false;
@@ -34,14 +34,14 @@ public sealed class AdHocUnionMemberTypeState
       Name = name;
       ArgumentName = ArgumentName.Create(Name);
 
-      var backingFieldName = (typeDuplicateCounter == 0 ? Name : defaultName).MakeBackingFieldName();
-      BackingFieldName = backingFieldName == Name ? $"_{backingFieldName}" : backingFieldName;
+      var backingFieldName = typeDuplicateCounter == 0 ? Name : defaultName;
+      BackingFieldName = BackingFieldName.Create(backingFieldName, Name);
 
       TypeDuplicateCounter = typeDuplicateCounter;
       TypeFullyQualified = typeState.TypeFullyQualified;
       TypeMinimallyQualified = typeState.TypeMinimallyQualified;
       IsReferenceType = typeState.IsReferenceType;
-      IsStruct = typeState.IsStruct;
+      IsValueType = typeState.IsValueType;
       NullableAnnotation = typeState.NullableAnnotation;
       IsNullableStruct = typeState.IsNullableStruct;
       SpecialType = typeState.SpecialType;
@@ -63,7 +63,7 @@ public sealed class AdHocUnionMemberTypeState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
-             && IsStruct == other.IsStruct
+             && IsValueType == other.IsValueType
              && SpecialType == other.SpecialType
              && IsInterface == other.IsInterface
              && TypeDuplicateCounter == other.TypeDuplicateCounter
@@ -76,7 +76,7 @@ public sealed class AdHocUnionMemberTypeState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
          hashCode = (hashCode * 397) ^ TypeDuplicateCounter;

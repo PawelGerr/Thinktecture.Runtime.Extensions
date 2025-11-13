@@ -9,26 +9,28 @@ public sealed class ComplexValueObjectSourceGeneratorState
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
-   public bool IsEqualWithReferenceEquality => false;
-   public bool DisallowsDefaultValue => !IsReferenceType && !Settings.AllowDefaultStructs;
-   public IReadOnlyList<ContainingTypeState> ContainingTypes { get; }
-   public IReadOnlyList<GenericTypeParameterState> GenericParameters { get; }
-   public int NumberOfGenerics => GenericParameters.Count;
+   public bool DisallowsDefaultValue => IsValueType // reference types are not problematic
+                                        && !AssignableInstanceFieldsAndProperties.IsDefaultOrEmpty // a struct without fields and properties is not problematic
+                                        && (!Settings.AllowDefaultStructs || AssignableInstanceFieldsAndProperties.Any(m => m.DisallowsDefaultValue));
+   public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
+   public int NumberOfGenerics => GenericParameters.Length;
 
    public string? Namespace { get; }
    public string Name { get; }
    public bool IsReferenceType { get; }
-   public bool IsStruct { get; }
-   public NullableAnnotation NullableAnnotation { get; }
-   public bool IsNullableStruct { get; }
+   public bool IsValueType { get; }
 
+   public NullableAnnotation NullableAnnotation => NullableAnnotation.NotAnnotated;
+   public bool IsNullableStruct => false;
    public bool IsRecord => false;
    public bool IsTypeParameter => false;
+   public bool IsEqualWithReferenceEquality => false;
 
    public string? FactoryValidationReturnType { get; }
 
-   public IReadOnlyList<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
-   public IReadOnlyList<EqualityInstanceMemberInfo> EqualityMembers { get; }
+   public ImmutableArray<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
+   public ImmutableArray<EqualityInstanceMemberInfo> EqualityMembers { get; }
 
    public ValidationErrorState ValidationError { get; }
    public ValueObjectSettings Settings { get; }
@@ -49,29 +51,23 @@ public sealed class ComplexValueObjectSourceGeneratorState
       ContainingTypes = type.GetContainingTypes();
       GenericParameters = type.GetGenericTypeParameters();
       IsReferenceType = type.IsReferenceType;
-      IsStruct = type.IsValueType;
-      NullableAnnotation = type.NullableAnnotation;
-      IsNullableStruct = type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+      IsValueType = type.IsValueType;
 
-      AssignableInstanceFieldsAndProperties = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken).ToList();
+      AssignableInstanceFieldsAndProperties = [..type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken)];
       EqualityMembers = GetEqualityMembers();
-
-      var factoryValidationReturnType = (type.GetMembers().FirstOrDefault(m => m.IsStatic && m.Name == Constants.Methods.VALIDATE_FACTORY_ARGUMENTS && m is IMethodSymbol method && method.ReturnType.SpecialType != SpecialType.System_Void) as IMethodSymbol)?.ReturnType;
-
-      if (factoryValidationReturnType is not null)
-         FactoryValidationReturnType = factoryValidationReturnType.ToFullyQualifiedDisplayString();
+      FactoryValidationReturnType = type.GetValidateFactoryArgumentsReturnType();
    }
 
-   private IReadOnlyList<EqualityInstanceMemberInfo> GetEqualityMembers()
+   private ImmutableArray<EqualityInstanceMemberInfo> GetEqualityMembers()
    {
       var members = AssignableInstanceFieldsAndProperties;
 
-      if (members.Count == 0)
-         return Array.Empty<EqualityInstanceMemberInfo>();
+      if (members.Length == 0)
+         return [];
 
-      List<EqualityInstanceMemberInfo>? equalityMembers = null;
+      ImmutableArray<EqualityInstanceMemberInfo>.Builder? equalityMembers = null;
 
-      for (var i = 0; i < members.Count; i++)
+      for (var i = 0; i < members.Length; i++)
       {
          var member = members[i];
          var settings = member.ValueObjectMemberSettings;
@@ -82,23 +78,23 @@ public sealed class ComplexValueObjectSourceGeneratorState
          var equalityComparer = settings.HasInvalidEqualityComparerType ? null : settings.EqualityComparerAccessor;
          var equalityMember = new EqualityInstanceMemberInfo(member, equalityComparer);
 
-         (equalityMembers ??= new List<EqualityInstanceMemberInfo>(members.Count)).Add(equalityMember);
+         (equalityMembers ??= ImmutableArray.CreateBuilder<EqualityInstanceMemberInfo>(members.Length)).Add(equalityMember);
       }
 
       if (equalityMembers != null)
-         return equalityMembers;
+         return equalityMembers.DrainToImmutable();
 
-      var equalityMembersArray = new EqualityInstanceMemberInfo[members.Count];
+      var equalityMembersArray = ImmutableArray.CreateBuilder<EqualityInstanceMemberInfo>(members.Length);
 
-      for (var i = 0; i < members.Count; i++)
+      for (var i = 0; i < members.Length; i++)
       {
          var memberInfo = members[i];
          var equalityMemberInfo = new EqualityInstanceMemberInfo(memberInfo, null);
 
-         equalityMembersArray[i] = equalityMemberInfo;
+         equalityMembersArray.Add(equalityMemberInfo);
       }
 
-      return equalityMembersArray;
+      return equalityMembersArray.DrainToImmutable();
    }
 
    public override bool Equals(object? obj)
@@ -115,7 +111,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
 
       return TypeFullyQualified == other.TypeFullyQualified
              && IsReferenceType == other.IsReferenceType
-             && IsStruct == other.IsStruct
+             && IsValueType == other.IsValueType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
@@ -131,7 +127,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
       {
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();

@@ -20,7 +20,7 @@ public abstract class NewtonsoftJsonKeyedSerializerCodeGeneratorFactoryBase : IK
           || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

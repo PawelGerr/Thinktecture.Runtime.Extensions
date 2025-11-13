@@ -1,36 +1,31 @@
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
-public sealed class ConstructorState : IEquatable<ConstructorState>, IHashCodeComputable
+public readonly struct ConstructorState(ImmutableArray<DefaultMemberState> arguments) : IEquatable<ConstructorState>, IHashCodeComputable
 {
-   public ImmutableArray<DefaultMemberState> Arguments { get; }
+   public ImmutableArray<DefaultMemberState> Arguments { get; } = arguments;
 
-   public ConstructorState(ImmutableArray<DefaultMemberState> arguments)
+   public bool Equals(ConstructorState other)
    {
-      Arguments = arguments;
-   }
-
-   public bool Equals(ConstructorState? other)
-   {
-      if (other is null)
-         return false;
-      if (ReferenceEquals(this, other))
-         return true;
-
       return Arguments.SequenceEqual(other.Arguments);
    }
 
    public override bool Equals(object? obj)
    {
-      if (obj is null)
-         return false;
-      if (ReferenceEquals(this, obj))
-         return true;
-
-      return Equals(obj as ConstructorState);
+      return obj is ConstructorState state && Equals(state);
    }
 
    public override int GetHashCode()
    {
       return Arguments.ComputeHashCode();
+   }
+
+   public static bool operator ==(ConstructorState left, ConstructorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ConstructorState left, ConstructorState right)
+   {
+      return !(left == right);
    }
 }

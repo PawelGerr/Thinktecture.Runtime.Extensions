@@ -1,8 +1,13 @@
 namespace Thinktecture.CodeAnalysis;
 
+/// <summary>
+/// The immutable arrays must not contain duplicates.
+/// </summary>
 public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
    where T : IEquatable<T>
 {
+   public static readonly SetComparer<T> Instance = new();
+
    public bool Equals(ImmutableArray<T> x, ImmutableArray<T> y)
    {
       if (x.IsDefaultOrEmpty)
@@ -14,13 +19,27 @@ public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
       if (x.Length != y.Length)
          return false;
 
-      for (var i = 0; i < x.Length; i++)
-      {
-         if (!y.Contains(x[i]))
-            return false;
-      }
+      var hashSet = SetComparerPool.Instance.Lease(EqualityComparer<T>.Default);
 
-      return true;
+      try
+      {
+         for (var i = 0; i < y.Length; i++)
+         {
+            hashSet.Add(y[i]);
+         }
+
+         for (var i = 0; i < x.Length; i++)
+         {
+            if (!hashSet.Contains(x[i]))
+               return false;
+         }
+
+         return true;
+      }
+      finally
+      {
+         SetComparerPool.Instance.Return(hashSet);
+      }
    }
 
    public int GetHashCode(ImmutableArray<T> obj)
@@ -29,5 +48,17 @@ public sealed class SetComparer<T> : IEqualityComparer<ImmutableArray<T>>
       // if the order is different, but in (mathematical) sets we don't want to be order-specific.
 
       return obj.IsDefaultOrEmpty ? 0 : obj.Length.GetHashCode();
+   }
+
+   private sealed class SetComparerPool : ReusableHashSet<T>
+   {
+      private static readonly ThreadLocal<SetComparerPool> _instance = new(() => new SetComparerPool(1000));
+
+      public static SetComparerPool Instance => _instance.Value;
+
+      private SetComparerPool(int maxSetSize)
+         : base(maxSetSize)
+      {
+      }
    }
 }

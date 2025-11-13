@@ -6,11 +6,11 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
    public SwitchMapMethodsGeneration MapMethods { get; }
    public ConversionOperatorsGeneration ConversionFromValue { get; }
    public string SwitchMapStateParameterName { get; }
-   public IReadOnlyList<RegularUnionSwitchMapOverload> SwitchMapOverloads { get; }
+   public ImmutableArray<RegularUnionSwitchMapOverload> SwitchMapOverloads { get; }
 
    public RegularUnionSettings(
       AttributeData attribute,
-      IReadOnlyList<RegularUnionSwitchMapOverload> switchMapOverloads)
+      ImmutableArray<RegularUnionSwitchMapOverload> switchMapOverloads)
    {
       SwitchMethods = attribute.FindSwitchMethods();
       MapMethods = attribute.FindMapMethods();
@@ -43,9 +43,9 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
    {
       unchecked
       {
-         var hashCode = SwitchMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ MapMethods.GetHashCode();
-         hashCode = (hashCode * 397) ^ ConversionFromValue.GetHashCode();
+         var hashCode = (int)SwitchMethods;
+         hashCode = (hashCode * 397) ^ (int)MapMethods;
+         hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
          hashCode = (hashCode * 397) ^ SwitchMapOverloads.ComputeHashCode();
 

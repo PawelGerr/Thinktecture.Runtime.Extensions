@@ -59,4 +59,14 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
          return hashCode;
       }
    }
+
+   public static bool operator ==(ParsableGeneratorState left, ParsableGeneratorState right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ParsableGeneratorState left, ParsableGeneratorState right)
+   {
+      return !(left == right);
+   }
 }

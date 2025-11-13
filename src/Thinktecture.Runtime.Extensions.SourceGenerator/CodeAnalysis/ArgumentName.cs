@@ -1,4 +1,4 @@
-namespace Thinktecture;
+namespace Thinktecture.CodeAnalysis;
 
 public readonly struct ArgumentName : IEquatable<ArgumentName>
 {
@@ -16,11 +16,6 @@ public readonly struct ArgumentName : IEquatable<ArgumentName>
       return new ArgumentName(name, renderAsIs);
    }
 
-   public bool Equals(string other)
-   {
-      return Name.Equals(other, StringComparison.OrdinalIgnoreCase);
-   }
-
    public override bool Equals(object? obj)
    {
       return obj is ArgumentName other && Equals(other);
@@ -35,12 +30,22 @@ public readonly struct ArgumentName : IEquatable<ArgumentName>
    {
       unchecked
       {
-         return (Name.GetHashCode() * 397) ^ RenderAsIs.GetHashCode();
+         return ((Name?.GetHashCode() ?? 0) * 397) ^ RenderAsIs.GetHashCode();
       }
    }
 
    public override string ToString()
    {
-      return Name;
+      return Name ?? string.Empty;
+   }
+
+   public static bool operator ==(ArgumentName left, ArgumentName right)
+   {
+      return left.Equals(right);
+   }
+
+   public static bool operator !=(ArgumentName left, ArgumentName right)
+   {
+      return !(left == right);
    }
 }

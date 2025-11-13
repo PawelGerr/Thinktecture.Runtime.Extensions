@@ -14,8 +14,13 @@ public sealed class MemberInformationComparer : IEqualityComparer<IMemberInforma
 
       return x.Name == y.Name
              && x.TypeFullyQualified == y.TypeFullyQualified
+             && x.SpecialType == y.SpecialType
              && x.IsReferenceType == y.IsReferenceType
-             && x.SpecialType == y.SpecialType;
+             && x.IsValueType == y.IsValueType
+             && x.IsRecord == y.IsRecord
+             && x.IsTypeParameter == y.IsTypeParameter
+             && x.NullableAnnotation == y.NullableAnnotation
+             && x.IsNullableStruct == y.IsNullableStruct;
    }
 
    public int GetHashCode(IMemberInformation obj)
@@ -26,6 +31,11 @@ public sealed class MemberInformationComparer : IEqualityComparer<IMemberInforma
          hashCode = (hashCode * 397) ^ obj.TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ obj.IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)obj.SpecialType;
+         hashCode = (hashCode * 397) ^ obj.IsValueType.GetHashCode();
+         hashCode = (hashCode * 397) ^ obj.IsRecord.GetHashCode();
+         hashCode = (hashCode * 397) ^ obj.IsTypeParameter.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)obj.NullableAnnotation;
+         hashCode = (hashCode * 397) ^ obj.IsNullableStruct.GetHashCode();
 
          return hashCode;
       }

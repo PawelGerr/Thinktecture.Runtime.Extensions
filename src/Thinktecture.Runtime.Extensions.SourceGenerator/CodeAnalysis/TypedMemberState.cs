@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
+public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
@@ -9,10 +9,10 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
    public SpecialType SpecialType { get; }
    public TypeKind TypeKind { get; }
    public bool IsReferenceType { get; }
-   public bool IsStruct { get; }
+   public bool IsValueType { get; }
    public bool IsTypeParameter => TypeKind == TypeKind.TypeParameter;
    public bool IsNullableStruct { get; }
-   public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct || (IsTypeParameter && !IsStruct);
+   public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct || (IsTypeParameter && !IsValueType);
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
@@ -28,7 +28,7 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
       IsReferenceType = type.IsReferenceType;
-      IsStruct = type.IsValueType;
+      IsValueType = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;
       SpecialType = type.SpecialType;
       TypeKind = type.TypeKind;
@@ -84,61 +84,61 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          switch (customOperator.Name)
          {
             case "op_GreaterThan":
-               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThan) && customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThan) && customOperator.IsUserDefinedComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.GreaterThan;
                break;
 
             case "op_GreaterThanOrEqual":
-               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThanOrEqual) && customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.GreaterThanOrEqual) && customOperator.IsUserDefinedComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.GreaterThanOrEqual;
                break;
 
             case "op_LessThan":
-               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThan) && customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThan) && customOperator.IsUserDefinedComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.LessThan;
                break;
 
             case "op_LessThanOrEqual":
-               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThanOrEqual) && customOperator.IsComparisonOperator(type))
+               if (!ComparisonOperators.HasOperator(ImplementedComparisonOperators.LessThanOrEqual) && customOperator.IsUserDefinedComparisonOperator(type))
                   ComparisonOperators |= ImplementedComparisonOperators.LessThanOrEqual;
                break;
 
             case "op_Addition":
-               if (!AdditionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
+               if (!AdditionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsUserDefinedArithmeticOperator(type))
                   AdditionOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedAddition":
-               if (!AdditionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
+               if (!AdditionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsUserDefinedArithmeticOperator(type))
                   AdditionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Subtraction":
-               if (!SubtractionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
+               if (!SubtractionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsUserDefinedArithmeticOperator(type))
                   SubtractionOperators |= ImplementedOperators.Default;
                break;
             case "op_CheckedSubtraction":
-               if (!SubtractionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
+               if (!SubtractionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsUserDefinedArithmeticOperator(type))
                   SubtractionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Division":
-               if (!DivisionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
+               if (!DivisionOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsUserDefinedArithmeticOperator(type))
                   DivisionOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedDivision":
-               if (!DivisionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
+               if (!DivisionOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsUserDefinedArithmeticOperator(type))
                   DivisionOperators |= ImplementedOperators.Checked;
                break;
 
             case "op_Multiply":
-               if (!MultiplyOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsArithmeticOperator(type))
+               if (!MultiplyOperators.HasOperator(ImplementedOperators.Default) && customOperator.IsUserDefinedArithmeticOperator(type))
                   MultiplyOperators |= ImplementedOperators.Default;
                break;
 
             case "op_CheckedMultiply":
-               if (!MultiplyOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsArithmeticOperator(type))
+               if (!MultiplyOperators.HasOperator(ImplementedOperators.Checked) && customOperator.IsUserDefinedArithmeticOperator(type))
                   MultiplyOperators |= ImplementedOperators.Checked;
                break;
          }
@@ -182,9 +182,10 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
       return TypeFullyQualified == other.TypeFullyQualified
              && SpecialType == other.SpecialType
              && TypeKind == other.TypeKind
+             && NullableAnnotation == other.NullableAnnotation
              && IsNullableStruct == other.IsNullableStruct
              && IsReferenceType == other.IsReferenceType
-             && IsStruct == other.IsStruct
+             && IsValueType == other.IsValueType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
              && IsParsable == other.IsParsable
@@ -203,9 +204,10 @@ public class TypedMemberState : IEquatable<TypedMemberState>, ITypedMemberState
          var hashCode = TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ (int)TypeKind;
+         hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ IsNullableStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
-         hashCode = (hashCode * 397) ^ IsStruct.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
