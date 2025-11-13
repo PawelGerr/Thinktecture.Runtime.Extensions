@@ -51,7 +51,7 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 # Requirements
 
 * C# 11 (or higher) for generated code
-* SDK 8.0.400 (or higher) for building projects
+* SDK 8.0.416 (or higher) for building projects
 
 # Migrations
 
