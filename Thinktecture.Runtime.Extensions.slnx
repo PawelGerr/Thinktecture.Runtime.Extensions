@@ -10,6 +10,8 @@
     <File Path="LICENSE.md" />
     <File Path="README.md" />
     <File Path="CLAUDE.md" />
+    <File Path="src\Thinktecture.Runtime.Extensions.SourceGenerator\AnalyzerReleases.Shipped.md" />
+    <File Path="src\Thinktecture.Runtime.Extensions.SourceGenerator\AnalyzerReleases.Unshipped.md" />
     <File Path=".clinerules" />
   </Folder>
   <Folder Name="/assets/.github/">
