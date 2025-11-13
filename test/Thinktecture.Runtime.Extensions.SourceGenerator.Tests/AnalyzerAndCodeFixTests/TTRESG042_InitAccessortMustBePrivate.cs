@@ -60,9 +60,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -82,9 +82,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -111,9 +111,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }
@@ -133,9 +133,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }
@@ -183,9 +183,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   private int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -211,9 +211,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ValueObject<int>]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   private int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }
@@ -279,9 +279,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -301,9 +301,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -330,9 +330,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }
@@ -352,9 +352,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   public int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }
@@ -402,9 +402,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   private int {|#0:InstanceProperty|}
                   {
                      get => _instanceProperty;
@@ -430,9 +430,9 @@ public class TTRESG042_InitAccessorMustBePrivate
                [ComplexValueObject]
             	public partial class TestValueObject
             	{
-                  [ValueObjectMemberIgnore]
+                  [IgnoreMember]
                   private readonly int _instanceProperty;
-            
+
                   private int {|#0:InstanceProperty|}
                   {
                      get { return _instanceProperty; }

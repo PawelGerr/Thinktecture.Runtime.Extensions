@@ -3,23 +3,6 @@ namespace Thinktecture;
 /// <summary>
 /// The provided value doesn't match any enumeration item.
 /// </summary>
-[Obsolete("Use 'UnknownSmartEnumIdentifierException' instead.")]
-public sealed class UnknownEnumIdentifierException : UnknownSmartEnumIdentifierException
-{
-   /// <summary>
-   /// Initializes new instance of <see cref="UnknownSmartEnumIdentifierException"/>.
-   /// </summary>
-   /// <param name="enumType">The type of the enumeration.</param>
-   /// <param name="value">Provided value.</param>
-   public UnknownEnumIdentifierException(Type enumType, object value)
-      : base(enumType, value)
-   {
-   }
-}
-
-/// <summary>
-/// The provided value doesn't match any enumeration item.
-/// </summary>
 public class UnknownSmartEnumIdentifierException : KeyNotFoundException
 {
    /// <summary>

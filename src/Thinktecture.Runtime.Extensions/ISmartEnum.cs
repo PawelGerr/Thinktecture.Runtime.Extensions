@@ -6,29 +6,6 @@ namespace Thinktecture;
 /// Interface of a Smart Enum.
 /// </summary>
 /// <typeparam name="TKey">Type of the key.</typeparam>
-[Obsolete("Use 'ISmartEnum<TKey>' instead.")]
-public interface IEnum<TKey> : ISmartEnum<TKey>
-   where TKey : notnull;
-
-/// <summary>
-/// Interface of a Smart Enum.
-/// </summary>
-/// <typeparam name="T">Type of the enumeration implementing this interface.</typeparam>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-/// <remarks>
-/// Don't implement this interface directly. It will be implemented by a source generator.
-/// </remarks>
-[Obsolete("Use 'ISmartEnum<TKey, T, TValidationError>' instead.")]
-public interface IEnum<TKey, T, out TValidationError> : ISmartEnum<TKey, T, TValidationError>
-   where T : ISmartEnum<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// Interface of a Smart Enum.
-/// </summary>
-/// <typeparam name="TKey">Type of the key.</typeparam>
 public interface ISmartEnum<TKey> : IKeyedObject<TKey>
    where TKey : notnull;
 

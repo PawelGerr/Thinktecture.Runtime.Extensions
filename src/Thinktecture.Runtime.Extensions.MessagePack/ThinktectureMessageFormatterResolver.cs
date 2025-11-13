@@ -9,12 +9,6 @@ namespace Thinktecture;
 /// <summary>
 /// MessagePack formatter resolver for Value Objects.
 /// </summary>
-[Obsolete("Use 'ThinktectureMessageFormatterResolver' instead.")]
-public class ValueObjectMessageFormatterResolver : ThinktectureMessageFormatterResolver;
-
-/// <summary>
-/// MessagePack formatter resolver for Value Objects.
-/// </summary>
 public class ThinktectureMessageFormatterResolver : IFormatterResolver
 {
    /// <summary>
@@ -25,7 +19,7 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
    private readonly bool _skipObjectsWithMessagePackFormatterAttribute;
 
    /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectMessageFormatterResolver"/>.
+   /// Initializes new instance of <see cref="ThinktectureMessageFormatterResolver"/>.
    /// </summary>
    public ThinktectureMessageFormatterResolver()
       : this(true)
@@ -33,7 +27,7 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
    }
 
    /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectMessageFormatterResolver"/>.
+   /// Initializes new instance of <see cref="ThinktectureMessageFormatterResolver"/>.
    /// </summary>
    /// <param name="skipObjectsWithMessagePackFormatterAttribute">
    /// Indication whether to skip value objects with <see cref="MessagePackFormatterAttribute"/>.

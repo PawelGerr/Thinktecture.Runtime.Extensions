@@ -9,21 +9,6 @@ namespace Thinktecture;
 public static class ComplexTypePropertyBuilderExtensions
 {
    /// <summary>
-   /// Configures a complex type property to use value object conversion.
-   /// </summary>
-   /// <typeparam name="TProperty">The property type.</typeparam>
-   /// <param name="propertyBuilder">The complex type property builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
-   /// <returns>The complex type property builder for chaining.</returns>
-   [Obsolete("Use 'HasThinktectureValueConverter' instead.")]
-   public static ComplexTypePropertyBuilder<TProperty> HasValueObjectConversion<TProperty>(
-      this ComplexTypePropertyBuilder<TProperty> propertyBuilder,
-      bool useConstructorForRead = true)
-   {
-      return propertyBuilder.HasThinktectureValueConverter(useConstructorForRead);
-   }
-
-   /// <summary>
    /// Configures a complex type property to use value converter for Smart Enums and Value Objects.
    /// </summary>
    /// <typeparam name="TProperty">The property type.</typeparam>

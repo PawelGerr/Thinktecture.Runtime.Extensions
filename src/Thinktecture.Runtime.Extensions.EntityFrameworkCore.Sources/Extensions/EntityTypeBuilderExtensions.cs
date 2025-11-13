@@ -22,86 +22,6 @@ public static class EntityTypeBuilderExtensions
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <typeparam name="T">The entity type.</typeparam>
    /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static EntityTypeBuilder<T> AddValueObjectConverters<T>(
-      this EntityTypeBuilder<T> entityTypeBuilder,
-      bool useConstructorForRead = true,
-      bool addConvertersForOwnedTypes = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-      where T : class
-   {
-      return entityTypeBuilder.AddThinktectureValueConverters(useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static EntityTypeBuilder AddValueObjectConverters(
-      this EntityTypeBuilder entityTypeBuilder,
-      bool useConstructorForRead = true,
-      bool addConvertersForOwnedTypes = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-   {
-      return entityTypeBuilder.AddThinktectureValueConverters(useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddValueObjectConverters<TEntity, TRelatedEntity>(
-      this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder,
-      bool useConstructorForRead = true,
-      bool addConvertersForOwnedTypes = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-      where TEntity : class
-      where TRelatedEntity : class
-   {
-      return entityTypeBuilder.AddThinktectureValueConverters(useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static OwnedNavigationBuilder AddValueObjectConverters(
-      this OwnedNavigationBuilder entityTypeBuilder,
-      bool useConstructorForRead = true,
-      bool addConvertersForOwnedTypes = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-   {
-      return entityTypeBuilder.AddThinktectureValueConverters(useConstructorForRead, addConvertersForOwnedTypes, configureEnumsAndKeyedValueObjects);
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="entityTypeBuilder">The entity type builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <typeparam name="T">The entity type.</typeparam>
-   /// <returns>The entity type builder for method chaining.</returns>
    public static EntityTypeBuilder<T> AddThinktectureValueConverters<T>(
       this EntityTypeBuilder<T> entityTypeBuilder,
       bool useConstructorForRead = true,
@@ -192,41 +112,6 @@ public static class EntityTypeBuilderExtensions
          configureEnumsAndKeyedValueObjects);
 
       return entityTypeBuilder;
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="complexPropertyBuilder">The complex property builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static ComplexPropertyBuilder<TComplex> AddValueObjectConverters<TComplex>(
-      this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
-      bool useConstructorForRead = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-      where TComplex : class
-   {
-      return complexPropertyBuilder.AddThinktectureValueConverters(useConstructorForRead, configureEnumsAndKeyedValueObjects);
-   }
-
-   /// <summary>
-   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
-   /// Properties with a value provider are skipped.
-   /// </summary>
-   /// <param name="complexPropertyBuilder">The complex property builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
-   /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
-   /// <returns>The entity type builder for method chaining.</returns>
-   [Obsolete("Use 'AddThinktectureValueConverters' instead.")]
-   public static ComplexPropertyBuilder AddValueObjectConverters(
-      this ComplexPropertyBuilder complexPropertyBuilder,
-      bool useConstructorForRead = true,
-      Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
-   {
-      return complexPropertyBuilder.AddThinktectureValueConverters(useConstructorForRead, configureEnumsAndKeyedValueObjects);
    }
 
    /// <summary>

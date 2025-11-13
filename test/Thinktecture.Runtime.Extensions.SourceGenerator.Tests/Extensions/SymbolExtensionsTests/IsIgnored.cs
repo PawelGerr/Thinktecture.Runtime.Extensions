@@ -41,7 +41,7 @@ namespace Test;
 
 public class C
 {
-   [ValueObjectMemberIgnore]
+   [IgnoreMember]
    public int F2;
 }
 ";
@@ -153,7 +153,7 @@ using Thinktecture;
 namespace Test;
 public class C
 {
-   [ValueObjectMemberIgnore]
+   [IgnoreMember]
    public int P2 { get; }
 }
 ";

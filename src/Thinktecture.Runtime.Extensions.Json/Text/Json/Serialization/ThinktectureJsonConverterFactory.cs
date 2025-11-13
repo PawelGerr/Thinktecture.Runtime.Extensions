@@ -6,50 +6,6 @@ using Thinktecture.Internal;
 namespace Thinktecture.Text.Json.Serialization;
 
 /// <summary>
-/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
-/// </summary>
-[Obsolete("Use 'ThinktectureJsonConverterFactory' instead.")]
-public sealed class ValueObjectJsonConverterFactory<T, TKey, TValidationError> : ThinktectureJsonConverterFactory<T, TKey, TValidationError>
-   where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// Factory for creation of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
-/// </summary>
-[Obsolete("Use 'ThinktectureJsonConverterFactory' instead.")]
-public sealed class ValueObjectJsonConverterFactory<T, TValidationError> : ThinktectureJsonConverterFactory<T, TValidationError>
-   where T : IObjectFactory<T, string, TValidationError>, IConvertible<string>
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// Factory for creation of <see cref="ThinktectureJsonConverterFactory{T,TKey,TValidationError}"/>.
-/// </summary>
-[Obsolete("Use 'ThinktectureJsonConverterFactory' instead.")]
-public sealed class ValueObjectJsonConverterFactory : ThinktectureJsonConverterFactory
-{
-   /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectJsonConverterFactory"/>.
-   /// </summary>
-   public ValueObjectJsonConverterFactory()
-      : this(true)
-   {
-   }
-
-   /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectJsonConverterFactory"/>.
-   /// </summary>
-   /// <param name="skipObjectsWithJsonConverterAttribute">
-   /// Indication whether to skip value objects with <see cref="JsonConverterAttribute"/>.
-   /// </param>
-   public ValueObjectJsonConverterFactory(
-      bool skipObjectsWithJsonConverterAttribute)
-      : base(skipObjectsWithJsonConverterAttribute)
-   {
-   }
-}
-
-/// <summary>
 /// Factory for creation of <see cref="ThinktectureJsonConverterFactory{T,TKey,TValidationError}"/>.
 /// </summary>
 [ThinktectureRuntimeExtensionInternal]

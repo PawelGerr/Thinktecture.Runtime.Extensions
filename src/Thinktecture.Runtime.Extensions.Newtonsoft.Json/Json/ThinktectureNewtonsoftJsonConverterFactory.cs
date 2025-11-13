@@ -8,12 +8,6 @@ namespace Thinktecture.Json;
 /// <summary>
 /// Non-generic converter for Value Objects.
 /// </summary>
-[Obsolete("Use 'jsonSerializerSettings.AddThinktectureJsonConverters()' instead.")]
-public sealed class ValueObjectNewtonsoftJsonConverter : ThinktectureNewtonsoftJsonConverterFactory;
-
-/// <summary>
-/// Non-generic converter for Value Objects.
-/// </summary>
 public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
 {
    private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new();

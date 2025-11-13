@@ -10,18 +10,6 @@ namespace Thinktecture.Formatters;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-[Obsolete("Use 'ThinktectureMessageFormatterResolver' instead.")]
-public sealed class ValueObjectMessagePackFormatter<T, TKey, TValidationError> : ThinktectureMessagePackFormatter<T, TKey, TValidationError>
-   where T : class, IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// MessagePack formatter for Value Objects.
-/// </summary>
-/// <typeparam name="T">Type of the value object.</typeparam>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 [ThinktectureRuntimeExtensionInternal]
 public class ThinktectureMessagePackFormatter<T, TKey, TValidationError> : IMessagePackFormatter<T?>
    where T : class, IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>

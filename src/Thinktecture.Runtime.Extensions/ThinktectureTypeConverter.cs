@@ -9,18 +9,6 @@ namespace Thinktecture;
 /// <typeparam name="T">Type of the concrete enumeration.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-[Obsolete("Use 'ThinktectureTypeConverter' instead. This class will be removed in a future version.")]
-public class ValueObjectTypeConverter<T, TKey, TValidationError> : ThinktectureTypeConverter<T, TKey, TValidationError>
-   where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// Type converter to convert corresponding types to <typeparamref name="TKey"/> and vice versa.
-/// </summary>
-/// <typeparam name="T">Type of the concrete enumeration.</typeparam>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 [ThinktectureRuntimeExtensionInternal]
 public class ThinktectureTypeConverter<T, TKey, TValidationError> : TypeConverter
    where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>

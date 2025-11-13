@@ -23,14 +23,14 @@ This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discr
 - **`src/Thinktecture.Runtime.Extensions`**: Core library with base interfaces, attributes, and runtime helpers
     - Attributes: `SmartEnumAttribute<TKey>`, `SmartEnumAttribute`, `ValueObjectAttribute<TKey>`, `ComplexValueObjectAttribute`, `UnionAttribute<T1,T2,...>` (up to 5 type parameters), `AdHocUnionAttribute` (non-generic alternative to UnionAttribute), `UnionAttribute`, `ObjectFactoryAttribute<T>`
     - Additional attributes: `KeyMemberEqualityComparerAttribute`, `KeyMemberComparerAttribute`, `MemberEqualityComparerAttribute`, `IgnoreMemberAttribute`, `ValidationErrorAttribute`, `UseDelegateFromConstructorAttribute`, `UnionSwitchMapOverloadAttribute`
-    - Key interfaces: `ISmartEnum<TKey>`, `IEnum`, `IKeyedObject<TKey>`, `IKeyedValueObject<TKey>`, `IComplexValueObject`, `IValidationError`, `IObjectFactory<T>`
+    - Key interfaces: `ISmartEnum<TKey>`, `IEnum`, `IKeyedObject<TKey>`, `IKeyedValueObject<TKey>`, `IValidationError`, `IObjectFactory<T>`
     - Utility types: `ValidationError`, `ComparerAccessors`, collection helpers (EmptyDictionary, EmptyLookup, SingleItemReadOnlyDictionary, etc.)
     - Enums: `AccessModifier`, `MemberKind`, `OperatorsGeneration`, `ConversionOperatorsGeneration`, `SwitchMapMethodsGeneration`, `SerializationFrameworks`, `UnionConstructorAccessModifier`
 - **`src/Thinktecture.Runtime.Extensions.SourceGenerator`**: Roslyn Source Generators and Analyzers that create boilerplate code and validate usage for partial classes/structs
     - Contains 6 source generators, 2 analyzers, and 1 code fix provider
     - Organized into subdirectories: SmartEnums, ValueObjects, AdHocUnions, RegularUnions, ObjectFactories, Annotations, Diagnostics, CodeFixes
-- **Framework Integration Projects**: Separate projects for JSON, MessagePack, Newtonsoft.Json, ProtoBuf, Entity Framework Core (7/8/9), ASP.NET Core, and Swashbuckle
-    - **EF Core**: Shared sources in `EntityFrameworkCore.Sources`, version-specific projects for EF Core 7/8/9
+- **Framework Integration Projects**: Separate projects for JSON, MessagePack, Newtonsoft.Json, ProtoBuf, Entity Framework Core (8/9/10), ASP.NET Core, and Swashbuckle
+    - **EF Core**: Shared sources in `EntityFrameworkCore.Sources`, version-specific projects for EF Core 8/9/10
     - **Serialization**: Converters/formatters for System.Text.Json, MessagePack, Newtonsoft.Json, and ProtoBuf
 
 ### Source Generators and Analyzers
@@ -518,5 +518,3 @@ Notes:
     - UseWithEntityFramework: bool — enable EF Core integration for this factory
     - UseForModelBinding: bool (init-only) — enable ASP.NET Core model binding
     - HasCorrespondingConstructor: bool (init-only) — indicates presence of a single-parameter ctor of type `Type`
-- Obsolete alias:
-    - ValueObjectFactoryAttribute<T> — use ObjectFactoryAttribute<T> instead

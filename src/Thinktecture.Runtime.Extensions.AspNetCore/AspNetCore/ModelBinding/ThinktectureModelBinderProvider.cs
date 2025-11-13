@@ -6,35 +6,6 @@ namespace Thinktecture.AspNetCore.ModelBinding;
 /// <summary>
 /// Provider for creation of model binders for Smart Enums and for Value Objects with a key member.
 /// </summary>
-[Obsolete("Use 'ThinktectureModelBinderProvider' instead.")]
-public sealed class ValueObjectModelBinderProvider : ThinktectureModelBinderProvider
-{
-   /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectModelBinderProvider"/>.
-   /// </summary>
-   /// <param name="skipBindingFromBody">Indication whether to skip model binding if the raw value comes from request body.</param>
-   public ValueObjectModelBinderProvider(bool skipBindingFromBody = true)
-      : base(skipBindingFromBody)
-   {
-   }
-
-   /// <summary>
-   /// Initializes new instance of <see cref="ValueObjectModelBinderProvider"/>.
-   /// </summary>
-   /// <param name="trimStringBasedEnums">Indication whether to trim string-values before parsing them.</param>
-   /// <param name="skipBindingFromBody">Indication whether to skip model binding if the raw value comes from request body.</param>
-   [Obsolete("Use constructor without 'trimStringBasedEnums' parameter instead")]
-   public ValueObjectModelBinderProvider(
-      bool trimStringBasedEnums,
-      bool skipBindingFromBody = true)
-      : this(skipBindingFromBody)
-   {
-   }
-}
-
-/// <summary>
-/// Provider for creation of model binders for Smart Enums and for Value Objects with a key member.
-/// </summary>
 public class ThinktectureModelBinderProvider : IModelBinderProvider
 {
    private readonly bool _skipBindingFromBody;

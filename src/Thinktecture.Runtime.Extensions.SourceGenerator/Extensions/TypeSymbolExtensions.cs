@@ -308,7 +308,7 @@ public static class TypeSymbolExtensions
    {
       return type is
       {
-         Name: Constants.Attributes.ObjectFactory.NAME or Constants.Attributes.ObjectFactory.NAME_OBSOLETE,
+         Name: Constants.Attributes.ObjectFactory.NAME,
          TypeArguments.Length: 1,
          ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
       };

@@ -15,21 +15,6 @@ public static class PropertyBuilderExtensions
    /// <param name="propertyBuilder">The property builder.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
    /// <returns>The property builder for chaining.</returns>
-   [Obsolete("Use 'HasThinktectureValueConverter' instead.")]
-   public static PropertyBuilder<TProperty> HasValueObjectConversion<TProperty>(
-      this PropertyBuilder<TProperty> propertyBuilder,
-      bool useConstructorForRead = true)
-   {
-      return propertyBuilder.HasThinktectureValueConverter(useConstructorForRead);
-   }
-
-   /// <summary>
-   /// Configures a property to use value object conversion.
-   /// </summary>
-   /// <typeparam name="TProperty">The property type.</typeparam>
-   /// <param name="propertyBuilder">The property builder.</param>
-   /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
-   /// <returns>The property builder for chaining.</returns>
    public static PropertyBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
       this PropertyBuilder<TProperty> propertyBuilder,
       bool useConstructorForRead = true)

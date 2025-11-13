@@ -45,14 +45,6 @@ public abstract class ObjectFactoryAttribute : Attribute
 /// </summary>
 /// <typeparam name="T">Type of the value to be able to create a value object from.</typeparam>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
-[Obsolete("Use 'ObjectFactoryAttribute<T>' instead.")]
-public sealed class ValueObjectFactoryAttribute<T> : ObjectFactoryAttribute<T>;
-
-/// <summary>
-/// Signals a desire for an (additional) factory for creation of objects from a value of type <typeparamref name="T"/>.
-/// </summary>
-/// <typeparam name="T">Type of the value to be able to create a value object from.</typeparam>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
 public class ObjectFactoryAttribute<T> : ObjectFactoryAttribute
 {
    /// <summary>

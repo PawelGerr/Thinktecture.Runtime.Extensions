@@ -8,18 +8,6 @@ namespace Thinktecture.Json;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-[Obsolete("Use 'ThinktectureNewtonsoftJsonConverterFactory' instead.")]
-public sealed class ValueObjectNewtonsoftJsonConverter<T, TKey, TValidationError> : ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError>
-   where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>;
-
-/// <summary>
-/// <see cref="JsonConverter"/> for Value Objects.
-/// </summary>
-/// <typeparam name="T">Type of the value object.</typeparam>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 [ThinktectureRuntimeExtensionInternal]
 public class ThinktectureNewtonsoftJsonConverter<T, TKey, TValidationError> : JsonConverter
    where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>

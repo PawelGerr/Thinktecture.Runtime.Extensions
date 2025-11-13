@@ -10,48 +10,6 @@ namespace Thinktecture.Text.Json.Serialization;
 /// <typeparam name="T">Type of the value object.</typeparam>
 /// <typeparam name="TKey">Type of the key.</typeparam>
 /// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-[Obsolete("Use 'ThinktectureJsonConverterFactory' instead.")]
-public sealed class ValueObjectJsonConverter<T, TKey, TValidationError> : ThinktectureJsonConverter<T, TKey, TValidationError>
-   where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>
-   where TKey : notnull
-   where TValidationError : class, IValidationError<TValidationError>
-{
-   /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
-   /// </summary>
-   /// <param name="options">JSON serializer options.</param>
-   public ValueObjectJsonConverter(JsonSerializerOptions options)
-      : base(options)
-   {
-   }
-}
-
-/// <summary>
-/// JSON converter for string-based Value Objects.
-/// </summary>
-/// <typeparam name="T">Type of the value object.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
-[Obsolete("Use 'ThinktectureJsonConverterFactory' instead.")]
-public sealed class ValueObjectJsonConverter<T, TValidationError> : ThinktectureJsonConverter<T, TValidationError>
-   where T : IObjectFactory<T, string, TValidationError>, IConvertible<string>
-   where TValidationError : class, IValidationError<TValidationError>
-{
-   /// <summary>
-   /// Initializes a new instance of <see cref="ValueObjectJsonConverter{T,TKey,TValidationError}"/>.
-   /// </summary>
-   /// <param name="options">JSON serializer options.</param>
-   public ValueObjectJsonConverter(JsonSerializerOptions options)
-      : base(options)
-   {
-   }
-}
-
-/// <summary>
-/// JSON converter for Value Objects.
-/// </summary>
-/// <typeparam name="T">Type of the value object.</typeparam>
-/// <typeparam name="TKey">Type of the key.</typeparam>
-/// <typeparam name="TValidationError">Type of the validation error.</typeparam>
 [ThinktectureRuntimeExtensionInternal]
 public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverter<T>
    where T : IObjectFactory<T, TKey, TValidationError>, IConvertible<TKey>

@@ -124,9 +124,7 @@ public static class Constants
       public static class ObjectFactory
       {
          public const string NAME = "ObjectFactoryAttribute";
-         public const string NAME_OBSOLETE = "ValueObjectFactoryAttribute";
          public const string FULL_NAME = $"{NAMESPACE}.{NAME}`1";
-         public const string FULL_NAME_OBSOLETE = $"{NAMESPACE}.{NAME_OBSOLETE}`1";
       }
 
       public static class Union

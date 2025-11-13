@@ -17,15 +17,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
 
       SetupLogger(context, options);
 
-      InitializeObjectFactorySourceGen(context, options);
-   }
-
-   private void InitializeObjectFactorySourceGen(
-      IncrementalGeneratorInitializationContext context,
-      IncrementalValueProvider<GeneratorOptions> options)
-   {
       InitializeObjectFactorySourceGen(context, options, Constants.Attributes.ObjectFactory.FULL_NAME);
-      InitializeObjectFactorySourceGen(context, options, Constants.Attributes.ObjectFactory.FULL_NAME_OBSOLETE);
    }
 
    private void InitializeObjectFactorySourceGen(
