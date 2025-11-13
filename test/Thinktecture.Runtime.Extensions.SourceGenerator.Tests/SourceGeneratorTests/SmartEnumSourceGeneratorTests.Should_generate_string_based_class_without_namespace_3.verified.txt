@@ -8,32 +8,32 @@ partial class TestEnum :
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
    public static bool operator <(global::TestEnum left, global::TestEnum right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Key, right.Key) < 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
    public static bool operator <=(global::TestEnum left, global::TestEnum right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Key, right.Key) <= 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
    public static bool operator >(global::TestEnum left, global::TestEnum right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Key, right.Key) > 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
    public static bool operator >=(global::TestEnum left, global::TestEnum right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Key, right.Key) >= 0;
    }
 }

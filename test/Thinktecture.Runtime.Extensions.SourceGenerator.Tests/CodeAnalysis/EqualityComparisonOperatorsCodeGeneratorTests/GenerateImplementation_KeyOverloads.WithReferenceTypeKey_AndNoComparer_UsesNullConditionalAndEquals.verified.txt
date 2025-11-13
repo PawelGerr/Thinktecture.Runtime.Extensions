@@ -1,0 +1,80 @@
+﻿
+      /// <summary>
+      /// Compares two instances of <see cref="Order"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.Order? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="Order"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.Order? other)
+      {
+         return !(obj == other);
+      }
+
+      private static bool Equals(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.CustomerId? value)
+      {
+         if (obj is null)
+            return value is null;
+
+         if(value is null)
+            return false;
+
+         return obj.CustomerId is null ? value is null : obj.CustomerId.Equals(value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="Order"/> with <see cref="global::Thinktecture.Tests.CustomerId"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.CustomerId? value)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="Order"/> with <see cref="global::Thinktecture.Tests.CustomerId"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.CustomerId? value, global::Thinktecture.Tests.Order? obj)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="Order"/> with <see cref="global::Thinktecture.Tests.CustomerId"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.CustomerId? value)
+      {
+         return !(obj == value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="global::Thinktecture.Tests.CustomerId"/> with <see cref="Order"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.CustomerId? value, global::Thinktecture.Tests.Order? obj)
+      {
+         return !(obj == value);
+      }

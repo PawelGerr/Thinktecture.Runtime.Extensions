@@ -2317,4 +2317,530 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          }
       }
    }
+
+   public class ComplexExpressions
+   {
+      [Fact]
+      public async Task Should_trigger_when_lambda_is_unnamed_even_with_complex_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(
+                        item1: () =>
+                        {
+                           Console.WriteLine("Item1");
+                        },
+                        () =>
+                        {
+                           Console.WriteLine("Other");
+                        })|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_all_named_with_trivia()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     testEnum.Switch(
+                        // First item
+                        item1: () => {},
+                        // Second item
+                        item2: () => {});
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_trigger_with_only_first_parameter_unnamed()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(
+                        () => {},
+                        item2: () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_with_only_last_parameter_unnamed()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(
+                        item1: () => {},
+                        () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+   }
+
+   public class NestedCalls
+   {
+      [Fact]
+      public async Task Should_trigger_on_outer_call_with_unnamed_parameters_even_when_inner_is_correct()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum1 = SmartEnum_StringBased.Item1;
+                     var testEnum2 = SmartEnum_StringBased.Item2;
+
+                     {|#0:testEnum1.Switch(
+                        item1: () =>
+                        {
+                           testEnum2.Switch(item1: () => {}, item2: () => {});
+                        },
+                        () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_both_outer_and_inner_calls_with_unnamed_parameters()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum1 = SmartEnum_StringBased.Item1;
+                     var testEnum2 = SmartEnum_StringBased.Item2;
+
+                     {|#0:testEnum1.Switch(
+                        item1: () =>
+                        {
+                           {|#1:testEnum2.Switch(item1: () => {}, () => {})|};
+                        },
+                        () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected1 = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         var expected2 = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(1).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected1, expected2);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_when_both_outer_and_inner_have_all_named_parameters()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum1 = SmartEnum_StringBased.Item1;
+                     var testEnum2 = SmartEnum_StringBased.Item2;
+
+                     testEnum1.Switch(
+                        item1: () =>
+                        {
+                           testEnum2.Switch(item1: () => {}, item2: () => {});
+                        },
+                        item2: () => {});
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
+      }
+   }
+
+   public class DefaultArguments
+   {
+      [Fact]
+      public async Task Should_not_trigger_when_using_default_argument_values()
+      {
+         // This tests the case where arguments have default values
+         // The analyzer should still require named parameters
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     testEnum.Switch(item1: () => {}, item2: () => {});
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_partially_methods_even_with_all_parameters_provided()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     {|#0:testEnum.SwitchPartially(
+                        value => {}, // default
+                        item1: () => {},
+                        () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased_SwitchMapPartially));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
+      }
+   }
+
+   public class MethodReferences
+   {
+      [Fact]
+      public async Task Should_trigger_with_method_reference_as_unnamed_parameter()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  private void Handler() { }
+
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(
+                        item1: Handler,
+                        Handler)|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_with_all_method_references_named()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  private void Handler1() { }
+                  private void Handler2() { }
+
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     testEnum.Switch(
+                        item1: Handler1,
+                        item2: Handler2);
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_trigger_with_static_method_reference_as_unnamed_parameter()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  private static void Handler() { }
+
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(
+                        item1: Handler,
+                        Handler)|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+   }
+
+   public class MixedUnionTypes
+   {
+      [Fact]
+      public async Task Should_trigger_on_ad_hoc_union_with_mix_of_named_and_unnamed()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = new TestUnion_class_string_int("text");
+
+                     {|#0:testUnion.Switch(
+                        @string: s => {},
+                        i => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion_class_string_int));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestUnion_class_string_int).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_regular_union_with_mix_of_named_and_unnamed()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = new TestUnion.Child1("text");
+
+                     {|#0:testUnion.Switch(
+                        child1: c => {},
+                        c => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestUnion));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestUnion).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_when_switch_call_is_chained()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public int Do()
+                  {
+                     return SmartEnum_StringBased.Item1
+                        .Switch(item1: () => 1, item2: () => 2);
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly]);
+      }
+   }
+
+   public class ExtensionMethodScenarios
+   {
+      [Fact]
+      public async Task Should_trigger_even_when_called_as_extension_method()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased.Item1;
+
+                     {|#0:testEnum.Switch(item1: () => {}, () => {})|};
+                  }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(SmartEnum_StringBased));
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_unrelated_extension_methods()
+      {
+         var code = """
+
+            using System;
+            using System.Linq;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var numbers = new[] { 1, 2, 3 };
+                     var result = numbers.Select(x => x * 2).Where(x => x > 2);
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+   }
 }

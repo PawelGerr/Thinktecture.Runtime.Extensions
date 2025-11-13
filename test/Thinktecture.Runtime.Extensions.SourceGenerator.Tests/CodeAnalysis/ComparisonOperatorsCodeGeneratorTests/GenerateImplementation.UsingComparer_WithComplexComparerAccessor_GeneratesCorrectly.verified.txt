@@ -1,0 +1,33 @@
+﻿
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::Thinktecture.Tests.Comparers.ProductIdComparer.Comparer.Compare(left._id, right._id) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::Thinktecture.Tests.Comparers.ProductIdComparer.Comparer.Compare(left._id, right._id) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::Thinktecture.Tests.Comparers.ProductIdComparer.Comparer.Compare(left._id, right._id) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::Thinktecture.Tests.Comparers.ProductIdComparer.Comparer.Compare(left._id, right._id) >= 0;
+   }

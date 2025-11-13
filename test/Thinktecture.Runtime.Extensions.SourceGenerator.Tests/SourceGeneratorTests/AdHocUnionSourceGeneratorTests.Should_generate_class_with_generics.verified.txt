@@ -21,8 +21,6 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly object? _obj;
@@ -216,7 +214,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
       /// </summary>
-      /// <param name="listOfString">Value to covert from.</param>
+      /// <param name="listOfString">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="listOfString"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(global::System.Collections.Generic.List<string> @listOfString)
       {
@@ -226,7 +224,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.
       /// </summary>
-      /// <param name="listOfInt32">Value to covert from.</param>
+      /// <param name="listOfInt32">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="listOfInt32"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(global::System.Collections.Generic.List<int> @listOfInt32)
       {
@@ -236,7 +234,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>global::System.Collections.Generic.List&lt;string&gt;</c>.</exception>
       public static explicit operator global::System.Collections.Generic.List<string>(global::Thinktecture.Tests.TestUnion obj)
@@ -247,7 +245,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</exception>
       public static explicit operator global::System.Collections.Generic.List<int>(global::Thinktecture.Tests.TestUnion obj)
@@ -311,8 +309,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<string>?)this._obj)?.GetHashCode() ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0),
+            1 => ((global::System.Collections.Generic.List<string>?)this._obj)?.GetHashCode() ?? 0,
+            2 => ((global::System.Collections.Generic.List<int>?)this._obj)?.GetHashCode() ?? 0,
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

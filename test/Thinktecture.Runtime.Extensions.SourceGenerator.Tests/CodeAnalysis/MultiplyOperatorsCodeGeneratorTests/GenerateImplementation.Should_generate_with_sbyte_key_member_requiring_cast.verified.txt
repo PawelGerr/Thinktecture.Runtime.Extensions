@@ -1,0 +1,16 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.SignedCounter operator *(global::Thinktecture.Tests.SignedCounter left, global::Thinktecture.Tests.SignedCounter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((global::System.SByte)(left.Value * right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.SignedCounter operator checked *(global::Thinktecture.Tests.SignedCounter left, global::Thinktecture.Tests.SignedCounter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((global::System.SByte)(left.Value * right.Value)));
+   }

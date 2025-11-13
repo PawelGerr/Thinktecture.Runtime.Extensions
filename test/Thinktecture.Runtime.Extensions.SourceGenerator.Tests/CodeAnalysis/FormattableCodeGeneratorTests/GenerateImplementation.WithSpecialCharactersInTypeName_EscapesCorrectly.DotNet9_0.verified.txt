@@ -1,0 +1,6 @@
+﻿
+   /// <inheritdoc />
+   public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
+   {
+      return ((global::System.IFormattable)this.@value).ToString(format, formatProvider);
+   }

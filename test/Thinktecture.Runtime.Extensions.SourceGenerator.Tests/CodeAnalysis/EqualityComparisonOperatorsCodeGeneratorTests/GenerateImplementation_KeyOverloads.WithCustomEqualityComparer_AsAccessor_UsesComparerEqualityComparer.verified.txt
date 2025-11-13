@@ -1,0 +1,80 @@
+﻿
+      /// <summary>
+      /// Compares two instances of <see cref="ProductGroup"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.ProductGroup? obj, global::Thinktecture.Tests.ProductGroup? other)
+      {
+         if (obj is null)
+            return other is null;
+
+         return obj.Equals(other);
+      }
+
+      /// <summary>
+      /// Compares two instances of <see cref="ProductGroup"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="other">Another instance to compare.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.ProductGroup? obj, global::Thinktecture.Tests.ProductGroup? other)
+      {
+         return !(obj == other);
+      }
+
+      private static bool Equals(global::Thinktecture.Tests.ProductGroup? obj, global::System.String? value)
+      {
+         if (obj is null)
+            return value is null;
+
+         if(value is null)
+            return false;
+
+         return global::Thinktecture.Tests.ProductGroup.KeyMemberComparer.EqualityComparer.Equals(obj._key, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="ProductGroup"/> with <see cref="global::System.String"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::Thinktecture.Tests.ProductGroup? obj, global::System.String? value)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="ProductGroup"/> with <see cref="global::System.String"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      public static bool operator ==(global::System.String? value, global::Thinktecture.Tests.ProductGroup? obj)
+      {
+         return Equals(obj, value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="ProductGroup"/> with <see cref="global::System.String"/>.
+      /// </summary>
+      /// <param name="obj">Instance to compare.</param>
+      /// <param name="value">Value to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::Thinktecture.Tests.ProductGroup? obj, global::System.String? value)
+      {
+         return !(obj == value);
+      }
+
+      /// <summary>
+      /// Compares an instance of <see cref="global::System.String"/> with <see cref="ProductGroup"/>.
+      /// </summary>
+      /// <param name="value">Value to compare.</param>
+      /// <param name="obj">Instance to compare with.</param>
+      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      public static bool operator !=(global::System.String? value, global::Thinktecture.Tests.ProductGroup? obj)
+      {
+         return !(obj == value);
+      }

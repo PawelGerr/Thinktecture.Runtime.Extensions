@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using MessagePack;
-using Thinktecture.CodeAnalysis.AdHocUnions;
 using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.Formatters;
 using Xunit.Abstractions;
@@ -62,7 +61,6 @@ public class MessagePackAdHocUnionSourceGeneratorTests : SourceGeneratorTestsBas
       var source = """
 
          using System;
-         using System.Text.Json.Serialization;
 
          namespace Thinktecture.Tests
          {

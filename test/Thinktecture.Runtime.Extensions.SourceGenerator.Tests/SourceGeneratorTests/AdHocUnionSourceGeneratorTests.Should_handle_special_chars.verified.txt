@@ -21,12 +21,10 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests._1TestUnionWithSpecialChars).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly int _int32;
-      private readonly global::Thinktecture.Tests._1Test? __1Test;
+      private readonly global::Thinktecture.Tests._1Test? _1test;
 
       /// <summary>
       /// Indication whether the current value is of type <see cref="int"/>.
@@ -48,7 +46,7 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="global::Thinktecture.Tests._1Test"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests._1Test"/>.</exception>
-      public global::Thinktecture.Tests._1Test As_1Test => Is_1Test ? this.__1Test! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type '_1Test'.");
+      public global::Thinktecture.Tests._1Test As_1Test => Is_1Test ? this._1test! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type '_1Test'.");
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.
@@ -56,7 +54,7 @@ namespace Thinktecture.Tests
       public object Value => this._valueIndex switch
       {
          1 => this._int32,
-         2 => this.__1Test!,
+         2 => this._1test!,
          _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
       };
 
@@ -71,12 +69,12 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Initializes new instance with <paramref name="_1Test"/>.
+      /// Initializes new instance with <paramref name="_1test"/>.
       /// </summary>
-      /// <param name="_1Test">Value to create a new instance for.</param>
-      public _1TestUnionWithSpecialChars(global::Thinktecture.Tests._1Test @_1Test)
+      /// <param name="_1test">Value to create a new instance for.</param>
+      public _1TestUnionWithSpecialChars(global::Thinktecture.Tests._1Test @_1test)
       {
-         this.__1Test = @_1Test;
+         this._1test = @_1test;
          this._valueIndex = 2;
       }
 
@@ -85,11 +83,11 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current value.
       /// </summary>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="_1Test">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
+      /// <param name="_1test">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int32,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._1Test> @_1Test)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._1Test> @_1test)
       {
          switch (this._valueIndex)
          {
@@ -97,7 +95,7 @@ namespace Thinktecture.Tests
                @int32(this._int32);
                return;
             case 2:
-               @_1Test(this.__1Test!);
+               @_1test(this._1test!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -111,12 +109,12 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="_1Test">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
+      /// <param name="_1test">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int32,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests._1Test> @_1Test)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests._1Test> @_1test)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -127,7 +125,7 @@ namespace Thinktecture.Tests
                @int32(@state, this._int32);
                return;
             case 2:
-               @_1Test(@state, this.__1Test!);
+               @_1test(@state, this._1test!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -140,11 +138,11 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current value.
       /// </summary>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="_1Test">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
+      /// <param name="_1test">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int32,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._1Test, TResult> @_1Test)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._1Test, TResult> @_1test)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -154,7 +152,7 @@ namespace Thinktecture.Tests
             case 1:
                return @int32(this._int32);
             case 2:
-               return @_1Test(this.__1Test!);
+               return @_1test(this._1test!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -167,12 +165,12 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="_1Test">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
+      /// <param name="_1test">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int32,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests._1Test, TResult> @_1Test)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests._1Test, TResult> @_1test)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -183,7 +181,7 @@ namespace Thinktecture.Tests
             case 1:
                return @int32(@state, this._int32);
             case 2:
-               return @_1Test(@state, this.__1Test!);
+               return @_1test(@state, this._1test!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -194,11 +192,11 @@ namespace Thinktecture.Tests
       /// Maps current value to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
       /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
-      /// <param name="_1Test">The instance to return if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
+      /// <param name="_1test">The instance to return if the current value is of type <see cref="global::Thinktecture.Tests._1Test"/>.</param>
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @int32,
-         TResult @_1Test)
+         TResult @_1test)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -208,7 +206,7 @@ namespace Thinktecture.Tests
             case 1:
                return @int32;
             case 2:
-               return @_1Test;
+               return @_1test;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -217,7 +215,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="int"/>.
       /// </summary>
-      /// <param name="int32">Value to covert from.</param>
+      /// <param name="int32">Value to convert from.</param>
       /// <returns>A new instance of <see cref="_1TestUnionWithSpecialChars"/> converted from <paramref name="int32"/>.</returns>
       public static implicit operator global::Thinktecture.Tests._1TestUnionWithSpecialChars(int @int32)
       {
@@ -227,17 +225,17 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="global::Thinktecture.Tests._1Test"/>.
       /// </summary>
-      /// <param name="_1Test">Value to covert from.</param>
-      /// <returns>A new instance of <see cref="_1TestUnionWithSpecialChars"/> converted from <paramref name="_1Test"/>.</returns>
-      public static implicit operator global::Thinktecture.Tests._1TestUnionWithSpecialChars(global::Thinktecture.Tests._1Test @_1Test)
+      /// <param name="_1test">Value to convert from.</param>
+      /// <returns>A new instance of <see cref="_1TestUnionWithSpecialChars"/> converted from <paramref name="_1test"/>.</returns>
+      public static implicit operator global::Thinktecture.Tests._1TestUnionWithSpecialChars(global::Thinktecture.Tests._1Test @_1test)
       {
-         return new global::Thinktecture.Tests._1TestUnionWithSpecialChars(@_1Test);
+         return new global::Thinktecture.Tests._1TestUnionWithSpecialChars(@_1test);
       }
 
       /// <summary>
       /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
       public static explicit operator int(global::Thinktecture.Tests._1TestUnionWithSpecialChars obj)
@@ -248,7 +246,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to type <see cref="global::Thinktecture.Tests._1Test"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="global::Thinktecture.Tests._1Test"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="global::Thinktecture.Tests._1Test"/>.</exception>
       public static explicit operator global::Thinktecture.Tests._1Test(global::Thinktecture.Tests._1TestUnionWithSpecialChars obj)
@@ -302,7 +300,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => this._int32.Equals(other._int32),
-            2 => this.__1Test is null ? other.__1Test is null : this.__1Test.Equals(other.__1Test),
+            2 => this._1test is null ? other._1test is null : this._1test.Equals(other._1test),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -312,8 +310,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests._1TestUnionWithSpecialChars._typeHashCode, this._int32.GetHashCode()),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests._1TestUnionWithSpecialChars._typeHashCode, this.__1Test?.GetHashCode() ?? 0),
+            1 => this._int32.GetHashCode(),
+            2 => this._1test?.GetHashCode() ?? 0,
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -324,7 +322,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => this._int32.ToString(),
-            2 => this.__1Test?.ToString(),
+            2 => this._1test?.ToString(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

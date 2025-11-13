@@ -1,0 +1,48 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator *(global::Thinktecture.Tests.Name left, global::Thinktecture.Tests.Name right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value * right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator checked *(global::Thinktecture.Tests.Name left, global::Thinktecture.Tests.Name right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value * right.Value)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator *(global::Thinktecture.Tests.Name left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value * right));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator *(global::System.String left, global::Thinktecture.Tests.Name right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left * right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator checked *(global::Thinktecture.Tests.Name left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value * right)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Name operator checked *(global::System.String left, global::Thinktecture.Tests.Name right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left * right.Value)));
+   }

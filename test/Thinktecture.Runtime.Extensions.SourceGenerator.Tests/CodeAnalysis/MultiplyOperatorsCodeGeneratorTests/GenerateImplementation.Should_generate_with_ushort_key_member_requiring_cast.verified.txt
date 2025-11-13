@@ -1,0 +1,16 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.UnsignedSmallNumber operator *(global::Thinktecture.Tests.UnsignedSmallNumber left, global::Thinktecture.Tests.UnsignedSmallNumber right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((global::System.UInt16)(left.Value * right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.UnsignedSmallNumber operator checked *(global::Thinktecture.Tests.UnsignedSmallNumber left, global::Thinktecture.Tests.UnsignedSmallNumber right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((global::System.UInt16)(left.Value * right.Value)));
+   }

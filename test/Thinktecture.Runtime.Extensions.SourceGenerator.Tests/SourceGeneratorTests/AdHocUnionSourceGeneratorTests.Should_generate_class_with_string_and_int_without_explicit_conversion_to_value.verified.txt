@@ -21,8 +21,6 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly string? _string;
@@ -217,7 +215,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="string"/>.
       /// </summary>
-      /// <param name="string">Value to covert from.</param>
+      /// <param name="string">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
       {
@@ -227,7 +225,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="int"/>.
       /// </summary>
-      /// <param name="int32">Value to covert from.</param>
+      /// <param name="int32">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
       {
@@ -290,8 +288,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._int32.GetHashCode()),
+            1 => this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
+            2 => this._int32.GetHashCode(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

@@ -1,0 +1,89 @@
+﻿
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.CustomType left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left._key, right._key) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.CustomType left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left._key, right._key) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.CustomType left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left._key, right._key) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.CustomType left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left._key, right._key) >= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.CustomType left, global::System.Guid right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return MyComparer.Comparer.Compare(left._key, right) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::System.Guid left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left, right._key) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.CustomType left, global::System.Guid right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return MyComparer.Comparer.Compare(left._key, right) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::System.Guid left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left, right._key) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.CustomType left, global::System.Guid right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return MyComparer.Comparer.Compare(left._key, right) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::System.Guid left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left, right._key) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.CustomType left, global::System.Guid right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return MyComparer.Comparer.Compare(left._key, right) >= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::System.Guid left, global::Thinktecture.Tests.CustomType right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return MyComparer.Comparer.Compare(left, right._key) >= 0;
+   }

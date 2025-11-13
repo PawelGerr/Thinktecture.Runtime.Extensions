@@ -9,16 +9,16 @@ partial class TestValueObject :
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return Create((left._value * right._value));
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return Create(checked((left._value * right._value)));
    }
 }

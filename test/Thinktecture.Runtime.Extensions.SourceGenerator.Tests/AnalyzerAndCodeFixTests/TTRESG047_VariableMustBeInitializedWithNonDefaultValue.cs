@@ -819,4 +819,542 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
          await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
    }
+
+   public class CompoundAssignment
+   {
+      [Fact]
+      public async Task Should_trigger_on_compound_addition_assignment_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject value = StructValueObject.Create(42);
+                      value += {|#0:default(StructValueObject)|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_compound_assignment_with_non_default_value()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject value = StructValueObject.Create(42);
+                      value += StructValueObject.Create(10);
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class DeconstructionAssignment
+   {
+      [Fact]
+      public async Task Should_trigger_on_deconstruction_with_default_in_tuple()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      (int x, StructValueObject y) = (42, {|#0:default(StructValueObject)|});
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_nested_deconstruction_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      ((int a, StructValueObject b), int c) = ((1, {|#0:default|}), 3);
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_deconstruction_with_valid_value()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      (int x, StructValueObject y) = (42, StructValueObject.Create(10));
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class ConditionalExpression
+   {
+      [Fact]
+      public async Task Should_trigger_on_ternary_with_default_in_true_branch()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(bool condition)
+                   {
+                      StructValueObject value = condition ? {|#0:default|} : StructValueObject.Create(10);
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_ternary_with_default_in_false_branch()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(bool condition)
+                   {
+                      StructValueObject value = condition ? StructValueObject.Create(10) : {|#0:default|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_ternary_with_default_in_both_branches()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(bool condition)
+                   {
+                      StructValueObject value = condition ? {|#0:default|} : {|#1:default(StructValueObject)|};
+                   }
+               }
+            }
+            """;
+
+         var expected1 = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         var expected2 = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(1).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected1, expected2);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_ternary_with_valid_values()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod(bool condition)
+                   {
+                      StructValueObject value = condition ? StructValueObject.Create(5) : StructValueObject.Create(10);
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class ArrayInitialization
+   {
+      [Fact]
+      public async Task Should_trigger_on_array_initialization_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject[] array = new[] { StructValueObject.Create(1), {|#0:default|} };
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_collection_initialization_with_default()
+      {
+         var code = """
+
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      List<StructValueObject> list = new List<StructValueObject> { StructValueObject.Create(1), {|#0:default|} };
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_array_initialization_with_valid_values()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject[] array = new[] { StructValueObject.Create(1), StructValueObject.Create(2) };
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class ObjectInitializer
+   {
+      [Fact]
+      public async Task Should_trigger_on_object_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class Container
+               {
+                  public required StructValueObject Value { get; init; }
+               }
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      var container = new Container { Value = {|#0:default|} };
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_nested_object_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class Inner
+               {
+                  public required StructValueObject Value { get; init; }
+               }
+
+               public class Outer
+               {
+                  public required Inner InnerObject { get; init; }
+               }
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      var outer = new Outer
+                      {
+                         InnerObject = new Inner { Value = {|#0:default|} }
+                      };
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_object_initializer_with_valid_value()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class Container
+               {
+                  public required StructValueObject Value { get; init; }
+               }
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      var container = new Container { Value = StructValueObject.Create(42) };
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class ReturnStatement
+   {
+      [Fact]
+      public async Task Should_trigger_on_return_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject TestMethod()
+                   {
+                      return {|#0:default|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_expression_bodied_member_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject GetValue() => {|#0:default|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_return_with_valid_value()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject TestMethod()
+                   {
+                      return StructValueObject.Create(42);
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
+
+   public class NullableContexts
+   {
+      [Fact]
+      public async Task Should_trigger_on_nullable_struct_assignment_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject? nullable = {|#0:default(StructValueObject)|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_nullable_struct_assignment_with_null()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      StructValueObject? nullable = null;
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
+      }
+   }
 }

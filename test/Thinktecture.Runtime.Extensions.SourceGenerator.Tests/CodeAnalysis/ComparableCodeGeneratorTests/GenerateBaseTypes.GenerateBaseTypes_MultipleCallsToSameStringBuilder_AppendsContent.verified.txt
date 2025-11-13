@@ -1,0 +1,5 @@
+﻿
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.Type1>
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.Type2>

@@ -73,7 +73,7 @@ public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [Union]
-            [UnionSwitchMapOverload(StopAt = [typeof(Success)])]
+            [UnionSwitchMapOverload(StopAt = [typeof(Result<T>.Success)])]
             public partial record Result<T>
             {
                public partial record Success(T Value) : Result<T>;
@@ -82,7 +82,9 @@ public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
             }
          }
          """;
-      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source,
+                                                                     [typeof(UnionAttribute).Assembly],
+                                                                     ["'Thinktecture.Tests.Result<T>.Success': an attribute argument cannot use type parameters"]);
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.Result`1.RegularUnion.g.cs");
@@ -261,6 +263,4 @@ public class RegularUnionSwitchMapOverloadTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.PlaceId.RegularUnion.g.cs");
    }
-
-
 }

@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestType, global::Thinktecture.Tests.TestType, global::Thinktecture.Tests.TestType>

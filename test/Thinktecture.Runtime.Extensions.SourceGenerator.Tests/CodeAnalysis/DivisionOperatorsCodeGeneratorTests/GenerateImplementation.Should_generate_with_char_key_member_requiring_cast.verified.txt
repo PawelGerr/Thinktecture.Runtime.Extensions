@@ -1,0 +1,16 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.CharValue operator /(global::Thinktecture.Tests.CharValue left, global::Thinktecture.Tests.CharValue right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((global::System.Char)(left.Value / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.CharValue operator checked /(global::Thinktecture.Tests.CharValue left, global::Thinktecture.Tests.CharValue right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((global::System.Char)(left.Value / right.Value)));
+   }

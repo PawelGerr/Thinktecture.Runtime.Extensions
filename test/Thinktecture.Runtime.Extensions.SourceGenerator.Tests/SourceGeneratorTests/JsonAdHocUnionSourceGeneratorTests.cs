@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Thinktecture.CodeAnalysis.AdHocUnions;
 using Thinktecture.CodeAnalysis.ObjectFactories;
 using Xunit.Abstractions;
 

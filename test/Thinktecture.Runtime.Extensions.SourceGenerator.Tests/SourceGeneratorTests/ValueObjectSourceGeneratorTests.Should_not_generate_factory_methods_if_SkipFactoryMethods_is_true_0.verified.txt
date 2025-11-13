@@ -24,8 +24,6 @@ namespace Thinktecture.Tests
             TryGetFromKey = null
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// The identifier of this object.
       /// </summary>
@@ -43,7 +41,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion to the type <see cref="int"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
       public static implicit operator int?(global::Thinktecture.Tests.TestValueObject? obj)
@@ -54,10 +52,9 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to the type <see cref="int"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/>.</returns>
       /// <exception cref="System.NullReferenceException">If <paramref name="obj"/> is <c>null</c>.</exception>
-      [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
       public static explicit operator int(global::Thinktecture.Tests.TestValueObject obj)
       {
          if(obj is null)
@@ -99,7 +96,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, this._value);
+         return this._value.GetHashCode();
       }
 
       /// <inheritdoc />

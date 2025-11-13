@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.Generic<int, string>, global::Thinktecture.Tests.Generic<int, string>, global::Thinktecture.Tests.Generic<int, string>>

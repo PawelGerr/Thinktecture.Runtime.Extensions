@@ -115,6 +115,8 @@ public class ReadJson : JsonTestsBase
       Deserialize<TestValueObject_Complex_Struct?>("null").Should().Be(null);
       Deserialize<TestValueObject_Complex_Struct>("null").Should().Be(default(TestValueObject_Complex_Struct));
       Deserialize<GenericComplexValueObjectStruct<string, int, TimeSpan>?>("null").Should().Be(null);
+      Deserialize<EmptyComplexValueObjectDoesNotAllowDefaultStructs>("null").Should().Be(EmptyComplexValueObjectDoesNotAllowDefaultStructs.Create());
+      Deserialize<GenericClass<EmptyComplexValueObjectDoesNotAllowDefaultStructs>>("{\"Property\": null }").Should().BeEquivalentTo(new GenericClass<EmptyComplexValueObjectDoesNotAllowDefaultStructs>(EmptyComplexValueObjectDoesNotAllowDefaultStructs.Create()));
    }
 
    [Theory]
@@ -224,9 +226,6 @@ public class ReadJson : JsonTestsBase
    public void Should_throw_if_AllowDefaultStructs_is_disabled_on_complex_value_object_and_value_is_null()
    {
       // null as root
-      FluentActions.Invoking(() => Deserialize<EmptyComplexValueObjectDoesNotAllowDefaultStructs>("null"))
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"EmptyComplexValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
-
       FluentActions.Invoking(() => Deserialize<ComplexValueObjectDoesNotAllowDefaultStructsWithInt>("null"))
                    .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithInt\" because it doesn't allow default values.");
 
@@ -237,9 +236,6 @@ public class ReadJson : JsonTestsBase
                    .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithStringBasedStruct\" because it doesn't allow default values.");
 
       // null as property
-      FluentActions.Invoking(() => Deserialize<GenericClass<EmptyComplexValueObjectDoesNotAllowDefaultStructs>>("{\"Property\": null }"))
-                   .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"EmptyComplexValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
-
       FluentActions.Invoking(() => Deserialize<GenericClass<ComplexValueObjectDoesNotAllowDefaultStructsWithInt>>("{\"Property\": null }"))
                    .Should().Throw<JsonException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithInt\" because it doesn't allow default values.");
 

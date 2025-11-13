@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.MyStruct, global::Thinktecture.Tests.MyStruct, bool>

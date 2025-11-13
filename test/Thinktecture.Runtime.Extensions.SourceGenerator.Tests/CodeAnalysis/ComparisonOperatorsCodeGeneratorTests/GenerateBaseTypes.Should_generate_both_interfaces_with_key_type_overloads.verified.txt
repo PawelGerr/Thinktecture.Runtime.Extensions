@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestType, global::Thinktecture.Tests.TestType, bool>,
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestType, global::System.Int32, bool>

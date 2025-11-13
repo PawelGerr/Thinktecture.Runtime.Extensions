@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.ProductId, global::Thinktecture.Tests.ProductId, bool>

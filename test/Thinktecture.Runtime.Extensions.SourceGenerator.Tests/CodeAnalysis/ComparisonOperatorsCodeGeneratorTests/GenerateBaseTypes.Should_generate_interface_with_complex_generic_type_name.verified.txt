@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested, global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested, bool>

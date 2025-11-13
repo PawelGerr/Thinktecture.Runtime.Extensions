@@ -21,8 +21,6 @@ namespace Thinktecture.Tests
                        .AsReadOnly()
       };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestUnion).GetHashCode();
-
       private readonly int _valueIndex;
 
       private readonly string? _text;
@@ -217,7 +215,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="string"/>.
       /// </summary>
-      /// <param name="text">Value to covert from.</param>
+      /// <param name="text">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="text"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(string @text)
       {
@@ -227,7 +225,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion from type <see cref="int"/>.
       /// </summary>
-      /// <param name="number">Value to covert from.</param>
+      /// <param name="number">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="number"/>.</returns>
       public static implicit operator global::Thinktecture.Tests.TestUnion(int @number)
       {
@@ -237,7 +235,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to type <see cref="string"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="string"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
       public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
@@ -248,7 +246,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion to type <see cref="int"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
       public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
@@ -312,8 +310,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._text?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0),
-            2 => global::System.HashCode.Combine(global::Thinktecture.Tests.TestUnion._typeHashCode, this._number.GetHashCode()),
+            1 => this._text?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
+            2 => this._number.GetHashCode(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

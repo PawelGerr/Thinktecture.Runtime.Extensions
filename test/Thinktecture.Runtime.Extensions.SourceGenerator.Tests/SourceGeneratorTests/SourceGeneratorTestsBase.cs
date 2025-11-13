@@ -13,6 +13,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public abstract class SourceGeneratorTestsBase
 {
    private const string _GENERATION_ERROR = "CS8785";
+   private const string _PARTIAL_METHOD_MUST_HAVE_IMPLEMENTATION = "CS8795";
 
    private readonly ITestOutputHelper _output;
    private readonly int _maxOutputSize;
@@ -96,7 +97,16 @@ public abstract class SourceGeneratorTestsBase
       params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
-      return GetGeneratedOutput<T>(source, null, furtherAssemblies);
+      return GetGeneratedOutput<T>(source, furtherAssemblies, []);
+   }
+
+   protected string GetGeneratedOutput<T>(
+      string source,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutput<T>(source, null, furtherAssemblies, expectedCompilerErrors);
    }
 
    protected string GetGeneratedOutput<T>(
@@ -105,16 +115,54 @@ public abstract class SourceGeneratorTestsBase
       params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
-      var outputsByFilePath = GetGeneratedOutputs<T>(source, furtherAssemblies);
+      return GetGeneratedOutput<T>(source, generatedFileNameFragment, furtherAssemblies, []);
+   }
 
-      var output = outputsByFilePath.SingleOrDefault(t => generatedFileNameFragment is null || t.Key.Contains(generatedFileNameFragment)).Value;
+   protected string GetGeneratedOutput<T>(
+      string source,
+      string generatedFileNameFragment,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
+      where T : IIncrementalGenerator, new()
+   {
+      var output = GetGeneratedOutputs<T>(source, generatedFileNameFragment, furtherAssemblies, expectedCompilerErrors).SingleOrDefault().Value;
 
       _output.WriteLine(output ?? "No output provided.");
 
       return output;
    }
 
-   protected static Dictionary<string, string> GetGeneratedOutputs<T>(string source, params Assembly[] furtherAssemblies)
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutputs<T>(source, null, furtherAssemblies);
+   }
+
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      string generatedFileNameFragment,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutputs<T>(source, generatedFileNameFragment, furtherAssemblies, []);
+   }
+
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
+      where T : IIncrementalGenerator, new()
+   {
+      return GetGeneratedOutputs<T>(source, null, furtherAssemblies, expectedCompilerErrors);
+   }
+
+   protected static Dictionary<string, string> GetGeneratedOutputs<T>(
+      string source,
+      string generatedFileNameFragment,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors)
       where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
@@ -137,14 +185,18 @@ public abstract class SourceGeneratorTestsBase
                                                  references,
                                                  new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 
+      var errors = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error && d.Id != _PARTIAL_METHOD_MUST_HAVE_IMPLEMENTATION).ToList();
+      errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
+
       var generator = new T();
       CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
-      var errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
-      errors.Should().BeEmpty();
+      errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
+      errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
 
       return outputCompilation.SyntaxTrees
                               .Skip(1)
+                              .Where(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))
                               .ToDictionary(t => t.FilePath, t => t.ToString());
    }
 }

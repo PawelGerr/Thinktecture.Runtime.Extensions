@@ -50,7 +50,7 @@ namespace Thinktecture.Tests
                }
          };
 
-      private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+      private static readonly global::System.Lazy<Lookups> _lookups = new global::System.Lazy<Lookups>(GetLookups, global::System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
       /// <summary>
       /// Gets all valid items.
@@ -63,7 +63,7 @@ namespace Thinktecture.Tests
       public int Key { get; }
 
       private readonly int _hashCode;
-      private readonly global::System.Lazy<int> _itemIndex;
+      private readonly global::Thinktecture.Internal.WriteOnceInt _itemIndex;
 
       private TestEnum(
          int @key)
@@ -72,17 +72,8 @@ namespace Thinktecture.Tests
             ref @key);
 
          this.Key = @key;
-         this._hashCode = global::System.HashCode.Combine(typeof(global::Thinktecture.Tests.TestEnum), @key.GetHashCode());
-         this._itemIndex = new global::System.Lazy<int>(() =>
-                                                        {
-                                                           for (var i = 0; i < Items.Count; i++)
-                                                           {
-                                                              if (this == Items[i])
-                                                                 return i;
-                                                           }
-
-                                                           throw new global::System.Exception($"Current item '{@key}' not found in 'Items'.");
-                                                        }, global::System.Threading.LazyThreadSafetyMode.PublicationOnly);
+         this._itemIndex = new global::Thinktecture.Internal.WriteOnceInt();
+         this._hashCode = @key.GetHashCode();
       }
 
       static partial void ValidateConstructorArguments(
@@ -146,7 +137,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion to the type <see cref="int"/>.
       /// </summary>
-      /// <param name="item">Item to covert.</param>
+      /// <param name="item">Item to convert.</param>
       /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
       public static implicit operator int(global::Thinktecture.Tests.TestEnum? item)
@@ -157,7 +148,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion from the type <see cref="int"/>.
       /// </summary>
-      /// <param name="key">Value to covert.</param>
+      /// <param name="key">Value to convert.</param>
       /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item.</returns>
       public static explicit operator global::Thinktecture.Tests.TestEnum(int @key)
       {
@@ -188,6 +179,18 @@ namespace Thinktecture.Tests
          return this.Key.ToString();
       }
 
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private int GetItemIndex()
+      {
+         var index = _itemIndex.Value; // fast-path (may be stale)
+
+         if (index >= 0)
+            return index;
+
+         _ = Items;
+         return _itemIndex.ReadVolatile();
+      }
+
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current item.
@@ -199,7 +202,7 @@ namespace Thinktecture.Tests
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item1,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item2)
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                @item1();
@@ -226,7 +229,7 @@ namespace Thinktecture.Tests
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action? @item1 = null,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action? @item2 = null)
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                if (@item1 is null)
@@ -264,7 +267,7 @@ namespace Thinktecture.Tests
 		where TState : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                @item1(@state);
@@ -296,7 +299,7 @@ namespace Thinktecture.Tests
 		where TState : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                if (@item1 is null)
@@ -332,7 +335,7 @@ namespace Thinktecture.Tests
 		   where TResult : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                return @item1();
@@ -360,7 +363,7 @@ namespace Thinktecture.Tests
 		   where TResult : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                if (@item1 is null)
@@ -397,7 +400,7 @@ namespace Thinktecture.Tests
 		   where TState : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                return @item1(@state);
@@ -428,7 +431,7 @@ namespace Thinktecture.Tests
 		   where TState : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                if (@item1 is null)
@@ -461,7 +464,7 @@ namespace Thinktecture.Tests
 		   where TResult : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                return @item1;
@@ -487,7 +490,7 @@ namespace Thinktecture.Tests
 		   where TResult : allows ref struct
 #endif
       {
-         switch (_itemIndex.Value)
+         switch (GetItemIndex())
          {
             case 0:
                if (!@item1.IsSet)
@@ -520,6 +523,7 @@ namespace Thinktecture.Tests
                throw new global::System.ArgumentException($"The type \"TestEnum\" has multiple items with the identifier \"{item.Key}\".");
 
             lookup.Add(item.Key, item);
+            item._itemIndex.Set(list.Count);
             list.Add(item);
          }
 

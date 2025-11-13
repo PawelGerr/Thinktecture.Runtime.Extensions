@@ -30,17 +30,15 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
-      /// <param name="stringValue">The value to be used for object creation.</param>
-      /// <param name="intValue">The value to be used for object creation.</param>
-      /// <param name="referenceProperty">The value to be used for object creation.</param>
-      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="stringValue">_stringValue</param>
+      /// <param name="intValue">_intValue</param>
+      /// <param name="referenceProperty">ReferenceProperty</param>
+      /// <param name="nullableReferenceProperty">NullableReferenceProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static global::Thinktecture.ValidationError? Validate(
@@ -97,12 +95,12 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Creates an instance of the <see cref="TestValueObject"/> type if the provided values pass validation.
       /// </summary>
-      /// <param name="stringValue">The value to be used for object creation.</param>
-      /// <param name="intValue">The value to be used for object creation.</param>
-      /// <param name="referenceProperty">The value to be used for object creation.</param>
-      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="stringValue">_stringValue</param>
+      /// <param name="intValue">_intValue</param>
+      /// <param name="referenceProperty">ReferenceProperty</param>
+      /// <param name="nullableReferenceProperty">NullableReferenceProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       public static global::Thinktecture.Tests.TestValueObject Create(
@@ -132,12 +130,12 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="stringValue">The value to be used for object creation.</param>
-      /// <param name="intValue">The value to be used for object creation.</param>
-      /// <param name="referenceProperty">The value to be used for object creation.</param>
-      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="stringValue">_stringValue</param>
+      /// <param name="intValue">_intValue</param>
+      /// <param name="referenceProperty">ReferenceProperty</param>
+      /// <param name="nullableReferenceProperty">NullableReferenceProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -169,12 +167,12 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="stringValue">The value to be used for object creation.</param>
-      /// <param name="intValue">The value to be used for object creation.</param>
-      /// <param name="referenceProperty">The value to be used for object creation.</param>
-      /// <param name="nullableReferenceProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="stringValue">_stringValue</param>
+      /// <param name="intValue">_intValue</param>
+      /// <param name="referenceProperty">ReferenceProperty</param>
+      /// <param name="nullableReferenceProperty">NullableReferenceProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -302,7 +300,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);
          hashCode.Add(this._stringValue, global::Thinktecture.ComparerAccessors.StringOrdinal.EqualityComparer);
          hashCode.Add(this._intValue, global::Thinktecture.ComparerAccessors.Default<int>.EqualityComparer);
          return hashCode.ToHashCode();

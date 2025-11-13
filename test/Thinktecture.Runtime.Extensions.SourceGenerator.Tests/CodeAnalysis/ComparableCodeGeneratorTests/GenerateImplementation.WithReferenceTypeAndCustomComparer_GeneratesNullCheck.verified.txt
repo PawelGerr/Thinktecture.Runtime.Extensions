@@ -1,0 +1,21 @@
+﻿
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestClass item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestClass\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestClass? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return Comparer.Comparer.Compare(this.Name, obj.Name);
+   }

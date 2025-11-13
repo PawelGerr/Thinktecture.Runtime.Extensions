@@ -1,0 +1,6 @@
+﻿
+   global::System.IParsable<global::Thinktecture.Tests.Type1>
+#if NET9_0_OR_GREATER
+   , global::System.ISpanParsable<global::Thinktecture.Tests.Type1>
+#endif
+   global::System.IParsable<global::Thinktecture.Tests.Type2>

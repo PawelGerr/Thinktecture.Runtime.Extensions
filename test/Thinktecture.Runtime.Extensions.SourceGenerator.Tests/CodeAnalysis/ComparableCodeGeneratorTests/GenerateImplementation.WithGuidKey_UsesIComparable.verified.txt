@@ -1,0 +1,21 @@
+﻿
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.OrderId item)
+         throw new global::System.ArgumentException("Argument must be of type \"OrderId\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.OrderId? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return ((global::System.IComparable<global::System.Guid>)this._id).CompareTo(obj._id);
+   }

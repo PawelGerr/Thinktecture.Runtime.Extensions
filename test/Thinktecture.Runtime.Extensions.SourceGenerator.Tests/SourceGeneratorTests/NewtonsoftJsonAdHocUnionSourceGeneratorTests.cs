@@ -59,7 +59,6 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
       var source = """
 
          using System;
-         using System.Text.Json.Serialization;
 
          namespace Thinktecture.Tests
          {

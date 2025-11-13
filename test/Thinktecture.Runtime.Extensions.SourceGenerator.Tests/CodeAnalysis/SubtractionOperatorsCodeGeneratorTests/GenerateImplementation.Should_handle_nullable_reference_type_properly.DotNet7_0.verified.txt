@@ -1,0 +1,16 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.NullableText operator -(global::Thinktecture.Tests.NullableText left, global::Thinktecture.Tests.NullableText right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value - right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.NullableText operator checked -(global::Thinktecture.Tests.NullableText left, global::Thinktecture.Tests.NullableText right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value - right.Value)));
+   }

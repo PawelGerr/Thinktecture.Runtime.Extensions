@@ -1,0 +1,2 @@
+﻿
+   global::System.IParsable<global::Thinktecture.Tests.TestValueObject>

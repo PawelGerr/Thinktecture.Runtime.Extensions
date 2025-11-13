@@ -1,0 +1,23 @@
+﻿
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator checked /(global::Thinktecture.Tests.Amount left, global::Thinktecture.Tests.Amount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value / right.Value)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator checked /(global::Thinktecture.Tests.Amount left, global::System.Int32 right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return Create(checked((left.Value / right)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator checked /(global::System.Int32 left, global::Thinktecture.Tests.Amount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left / right.Value)));
+   }

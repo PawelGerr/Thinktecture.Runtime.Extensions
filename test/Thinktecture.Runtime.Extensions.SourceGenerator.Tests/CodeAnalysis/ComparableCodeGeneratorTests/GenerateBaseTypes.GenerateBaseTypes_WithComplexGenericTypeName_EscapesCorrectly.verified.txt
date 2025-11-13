@@ -1,0 +1,3 @@
+﻿
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested>

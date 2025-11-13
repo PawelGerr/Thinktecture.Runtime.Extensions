@@ -1,0 +1,44 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator /(global::Thinktecture.Tests.Counter left, global::Thinktecture.Tests.Counter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((global::System.Byte)(left.Value / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator checked /(global::Thinktecture.Tests.Counter left, global::Thinktecture.Tests.Counter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((global::System.Byte)(left.Value / right.Value)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator /(global::Thinktecture.Tests.Counter left, global::System.Byte right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return Create((global::System.Byte)(left.Value / right));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator /(global::System.Byte left, global::Thinktecture.Tests.Counter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((global::System.Byte)(left / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator checked /(global::Thinktecture.Tests.Counter left, global::System.Byte right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return Create(checked((global::System.Byte)(left.Value / right)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Counter operator checked /(global::System.Byte left, global::Thinktecture.Tests.Counter right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((global::System.Byte)(left / right.Value)));
+   }

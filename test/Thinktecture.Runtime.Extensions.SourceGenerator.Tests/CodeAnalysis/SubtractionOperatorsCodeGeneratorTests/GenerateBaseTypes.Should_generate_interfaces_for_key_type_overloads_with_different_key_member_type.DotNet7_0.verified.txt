@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.Counter, global::Thinktecture.Tests.Counter, global::Thinktecture.Tests.Counter>,
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.Counter, global::System.Byte, global::Thinktecture.Tests.Counter>

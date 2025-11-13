@@ -5,8 +5,7 @@ namespace Thinktecture.Tests
 {
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
    readonly partial struct TestValueObject :
-      global::Thinktecture.Internal.IMetadataOwner,
-      global::Thinktecture.IDisallowDefaultValue
+      global::Thinktecture.Internal.IMetadataOwner
    {
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(global::Thinktecture.Tests.TestValueObject))
@@ -23,7 +22,10 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
+      /// <summary>
+      /// Default instance of <see cref="TestValueObject"/>.
+      /// </summary>
+      public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.

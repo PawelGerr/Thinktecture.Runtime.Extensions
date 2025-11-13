@@ -34,7 +34,7 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
 
          namespace TestNamespace
          {
-         	public {{typeModifer}}partial class TestClass
+         	public {{typeModifer}} class TestClass
          	{
          	   {|#0:public {{member}}|}
             }
@@ -55,7 +55,7 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
 
          namespace TestNamespace
          {
-         	public {{typeModifer}}partial class TestClass
+         	public {{typeModifer}} class TestClass
          	{
          	   {|#0:public {{fixedMember}}|}
             }
@@ -80,7 +80,7 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
    [InlineData("public TestUnion_struct_string_int? Member { get; set; }")]                                                                                         // property: nullable DU
    [InlineData("public IntBasedStructValueObject Member;")]                                                                                                         // field: AllowDefaultStructs = true
    [InlineData("public IntBasedStructValueObject Member { get; set; }")]                                                                                            // property: AllowDefaultStructs = true
-   [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member => default!;")]                                                                   // property: has expression body
+   [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member => (IntBasedStructValueObjectDoesNotAllowDefaultStructs)(object)42;")]            // property: expression body
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; }")]                                                                       // property: no setter
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; } = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(1);")] // property: with initializer
    [InlineData("public IntBasedStructValueObjectDoesNotAllowDefaultStructs Member = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(1);")]               // field: with initializer
@@ -104,5 +104,358 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
          """;
 
       await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly]);
+   }
+
+   public class PropertyEdgeCases
+   {
+      [Fact]
+      public async Task Should_not_trigger_on_property_with_expression_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  private readonly StructValueObject _backing;
+
+                  public StructValueObject DisallowingProperty => _backing;
+               }
+
+               [ValueObject<int>]
+               public readonly partial struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_property_with_initializer()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public StructValueObject DisallowingProperty { get; } = (StructValueObject)(object)42;
+               }
+
+               public readonly struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_property_less_visible_than_containing_type()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  private StructValueObject DisallowingProperty { get; }
+               }
+
+               [ValueObject<int>]
+               public readonly partial struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_special_type_property()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public int IntProperty { get; }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+   }
+
+   public class FieldEdgeCases
+   {
+      [Fact]
+      public async Task Should_not_trigger_on_field_without_initializer()
+      {
+         // there could be a constructor that initializes the field
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly StructValueObject {|#0:DisallowingField|};
+               }
+
+               [ValueObject<int>]
+               public readonly partial struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_field_with_initializer()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly StructValueObject DisallowingField = new StructValueObject();
+               }
+
+               [ValueObject<int>(AllowDefaultStructs = true)]
+               public readonly partial struct StructValueObject
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_readonly_field()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly StructValueObject DisallowingField;
+               }
+
+               [ValueObject<int>]
+               public readonly partial struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_field()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public static readonly StructValueObject DisallowingField;
+               }
+
+               public readonly struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_field_less_visible_than_containing_type()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  private readonly StructValueObject DisallowingField;
+               }
+
+               [ValueObject<int>]
+               public readonly partial struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_reference_type_field()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly DisallowingClass DisallowingField;
+               }
+
+               [ValueObject<int>]
+               public partial class DisallowingClass
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_multiple_field_declarations_in_same_statement_without_initializers()
+      {
+         // there could be a constructor that initializes the field
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly StructValueObject {|#0:Field1|}, {|#1:Field2|};
+               }
+
+               public readonly struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+   }
+
+   public class MultipleViolations
+   {
+      [Fact]
+      public async Task Should_not_trigger_on_both_field_and_property_in_same_class()
+      {
+         // both could be initialized in constructor
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public readonly StructValueObject {|#0:DisallowingField|};
+                  public StructValueObject {|#1:DisallowingProperty|} { get; }
+               }
+
+               public readonly struct StructValueObject : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_multiple_properties_with_different_disallowing_types()
+      {
+         // both could be initialized in constructor
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ComplexValueObject]
+               public partial class TestClass
+               {
+                  public StructValueObject1 {|#0:Property1|} { get; }
+                  public StructValueObject2 {|#1:Property2|} { get; }
+               }
+
+               public readonly struct StructValueObject1 : IDisallowDefaultValue
+               {
+               }
+
+               public readonly struct StructValueObject2 : IDisallowDefaultValue
+               {
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
    }
 }

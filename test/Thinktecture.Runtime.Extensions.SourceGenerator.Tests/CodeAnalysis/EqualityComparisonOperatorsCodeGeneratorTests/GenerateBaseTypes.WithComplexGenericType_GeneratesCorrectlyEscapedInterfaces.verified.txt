@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Container<global::System.String>.Inner, global::Thinktecture.Tests.Container<global::System.String>.Inner, bool>,
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Container<global::System.String>.Inner, global::System.Guid, bool>

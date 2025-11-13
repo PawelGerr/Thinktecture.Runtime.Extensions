@@ -21,6 +21,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+         using System.Threading.Tasks;
 
          #nullable enable
 
@@ -39,7 +40,9 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  ["No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?, ref string?, ref Func<string?, Task<string?>?>?)'"]);
 
       await VerifyAsync(output);
    }
@@ -67,7 +70,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  [
+                                                                     "No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)'",
+                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type."
+                                                                  ]);
 
       await VerifyAsync(output);
    }
@@ -84,7 +92,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-           [ComplexValueObject]
+            [ComplexValueObject]
          	public partial class TestValueObject
          	{
                static partial string? ValidateFactoryArguments(ref ValidationError? validationError)
@@ -95,7 +103,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  [
+                                                                     "No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)'",
+                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type."
+                                                                  ]);
 
       await VerifyAsync(output);
    }
@@ -119,7 +132,10 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Keyed value objects must not be generic'"]);
       output.Should().BeNull();
    }
 
@@ -1195,6 +1211,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          using System;
          using Thinktecture;
+         using System.Diagnostics.CodeAnalysis;
 
          #nullable enable
 
@@ -1297,5 +1314,1082 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.ValueObject.g.cs",
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.Comparable.g.cs",
                         "Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public void Should_not_generate_code_for_keyed_class_with_nullable_key_type_annotation()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string?>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         [
+            "Type 'string' cannot be used in this context because it cannot be represented in metadata.",
+            "Error during code generation for 'TestValueObject': 'Key member type must be non-nullable'"
+         ]);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_not_generate_code_for_keyed_class_with_nullable_struct_key_type()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int?>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Key member type must be non-nullable'"]);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_not_generate_code_for_keyed_class_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            public class Container<T>
+            {
+               [ValueObject<int>]
+         	   public partial class TestValueObject
+         	   {
+               }
+            }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Type must not be inside a generic class'"]);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_not_generate_code_for_complex_class_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            public class Container<T>
+            {
+               [ComplexValueObject]
+         	   public partial class TestValueObject
+         	   {
+               }
+            }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
+         source,
+         [typeof(ComplexValueObjectAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Type must not be inside a generic class'"]);
+
+      output.Should().BeNull();
+   }
+
+   [Fact]
+   public async Task Should_generate_Guid_based_keyed_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<Guid>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_DateTime_based_keyed_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<DateTime>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_decimal_based_keyed_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<decimal>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipKeyMember_and_custom_property()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipKeyMember = true, KeyMemberName = "Value")]
+         	public partial class TestValueObject
+         	{
+               public int Value { get; private init; }
+           }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipKeyMember_and_custom_field()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>(SkipKeyMember = true, KeyMemberName = "_customValue")]
+         	public partial class TestValueObject
+         	{
+               private readonly string _customValue;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_required_members()
+   {
+      // This will cause TT-Analyzer to raise a compiler error, but the analyzer is not run for generated code.
+
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public required string Property1 { get; init; }
+               public required int Property2 { get; init; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_init_only_properties()
+   {
+      // This will cause TT-Analyzer to raise a compiler error, but the analyzer is not run for generated code.
+
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public string Property1 { get; init; }
+               public int Property2 { get; init; }
+           }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_multiple_ignored_members()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public string Property1 { get; }
+
+               [IgnoreMember]
+               public string IgnoredProperty1 { get; }
+
+               public int Property2 { get; }
+
+               [IgnoreMember]
+               public int IgnoredProperty2 { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_different_member_equality_comparers()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               public string Property1 { get; }
+
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
+               public string Property2 { get; }
+
+               [MemberEqualityComparer<ComparerAccessors.Default<int>, int>]
+               public int Property3 { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_ValidationError_in_ValidateFactoryArguments()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+
+               static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref string property)
+               {
+                  if (string.IsNullOrWhiteSpace(property))
+                     validationError = new ValidationError("Property cannot be empty");
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  ["No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?, ref string)'"]);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SerializationFrameworks_None()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SerializationFrameworks = SerializationFrameworks.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_SerializationFrameworks_None()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(SerializationFrameworks = SerializationFrameworks.None)]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_all_arithmetic_operators_set_to_None()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(AdditionOperators = OperatorsGeneration.None,
+                             SubtractionOperators = OperatorsGeneration.None,
+                             MultiplyOperators = OperatorsGeneration.None,
+                             DivisionOperators = OperatorsGeneration.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_only_AdditionOperators()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SubtractionOperators = OperatorsGeneration.None,
+                             MultiplyOperators = OperatorsGeneration.None,
+                             DivisionOperators = OperatorsGeneration.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_mixed_arithmetic_operators()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<decimal>(AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                                 SubtractionOperators = OperatorsGeneration.None,
+                                 MultiplyOperators = OperatorsGeneration.Default,
+                                 DivisionOperators = OperatorsGeneration.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_struct_with_AllowDefaultStructs_false()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(AllowDefaultStructs = false)]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_struct_with_AllowDefaultStructs_false()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(AllowDefaultStructs = false)]
+         	public partial struct TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipIComparable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipIComparable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipIParsable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipIParsable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipIFormattable()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipIFormattable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_SkipToString()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipToString = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_SkipToString()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(SkipToString = true)]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_ComparisonOperators_None()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(ComparisonOperators = OperatorsGeneration.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_EqualityComparisonOperators_None()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(EqualityComparisonOperators = OperatorsGeneration.None)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_custom_factory_method_names()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(CreateFactoryMethodName = "New",
+                              TryCreateFactoryMethodName = "TryNew")]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_custom_factory_method_names()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(CreateFactoryMethodName = "Build",
+                                TryCreateFactoryMethodName = "TryBuild")]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_public_constructor()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(ConstructorAccessModifier = AccessModifier.Public)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_SkipFactoryMethods_and_ObjectFactory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(SkipFactoryMethods = true)]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ComplexValueObject.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_long_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<long>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_class_with_double_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<double>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
 }

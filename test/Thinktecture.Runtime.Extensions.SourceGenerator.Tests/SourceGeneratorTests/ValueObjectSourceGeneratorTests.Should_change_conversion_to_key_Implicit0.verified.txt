@@ -26,7 +26,7 @@ namespace Thinktecture.Tests
             TryGetFromKey = 
                (object? key,
                 out object? obj,
-                [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
+                [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out object? error) =>
                {
                   error = global::Thinktecture.Tests.TestValueObject.Validate(key is string typedKey ? typedKey : default, null, out var item);
                   obj = item;
@@ -34,8 +34,6 @@ namespace Thinktecture.Tests
                   return error is null;
                }
          };
-
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
 
       /// <summary>
       /// The identifier of this object.
@@ -147,7 +145,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Implicit conversion to the type <see cref="string"/>.
       /// </summary>
-      /// <param name="obj">Object to covert.</param>
+      /// <param name="obj">Object to convert.</param>
       /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
       public static implicit operator string?(global::Thinktecture.Tests.TestValueObject? obj)
@@ -158,7 +156,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Explicit conversion from the type <see cref="string"/>.
       /// </summary>
-      /// <param name="value">Value to covert.</param>
+      /// <param name="value">Value to convert.</param>
       /// <returns>An instance of <see cref="TestValueObject"/>.</returns>
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("value")]
       public static explicit operator global::Thinktecture.Tests.TestValueObject?(string? @value)
@@ -202,7 +200,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(_typeHashCode, global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(this._value));
+         return global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(this._value);
       }
 
       /// <inheritdoc />

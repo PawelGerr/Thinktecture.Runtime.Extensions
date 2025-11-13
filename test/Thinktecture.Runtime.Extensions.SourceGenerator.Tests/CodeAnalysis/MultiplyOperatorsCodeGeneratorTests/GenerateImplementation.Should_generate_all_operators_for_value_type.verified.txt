@@ -1,0 +1,12 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator *(global::Thinktecture.Tests.Amount left, global::Thinktecture.Tests.Amount right)
+   {
+      return Create((left.Value * right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator checked *(global::Thinktecture.Tests.Amount left, global::Thinktecture.Tests.Amount right)
+   {
+      return Create(checked((left.Value * right.Value)));
+   }

@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount, bool>,
+   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.Amount, global::System.Decimal, bool>

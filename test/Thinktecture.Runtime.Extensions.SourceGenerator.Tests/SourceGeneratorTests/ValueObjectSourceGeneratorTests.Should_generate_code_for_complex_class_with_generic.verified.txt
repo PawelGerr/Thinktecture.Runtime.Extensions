@@ -28,15 +28,13 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c> if validation is successful.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
-      /// <param name="nullableProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
+      /// <param name="nullableProperty">NullableProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static global::Thinktecture.ValidationError? Validate(
@@ -81,10 +79,10 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Creates an instance of the <c>ComplexValueObject&lt;T1, T2, T3&gt;</c> type if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
-      /// <param name="nullableProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
+      /// <param name="nullableProperty">NullableProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <returns>A newly created <c>ComplexValueObject&lt;T1, T2, T3&gt;</c> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       public static global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3> Create(
@@ -110,10 +108,10 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
-      /// <param name="nullableProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
+      /// <param name="nullableProperty">NullableProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -141,10 +139,10 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
-      /// <param name="nullableProperty">The value to be used for object creation.</param>
-      /// <param name="structProperty">The value to be used for object creation.</param>
-      /// <param name="nullableStructProperty">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
+      /// <param name="nullableProperty">NullableProperty</param>
+      /// <param name="structProperty">StructProperty</param>
+      /// <param name="nullableStructProperty">NullableStructProperty</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <c>ComplexValueObject&lt;T1, T2, T3&gt;</c>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -260,7 +258,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          return global::System.HashCode.Combine(
-            _typeHashCode,
             this.Property,
             this.NullableProperty,
             this.StructProperty,

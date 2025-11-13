@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount>

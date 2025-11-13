@@ -1,0 +1,40 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator /(global::Thinktecture.Tests.Text left, global::Thinktecture.Tests.Text right)
+   {
+      return Create((left.Value / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator checked /(global::Thinktecture.Tests.Text left, global::Thinktecture.Tests.Text right)
+   {
+      return Create(checked((left.Value / right.Value)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator /(global::Thinktecture.Tests.Text left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value / right));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator /(global::System.String left, global::Thinktecture.Tests.Text right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return Create((left / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator checked /(global::Thinktecture.Tests.Text left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value / right)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Text operator checked /(global::System.String left, global::Thinktecture.Tests.Text right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return Create(checked((left / right.Value)));
+   }

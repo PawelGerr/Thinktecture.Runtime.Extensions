@@ -1,0 +1,32 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested left, global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return left.Key < right.Key;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested left, global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return left.Key <= right.Key;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested left, global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return left.Key > right.Key;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested left, global::Thinktecture.Tests.Generic<global::System.String, global::System.Int32>.Nested right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return left.Key >= right.Key;
+   }

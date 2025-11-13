@@ -7,8 +7,7 @@ namespace Thinktecture.Tests
    readonly partial struct TestValueObject :
       global::System.IEquatable<global::Thinktecture.Tests.TestValueObject>,
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
-      global::Thinktecture.Internal.IMetadataOwner,
-      global::Thinktecture.IDisallowDefaultValue
+      global::Thinktecture.Internal.IMetadataOwner
    {
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(global::Thinktecture.Tests.TestValueObject))
@@ -25,7 +24,10 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
+      /// <summary>
+      /// Default instance of <see cref="TestValueObject"/>.
+      /// </summary>
+      public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
@@ -155,7 +157,7 @@ namespace Thinktecture.Tests
       /// <inheritdoc />
       public override int GetHashCode()
       {
-         return _typeHashCode;
+         return 0;
       }
 
       /// <inheritdoc />

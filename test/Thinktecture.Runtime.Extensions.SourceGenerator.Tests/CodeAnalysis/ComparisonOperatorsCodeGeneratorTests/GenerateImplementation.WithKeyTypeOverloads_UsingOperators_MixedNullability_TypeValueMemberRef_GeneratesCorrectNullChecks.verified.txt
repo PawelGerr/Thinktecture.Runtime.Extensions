@@ -1,0 +1,81 @@
+﻿
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right.Value) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right.Value) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right.Value) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.ProductId left, global::Thinktecture.Tests.ProductId right)
+   {
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right.Value) >= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::Thinktecture.Tests.ProductId left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   public static bool operator <(global::System.String left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.Value) < 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::Thinktecture.Tests.ProductId left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   public static bool operator <=(global::System.String left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.Value) <= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::Thinktecture.Tests.ProductId left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   public static bool operator >(global::System.String left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.Value) > 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::Thinktecture.Tests.ProductId left, global::System.String right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.Value, right) >= 0;
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   public static bool operator >=(global::System.String left, global::Thinktecture.Tests.ProductId right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.Value) >= 0;
+   }

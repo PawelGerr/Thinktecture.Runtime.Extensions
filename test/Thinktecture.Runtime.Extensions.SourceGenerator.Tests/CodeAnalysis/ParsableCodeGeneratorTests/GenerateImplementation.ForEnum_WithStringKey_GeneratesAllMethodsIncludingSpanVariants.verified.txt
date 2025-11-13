@@ -1,0 +1,66 @@
+﻿
+   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.ProductGroup? result)
+      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.ProductGroup, string, global::Thinktecture.ValidationError>
+   {
+      return T.Validate(key, provider, out result);
+   }
+
+#if NET9_0_OR_GREATER
+   private static global::Thinktecture.ValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.ProductGroup? result)
+      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.ProductGroup, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
+   {
+      return T.Validate(key, provider, out result);
+   }
+#endif
+
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.ProductGroup Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var validationError = Validate<global::Thinktecture.Tests.ProductGroup>(s, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"ProductGroup\".");
+   }
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.ProductGroup Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+   {
+      var validationError = Validate<global::Thinktecture.Tests.ProductGroup>(s, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"ProductGroup\".");
+   }
+#endif
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.ProductGroup result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = Validate<global::Thinktecture.Tests.ProductGroup>(s, provider, out result!);
+      return validationError is null;
+   }
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static bool TryParse(
+      global::System.ReadOnlySpan<char> s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.ProductGroup result)
+   {
+      var validationError = Validate<global::Thinktecture.Tests.ProductGroup>(s, provider, out result!);
+      return validationError is null;
+   }
+#endif

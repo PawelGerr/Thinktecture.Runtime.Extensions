@@ -59,6 +59,10 @@ public partial class RoundTripSerialize
       RoundTrip((object)null, (IntBasedStructValueObject?)null);
       RoundTrip(0, (IntBasedStructValueObject?)IntBasedStructValueObject.Create(0));
 
+      // struct - no members
+      RoundTrip((object)null, EmptyComplexValueObjectDoesNotAllowDefaultStructs.Create());
+      RoundTrip(new GenericClass<object>(null), new GenericClass<EmptyComplexValueObjectDoesNotAllowDefaultStructs>(EmptyComplexValueObjectDoesNotAllowDefaultStructs.Create()));
+
       // struct - int
       RoundTrip(0, IntBasedStructValueObject.Create(0)); // AllowDefaultStructs = true
       FluentActions.Invoking(() => RoundTrip((object)null, default(IntBasedStructValueObject)))
@@ -360,10 +364,6 @@ public partial class RoundTripSerialize
    public void Should_throw_if_AllowDefaultStructs_is_disabled_on_complex_value_object_and_value_is_null()
    {
       // null as root
-      FluentActions.Invoking(() => RoundTrip((object)null, EmptyComplexValueObjectDoesNotAllowDefaultStructs.Create()))
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"EmptyComplexValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
-
       FluentActions.Invoking(() => RoundTrip((object)null, ComplexValueObjectDoesNotAllowDefaultStructsWithInt.Create(0)))
                    .Should().Throw<MessagePackSerializationException>()
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithInt\" because it doesn't allow default values.");
@@ -377,10 +377,6 @@ public partial class RoundTripSerialize
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithStringBasedStruct\" because it doesn't allow default values.");
 
       // null as property
-      FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), (GenericClass<EmptyComplexValueObjectDoesNotAllowDefaultStructs>)null))
-                   .Should().Throw<MessagePackSerializationException>()
-                   .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"EmptyComplexValueObjectDoesNotAllowDefaultStructs\" because it doesn't allow default values.");
-
       FluentActions.Invoking(() => RoundTrip(new GenericClass<object>(null), (GenericClass<ComplexValueObjectDoesNotAllowDefaultStructsWithInt>)null))
                    .Should().Throw<MessagePackSerializationException>()
                    .WithInnerException<MessagePackSerializationException>().WithMessage("Cannot convert null to type \"ComplexValueObjectDoesNotAllowDefaultStructsWithInt\" because it doesn't allow default values.");

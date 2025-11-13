@@ -1,0 +1,8 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.Amount operator +(global::Thinktecture.Tests.Amount left, global::Thinktecture.Tests.Amount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value + right.Value));
+   }

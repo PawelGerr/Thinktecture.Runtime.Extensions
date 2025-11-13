@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Order, global::Thinktecture.Tests.Order, bool>,
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Order, global::Thinktecture.Tests.OrderId, bool>

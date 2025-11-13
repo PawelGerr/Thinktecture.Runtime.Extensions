@@ -1,0 +1,18 @@
+﻿
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.TestStruct item)
+         throw new global::System.ArgumentException("Argument must be of type \"TestStruct\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.TestStruct obj)
+   {
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(this.Value, obj.Value);
+   }

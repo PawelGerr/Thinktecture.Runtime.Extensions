@@ -26,18 +26,16 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
-      /// <param name="prop1">The value to be used for object creation.</param>
-      /// <param name="prop2">The value to be used for object creation.</param>
+      /// <param name="prop1">Prop1</param>
+      /// <param name="prop2">Prop2</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static global::Thinktecture.ValidationError? Validate(
          string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
@@ -65,13 +63,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Creates an instance of the <see cref="TestValueObject"/> type if the provided values pass validation.
       /// </summary>
-      /// <param name="prop1">The value to be used for object creation.</param>
-      /// <param name="prop2">The value to be used for object creation.</param>
+      /// <param name="prop1">Prop1</param>
+      /// <param name="prop2">Prop2</param>
       /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       public static global::Thinktecture.Tests.TestValueObject Create(
          string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2)
+         global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2)
       {
          var validationError = Validate(
             @prop1,
@@ -88,8 +86,8 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="prop1">The value to be used for object creation.</param>
-      /// <param name="prop2">The value to be used for object creation.</param>
+      /// <param name="prop1">Prop1</param>
+      /// <param name="prop2">Prop2</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -99,7 +97,7 @@ namespace Thinktecture.Tests
       /// </returns>
       public static bool TryCreate(
          string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
          return TryCreate(
@@ -113,8 +111,8 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="prop1">The value to be used for object creation.</param>
-      /// <param name="prop2">The value to be used for object creation.</param>
+      /// <param name="prop1">Prop1</param>
+      /// <param name="prop2">Prop2</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -128,7 +126,7 @@ namespace Thinktecture.Tests
       /// </returns>
       public static bool TryCreate(
          string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2,
+         global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
       {
@@ -143,7 +141,7 @@ namespace Thinktecture.Tests
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
          ref string? @prop1,
-         ref global::System.Func<string?, Task<string?>?>? @prop2);
+         ref global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2);
 
       partial void FactoryPostInit();
 
@@ -152,7 +150,7 @@ namespace Thinktecture.Tests
       /// </summary>
       private TestValueObject(
          string? @prop1,
-         global::System.Func<string?, Task<string?>?>? @prop2)
+         global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2)
       {
          ValidateConstructorArguments(
             ref @prop1,
@@ -164,7 +162,7 @@ namespace Thinktecture.Tests
 
       static partial void ValidateConstructorArguments(
          ref string? @prop1,
-         ref global::System.Func<string?, Task<string?>?>? @prop2);
+         ref global::System.Func<string?, global::System.Threading.Tasks.Task<string?>?>? @prop2);
 
       /// <summary>
       /// Compares two instances of <see cref="TestValueObject"/>.
@@ -214,7 +212,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);
          hashCode.Add(this.Prop1, global::System.StringComparer.OrdinalIgnoreCase!);
          hashCode.Add(this.Prop2);
          return hashCode.ToHashCode();

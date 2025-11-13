@@ -25,12 +25,10 @@ namespace Thinktecture.Tests
                .AsReadOnly()
          };
 
-      private static readonly int _typeHashCode = typeof(global::Thinktecture.Tests.TestValueObject).GetHashCode();
-
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       public static global::Thinktecture.ValidationError? Validate(
@@ -66,7 +64,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Creates an instance of the <see cref="TestValueObject"/> type if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
       /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       public static global::Thinktecture.Tests.TestValueObject Create(
@@ -86,7 +84,7 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -108,7 +106,7 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">The value to be used for object creation.</param>
+      /// <param name="property">Property</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -200,7 +198,6 @@ namespace Thinktecture.Tests
       public override int GetHashCode()
       {
          var hashCode = new global::System.HashCode();
-         hashCode.Add(_typeHashCode);
          hashCode.Add(this.Property, global::System.StringComparer.Ordinal);
          return hashCode.ToHashCode();
       }

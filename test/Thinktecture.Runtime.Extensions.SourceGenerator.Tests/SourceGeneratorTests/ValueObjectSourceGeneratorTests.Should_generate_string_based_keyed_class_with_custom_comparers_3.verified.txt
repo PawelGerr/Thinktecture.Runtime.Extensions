@@ -10,32 +10,32 @@ partial class TestValueObject :
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
    public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::Thinktecture.ComparerAccessors.StringOrdinal.Comparer.Compare(left._value, right._value) < 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
    public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::Thinktecture.ComparerAccessors.StringOrdinal.Comparer.Compare(left._value, right._value) <= 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
    public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::Thinktecture.ComparerAccessors.StringOrdinal.Comparer.Compare(left._value, right._value) > 0;
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
    public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
-      global::System.ArgumentNullException.ThrowIfNull(nameof(left));
-      global::System.ArgumentNullException.ThrowIfNull(nameof(right));
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
       return global::Thinktecture.ComparerAccessors.StringOrdinal.Comparer.Compare(left._value, right._value) >= 0;
    }
 }

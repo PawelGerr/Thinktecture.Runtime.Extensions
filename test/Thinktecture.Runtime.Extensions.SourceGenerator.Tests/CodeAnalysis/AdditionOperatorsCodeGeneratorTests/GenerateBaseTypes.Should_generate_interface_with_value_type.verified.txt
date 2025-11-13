@@ -1,0 +1,2 @@
+﻿
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount>

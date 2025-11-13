@@ -1,0 +1,3 @@
+﻿
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Amount, global::Thinktecture.Tests.Amount, bool>,
+   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Amount, global::System.Int32, bool>

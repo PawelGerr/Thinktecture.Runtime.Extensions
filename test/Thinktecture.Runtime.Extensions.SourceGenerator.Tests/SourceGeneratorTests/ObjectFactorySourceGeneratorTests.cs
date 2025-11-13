@@ -25,8 +25,8 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestEnum
          	{
-               public static readonly TestEnum Item1 = new(1);
-               public static readonly TestEnum Item2 = new(2);
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
             }
          }
 
@@ -52,8 +52,8 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
-               public static readonly TestEnum Item1 = new(1);
-               public static readonly TestEnum Item2 = new(2);
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
             }
          }
 
@@ -241,5 +241,537 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_struct()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	public partial struct TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_complex_struct()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            [ObjectFactory<string>]
+         	public partial struct TestValueObject
+         	{
+               public int Value1 { get; }
+               public string Value2 { get; }
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_record_class()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	public partial record TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_record_struct()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	public partial record struct TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_multiple_object_factories_with_different_types()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>]
+            [ObjectFactory<int>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_constructor_call_when_HasCorrespondingConstructor_is_false()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ObjectFactory<string>(HasCorrespondingConstructor = false)]
+         	public partial class TestClass;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestClass.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestClass.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_UseForSerialization_SystemTextJson()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_UseForSerialization_None()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.None)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_SkipIParsable()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>(SkipIParsable = true)]
+            [ObjectFactory<string>]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_keyed_value_object_with_string()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [ObjectFactory<int>]
+         	public partial class TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_generic_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	public partial class TestValueObject<T>;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(
+         source,
+         [typeof(ObjectFactoryAttribute).Assembly],
+         ["Error during code generation for 'TestValueObject': 'Keyed value objects must not be generic'"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject`1.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject`1.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_complex_generic_type()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            [ObjectFactory<string>]
+         	public partial class TestValueObject<T>
+         	{
+               public T Value { get; }
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject`1.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject`1.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_ValidationError()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            [ObjectFactory<string>]
+         	public partial class TestValueObject
+         	{
+               public int Value { get; }
+
+               static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref int value)
+               {
+                  if (value < 0)
+                     validationError = new ValidationError("Value must be positive");
+               }
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(
+         source,
+         [typeof(ObjectFactoryAttribute).Assembly],
+         ["No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?, ref int)'"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_empty_class()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ObjectFactory<string>]
+         	public partial class TestClass;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestClass.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestClass.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_nested_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class OuterClass
+            {
+               [ValueObject<int>]
+               [ObjectFactory<string>]
+               public partial class TestValueObject;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.OuterClass.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.OuterClass.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_internal_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	internal partial class TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_Guid_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<Guid>]
+         	public partial class TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_union_with_custom_factory_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [Union<string, int>]
+            [ObjectFactory<double>]
+            public partial class TestUnion;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.ObjectFactories.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_byte_array_type()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [ObjectFactory<byte[]>]
+         	public partial class TestValueObject;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_crash_if_type_has_errors()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ObjectFactory<string>]
+         	public partial class TestClass : NonExistentType;
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(
+         source,
+         [typeof(ObjectFactoryAttribute).Assembly],
+         ["The type or namespace name 'NonExistentType' could not be found (are you missing a using directive or an assembly reference?)"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestClass.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestClass.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_for_positional_record()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            [ObjectFactory<string>]
+         	public partial record TestValueObject(int Value1, string Value2);
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_object_factory_with_multiple_factories_and_different_serialization_settings()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+            [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
    }
 }

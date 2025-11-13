@@ -1,0 +1,3 @@
+﻿
+   global::System.IComparable,
+   global::System.IComparable<global::Thinktecture.Tests.@Special.@Type>

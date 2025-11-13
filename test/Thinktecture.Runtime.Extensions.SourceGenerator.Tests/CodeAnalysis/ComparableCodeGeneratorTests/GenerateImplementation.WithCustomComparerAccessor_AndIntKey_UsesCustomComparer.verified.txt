@@ -1,0 +1,21 @@
+﻿
+   /// <inheritdoc />
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.CustomType item)
+         throw new global::System.ArgumentException("Argument must be of type \"CustomType\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   public int CompareTo(global::Thinktecture.Tests.CustomType? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return global::Thinktecture.Tests.CustomType.Comparer.Comparer.Compare(this.Value, obj.Value);
+   }
