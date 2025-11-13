@@ -4,7 +4,7 @@
     <Description>Provides an easy way to implement Smart Enums, Value Objects and Discriminated Unions.</Description>
     <PackageTags>smart-enum;value-object;discriminated-union;</PackageTags>
     <TargetFramework></TargetFramework>
-    <TargetFrameworks>net7.0;net9.0;</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

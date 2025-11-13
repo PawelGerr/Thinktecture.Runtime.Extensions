@@ -95,9 +95,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          NumberOfIncrementalIterations = numberOfFixes;
          NumberOfFixAllIterations = numberOfFixes;
 
-#if NET7
-         ReferenceAssemblies = new ReferenceAssemblies("net7.0", new PackageIdentity("Microsoft.NETCore.App.Ref","7.0.0"), Path.Combine("ref", "7.0.0"));
-#elif NET8_0
+#if NET8_0
          ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "8.0.0"), Path.Combine("ref", "8.0.0"));
 #elif NET9_0
          ReferenceAssemblies = new ReferenceAssemblies("net9.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "9.0.0"), Path.Combine("ref", "9.0.0"));

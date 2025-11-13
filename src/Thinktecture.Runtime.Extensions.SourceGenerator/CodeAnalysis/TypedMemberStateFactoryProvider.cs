@@ -4,7 +4,6 @@ namespace Thinktecture.CodeAnalysis;
 
 public static class TypedMemberStateFactoryProvider
 {
-   private static Lazy<TypedMemberStateFactory>? _dotnet7;
    private static Lazy<TypedMemberStateFactory>? _dotnet8;
    private static Lazy<TypedMemberStateFactory>? _dotnet9;
    private static Lazy<TypedMemberStateFactory>? _dotnet10;
@@ -24,7 +23,6 @@ public static class TypedMemberStateFactoryProvider
 
       return version switch
       {
-         7 => GetFactory(compilation, ref _dotnet7),
          8 => GetFactory(compilation, ref _dotnet8),
          9 => GetFactory(compilation, ref _dotnet9),
          10 => GetFactory(compilation, ref _dotnet10),

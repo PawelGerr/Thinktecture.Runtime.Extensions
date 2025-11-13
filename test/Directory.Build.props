@@ -16,7 +16,7 @@
     <ReportAnalyzer>true</ReportAnalyzer>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TargetFramework></TargetFramework>
-    <TargetFrameworks>net7.0;net8.0;net9.0;net10.0;</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0;</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,11 +27,6 @@
     <PackageReference Include="Verify.Xunit" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-    <PackageReference Update="Microsoft.NET.Test.Sdk" PrivateAssets="all" VersionOverride="17.13.0" />
-    <PackageReference Update="xunit.runner.visualstudio" PrivateAssets="all" VersionOverride="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>

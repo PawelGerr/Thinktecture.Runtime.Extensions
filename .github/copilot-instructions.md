@@ -12,7 +12,7 @@ This file provides guidance to the AI assistant when working with code in this r
 
 - .NET 10.0 SDK (as specified in global.json)
 - C# 11+ for generated code
-- Multiple .NET versions (7.0, 8.0, 9.0, 10.0) for framework compatibility testing
+- Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
 
 ## Architecture Overview
 
@@ -324,7 +324,7 @@ The source generators follow a consistent pattern:
 
 - Follow `.editorconfig` settings (especially in `src/.editorconfig`)
 - **XML documentation required** for all publicly visible types and members (except source generator, analyzer, test, and sample projects)
-- Multi-target framework support (net7.0 base, with EF Core version-specific projects)
+- Multi-target framework support (net8.0 base, with EF Core version-specific projects)
 - Don't use `#region`/`#endregion`
 
 ## Common Troubleshooting and Best Practices
