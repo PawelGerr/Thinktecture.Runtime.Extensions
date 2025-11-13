@@ -40,10 +40,9 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Thinktecture.Runtime.Extensions.AspNetCore/Thinktecture.Runtime.Extensions.AspNetCore.csproj" />
-    <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore8/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.EntityFrameworkCore9/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.csproj" />
-    <Project Path="src\Thinktecture.Runtime.Extensions.EntityFrameworkCore10\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.csproj" Type="Classic C#" />
+    <Project Path="src\Thinktecture.Runtime.Extensions.EntityFrameworkCore10\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.csproj" Type="C#" />
     <Project Path="src/Thinktecture.Runtime.Extensions.Json/Thinktecture.Runtime.Extensions.Json.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.MessagePack/Thinktecture.Runtime.Extensions.MessagePack.csproj" />
     <Project Path="src/Thinktecture.Runtime.Extensions.Newtonsoft.Json/Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
@@ -55,10 +54,9 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Thinktecture.Runtime.Extensions.AspNetCore.Tests/Thinktecture.Runtime.Extensions.AspNetCore.Tests.csproj" />
-    <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.Tests/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.Tests.csproj" />
-    <Project Path="test\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.Tests.csproj" Type="Classic C#" />
+    <Project Path="test\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.Tests\Thinktecture.Runtime.Extensions.EntityFrameworkCore10.Tests.csproj" Type="C#" />
     <Project Path="test/Thinktecture.Runtime.Extensions.Json.Tests/Thinktecture.Runtime.Extensions.Json.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.MessagePack.Tests/Thinktecture.Runtime.Extensions.MessagePack.Tests.csproj" />
     <Project Path="test/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests.csproj" />
