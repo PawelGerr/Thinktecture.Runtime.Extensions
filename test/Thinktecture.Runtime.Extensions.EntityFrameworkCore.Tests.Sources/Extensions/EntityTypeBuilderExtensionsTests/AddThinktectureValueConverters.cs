@@ -52,7 +52,6 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
             _converterType.MakeGenericType(typeof(CustomObject_ObjectFactory), typeof(string), typeof(ValidationError)));
       }
 
-#if COMPLEX_TYPES
       [Fact]
       public void Should_add_converters_for_complex_types()
       {
@@ -95,7 +94,6 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
 
          ValidateConverter(complexProperty.ComplexType, nameof(TestComplexValueObject.TestEnum));
       }
-#endif
 
       [Fact]
       public void Should_add_converters_for_owned_types()
@@ -150,12 +148,7 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
       }
 
       private static void ValidateConverter(
-#if COMPLEX_TYPES
-         ITypeBase
-#else
-         IEntityType
-#endif
-            entityType, string propertyName, Type converterType = null)
+         ITypeBase entityType, string propertyName, Type converterType = null)
       {
          var property = entityType.FindProperty(propertyName) ?? throw new Exception($"Property with the name '{propertyName}' not found.");
          property.GetValueConverter().Should().BeOfType(converterType ?? _stringSmartEnumConverterType);

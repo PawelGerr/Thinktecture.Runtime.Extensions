@@ -17,15 +17,12 @@ internal sealed class ThinktectureConventionSetPlugin : IConventionSetPlugin
    {
       if (_settings?.IsEnabled == true)
       {
-         var convention = new ThinktectureConventionsPlugin( _settings.UseConstructorForRead, _settings.ConfigureEnumsAndKeyedValueObjects);
+         var convention = new ThinktectureConventionsPlugin(_settings.UseConstructorForRead, _settings.ConfigureEnumsAndKeyedValueObjects);
 
          conventionSet.NavigationAddedConventions.Add(convention);
          conventionSet.PropertyAddedConventions.Add(convention);
          conventionSet.EntityTypeAddedConventions.Add(convention);
-
-#if PRIMITIVE_COLLECTIONS
          conventionSet.PropertyElementTypeChangedConventions.Add(convention);
-#endif
       }
 
       return conventionSet;

@@ -1,4 +1,3 @@
-#if PRIMITIVE_COLLECTIONS
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -27,4 +26,3 @@ public static class PrimitiveCollectionBuilderExtensions
       return primitiveCollectionBuilder;
    }
 }
-#endif

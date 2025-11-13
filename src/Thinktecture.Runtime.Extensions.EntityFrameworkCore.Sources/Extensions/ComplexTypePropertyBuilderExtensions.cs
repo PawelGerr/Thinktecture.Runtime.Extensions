@@ -1,5 +1,3 @@
-#if COMPLEX_TYPES
-
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -42,4 +40,3 @@ public static class ComplexTypePropertyBuilderExtensions
       return propertyBuilder;
    }
 }
-#endif

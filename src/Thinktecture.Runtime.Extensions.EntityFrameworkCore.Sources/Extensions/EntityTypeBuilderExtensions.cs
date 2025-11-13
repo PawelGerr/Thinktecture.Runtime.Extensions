@@ -194,7 +194,6 @@ public static class EntityTypeBuilderExtensions
       return entityTypeBuilder;
    }
 
-#if COMPLEX_TYPES
    /// <summary>
    /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
    /// Properties with a value provider are skipped.
@@ -273,7 +272,6 @@ public static class EntityTypeBuilderExtensions
 
       return complexPropertyBuilder;
    }
-#endif
 
    internal static void AddConvertersToEntity(
       this IMutableEntityType entity,
@@ -285,9 +283,7 @@ public static class EntityTypeBuilderExtensions
       AddNonKeyedValueObjectMembers(entity);
 
       AddConverterForScalarProperties(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
-#if COMPLEX_TYPES
       AddConverterForComplexProperties(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
-#endif
       AddConvertersForNavigations(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
 
       if (addConvertersForOwnedTypes)
@@ -309,7 +305,6 @@ public static class EntityTypeBuilderExtensions
       }
    }
 
-#if COMPLEX_TYPES
    private static void AddSmartEnumAndKeyedValueObjects(
       IMutableTypeBase entity,
       bool useConstructorForRead,
@@ -320,15 +315,9 @@ public static class EntityTypeBuilderExtensions
          AddConverterToNonNavigation(entity, propertyInfo, useConstructorForRead, configure);
       }
    }
-#endif
 
    private static void AddConverterToNonNavigation(
-#if COMPLEX_TYPES
-      IMutableTypeBase
-#else
-      IMutableEntityType
-#endif
-         entity,
+      IMutableTypeBase entity,
       PropertyInfo propertyInfo,
       bool useConstructorForRead,
       Action<IMutableProperty> configure)
@@ -340,7 +329,6 @@ public static class EntityTypeBuilderExtensions
       if (entity.FindProperty(propertyInfo) is not null)
          return;
 
-#if COMPLEX_TYPES
 #if USE_FIND_COMPLEX_PROPERTY_FIX
       var complexProperty = entity.FindComplexPropertyFix(propertyInfo);
 #else
@@ -349,7 +337,6 @@ public static class EntityTypeBuilderExtensions
       // will be handled by AddConverterForComplexProperties
       if (complexProperty is not null)
          return;
-#endif
 
       if (!propertyInfo.IsCandidateProperty())
          return;
@@ -363,12 +350,7 @@ public static class EntityTypeBuilderExtensions
    }
 
    private static void AddNonKeyedValueObjectMembers(
-#if COMPLEX_TYPES
-      IMutableTypeBase
-#else
-      IMutableEntityType
-#endif
-         entity)
+      IMutableTypeBase entity)
    {
       if (!entity.ClrType.TryGetAssignableMembers(out var members))
          return;
@@ -378,16 +360,14 @@ public static class EntityTypeBuilderExtensions
          if (entity.IsIgnored(member.Name))
             continue;
 
-#if COMPLEX_TYPES
 #if USE_FIND_COMPLEX_PROPERTY_FIX
          var complexProperty = entity.FindComplexPropertyFix(member);
 #else
-         var complexProperty = entity.FindComplexProperty(memberName);
+         var complexProperty = entity.FindComplexProperty(member);
 #endif
          // will be handled by AddConverterForComplexProperties
          if (complexProperty is not null)
             continue;
-#endif
 
          var property = entity.FindProperty(member);
 
@@ -443,12 +423,7 @@ public static class EntityTypeBuilderExtensions
    }
 
    private static void AddConverterForScalarProperties(
-#if COMPLEX_TYPES
-      IMutableTypeBase
-#else
-      IMutableEntityType
-#endif
-         entity,
+      IMutableTypeBase entity,
       bool useConstructorForRead,
       Action<IMutableProperty> configure)
    {
@@ -459,13 +434,11 @@ public static class EntityTypeBuilderExtensions
          if (valueConverter is not null)
             continue;
 
-#if PRIMITIVE_COLLECTIONS
          if (property.IsPrimitiveCollection)
          {
             AddConverterForPrimitiveCollections(property, useConstructorForRead, configure);
             continue;
          }
-#endif
 
          if (property.ClrType.FindMetadataForValueConverter() is not { } metadata)
             continue;
@@ -474,7 +447,6 @@ public static class EntityTypeBuilderExtensions
       }
    }
 
-#if PRIMITIVE_COLLECTIONS
    private static void AddConverterForPrimitiveCollections(
       IMutableProperty property,
       bool useConstructorForRead,
@@ -492,9 +464,7 @@ public static class EntityTypeBuilderExtensions
       elementType.SetValueConverter(valueConverter);
       configure(property);
    }
-#endif
 
-#if COMPLEX_TYPES
    private static void AddConverterForComplexProperties(
       IMutableTypeBase entity,
       bool useConstructorForRead,
@@ -517,7 +487,6 @@ public static class EntityTypeBuilderExtensions
       AddConverterForScalarProperties(complexProperty.ComplexType, useConstructorForRead, configureEnumsAndKeyedValueObjects);
       AddConverterForComplexProperties(complexProperty.ComplexType, useConstructorForRead, configureEnumsAndKeyedValueObjects);
    }
-#endif
 
    private static PropertyBuilder FindPropertyBuilder((EntityTypeBuilder?, OwnedNavigationBuilder?) builders, IMutableEntityType entityType, string propertyName)
    {

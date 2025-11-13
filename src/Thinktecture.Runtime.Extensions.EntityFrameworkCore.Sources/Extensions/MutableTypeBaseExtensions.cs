@@ -1,5 +1,3 @@
-#if COMPLEX_TYPES
-
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -19,5 +17,3 @@ internal static class MutableTypeBaseExtensions
       };
    }
 }
-
-#endif

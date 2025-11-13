@@ -44,13 +44,11 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("value 6", "value 7"),
                       CustomObject_ObjectFactory = new CustomObject_ObjectFactory("value 8", "value 9"),
                       SmartEnum_IntBased = SmartEnum_IntBased.Item2,
-#if PRIMITIVE_COLLECTIONS
                       CollectionOfIntBasedReferenceValueObject =
                       [
                          IntBasedReferenceValueObject.Create(1),
                          IntBasedReferenceValueObject.Create(2)
                       ],
-#endif
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync();
@@ -122,7 +120,6 @@ SET
                 .ToListAsync();
    }
 
-#if COMPLEX_TYPES
    [Fact]
    public async Task Should_roundtrip_complex_value_object_with_complex_property()
    {
@@ -139,7 +136,6 @@ SET
       loadedEntity.Id.Should().Be(entity.Id);
       loadedEntity.TestComplexType.Should().BeEquivalentTo(entity.TestComplexType);
    }
-#endif
 
    public void Dispose()
    {

@@ -1,4 +1,3 @@
-#if COMPLEX_TYPES
 using System;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,4 +32,3 @@ public class TestEntityWithComplexValueObjectAsComplexType
       });
    }
 }
-#endif

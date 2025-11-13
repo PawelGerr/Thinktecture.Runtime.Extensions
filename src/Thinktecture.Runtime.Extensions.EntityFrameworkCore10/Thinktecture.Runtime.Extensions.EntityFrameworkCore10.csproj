@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Extends Entity Framework Core to support some components from Thinktecture.Runtime.Extensions.</Description>
     <PackageTags>smart-enum;value-object;discriminated-union;EntityFrameworkCore</PackageTags>
-    <DefineConstants>$(DefineConstants);COMPLEX_TYPES;PRIMITIVE_COLLECTIONS;USE_FIND_COMPLEX_PROPERTY_FIX;</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_FIND_COMPLEX_PROPERTY_FIX;</DefineConstants>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 

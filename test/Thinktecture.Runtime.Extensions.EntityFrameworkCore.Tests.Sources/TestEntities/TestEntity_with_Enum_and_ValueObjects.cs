@@ -22,11 +22,7 @@ public class TestEntity_with_Enum_and_ValueObjects
    public StringBasedReferenceValueObject? StringBasedReferenceValueObject { get; set; }
    public required StringBasedStructValueObject StringBasedStructValueObject { get; set; }
    public StringBasedReferenceValueObjectWithCustomError? StringBasedReferenceValueObjectWithCustomError { get; set; }
-
-#if PRIMITIVE_COLLECTIONS
    public List<IntBasedReferenceValueObject> CollectionOfIntBasedReferenceValueObject { get; set; } = [];
-#endif
-
    public Boundary? Boundary { get; set; }
    public BoundaryWithCustomError? BoundaryWithCustomError { get; set; }
    public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
@@ -46,9 +42,7 @@ public class TestEntity_with_Enum_and_ValueObjects
 
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
       {
-#if PRIMITIVE_COLLECTIONS
          var primitiveCollectionBuilder = builder.PrimitiveCollection(e => e.CollectionOfIntBasedReferenceValueObject);
-#endif
 
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
@@ -68,9 +62,7 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter();
             builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter();
 
-#if PRIMITIVE_COLLECTIONS
             primitiveCollectionBuilder.HasThinktectureValueConverter();
-#endif
          }
 
          builder.OwnsOne(e => e.Boundary, navigationBuilder =>

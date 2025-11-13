@@ -59,7 +59,6 @@ public class UseThinktectureValueConverters : IDisposable
          _converterType.MakeGenericType(typeof(CustomObject_ObjectFactory), typeof(string), typeof(ValidationError)));
    }
 
-#if COMPLEX_TYPES
    [Fact]
    public void Should_add_converters_for_complex_types()
    {
@@ -86,7 +85,6 @@ public class UseThinktectureValueConverters : IDisposable
 
       ValidateConverter(complexProperty.ComplexType, nameof(TestComplexValueObject.TestEnum));
    }
-#endif
 
    [Fact]
    public void Should_add_converters_for_owned_types()
@@ -141,12 +139,7 @@ public class UseThinktectureValueConverters : IDisposable
    }
 
    private static void ValidateConverter(
-#if COMPLEX_TYPES
-      ITypeBase
-#else
-      IEntityType
-#endif
-         entityType,
+      ITypeBase entityType,
       string propertyName,
       Type converterType = null)
    {

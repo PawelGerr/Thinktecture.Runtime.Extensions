@@ -11,10 +11,8 @@ namespace Thinktecture.EntityFrameworkCore.Conventions;
 internal sealed class ThinktectureConventionsPlugin
    : INavigationAddedConvention,
      IPropertyAddedConvention,
-     IEntityTypeAddedConvention
-#if PRIMITIVE_COLLECTIONS
-     , IPropertyElementTypeChangedConvention
-#endif
+     IEntityTypeAddedConvention,
+     IPropertyElementTypeChangedConvention
 {
    private readonly bool _useConstructorForRead;
    private readonly Action<IConventionProperty> _configureEnumsAndKeyedValueObjects;
@@ -81,13 +79,11 @@ internal sealed class ThinktectureConventionsPlugin
          if (entity.IsIgnored(member.Name))
             continue;
 
-#if COMPLEX_TYPES
          var complexProperty = entity.FindComplexProperty(member);
 
          // Ignore complex properties, even if it has an ObjectFactory
          if (complexProperty is not null)
             continue;
-#endif
 
          var property = entity.FindProperty(member);
 
@@ -106,7 +102,6 @@ internal sealed class ThinktectureConventionsPlugin
       ProcessProperty(propertyBuilder.Metadata);
    }
 
-#if PRIMITIVE_COLLECTIONS
    public void ProcessPropertyElementTypeChanged(
       IConventionPropertyBuilder propertyBuilder,
       IElementType? newElementType,
@@ -129,7 +124,6 @@ internal sealed class ThinktectureConventionsPlugin
       elementType.SetValueConverter(GetValueConverter(metadata));
       _configureEnumsAndKeyedValueObjects(propertyBuilder.Metadata);
    }
-#endif
 
    private void ProcessNavigation(IConventionNavigation navigation)
    {
