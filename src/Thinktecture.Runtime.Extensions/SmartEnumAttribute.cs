@@ -24,6 +24,12 @@ public sealed class SmartEnumAttribute : Attribute
    /// Indication whether and how the generator should generate the methods <c>Map</c>.
    /// </summary>
    public SwitchMapMethodsGeneration MapMethods { get; set; }
+
+   /// <summary>
+   /// The name of the "state" parameter used in <c>Switch</c> and <c>Map</c> methods.
+   /// Default is <c>state</c>.
+   /// </summary>
+   public string? SwitchMapStateParameterName { get; set; }
 }
 
 /// <summary>

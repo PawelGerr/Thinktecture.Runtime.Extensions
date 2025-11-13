@@ -408,7 +408,7 @@ public static class EntityTypeBuilderExtensions
          if (navigation.ClrType.FindMetadataForValueConverter() is not { } metadata)
             continue;
 
-         (navigationsToConvert ??= new List<(IMutableNavigation, ConversionMetadata)>()).Add((navigation, metadata));
+         (navigationsToConvert ??= []).Add((navigation, metadata));
       }
 
       if (navigationsToConvert is null)
