@@ -1,3 +1,0 @@
-﻿
-   global::System.IFormattable
-   global::System.IFormattable

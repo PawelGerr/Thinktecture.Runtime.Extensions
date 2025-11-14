@@ -1,2 +1,0 @@
-﻿
-   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.Generic<int, string>, global::Thinktecture.Tests.Generic<int, string>, global::Thinktecture.Tests.Generic<int, string>>
