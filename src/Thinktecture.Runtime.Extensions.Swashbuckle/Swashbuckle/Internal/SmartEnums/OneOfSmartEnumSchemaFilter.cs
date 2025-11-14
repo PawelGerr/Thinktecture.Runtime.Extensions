@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 
@@ -28,10 +28,10 @@ public class OneOfSmartEnumSchemaFilter : SmartEnumSchemaFilterBase
    /// <inheritdoc />
    protected override void SetItems(OpenApiSchema schema, IReadOnlyList<SmartEnumItem> items)
    {
-      schema.OneOf = items.Select(item => new OpenApiSchema
-                                          {
-                                             Title = item.Item.ToString(),
-                                             Extensions = { ["const"] = item.OpenApiValue }
-                                          }).ToList();
+      schema.OneOf = items.Select(item => (IOpenApiSchema)new OpenApiSchema
+                                                          {
+                                                             Title = item.Item.ToString(),
+                                                             Const = item.OpenApiValue.ToString()
+                                                          }).ToList();
    }
 }

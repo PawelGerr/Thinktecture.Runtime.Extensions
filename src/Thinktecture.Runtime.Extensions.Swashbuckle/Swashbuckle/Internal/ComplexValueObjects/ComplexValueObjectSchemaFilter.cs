@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -57,6 +57,7 @@ public class ComplexValueObjectSchemaFilter : IInternalComplexValueObjectSchemaF
                     ?? _jsonSerializerOptions.PropertyNamingPolicy?.ConvertName(memberInfo.Name)
                     ?? memberInfo.Name;
 
+         schema.Required ??= new SortedSet<string>();
          schema.Required.Add(name);
       }
    }

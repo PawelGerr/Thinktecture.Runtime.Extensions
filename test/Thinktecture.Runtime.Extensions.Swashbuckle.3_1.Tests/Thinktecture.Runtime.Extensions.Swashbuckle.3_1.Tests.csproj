@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net9.0;net10.0;</TargetFrameworks>
+    <nullable>enable</nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Swashbuckle\Thinktecture.Runtime.Extensions.Swashbuckle.csproj" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Tests.Shared\Thinktecture.Runtime.Extensions.Tests.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Xunit.Extensions.Logging" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+    <PackageReference Update="Microsoft.AspNetCore.TestHost" VersionOverride="9.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Thinktecture.Runtime.Extensions.Swashbuckle.Tests.Sources\**\*.cs" />
+    <Compile Update="..\Thinktecture.Runtime.Extensions.Swashbuckle.Tests.Sources\ModuleInit.cs">
+      <Link>ModuleInit.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="*.verified.txt" Visible="false" />
+  </ItemGroup>
+
+</Project>

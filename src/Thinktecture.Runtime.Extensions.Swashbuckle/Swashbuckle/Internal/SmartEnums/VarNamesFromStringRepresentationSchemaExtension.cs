@@ -1,6 +1,6 @@
+using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
@@ -48,9 +48,14 @@ public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaE
          return;
       }
 
-      var names = new OpenApiArray();
-      names.AddRange(items.Select(item => new OpenApiString(item.Item.ToString())));
+      var names = new JsonArray();
 
-      schema.Extensions[_extensionName] = names;
+      foreach (var item in items)
+      {
+         names.Add(JsonValue.Create(item.Item.ToString()));
+      }
+
+      schema.Extensions ??= new Dictionary<string, IOpenApiExtension>();
+      schema.Extensions[_extensionName] = new JsonNodeExtension(names);
    }
 }

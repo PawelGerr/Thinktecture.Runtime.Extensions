@@ -1,0 +1,109 @@
+﻿{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Boundary_with_BaseClass"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Boundary_with_BaseClass"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Boundary_with_BaseClass": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TestBaseClass"
+          }
+        ],
+        "properties": {
+          "lower": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "upper": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringBasedReferenceValueObject_with_BaseClass": {
+        "type": "string",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TestBaseClass"
+          }
+        ]
+      },
+      "TestBaseClass": {
+        "type": "object",
+        "properties": {
+          "testProperty": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TestUnion_class_string_int_with_base_class": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TestBaseClass"
+          }
+        ],
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "format": "int32"
+          }
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Tests"
+    }
+  ]
+}

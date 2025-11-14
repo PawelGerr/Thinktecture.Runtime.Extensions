@@ -1,0 +1,68 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SmartEnum_StringBased_with_BaseClass": {
+        "type": "string",
+        "oneOf": [
+          {
+            "title": "Item1",
+            "enum": [
+              "Item1"
+            ]
+          },
+          {
+            "title": "Item2",
+            "enum": [
+              "Item2"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Tests"
+    }
+  ]
+}

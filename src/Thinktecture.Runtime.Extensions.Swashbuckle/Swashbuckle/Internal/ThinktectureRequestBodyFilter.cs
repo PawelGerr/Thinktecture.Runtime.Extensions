@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -30,7 +30,7 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
    }
 
    /// <inheritdoc />
-   public void Apply(OpenApiRequestBody requestBody, RequestBodyFilterContext context)
+   public void Apply(IOpenApiRequestBody requestBody, RequestBodyFilterContext context)
    {
       if (context.FormParameterDescriptions is null)
          return;
@@ -38,7 +38,7 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
       ReplaceExpandedSchema(requestBody, context);
    }
 
-   private void ReplaceExpandedSchema(OpenApiRequestBody requestBody, RequestBodyFilterContext context)
+   private void ReplaceExpandedSchema(IOpenApiRequestBody requestBody, RequestBodyFilterContext context)
    {
       var rootNodes = BuildTree(context);
 
@@ -50,7 +50,7 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
 
    private void ReplaceExpandedSchema(
       RequestBodyFilterContext context,
-      OpenApiRequestBody requestBody,
+      IOpenApiRequestBody requestBody,
       Node node)
    {
       var metadata = MetadataLookup.Find(node.Type);
@@ -75,15 +75,18 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
    }
 
    private void ReplaceExpandedSchema(
-      OpenApiRequestBody requestBody,
+      IOpenApiRequestBody requestBody,
       RequestBodyFilterContext context,
       IReadOnlyList<ApiParameterDescription> parameters,
       string newParameterName,
       Metadata metadata)
    {
+      if (requestBody.Content is null)
+         return;
+
       var schema = context.SchemaGenerator.GenerateSchema(metadata.Type, context.SchemaRepository);
 
-      if (schema.Reference is null)
+      if (schema is not OpenApiSchemaReference)
          return;
 
       foreach (var (_, mediaType) in requestBody.Content)
@@ -96,31 +99,33 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
       OpenApiMediaType mediaType,
       IReadOnlyList<ApiParameterDescription> parameters,
       string newParameterName,
-      OpenApiSchema schema)
+      IOpenApiSchema schema)
    {
-      if (IsSameSchema(mediaType.Schema, schema.Reference))
+      var schemaReference = schema as OpenApiSchemaReference;
+
+      if (schemaReference is not null && IsSameSchema(mediaType.Schema, schemaReference))
          return;
 
-      var propertySchemas = mediaType.Schema
-                                     .Properties
+      var propertySchemas = mediaType.Schema?
+                                     .Properties?
                                      .Where(kvp => parameters.Any(parameter => kvp.Key == parameter.Name))
                                      .ToList();
 
-      if (propertySchemas.Count == 0)
+      if (propertySchemas is null || propertySchemas.Count == 0)
          return;
 
       if (propertySchemas.Count == 1)
       {
          var propertySchema = propertySchemas[0].Value;
 
-         if (propertySchema.Reference?.Id == schema.Reference.Id)
+         if (propertySchema is OpenApiSchemaReference propertySchemaReference && propertySchemaReference.Id == schemaReference?.Id)
             return;
 
-         if (propertySchema.AllOf.Count == 1)
+         if (propertySchema.AllOf?.Count == 1)
          {
             var allOfSchema = propertySchema.AllOf[0];
 
-            if (allOfSchema.Reference?.Id == schema.Reference.Id)
+            if (allOfSchema is OpenApiSchemaReference allOfSchemaReference && allOfSchemaReference.Reference?.Id == schemaReference?.Id)
                return;
 
             propertySchema.AllOf[0] = schema;
@@ -130,29 +135,37 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
 
       foreach (var propertySchema in propertySchemas)
       {
-         mediaType.Schema.Properties.Remove(propertySchema.Key);
-         mediaType.Encoding.Remove(propertySchema.Key);
+         mediaType.Schema?.Properties?.Remove(propertySchema.Key);
+         mediaType.Encoding?.Remove(propertySchema.Key);
       }
 
-      mediaType.Schema.Properties[newParameterName] = _swaggerGenOptions.SchemaGeneratorOptions.UseAllOfToExtendReferenceSchemas
-                                                         ? new OpenApiSchema { AllOf = [schema] }
-                                                         : schema;
+      mediaType.Schema ??= new OpenApiSchema();
+
+      if (mediaType.Schema is OpenApiSchema mediaTypeSchema)
+      {
+         mediaTypeSchema.Properties ??= new Dictionary<string, IOpenApiSchema>();
+         mediaTypeSchema.Properties[newParameterName] = _swaggerGenOptions.SchemaGeneratorOptions.UseAllOfToExtendReferenceSchemas
+                                                           ? new OpenApiSchema { AllOf = [schema] }
+                                                           : schema;
+      }
+
+      mediaType.Encoding ??= new Dictionary<string, OpenApiEncoding>();
       mediaType.Encoding[newParameterName] = new OpenApiEncoding { Style = ParameterStyle.Form };
    }
 
    private static bool IsSameSchema(
-      OpenApiSchema schema,
-      OpenApiReference expected)
+      IOpenApiSchema? schema,
+      OpenApiSchemaReference expected)
    {
-      if (schema.Reference?.Id == expected.Id)
+      if (schema is OpenApiSchemaReference schemaReference && schemaReference.Id == expected.Id)
          return true;
 
-      if (schema.AllOf.Count != 1)
+      if (schema?.AllOf?.Count != 1)
          return false;
 
       var allOfSchema = schema.AllOf[0];
 
-      if (allOfSchema.Reference?.Id == expected.Id)
+      if (allOfSchema is OpenApiSchemaReference allOfSchemaReference && allOfSchemaReference.Id == expected.Id)
          return true;
 
       return false;

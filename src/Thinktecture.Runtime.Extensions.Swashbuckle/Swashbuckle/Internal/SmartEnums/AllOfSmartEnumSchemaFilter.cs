@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 
@@ -34,7 +34,7 @@ public class AllOfSmartEnumSchemaFilter : SmartEnumSchemaFilterBase
          .. items.Select(item => new OpenApiSchema
                                  {
                                     Title = item.Item.ToString(),
-                                    Extensions = { ["const"] = item.OpenApiValue }
+                                    Const = item.OpenApiValue.ToString()
                                  })
       ];
    }

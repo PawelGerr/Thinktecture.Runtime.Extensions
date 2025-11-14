@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Serilog;
 using Serilog.Events;
 using Thinktecture.AspNetCore.ModelBinding;
@@ -150,6 +150,7 @@ public class Program
                                   options.TagActionsBy(_ => ["demo"]);
                                   options.IncludeXmlComments(typeof(ProductName).Assembly);
                                   options.IncludeXmlComments(typeof(Program).Assembly);
+                                  options.SupportNonNullableReferenceTypes();
                                })
                                .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
                     })
@@ -199,6 +200,7 @@ public class Program
                 options.TagActionsBy(_ => ["demo"]);
                 options.IncludeXmlComments(typeof(ProductName).Assembly);
                 options.IncludeXmlComments(typeof(Program).Assembly);
+                options.SupportNonNullableReferenceTypes();
              })
              .AddThinktectureOpenApiFilters(options => options.SmartEnumSchemaExtension = SmartEnumSchemaExtension.VarNamesFromStringRepresentation);
 

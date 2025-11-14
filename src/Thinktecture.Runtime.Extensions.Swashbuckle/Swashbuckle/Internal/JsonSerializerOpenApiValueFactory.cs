@@ -1,6 +1,5 @@
 using System.Text.Json;
-using Microsoft.OpenApi.Any;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text.Json.Nodes;
 
 namespace Thinktecture.Swashbuckle.Internal;
 
@@ -30,9 +29,9 @@ public class JsonSerializerOpenApiValueFactory : IOpenApiValueFactory
    }
 
    /// <inheritdoc />
-   public IOpenApiAny CreateOpenApiValue(object value)
+   public JsonNode? CreateOpenApiValue(object value)
    {
       var json = JsonSerializer.Serialize(value, _type, _jsonSerializerOptions);
-      return OpenApiAnyFactory.CreateFromJson(json, _jsonSerializerOptions);
+      return JsonSerializer.Deserialize<JsonNode>(json, _jsonSerializerOptions);
    }
 }

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -38,8 +38,8 @@ public class KeyedValueObjectSchemaFilter : IInternalKeyedValueObjectSchemaFilte
    /// <inheritdoc />
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.Keyed.ValueObject metadata)
    {
-      schema.Properties.Clear();
-      schema.Required.Clear();
+      schema.Properties?.Clear();
+      schema.Required?.Clear();
 
       if (_clearAllOf)
          schema.AllOf?.Clear();

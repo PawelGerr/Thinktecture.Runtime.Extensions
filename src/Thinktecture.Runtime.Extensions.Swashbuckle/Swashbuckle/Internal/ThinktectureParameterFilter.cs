@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -29,7 +29,7 @@ public class ThinktectureParameterFilter : IParameterFilter
 
    /// <inheritdoc />
    public void Apply(
-      OpenApiParameter parameter,
+      IOpenApiParameter parameter,
       ParameterFilterContext context)
    {
       if (context.ParameterInfo is null)
@@ -43,15 +43,16 @@ public class ThinktectureParameterFilter : IParameterFilter
       modelBindingType = context.ParameterInfo.ParameterType.NormalizeStructType(modelBindingType);
       var serializationType = ThinktectureSchemaFilter.GetSerializationType(context.ParameterInfo.ParameterType);
 
-      if (parameter.Schema.Type is null             // Wrapper made by UseAllOfToExtendReferenceSchemas.
-          && modelBindingType == serializationType) // We keep the reference if the types are equal.
+      if (parameter is not OpenApiParameter openApiParameter
+          || (parameter.Schema?.AllOf?.Count > 0         // Wrapper made by UseAllOfToExtendReferenceSchemas.
+              && modelBindingType == serializationType)) // We keep the reference if the types are equal.
          return;
 
       // We need a new schema, something like MyComplexTypeAsString
       if (_createExtraSchemasForParameters && context.ParameterInfo.ParameterType != modelBindingType)
          modelBindingType = typeof(BoundParameter<,>).MakeGenericType(context.ParameterInfo.ParameterType, modelBindingType);
 
-      parameter.Schema = context.SchemaGenerator.GenerateSchema(
+      openApiParameter.Schema = context.SchemaGenerator.GenerateSchema(
          modelBindingType,
          context.SchemaRepository,
          parameterInfo: context.ParameterInfo);

@@ -1,7 +1,6 @@
+using System.Text.Json.Nodes;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 using Thinktecture.Swashbuckle.Internal.AdHocUnions;
@@ -53,28 +52,31 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    }
 
    /// <inheritdoc />
-   public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+   public void Apply(IOpenApiSchema schema, SchemaFilterContext context)
    {
-      // Wrapper made by UseAllOfToExtendReferenceSchemas
-      if (schema.Type is null)
+      // Handle types only, not members or parameters
+      if (context.MemberInfo is not null || context.ParameterInfo is not null)
          return;
 
-      if (TryHandleModelBoundType(schema, context))
+      if (schema is not OpenApiSchema openApiSchema)
          return;
 
-      if (TryHandleTypeWithObjectFactory(schema, context))
+      if (TryHandleModelBoundType(openApiSchema, context))
+         return;
+
+      if (TryHandleTypeWithObjectFactory(openApiSchema, context))
          return;
 
       var metadata = MetadataLookup.Find(context.Type);
 
       metadata?.Switch(
-         (Filter: this, schema, context),
-         keylessSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.schema, state.context, smartEnumMetadata),
-         keyedSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.schema, state.context, smartEnumMetadata),
-         keyedValueObject: static (state, keyedValueObjectMetadata) => state.Filter.Apply(state.schema, state.context, keyedValueObjectMetadata),
-         complexValueObject: static (state, complexValueObjectMetadata) => state.Filter.Apply(state.schema, state.context, complexValueObjectMetadata),
-         adHocUnion: static (state, adHocUnionMetadata) => state.Filter.Apply(state.schema, state.context, adHocUnionMetadata),
-         regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.schema, state.context, regularUnionMetadata));
+         (Filter: this, openApiSchema, context),
+         keylessSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.openApiSchema, state.context, smartEnumMetadata),
+         keyedSmartEnum: static (state, smartEnumMetadata) => state.Filter.Apply(state.openApiSchema, state.context, smartEnumMetadata),
+         keyedValueObject: static (state, keyedValueObjectMetadata) => state.Filter.Apply(state.openApiSchema, state.context, keyedValueObjectMetadata),
+         complexValueObject: static (state, complexValueObjectMetadata) => state.Filter.Apply(state.openApiSchema, state.context, complexValueObjectMetadata),
+         adHocUnion: static (state, adHocUnionMetadata) => state.Filter.Apply(state.openApiSchema, state.context, adHocUnionMetadata),
+         regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.openApiSchema, state.context, regularUnionMetadata));
    }
 
    internal static Type GetSerializationType(Type type)
@@ -130,8 +132,9 @@ public class ThinktectureSchemaFilter : ISchemaFilter
 
       var originalTypeSchema = context.SchemaGenerator.GenerateSchema(originalType, context.SchemaRepository);
 
-      if (originalTypeSchema.Reference is null
-          || context.SchemaRepository.Schemas.TryGetValue(originalTypeSchema.Reference.Id, out originalTypeSchema))
+      if (originalTypeSchema is not OpenApiSchemaReference originalTypeSchemaReference
+          || originalTypeSchemaReference.Reference.Id is null
+          || context.SchemaRepository.Schemas.TryGetValue(originalTypeSchemaReference.Reference.Id, out originalTypeSchema))
       {
          // We want to keep the original schema's title and description
          schema.Title = String.IsNullOrWhiteSpace(originalTypeSchema.Title) ? schema.Title : originalTypeSchema.Title;
@@ -141,7 +144,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       return true;
    }
 
-   private void CopyProperties(OpenApiSchema sourceSchema, OpenApiSchema targetSchema)
+   private void CopyProperties(IOpenApiSchema sourceSchema, OpenApiSchema targetSchema)
    {
       // We want to keep the original schema's title and description
       targetSchema.Title = String.IsNullOrWhiteSpace(targetSchema.Title) ? sourceSchema.Title : targetSchema.Title;
@@ -158,33 +161,45 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       targetSchema.Pattern = sourceSchema.Pattern;
       targetSchema.MultipleOf = sourceSchema.MultipleOf;
       targetSchema.Default = sourceSchema.Default;
+      targetSchema.Const = sourceSchema.Const;
       targetSchema.ReadOnly = sourceSchema.ReadOnly;
       targetSchema.WriteOnly = sourceSchema.WriteOnly;
-      targetSchema.AllOf = sourceSchema.AllOf != null ? new List<OpenApiSchema>(sourceSchema.AllOf) : null;
-      targetSchema.OneOf = sourceSchema.OneOf != null ? new List<OpenApiSchema>(sourceSchema.OneOf) : null;
-      targetSchema.AnyOf = sourceSchema.AnyOf != null ? new List<OpenApiSchema>(sourceSchema.AnyOf) : null;
+      targetSchema.AllOf = sourceSchema.AllOf != null ? new List<IOpenApiSchema>(sourceSchema.AllOf) : null;
+      targetSchema.OneOf = sourceSchema.OneOf != null ? new List<IOpenApiSchema>(sourceSchema.OneOf) : null;
+      targetSchema.AnyOf = sourceSchema.AnyOf != null ? new List<IOpenApiSchema>(sourceSchema.AnyOf) : null;
       targetSchema.Not = sourceSchema.Not;
-      targetSchema.Required = sourceSchema.Required != null ? new HashSet<string>(sourceSchema.Required) : null;
+      targetSchema.Required = sourceSchema.Required != null ? new SortedSet<string>(sourceSchema.Required) : null;
       targetSchema.Items = sourceSchema.Items;
       targetSchema.MaxItems = sourceSchema.MaxItems;
       targetSchema.MinItems = sourceSchema.MinItems;
       targetSchema.UniqueItems = sourceSchema.UniqueItems;
-      targetSchema.Properties = sourceSchema.Properties != null ? new Dictionary<string, OpenApiSchema>(sourceSchema.Properties) : null;
+      targetSchema.Properties = sourceSchema.Properties != null ? new Dictionary<string, IOpenApiSchema>(sourceSchema.Properties) : null;
       targetSchema.MaxProperties = sourceSchema.MaxProperties;
       targetSchema.MinProperties = sourceSchema.MinProperties;
       targetSchema.AdditionalPropertiesAllowed = sourceSchema.AdditionalPropertiesAllowed;
       targetSchema.AdditionalProperties = sourceSchema.AdditionalProperties;
       targetSchema.Discriminator = sourceSchema.Discriminator;
       targetSchema.Example = sourceSchema.Example;
-      targetSchema.Enum = sourceSchema.Enum != null ? new List<IOpenApiAny>(sourceSchema.Enum) : null;
-      targetSchema.Nullable = sourceSchema.Nullable;
+      targetSchema.Enum = sourceSchema.Enum != null ? new List<JsonNode>(sourceSchema.Enum) : null;
       targetSchema.ExternalDocs = sourceSchema.ExternalDocs;
       targetSchema.Deprecated = sourceSchema.Deprecated;
       targetSchema.Xml = sourceSchema.Xml;
       targetSchema.Extensions = sourceSchema.Extensions != null ? new Dictionary<string, IOpenApiExtension>(sourceSchema.Extensions) : null;
-      targetSchema.UnresolvedReference = sourceSchema.UnresolvedReference;
-      targetSchema.Reference = sourceSchema.Reference;
-      targetSchema.Annotations = sourceSchema.Annotations != null ? new Dictionary<string, object>(sourceSchema.Annotations) : null;
+      targetSchema.Comment = sourceSchema.Comment;
+
+      // Following members are not copied:
+      // * Id
+      // * Definitions
+      // * DependentRequired
+      // * DynamicAnchor
+      // * DynamicRef
+      // * Examples
+      // * Metadata
+      // * PatternProperties
+      // * Schema
+      // * UnevaluatedProperties
+      // * UnrecognizedKeywords
+      // * Vocabulary
    }
 
    private void Apply(

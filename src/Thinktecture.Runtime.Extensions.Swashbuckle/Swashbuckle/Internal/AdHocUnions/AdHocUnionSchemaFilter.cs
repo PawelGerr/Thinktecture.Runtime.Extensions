@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -24,8 +24,8 @@ public class AdHocUnionSchemaFilter : IInternalAdHocUnionSchemaFilter
    /// <inheritdoc />
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.AdHocUnion metadata)
    {
-      schema.Properties.Clear();
-      schema.Required.Clear();
+      schema.Properties?.Clear();
+      schema.Required?.Clear();
 
       schema.Type = null;
       schema.OneOf = metadata.MemberTypes

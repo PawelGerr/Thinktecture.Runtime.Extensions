@@ -611,5 +611,10 @@
         "type": "string"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "demo"
+    }
+  ]
 }

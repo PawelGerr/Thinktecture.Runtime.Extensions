@@ -1,0 +1,84 @@
+﻿{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test API",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "post": {
+        "tags": [
+          "Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SmartEnum_StringBased_with_BaseClass": {
+        "type": "string",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TestBaseClassWithNonEmptyCtor"
+          }
+        ],
+        "oneOf": [
+          {
+            "title": "Item1",
+            "enum": [
+              "Item1"
+            ]
+          },
+          {
+            "title": "Item2",
+            "enum": [
+              "Item2"
+            ]
+          }
+        ]
+      },
+      "TestBaseClassWithNonEmptyCtor": {
+        "required": [
+          "testProperty"
+        ],
+        "type": "object",
+        "properties": {
+          "testProperty": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Tests"
+    }
+  ]
+}

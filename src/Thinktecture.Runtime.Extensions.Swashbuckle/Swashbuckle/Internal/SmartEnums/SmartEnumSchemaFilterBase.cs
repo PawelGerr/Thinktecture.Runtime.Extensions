@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Internal;
 
@@ -45,11 +45,11 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    /// <inheritdoc />
    public void Apply(OpenApiSchema schema, SchemaFilterContext context, Metadata.Keyed.SmartEnum metadata)
    {
-      schema.Properties.Clear();
-      schema.Required.Clear();
+      schema.Properties?.Clear();
+      schema.Required?.Clear();
 
       if (_clearAllOf)
-         schema.AllOf.Clear();
+         schema.AllOf?.Clear();
 
       var items = GetItems(metadata.Type, metadata.KeyType, metadata.Items.Value);
 
@@ -87,7 +87,8 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
       return items.Select(item =>
                   {
                      var key = keySelector(item.Item);
-                     var value = valueFactory.CreateOpenApiValue(key);
+                     var value = valueFactory.CreateOpenApiValue(key)
+                                 ?? throw new InvalidOperationException($"Could not create OpenAPI value for key '{key}' of Smart Enum '{type.FullName}'. The IOpenApiValueFactory returned null.");
 
                      return new SmartEnumItem(item.Key, item.Item, item.Identifier, value);
                   })
@@ -133,7 +134,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    protected virtual void CopyPropertiesFromKeyTypeSchema(
       OpenApiSchema schema,
       SchemaFilterContext context,
-      OpenApiSchema keySchema)
+      IOpenApiSchema keySchema)
    {
       schema.Type = keySchema.Type;
       schema.Format = keySchema.Format;

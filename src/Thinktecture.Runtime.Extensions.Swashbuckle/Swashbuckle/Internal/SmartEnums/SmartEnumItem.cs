@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 
 namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 
@@ -8,5 +8,5 @@ namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 /// any release. You should only use it directly in your code with extreme caution and knowing that
 /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
 /// </summary>
-public record SmartEnumItem(object Key, object Item, string Identifier, IOpenApiAny OpenApiValue)
+public record SmartEnumItem(object Key, object Item, string Identifier, JsonNode OpenApiValue)
    : ISmartEnumItem;
