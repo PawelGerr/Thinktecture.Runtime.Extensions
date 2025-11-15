@@ -4,13 +4,9 @@ using Thinktecture.Logging;
 namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 [Generator]
-public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public sealed class ValueObjectSourceGenerator()
+   : ThinktectureSourceGeneratorBase(18_000), IIncrementalGenerator
 {
-   public ValueObjectSourceGenerator()
-      : base(18_000)
-   {
-   }
-
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var options = GetGeneratorOptions(context);
@@ -121,7 +117,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
 
       context.RegisterSourceOutput(sourceGenStates.Combine(options), (ctx, state) => GenerateCode(ctx, state.Left, state.Right, codeGeneratorFactory));
 
-      InitializeErrorReporting(context, valueObjectOrException);
+      InitializeDiagnosticReporting(context, valueObjectOrException);
       InitializeExceptionReporting(context, valueObjectOrException);
 
       return validValueObjects;
@@ -310,15 +306,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       InitializeOperatorsCodeGenerator(context, operators, options);
    }
 
-   private void InitializeErrorReporting<T>(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<T> valueObjectOrException)
-      where T : struct, ISourceGenContext
-   {
-      var exceptions = valueObjectOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                                 ? [state.Error.Value]
-                                                                                 : ImmutableArray<SourceGenError>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportError);
-   }
-
    private void InitializeExceptionReporting<T>(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<T> valueObjectOrException)
       where T : struct, ISourceGenContext
    {
@@ -326,6 +313,15 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
                                                                                  ? [state.Exception.Value]
                                                                                  : ImmutableArray<SourceGenException>.Empty);
       context.RegisterSourceOutput(exceptions, ReportException);
+   }
+
+   private void InitializeDiagnosticReporting<T>(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<T> valueObjectOrException)
+      where T : struct, ISourceGenContext
+   {
+      var exceptions = valueObjectOrException.SelectMany(static (state, _) => state.Diagnostic is not null
+                                                                                 ? [state.Diagnostic.Value]
+                                                                                 : ImmutableArray<SourceGenDiagnostic>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportDiagnostic);
    }
 
    private SerializerCodeGeneratorFactoriesContext GetSerializerCodeGeneratorFactories(MetadataReference reference)
@@ -388,46 +384,46 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          if (!TryGetType(context, out var type))
             return null;
 
-         if (!type.TypeParameters.IsDefaultOrEmpty)
-            return new SourceGenError("Keyed value objects must not be generic", tds);
+         if (type.Arity > 0)
+            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
 
+         if (context.Attributes.Length > 1)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute, [type.ToMinimallyQualifiedDisplayString()]);
+
          var attributeType = context.Attributes[0].AttributeClass;
 
          if (attributeType is null)
-            return new SourceGenError("Could not resolve ValueObjectAttribute type", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not resolve ValueObjectAttribute type"]);
 
          if (attributeType.TypeKind == TypeKind.Error)
-            return new SourceGenError("ValueObjectAttribute type has TypeKind=Error", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "ValueObjectAttribute type has TypeKind=Error"]);
 
          if (attributeType.Arity != 1)
-            return new SourceGenError("ValueObjectAttribute must have exactly one type argument", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "ValueObjectAttribute must have exactly one type argument"]);
 
          var keyMemberType = attributeType.TypeArguments[0];
 
          if (keyMemberType.TypeKind == TypeKind.Error)
-            return new SourceGenError("Key member type could not be resolved", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Key member type could not be resolved"]);
 
-         if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
-            return new SourceGenError("Key member type must be non-nullable", tds);
-
-         if (keyMemberType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
-            return new SourceGenError("Key member type must be non-nullable", tds);
+         if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated || keyMemberType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
+            return null; // Analyzer emits DiagnosticsDescriptors.KeyMemberShouldNotBeNullable
 
          if (type.IsNestedInGenericClass())
-            return new SourceGenError("Type must not be inside a generic class", tds);
+            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenError("Could not fetch type information for code generation of a value object", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a value object"]);
 
-         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
+         var diagnostic = AttributeInfo.TryCreate(type, out var attributeInfo);
 
-         if (errorMessage is not null)
-            return new SourceGenError(errorMessage, tds);
+         if (diagnostic is not null)
+            return new SourceGenDiagnostic(tds, diagnostic.Value.Descriptor, diagnostic.Value.Args);
 
          var settings = new AllValueObjectSettings(context.Attributes[0], keyMemberType.SpecialType == SpecialType.System_String);
 
@@ -444,9 +440,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a value object", tds, ex);
-
-         return new SourceGenException(ex, tds);
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a value object", ex, tds);
       }
    }
 
@@ -460,20 +454,19 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
             return null;
 
          if (type.IsNestedInGenericClass())
-            return new SourceGenError("Type must not be inside a generic class", tds);
+            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenError("Could not fetch type information for code generation of a value object", tds);
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a value object"]);
 
-         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
+         var diagnostic = AttributeInfo.TryCreate(type, out var attributeInfo);
 
-         if (errorMessage is not null)
-            return new SourceGenError(errorMessage, tds);
+         if (diagnostic is not null)
+            return new SourceGenDiagnostic(tds, diagnostic.Value.Descriptor, diagnostic.Value.Args);
 
          var settings = new AllValueObjectSettings(context.Attributes[0], false);
-
          var state = new ComplexValueObjectSourceGeneratorState(factory, type, attributeInfo.ValidationError, new ValueObjectSettings(settings, attributeInfo), cancellationToken);
 
          return new ComplexValidSourceGenState(state, settings, attributeInfo);
@@ -484,9 +477,7 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a value object", tds, ex);
-
-         return new SourceGenException(ex, tds);
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a value object", ex, tds);
       }
    }
 
@@ -507,7 +498,10 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       AllValueObjectSettings Settings,
       AttributeInfo AttributeInfo) : ISourceGenState<ComplexValueObjectSourceGeneratorState>;
 
-   private readonly record struct SourceGenContext<TState>(TState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private readonly record struct SourceGenContext<TState>(
+      TState? ValidState,
+      SourceGenException? Exception,
+      SourceGenDiagnostic? Diagnostic)
       : ISourceGenContext
       where TState : struct
    {
@@ -521,16 +515,16 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
          return new SourceGenContext<TState>(null, exception, null);
       }
 
-      public static implicit operator SourceGenContext<TState>(SourceGenError error)
+      public static implicit operator SourceGenContext<TState>(SourceGenDiagnostic diagnostic)
       {
-         return new SourceGenContext<TState>(null, null, error);
+         return new SourceGenContext<TState>(null, null, diagnostic);
       }
    }
 
    private interface ISourceGenContext
    {
       SourceGenException? Exception { get; }
-      SourceGenError? Error { get; }
+      SourceGenDiagnostic? Diagnostic { get; }
    }
 
    private interface ISourceGenState<out TState>
@@ -542,11 +536,6 @@ public sealed class ValueObjectSourceGenerator : ThinktectureSourceGeneratorBase
       IReadOnlyList<IValueObjectSerializerCodeGeneratorFactory>? Factories,
       Exception? Exception = null)
    {
-      public SerializerCodeGeneratorFactoriesContext(IReadOnlyList<IValueObjectSerializerCodeGeneratorFactory> factories)
-         : this(factories, null)
-      {
-      }
-
       public SerializerCodeGeneratorFactoriesContext(Exception exception)
          : this(null, exception)
       {

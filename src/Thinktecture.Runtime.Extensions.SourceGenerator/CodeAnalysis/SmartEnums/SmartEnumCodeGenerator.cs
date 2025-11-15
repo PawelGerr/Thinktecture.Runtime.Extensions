@@ -61,7 +61,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.HasDerivedTypes)
          _sb.Append("sealed ");
 
-      _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(@" :
+      _sb.Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@" :
       global::Thinktecture.Internal.IMetadataOwner,");
 
       if (_state.KeyMember is not null)
@@ -79,7 +79,8 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">
+      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">").AppendGenericConstraints(_state, @"
+      ").Append(@"
    {");
 
       GenerateCustomDelegateTypes();

@@ -17,6 +17,11 @@ public static class TypeSymbolExtensions
       return type.ToDisplayString(_fullyQualifiedDisplayFormat);
    }
 
+   public static string ToMinimallyQualifiedDisplayString(this ITypeSymbol type)
+   {
+      return type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+   }
+
    public static bool IsNullOrDotnetBaseType([NotNullWhen(false)] this ITypeSymbol? type)
    {
       return type is null

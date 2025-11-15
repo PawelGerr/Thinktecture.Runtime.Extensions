@@ -33,7 +33,7 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
 
       InitializeUnionTypeGeneration(context, validStates, options);
 
-      InitializeErrorReporting(context, unionTypeOrError);
+      InitializeDiagnosticReporting(context, unionTypeOrError);
       InitializeExceptionReporting(context, unionTypeOrError);
    }
 
@@ -58,21 +58,25 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
       {
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
-         if (type.TypeKind == TypeKind.Error
-             || context.Attributes.IsDefaultOrEmpty
-             || context.Attributes.Length != 1)
-         {
+         if (type.TypeKind == TypeKind.Error)
             return null;
-         }
+
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
+         if (context.Attributes.Length > 1)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute, [type.ToMinimallyQualifiedDisplayString()]);
 
          var attributeType = context.Attributes[0].AttributeClass;
 
-         if (attributeType is null
-             || attributeType.TypeKind == TypeKind.Error
-             || attributeType.Arity != 0)
-         {
-            return null;
-         }
+         if (attributeType is null)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not resolve discriminated union attribute type"]);
+
+         if (attributeType.TypeKind == TypeKind.Error)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "UnionAttribute type has TypeKind=Error"]);
+
+         if (attributeType.Arity != 0)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "UnionAttribute must not have generic arguments"]);
 
          var derivedTypeInfos = type.FindDerivedInnerTypes();
 
@@ -82,7 +86,7 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a discriminated union"]);
 
          var derivedTypes = ImmutableArray.CreateBuilder<RegularUnionTypeMemberState>(derivedTypeInfos.Count);
          var singleArgCtorsPerType = GetSingleArgumentConstructors(factory, derivedTypeInfos);
@@ -92,9 +96,7 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
             var derivedTypeInfo = derivedTypeInfos[i];
 
             if (derivedTypeInfo.Type.Arity != 0)
-            {
-               return null; // Derived type of a union must not have generic parameters
-            }
+               return null; // Analyzer emits DiagnosticsDescriptors.UnionDerivedTypesMustNotBeGeneric
 
             derivedTypes.Add(new RegularUnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef, singleArgCtorsPerType[i]));
          }
@@ -102,11 +104,9 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
          var switchMapOverloads = GetSwitchMapOverloads(type);
          var settings = new RegularUnionSettings(context.Attributes[0], switchMapOverloads);
 
-         var unionState = new RegularUnionSourceGenState(type,
-                                                         derivedTypes.DrainToImmutable(),
-                                                         settings);
-
-         return new SourceGenContext(unionState);
+         return new RegularUnionSourceGenState(type,
+                                               derivedTypes.DrainToImmutable(),
+                                               settings);
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -114,9 +114,7 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a discriminated union", tds, ex);
-
-         return new SourceGenContext(new SourceGenException(ex, tds));
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a discriminated union", ex, tds);
       }
    }
 
@@ -304,16 +302,6 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
       context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, RegularUnionCodeGeneratorFactory.Instance));
    }
 
-   private void InitializeErrorReporting(
-      IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
-   {
-      var exceptions = unionTypeOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                               ? [state.Error.Value]
-                                                                               : ImmutableArray<SourceGenError>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportError);
-   }
-
    private void InitializeExceptionReporting(
       IncrementalGeneratorInitializationContext context,
       IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
@@ -324,21 +312,34 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private readonly record struct SourceGenContext(RegularUnionSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private void InitializeDiagnosticReporting(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
    {
-      public SourceGenContext(RegularUnionSourceGenState validState)
-         : this(validState, null, null)
+      var exceptions = unionTypeOrException.SelectMany(static (state, _) => state.Diagnostic is not null
+                                                                               ? [state.Diagnostic.Value]
+                                                                               : ImmutableArray<SourceGenDiagnostic>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportDiagnostic);
+   }
+
+   private readonly record struct SourceGenContext(
+      RegularUnionSourceGenState? ValidState,
+      SourceGenException? Exception,
+      SourceGenDiagnostic? Diagnostic)
+   {
+      public static implicit operator SourceGenContext(RegularUnionSourceGenState state)
       {
+         return new SourceGenContext(state, null, null);
       }
 
-      public SourceGenContext(SourceGenException exception)
-         : this(null, exception, null)
+      public static implicit operator SourceGenContext(SourceGenException exception)
       {
+         return new SourceGenContext(null, exception, null);
       }
 
-      public SourceGenContext(SourceGenError errorMessage)
-         : this(null, null, errorMessage)
+      public static implicit operator SourceGenContext(SourceGenDiagnostic diagnostic)
       {
+         return new SourceGenContext(null, null, diagnostic);
       }
    }
 }

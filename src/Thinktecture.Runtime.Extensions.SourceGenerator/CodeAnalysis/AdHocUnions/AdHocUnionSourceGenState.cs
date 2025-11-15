@@ -39,7 +39,7 @@ public sealed class AdHocUnionSourceGenState
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       ContainingTypes = type.GetContainingTypes();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
       IsReferenceType = type.IsReferenceType;
       IsValueType = type.IsValueType;
       IsRefStruct = type is { IsRefLikeType: true, IsReferenceType: false };

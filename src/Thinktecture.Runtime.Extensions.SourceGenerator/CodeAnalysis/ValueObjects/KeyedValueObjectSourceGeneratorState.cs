@@ -41,7 +41,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
       ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
       IsValueType = type.IsValueType;

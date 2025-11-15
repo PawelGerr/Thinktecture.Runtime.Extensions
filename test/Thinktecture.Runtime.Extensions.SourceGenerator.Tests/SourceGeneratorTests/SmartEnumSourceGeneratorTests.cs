@@ -79,7 +79,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(
          source,
          [typeof(ISmartEnum<>).Assembly],
-         ["Error during code generation for 'TestEnum': 'Multiple ValueObject/SmartEnum/Union-attributes found'"]);
+         ["The type 'TestEnum' must not have more than one ValueObject/SmartEnum/Union-attribute"]);
       outputs.Should().BeEmpty();
    }
 
@@ -1859,7 +1859,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(
          source,
          [typeof(ISmartEnum<>).Assembly],
-         ["Error during code generation for 'TestEnum': 'Type must not be inside a generic class'"]);
+         ["Type 'TestEnum' must not be inside a generic type"]);
       outputs.Should().BeEmpty();
    }
 

@@ -135,7 +135,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
          source,
          [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Error during code generation for 'TestValueObject': 'Keyed value objects must not be generic'"]);
+         ["Type 'TestValueObject<T>' must not be generic"]);
       output.Should().BeNull();
    }
 
@@ -245,57 +245,57 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    [Fact]
    public async Task Should_not_generate_equals_method_if_SkipEqualityComparison_is_true()
    {
-       var source = """
+      var source = """
 
-          using System;
-          using Thinktecture;
+         using System;
+         using Thinktecture;
 
-          #nullable enable
+         #nullable enable
 
-          namespace Thinktecture.Tests
-          {
-            [ComplexValueObject(SkipEqualityComparison = true)]
-            public partial struct TestValueObject
-            {
-            }
-          }
+         namespace Thinktecture.Tests
+         {
+           [ComplexValueObject(SkipEqualityComparison = true)]
+           public partial struct TestValueObject
+           {
+           }
+         }
 
-          """;
-       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
-       await VerifyAsync(output);
+      await VerifyAsync(output);
    }
 
    [Fact]
    public async Task Should_not_generate_equals_method_on_keyed_value_object_if_SkipEqualityComparison_is_true()
    {
-       var source = """
+      var source = """
 
-          using System;
-          using Thinktecture;
+         using System;
+         using Thinktecture;
 
-          #nullable enable
+         #nullable enable
 
-          namespace Thinktecture.Tests
-          {
-            [ValueObject<int>(SkipEqualityComparison = true)]
-            public partial struct TestValueObject
-            {
-            }
-          }
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(SkipEqualityComparison = true)]
+           public partial struct TestValueObject
+           {
+           }
+         }
 
-          """;
-       var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
-       await VerifyAsync(outputs,
-                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
-                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
-                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
-                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
-                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
-                         "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
-                         "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
-                         "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
 
    [Fact]
@@ -1341,7 +1341,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          [typeof(ComplexValueObjectAttribute).Assembly],
          [
             "Type 'string' cannot be used in this context because it cannot be represented in metadata.",
-            "Error during code generation for 'TestValueObject': 'Key member type must be non-nullable'"
+            "A key member must not be nullable"
          ]);
 
       output.Should().BeNull();
@@ -1370,7 +1370,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
          source,
          [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Error during code generation for 'TestValueObject': 'Key member type must be non-nullable'"]);
+         ["A key member must not be nullable"]);
 
       output.Should().BeNull();
    }
@@ -1401,7 +1401,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
          source,
          [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Error during code generation for 'TestValueObject': 'Type must not be inside a generic class'"]);
+         ["Type 'TestValueObject' must not be inside a generic type"]);
 
       output.Should().BeNull();
    }
@@ -1432,7 +1432,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
          source,
          [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Error during code generation for 'TestValueObject': 'Type must not be inside a generic class'"]);
+         ["Type 'TestValueObject' must not be inside a generic type"]);
 
       output.Should().BeNull();
    }

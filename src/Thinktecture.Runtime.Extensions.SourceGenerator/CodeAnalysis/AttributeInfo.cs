@@ -31,14 +31,14 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
       KeyMemberEqualityComparerAccessor = keyMemberEqualityComparerAccessor;
    }
 
-   public static string? TryCreate(
+   public static (DiagnosticDescriptor Descriptor, object[] Args)? TryCreate(
       INamedTypeSymbol type,
       out AttributeInfo info)
    {
       return TryCreate(type, out info, out _);
    }
 
-   public static string? TryCreate(
+   public static (DiagnosticDescriptor Descriptor, object[] Args)? TryCreate(
       INamedTypeSymbol type,
       out AttributeInfo info,
       out AttributeData? thinktectureComponentAttribute)
@@ -113,7 +113,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          if (numberOfSourceGenAttributes > 1)
          {
             info = default;
-            return "Multiple ValueObject/SmartEnum/Union-attributes found";
+            return (DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneAttribute, [type.ToMinimallyQualifiedDisplayString()]);
          }
       }
 

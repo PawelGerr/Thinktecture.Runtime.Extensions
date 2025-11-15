@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture.Runtime.Tests.CodeAnalysis.AttributeInfoTests;
@@ -546,7 +547,9 @@ public class TryCreate : CompilationTestBase
       var error = AttributeInfo.TryCreate(testClassSymbol, out _);
 
       // Assert
-      error.Should().Be("Multiple ValueObject/SmartEnum/Union-attributes found");
+      error.Should().NotBeNull();
+      error!.Value.Descriptor.Title.ToString().Should().Be("Type must not have more than one ValueObject/SmartEnum/Union-attribute");
+      error.Value.Args.Should().BeEquivalentTo(["TestClass"]);
    }
 
    [Fact]

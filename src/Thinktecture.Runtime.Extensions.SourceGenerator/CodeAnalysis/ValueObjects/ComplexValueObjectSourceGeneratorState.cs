@@ -9,9 +9,11 @@ public sealed class ComplexValueObjectSourceGeneratorState
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
-   public bool DisallowsDefaultValue => IsValueType // reference types are not problematic
+
+   public bool DisallowsDefaultValue => IsValueType                                                // reference types are not problematic
                                         && !AssignableInstanceFieldsAndProperties.IsDefaultOrEmpty // a struct without fields and properties is not problematic
                                         && (!Settings.AllowDefaultStructs || AssignableInstanceFieldsAndProperties.Any(m => m.DisallowsDefaultValue));
+
    public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
    public int NumberOfGenerics => GenericParameters.Length;
@@ -47,7 +49,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
       ContainingTypes = type.GetContainingTypes();
       GenericParameters = type.GetGenericTypeParameters();
       IsReferenceType = type.IsReferenceType;

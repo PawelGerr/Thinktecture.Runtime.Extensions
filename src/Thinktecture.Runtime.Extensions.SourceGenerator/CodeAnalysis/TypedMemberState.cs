@@ -26,7 +26,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
    public TypedMemberState(ITypeSymbol type)
    {
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
       IsReferenceType = type.IsReferenceType;
       IsValueType = type.IsValueType;
       NullableAnnotation = type.NullableAnnotation;

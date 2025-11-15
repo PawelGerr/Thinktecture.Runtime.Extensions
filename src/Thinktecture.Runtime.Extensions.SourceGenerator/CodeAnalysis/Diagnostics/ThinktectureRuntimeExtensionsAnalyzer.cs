@@ -55,6 +55,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
       DiagnosticsDescriptors.ObjectFactoryMustHaveCorrespondingConstructor,
       DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor,
+      DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneAttribute,
+      DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute,
+      DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
+      DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
+      DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes,
    ];
 
    /// <inheritdoc />
@@ -868,9 +873,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       ValidateEnumDerivedTypes(context, enumType);
-
       EnumKeyMemberNameMustNotBeItem(context, attribute, tdsLocation);
-
       ValidateKeyedSmartEnum(context, enumType, attribute, tdsLocation, factory);
    }
 
@@ -1175,6 +1178,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static string BuildTypeName(ITypeSymbol type)
    {
-      return type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      return type.ToMinimallyQualifiedDisplayString();
    }
 }

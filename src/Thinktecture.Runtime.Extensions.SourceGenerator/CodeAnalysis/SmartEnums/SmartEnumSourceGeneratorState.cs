@@ -4,7 +4,8 @@ public sealed class SmartEnumSourceGeneratorState
    : ITypeInformation,
      IKeyedSerializerGeneratorTypeInformation,
      IParsableTypeInformation,
-     IEquatable<SmartEnumSourceGeneratorState>
+     IEquatable<SmartEnumSourceGeneratorState>,
+     IHasGenerics
 {
    public string? Namespace { get; }
    public string Name { get; }
@@ -17,6 +18,8 @@ public sealed class SmartEnumSourceGeneratorState
    public SmartEnumSettings Settings { get; }
    public BaseTypeState? BaseType { get; }
    public bool HasDerivedTypes { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
+   public int NumberOfGenerics => GenericParameters.Length;
 
    public NullableAnnotation NullableAnnotation => NullableAnnotation.NotAnnotated; // Key members cannot be nullable
    public bool IsNullableStruct => false;                                           // Key members cannot be structs
@@ -26,7 +29,6 @@ public sealed class SmartEnumSourceGeneratorState
    public bool IsEqualWithReferenceEquality => true;
    public bool IsRecord => false;
    public bool IsTypeParameter => false;
-   public int NumberOfGenerics => 0;
 
    public EnumItems Items { get; }
    public ImmutableArray<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
@@ -39,18 +41,20 @@ public sealed class SmartEnumSourceGeneratorState
       ValidationErrorState validationError,
       SmartEnumSettings settings,
       bool hasDerivedTypes,
+      ImmutableArray<GenericTypeParameterState> genericParameters,
       CancellationToken cancellationToken)
    {
       KeyMember = keyMember;
       Settings = settings;
       HasDerivedTypes = hasDerivedTypes;
       ValidationError = validationError;
+      GenericParameters = genericParameters;
 
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       ContainingTypes = type.GetContainingTypes();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
-      TypeMinimallyQualified = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+      TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
 
       BaseType = type.GetBaseType(factory);
       Items = new EnumItems(type.GetEnumItems());
@@ -79,6 +83,7 @@ public sealed class SmartEnumSourceGeneratorState
              && Items.Equals(other.Items)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
              && ContainingTypes.SequenceEqual(other.ContainingTypes)
+             && GenericParameters.SequenceEqual(other.GenericParameters)
              && DelegateMethods.SequenceEqual(other.DelegateMethods);
    }
 
@@ -95,6 +100,7 @@ public sealed class SmartEnumSourceGeneratorState
          hashCode = (hashCode * 397) ^ Items.GetHashCode();
          hashCode = (hashCode * 397) ^ AssignableInstanceFieldsAndProperties.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ DelegateMethods.ComputeHashCode();
 
          return hashCode;

@@ -41,7 +41,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
       InitializeParsableCodeGenerator(context, validStates, options);
       InitializeSerializerGenerators(context, validStates, options);
 
-      InitializeErrorReporting(context, typeOrError);
+      InitializeDiagnosticReporting(context, typeOrError);
       InitializeExceptionReporting(context, typeOrError);
    }
 
@@ -78,10 +78,10 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
 
-         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo, out var thinktectureComponentAttribute);
+         var diagnostic = AttributeInfo.TryCreate(type, out var attributeInfo, out var thinktectureComponentAttribute);
 
-         if (errorMessage is not null)
-            return new SourceGenContext(new SourceGenError(errorMessage, tds));
+         if (diagnostic is not null)
+            return new SourceGenDiagnostic(tds, diagnostic.Value.Descriptor, diagnostic.Value.Args);
 
          if (attributeInfo.ObjectFactories.IsDefaultOrEmpty)
             return null;
@@ -89,11 +89,9 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of an ObjectFactory", tds));
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a object factory"]);
 
-         var state = new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute);
-
-         return new SourceGenContext(state);
+         return new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute);
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -101,9 +99,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of an ObjectFactory", tds, ex);
-
-         return new SourceGenContext(new SourceGenException(ex, tds));
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of an ObjectFactory", ex, tds);
       }
    }
 
@@ -209,16 +205,6 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
       }
    }
 
-   private void InitializeErrorReporting(
-      IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<SourceGenContext> typeOrException)
-   {
-      var exceptions = typeOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                          ? [state.Error.Value]
-                                                                          : ImmutableArray<SourceGenError>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportError);
-   }
-
    private void InitializeExceptionReporting(
       IncrementalGeneratorInitializationContext context,
       IncrementalValuesProvider<SourceGenContext> typeOrException)
@@ -229,19 +215,34 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
+   private void InitializeDiagnosticReporting(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SourceGenContext> typeOrException)
+   {
+      var exceptions = typeOrException.SelectMany(static (state, _) => state.Diagnostic is not null
+                                                                          ? [state.Diagnostic.Value]
+                                                                          : ImmutableArray<SourceGenDiagnostic>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportDiagnostic);
+   }
+
    private readonly record struct SourceGenContext(
       ObjectFactorySourceGeneratorState? ValidState,
-      SourceGenException? Exception = null,
-      SourceGenError? Error = null)
+      SourceGenException? Exception,
+      SourceGenDiagnostic? Diagnostic)
    {
-      public SourceGenContext(SourceGenException exception)
-         : this(null, exception)
+      public static implicit operator SourceGenContext(ObjectFactorySourceGeneratorState state)
       {
+         return new SourceGenContext(state, null, null);
       }
 
-      public SourceGenContext(SourceGenError errorMessage)
-         : this(null, null, errorMessage)
+      public static implicit operator SourceGenContext(SourceGenException exception)
       {
+         return new SourceGenContext(null, exception, null);
+      }
+
+      public static implicit operator SourceGenContext(SourceGenDiagnostic diagnostic)
+      {
+         return new SourceGenContext(null, null, diagnostic);
       }
    }
 

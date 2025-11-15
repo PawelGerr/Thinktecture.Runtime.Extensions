@@ -4,13 +4,9 @@ using Thinktecture.Logging;
 namespace Thinktecture.CodeAnalysis.SmartEnums;
 
 [Generator]
-public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, IIncrementalGenerator
+public sealed class SmartEnumSourceGenerator()
+   : ThinktectureSourceGeneratorBase(30_000), IIncrementalGenerator
 {
-   public SmartEnumSourceGenerator()
-      : base(30_000)
-   {
-   }
-
    public void Initialize(IncrementalGeneratorInitializationContext context)
    {
       var options = GetGeneratorOptions(context);
@@ -59,8 +55,8 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       InitializeEnumTypeGeneration(context, validStates, options);
       InitializeEqualityComparisonOperatorsCodeGenerator(context, validStates, options);
 
-      InitializeErrorReporting(context, enumTypeOrError);
       InitializeExceptionReporting(context, enumTypeOrError);
+      InitializeDiagnosticReporting(context, enumTypeOrError);
 
       return validStates;
    }
@@ -213,20 +209,21 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       });
    }
 
-   private void InitializeErrorReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
-   {
-      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                              ? [state.Error.Value]
-                                                                              : ImmutableArray<SourceGenError>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportError);
-   }
-
    private void InitializeExceptionReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
    {
       var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Exception is not null
                                                                               ? [state.Exception.Value]
                                                                               : ImmutableArray<SourceGenException>.Empty);
       context.RegisterSourceOutput(exceptions, ReportException);
+   }
+
+   private void InitializeDiagnosticReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)
+   {
+      var exceptions = enumTypeOrException.SelectMany(static (state, _) => state.Diagnostic is not null
+                                                                              ? [state.Diagnostic.Value]
+                                                                              : ImmutableArray<SourceGenDiagnostic>.Empty);
+
+      context.RegisterSourceOutput(exceptions, ReportDiagnostic);
    }
 
    private SerializerCodeGeneratorFactoriesContext GetSerializerCodeGeneratorFactories(MetadataReference reference)
@@ -267,7 +264,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       return syntaxNode is ClassDeclarationSyntax classDeclaration && !classDeclaration.IsGeneric();
    }
 
-   private SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, bool isKeyed, CancellationToken cancellationToken)
+   private static SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, bool isKeyed, CancellationToken cancellationToken)
    {
       var tds = (TypeDeclarationSyntax)context.TargetNode;
 
@@ -278,14 +275,17 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
          if (type.TypeKind == TypeKind.Error)
             return null;
 
+         if (type.Arity > 0)
+            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
+
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
 
          if (context.Attributes.Length > 1)
-            return new SourceGenContext(new SourceGenError($"Type has more than 1 '{Constants.Attributes.SmartEnum.NAME}'", tds));
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute, [type.ToMinimallyQualifiedDisplayString()]);
 
          if (type.IsNestedInGenericClass())
-            return new SourceGenContext(new SourceGenError("Type must not be inside a generic class", tds));
+            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
 
          ITypeSymbol? keyMemberType = null;
 
@@ -294,32 +294,32 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
             var attributeType = context.Attributes[0].AttributeClass;
 
             if (attributeType is null)
-               return new SourceGenContext(new SourceGenError("Could not resolve SmartEnum attribute type", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not resolve Smart enum attribute type"]);
 
             if (attributeType.TypeKind == TypeKind.Error)
-               return new SourceGenContext(new SourceGenError("SmartEnumAttribute type has TypeKind=Error", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "SmartEnumAttribute type has TypeKind=Error"]);
 
             if (attributeType.Arity != 1)
-               return new SourceGenContext(new SourceGenError("SmartEnumAttribute must have exactly one type argument", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "SmartEnumAttribute must have exactly one type argument"]);
 
             keyMemberType = attributeType.TypeArguments[0];
 
             if (keyMemberType.TypeKind == TypeKind.Error)
-               return new SourceGenContext(new SourceGenError("SmartEnum key member type could not be resolved", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Smart enum key member type could not be resolved"]);
 
-            if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated)
-               return new SourceGenContext(new SourceGenError("SmartEnum key member type must be non-nullable", tds));
+            if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated || keyMemberType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
+               return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable
          }
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a smart enum", tds));
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a smart enum"]);
 
-         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
+         var diagnostic = AttributeInfo.TryCreate(type, out var attributeInfo);
 
-         if (errorMessage is not null)
-            return new SourceGenContext(new SourceGenError(errorMessage, tds));
+         if (diagnostic is not null)
+            return new SourceGenDiagnostic(tds, diagnostic.Value.Descriptor, diagnostic.Value.Args);
 
          var settings = new AllEnumSettings(context.Attributes[0]);
          KeyMemberState? keyMember = null;
@@ -336,9 +336,10 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
                                                            attributeInfo.ValidationError,
                                                            new SmartEnumSettings(settings, attributeInfo),
                                                            type.FindDerivedInnerTypes().Count > 0,
+                                                           type.GetGenericTypeParameters(),
                                                            cancellationToken);
 
-         return new SourceGenContext(new ValidSourceGenState(enumState, settings, keyMember, attributeInfo));
+         return new ValidSourceGenState(enumState, settings, keyMember, attributeInfo);
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -346,9 +347,7 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a smart enum", tds, ex);
-
-         return new SourceGenContext(new SourceGenException(ex, tds));
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a smart enum", ex, tds);
       }
    }
 
@@ -358,21 +357,24 @@ public sealed class SmartEnumSourceGenerator : ThinktectureSourceGeneratorBase, 
       KeyMemberState? KeyMember,
       AttributeInfo AttributeInfo);
 
-   private readonly record struct SourceGenContext(ValidSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private readonly record struct SourceGenContext(
+      ValidSourceGenState? ValidState,
+      SourceGenException? Exception,
+      SourceGenDiagnostic? Diagnostic)
    {
-      public SourceGenContext(ValidSourceGenState validState)
-         : this(validState, null, null)
+      public static implicit operator SourceGenContext(ValidSourceGenState state)
       {
+         return new SourceGenContext(state, null, null);
       }
 
-      public SourceGenContext(SourceGenException exception)
-         : this(null, exception, null)
+      public static implicit operator SourceGenContext(SourceGenException exception)
       {
+         return new SourceGenContext(null, exception, null);
       }
 
-      public SourceGenContext(SourceGenError errorMessage)
-         : this(null, null, errorMessage)
+      public static implicit operator SourceGenContext(SourceGenDiagnostic diagnostic)
       {
+         return new SourceGenContext(null, null, diagnostic);
       }
    }
 

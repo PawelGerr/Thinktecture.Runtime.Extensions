@@ -128,21 +128,19 @@ public abstract class ThinktectureSourceGeneratorBase
              || StringComparer.OrdinalIgnoreCase.Equals("0", booleanValue);
    }
 
-   protected void ReportError(
+   protected void ReportDiagnostic(
       SourceProductionContext context,
-      SourceGenError error)
+      SourceGenDiagnostic diagnostic)
    {
-      var node = error.Node;
-
       try
       {
-         Logger.LogError(error.Message, node);
-
-         context.ReportError(node.GetLocation(), node.Identifier.Text, error.Message);
+         context.ReportDiagnostic(Diagnostic.Create(diagnostic.Descriptor,
+                                                    diagnostic.IdentifierLocation,
+                                                    diagnostic.Args));
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during reporting an error to Roslyn", node, ex);
+         Logger.LogError("Error during reporting an error to Roslyn", null, ex);
       }
    }
 
@@ -154,6 +152,8 @@ public abstract class ThinktectureSourceGeneratorBase
 
       try
       {
+         Logger.LogError(exception.Message, node, exception.Exception);
+
          context.ReportError(node.GetLocation(), node.Identifier.Text, exception.Exception.ToString());
       }
       catch (Exception ex)

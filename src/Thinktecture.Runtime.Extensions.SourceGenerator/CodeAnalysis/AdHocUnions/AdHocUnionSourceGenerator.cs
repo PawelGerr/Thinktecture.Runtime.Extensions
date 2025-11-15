@@ -61,7 +61,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
       InitializeUnionTypeGeneration(context, validStates, options);
 
-      InitializeErrorReporting(context, unionTypeOrError);
+      InitializeDiagnosticReporting(context, unionTypeOrError);
       InitializeExceptionReporting(context, unionTypeOrError);
    }
 
@@ -116,7 +116,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          cancellationToken);
    }
 
-   private SourceGenContext? GetSourceGenContextOrNull(
+   private static SourceGenContext? GetSourceGenContextOrNull(
       GeneratorAttributeSyntaxContext context,
       Func<INamedTypeSymbol, ImmutableArray<TypedConstant>, ImmutableArray<ITypeSymbol>> getMemberTypes,
       CancellationToken cancellationToken)
@@ -128,39 +128,39 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          var type = (INamedTypeSymbol)context.TargetSymbol;
 
          if (type.TypeKind == TypeKind.Error)
-         {
             return null;
-         }
 
-         if (context.Attributes.IsDefaultOrEmpty || context.Attributes.Length != 1)
-         {
-            return new SourceGenContext(new SourceGenError("Ad-hoc union requires exactly one Union attribute", tds));
-         }
+         if (type.Arity > 0)
+            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
+
+         if (context.Attributes.IsDefaultOrEmpty)
+            return null;
+
+         if (context.Attributes.Length > 1)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute, [type.ToMinimallyQualifiedDisplayString()]);
 
          var attributeData = context.Attributes[0];
 
-         if (attributeData.AttributeClass is null
-             || attributeData.AttributeClass.TypeKind == TypeKind.Error)
-         {
-            return null;
-         }
+         if (attributeData.AttributeClass is null)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not resolve discriminated union attribute type"]);
+
+         if (attributeData.AttributeClass.TypeKind == TypeKind.Error)
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Discriminated union attribute has TypeKind=Error"]);
 
          var memberTypeSymbols = getMemberTypes(attributeData.AttributeClass, attributeData.ConstructorArguments);
 
          if (memberTypeSymbols.Length < 2)
-         {
-            return new SourceGenContext(new SourceGenError("Ad-hoc union must define at least two member types", tds));
-         }
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes, [type.ToMinimallyQualifiedDisplayString()]);
 
-         var errorMessage = AttributeInfo.TryCreate(type, out var attributeInfo);
+         var diagnostic = AttributeInfo.TryCreate(type, out var attributeInfo);
 
-         if (errorMessage is not null)
-            return new SourceGenContext(new SourceGenError(errorMessage, tds));
+         if (diagnostic is not null)
+            return new SourceGenDiagnostic(tds, diagnostic.Value.Descriptor, diagnostic.Value.Args);
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
-            return new SourceGenContext(new SourceGenError("Could not fetch type information for code generation of a discriminated union", tds));
+            return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a discriminated union"]);
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
                                                memberTypeSymbols.Length);
@@ -171,7 +171,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             var memberType = memberTypeSymbols[i];
 
             if (memberType.TypeKind == TypeKind.Error)
-               return new SourceGenContext(new SourceGenError("Type of the member must be a named type or array type", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), $"The member type '{memberType.Name}' could not be resolved"]);
 
             var memberTypeSettings = settings.MemberTypeSettings[i];
             memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
@@ -199,15 +199,13 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             }
 
             if (!memberType.TryBuildMemberName(out var defaultName))
-            {
-               return new SourceGenContext(new SourceGenError("Type of the member must be a named type or array type", tds));
-            }
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringGeneration, [type.ToMinimallyQualifiedDisplayString(), $"Could not build name for type '{memberType.Name}'. The type must be a named type, an array or a parameter but found '{memberType.GetType().FullName}'."]);
 
             var name = memberTypeSettings.Name ??
                        (typeDuplicateCounter == 0 ? defaultName : defaultName + typeDuplicateCounter);
 
             if (String.IsNullOrWhiteSpace(name))
-               return new SourceGenContext(new SourceGenError("Ad-hoc union member name cannot be null or whitespace", tds));
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringGeneration, [type.ToMinimallyQualifiedDisplayString(), $"The name for type '{memberType.Name}' must not be null nor empty."]);
 
             memberTypeStates.Add(new AdHocUnionMemberTypeState(name,
                                                                defaultName,
@@ -216,12 +214,10 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                                                                memberTypeSettings));
          }
 
-         var unionState = new AdHocUnionSourceGenState(type,
-                                                       memberTypeStates.DrainToImmutable(),
-                                                       settings,
-                                                       attributeInfo);
-
-         return new SourceGenContext(unionState);
+         return new AdHocUnionSourceGenState(type,
+                                             memberTypeStates.DrainToImmutable(),
+                                             settings,
+                                             attributeInfo);
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -229,9 +225,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       }
       catch (Exception ex)
       {
-         Logger.LogError("Error during extraction of relevant information out of semantic model for generation of a discriminated union", tds, ex);
-
-         return new SourceGenContext(new SourceGenException(ex, tds));
+         return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a discriminated union", ex, tds);
       }
    }
 
@@ -251,16 +245,6 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       context.RegisterSourceOutput(unionTypes.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left, tuple.Right, AdHocUnionCodeGeneratorFactory.Instance));
    }
 
-   private void InitializeErrorReporting(
-      IncrementalGeneratorInitializationContext context,
-      IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
-   {
-      var exceptions = unionTypeOrException.SelectMany(static (state, _) => state.Error is not null
-                                                                               ? [state.Error.Value]
-                                                                               : ImmutableArray<SourceGenError>.Empty);
-      context.RegisterSourceOutput(exceptions, ReportError);
-   }
-
    private void InitializeExceptionReporting(
       IncrementalGeneratorInitializationContext context,
       IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
@@ -271,21 +255,34 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       context.RegisterSourceOutput(exceptions, ReportException);
    }
 
-   private readonly record struct SourceGenContext(AdHocUnionSourceGenState? ValidState, SourceGenException? Exception, SourceGenError? Error)
+   private void InitializeDiagnosticReporting(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SourceGenContext> unionTypeOrException)
    {
-      public SourceGenContext(AdHocUnionSourceGenState validState)
-         : this(validState, null, null)
+      var exceptions = unionTypeOrException.SelectMany(static (state, _) => state.Diagnostic is not null
+                                                                               ? [state.Diagnostic.Value]
+                                                                               : ImmutableArray<SourceGenDiagnostic>.Empty);
+      context.RegisterSourceOutput(exceptions, ReportDiagnostic);
+   }
+
+   private readonly record struct SourceGenContext(
+      AdHocUnionSourceGenState? ValidState,
+      SourceGenException? Exception,
+      SourceGenDiagnostic? Diagnostic)
+   {
+      public static implicit operator SourceGenContext(AdHocUnionSourceGenState state)
       {
+         return new SourceGenContext(state, null, null);
       }
 
-      public SourceGenContext(SourceGenException exception)
-         : this(null, exception, null)
+      public static implicit operator SourceGenContext(SourceGenException exception)
       {
+         return new SourceGenContext(null, exception, null);
       }
 
-      public SourceGenContext(SourceGenError errorMessage)
-         : this(null, null, errorMessage)
+      public static implicit operator SourceGenContext(SourceGenDiagnostic diagnostic)
       {
+         return new SourceGenContext(null, null, diagnostic);
       }
    }
 }
