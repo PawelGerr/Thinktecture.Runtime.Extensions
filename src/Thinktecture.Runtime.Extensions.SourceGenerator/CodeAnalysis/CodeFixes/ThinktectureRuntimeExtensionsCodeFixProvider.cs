@@ -20,6 +20,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _SEAL_CLASS = "Seal class";
    private const string _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER = "Define Value Object equality comparer";
    private const string _DEFINE_VALUE_OBJECT_COMPARER = "Define Value Object comparer";
+   private const string _ALIGN_COMPARISON_EQUALITY_OPERATORS = "Align comparison/equality operators";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -39,6 +40,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial.Id,
       DiagnosticsDescriptors.UnionRecordMustBeSealed.Id,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id,
+      DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch.Id,
    ];
 
    /// <inheritdoc />
@@ -60,7 +62,11 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          CodeFixesContext? ctx = null;
          CodeFixesContext GetCodeFixesContext() => ctx ??= new CodeFixesContext(diagnostic, root);
 
-         if (diagnostic.Id == DiagnosticsDescriptors.TypeMustBePartial.Id)
+         if (diagnostic.Id == DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_ALIGN_COMPARISON_EQUALITY_OPERATORS, t => AlignComparisonEqualityOperatorsAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _ALIGN_COMPARISON_EQUALITY_OPERATORS), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.TypeMustBePartial.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_PARTIAL, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, SyntaxKind.PartialKeyword), _MAKE_PARTIAL), diagnostic);
          }
@@ -402,22 +408,148 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return throwStatement;
    }
 
+   private static async Task<Document> AlignComparisonEqualityOperatorsAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
+   {
+      if (declaration is null)
+         return document;
+
+      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (model is null)
+         return document;
+
+      var type = model.GetDeclaredSymbol(declaration, cancellationToken);
+
+      // Find SmartEnum or ValueObject attribute
+      AttributeData? targetAttributeData = null;
+
+      if (type.IsSmartEnum(out var smartEnumAttribute))
+      {
+         targetAttributeData = smartEnumAttribute;
+      }
+      else if (type.IsKeyedValueObjectType(out var valueObjectAttribute))
+      {
+         targetAttributeData = valueObjectAttribute;
+      }
+
+      if (targetAttributeData?.ApplicationSyntaxReference is null)
+         return document;
+
+      var attributeSyntax = await targetAttributeData.ApplicationSyntaxReference.GetSyntaxAsync(cancellationToken) as AttributeSyntax;
+
+      if (attributeSyntax is null)
+         return document;
+
+      var argumentList = attributeSyntax.ArgumentList;
+      AttributeArgumentSyntax? comparisonArg = null;
+      AttributeArgumentSyntax? equalityArg = null;
+
+      if (argumentList is not null)
+      {
+         for (var i = 0; i < argumentList.Arguments.Count; i++)
+         {
+            var arg = argumentList.Arguments[i];
+            var name = arg.NameEquals?.Name.Identifier.Text;
+
+            switch (name)
+            {
+               case Constants.Attributes.Properties.COMPARISON_OPERATORS:
+                  comparisonArg = arg;
+                  break;
+               case Constants.Attributes.Properties.EQUALITY_COMPARISON_OPERATORS:
+                  equalityArg = arg;
+                  break;
+            }
+         }
+      }
+
+      var comparisonValue = GetOperatorsGenerationValue(model, comparisonArg?.Expression, cancellationToken);
+      var equalityValue = GetOperatorsGenerationValue(model, equalityArg?.Expression, cancellationToken);
+
+      if (comparisonValue == equalityValue)
+         return document;
+
+      var newOperatorsGeneration = (comparisonValue, equalityValue) switch
+      {
+         (null, not null) => equalityValue,
+         (not null, null) => comparisonValue,
+         (not null, not null) => comparisonValue is OperatorsGeneration.None || equalityValue is OperatorsGeneration.None
+                                    ? OperatorsGeneration.None
+                                    : comparisonValue.Value > equalityValue.Value ? comparisonValue : equalityValue,
+         (_, _) => OperatorsGeneration.None
+      };
+
+      var newArgumentList = argumentList ?? SyntaxFactory.AttributeArgumentList();
+
+      if (comparisonValue != newOperatorsGeneration)
+      {
+         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"OperatorsGeneration.{newOperatorsGeneration.ToString()}"))
+                                   .WithNameEquals(SyntaxFactory.NameEquals(SyntaxFactory.IdentifierName(Constants.Attributes.Properties.COMPARISON_OPERATORS)));
+
+         newArgumentList = comparisonArg is null
+                              ? newArgumentList.WithArguments(newArgumentList.Arguments.Add(newArg))
+                              : newArgumentList.ReplaceNode(comparisonArg, newArg);
+      }
+
+      if (equalityValue != newOperatorsGeneration)
+      {
+         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"OperatorsGeneration.{newOperatorsGeneration.ToString()}"))
+                                   .WithNameEquals(SyntaxFactory.NameEquals(SyntaxFactory.IdentifierName(Constants.Attributes.Properties.EQUALITY_COMPARISON_OPERATORS)));
+
+         newArgumentList = equalityArg is null
+                              ? newArgumentList.WithArguments(newArgumentList.Arguments.Add(newArg))
+                              : newArgumentList.ReplaceNode(equalityArg, newArg);
+      }
+
+      var newAttribute = attributeSyntax.WithArgumentList(newArgumentList);
+      var newDeclaration = declaration.ReplaceNode(attributeSyntax, newAttribute);
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      return document.WithSyntaxRoot(newRoot);
+   }
+
+   // Helper that tries to resolve the enum value of an expression referencing OperatorsGeneration.
+   private static OperatorsGeneration? GetOperatorsGenerationValue(SemanticModel model, ExpressionSyntax? expr, CancellationToken cancellationToken)
+   {
+      if (expr is null)
+         return null;
+
+      // Try constant value first.
+      var constant = model.GetConstantValue(expr, cancellationToken);
+
+      if (constant.HasValue)
+      {
+         switch (constant.Value)
+         {
+            case int i when Enum.IsDefined(typeof(OperatorsGeneration), i):
+               return (OperatorsGeneration)i;
+            case OperatorsGeneration og:
+               return og;
+         }
+      }
+
+      // Try symbol info (enum field access or qualified name)
+      var symbol = model.GetSymbolInfo(expr, cancellationToken).Symbol;
+
+      if (symbol is IFieldSymbol { ContainingType: { TypeKind: TypeKind.Enum, Name: nameof(OperatorsGeneration) } } field)
+      {
+         if (Enum.TryParse(field.Name, out OperatorsGeneration parsed))
+            return parsed;
+      }
+
+      return null;
+   }
+
    private sealed class CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
    {
-      private TypeDeclarationSyntax? _typeDeclaration;
-      public TypeDeclarationSyntax? TypeDeclaration => _typeDeclaration ??= GetDeclaration<TypeDeclarationSyntax>();
-
-      private FieldDeclarationSyntax? _fieldDeclaration;
-      public FieldDeclarationSyntax? FieldDeclaration => _fieldDeclaration ??= GetDeclaration<FieldDeclarationSyntax>();
-
-      private MemberDeclarationSyntax? _memberDeclaration;
-      public MemberDeclarationSyntax? MemberDeclaration => _memberDeclaration ??= GetDeclaration<MemberDeclarationSyntax>();
-
-      private PropertyDeclarationSyntax? _propertyDeclaration;
-      public PropertyDeclarationSyntax? PropertyDeclaration => _propertyDeclaration ??= GetDeclaration<PropertyDeclarationSyntax>();
-
-      private MethodDeclarationSyntax? _methodDeclaration;
-      public MethodDeclarationSyntax? MethodDeclaration => _methodDeclaration ??= GetDeclaration<MethodDeclarationSyntax>();
+      public TypeDeclarationSyntax? TypeDeclaration => field ??= GetDeclaration<TypeDeclarationSyntax>();
+      public FieldDeclarationSyntax? FieldDeclaration => field ??= GetDeclaration<FieldDeclarationSyntax>();
+      public MemberDeclarationSyntax? MemberDeclaration => field ??= GetDeclaration<MemberDeclarationSyntax>();
+      public PropertyDeclarationSyntax? PropertyDeclaration => field ??= GetDeclaration<PropertyDeclarationSyntax>();
+      public MethodDeclarationSyntax? MethodDeclaration => field ??= GetDeclaration<MethodDeclarationSyntax>();
 
       private T? GetDeclaration<T>()
          where T : MemberDeclarationSyntax

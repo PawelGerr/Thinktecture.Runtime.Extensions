@@ -37,8 +37,14 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
 
       // Comparison operators depend on the equality comparison operators
-      if (ComparisonOperators > EqualityComparisonOperators)
+      if (EqualityComparisonOperators == OperatorsGeneration.None)
+      {
+         ComparisonOperators = OperatorsGeneration.None;
+      }
+      else if (ComparisonOperators > EqualityComparisonOperators)
+      {
          EqualityComparisonOperators = ComparisonOperators;
+      }
    }
 
    public override bool Equals(object? obj)

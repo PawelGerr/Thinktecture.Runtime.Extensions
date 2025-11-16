@@ -4,30 +4,21 @@
 namespace Thinktecture.Tests;
 
 partial class TestValueObject :
-   global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+   global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
 {
-      /// <summary>
-      /// Compares two instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         if (obj is null)
-            return other is null;
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left._value - right._value));
+   }
 
-         return obj.Equals(other);
-      }
-
-      /// <summary>
-      /// Compares two instances of <see cref="TestValueObject"/>.
-      /// </summary>
-      /// <param name="obj">Instance to compare.</param>
-      /// <param name="other">Another instance to compare.</param>
-      /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
-      {
-         return !(obj == other);
-      }
+   /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked -(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left._value - right._value)));
+   }
 }

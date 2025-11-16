@@ -3,7 +3,8 @@ namespace Thinktecture.ValueObjects;
 [ValueObject<decimal>(DefaultInstancePropertyName = "Zero", // renames Amount.Empty to Amount.Zero
                       AllowDefaultStructs = true,
                       ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads, // for comparison of amount with a decimal without implicit conversion: amount > 42m
-                      AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,   // for arithmetic operations of amount with a decimal without implicit conversion: amount + 42m
+                      EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                      AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads, // for arithmetic operations of amount with a decimal without implicit conversion: amount + 42m
                       SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                       DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]

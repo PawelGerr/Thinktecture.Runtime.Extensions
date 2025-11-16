@@ -4,37 +4,21 @@
 namespace Thinktecture.Tests;
 
 partial class TestValueObject :
-   global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>
+   global::System.Numerics.IAdditionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
 {
-   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-   public static bool operator <(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
       global::System.ArgumentNullException.ThrowIfNull(right);
-      return left._value < right._value;
+      return Create((left._value + right._value));
    }
 
-   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-   public static bool operator <=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
+   /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   public static global::Thinktecture.Tests.TestValueObject operator checked +(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
       global::System.ArgumentNullException.ThrowIfNull(right);
-      return left._value <= right._value;
-   }
-
-   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-   public static bool operator >(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-   {
-      global::System.ArgumentNullException.ThrowIfNull(left);
-      global::System.ArgumentNullException.ThrowIfNull(right);
-      return left._value > right._value;
-   }
-
-   /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-   public static bool operator >=(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
-   {
-      global::System.ArgumentNullException.ThrowIfNull(left);
-      global::System.ArgumentNullException.ThrowIfNull(right);
-      return left._value >= right._value;
+      return Create(checked((left._value + right._value)));
    }
 }

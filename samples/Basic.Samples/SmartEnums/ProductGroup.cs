@@ -1,7 +1,9 @@
 namespace Thinktecture.SmartEnums;
 
-[SmartEnum<int>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
-                SkipToString = true)]
+[SmartEnum<int>(
+   ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+   EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+   SkipToString = true)]
 public partial class ProductGroup
 {
    public static readonly ProductGroup Apple = new(1, "Apple", ProductCategory.Fruits);

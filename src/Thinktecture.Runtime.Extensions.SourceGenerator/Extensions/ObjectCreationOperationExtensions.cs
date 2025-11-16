@@ -61,6 +61,16 @@ public static class ObjectCreationOperationExtensions
              && GetEnumParameterValue<StringComparison>(operation, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON) is not null;
    }
 
+   public static OperatorsGeneration FindComparisonOperators(this IObjectCreationOperation operation)
+   {
+      return GetEnumParameterValue<OperatorsGeneration>(operation, Constants.Attributes.Properties.COMPARISON_OPERATORS) ?? OperatorsGeneration.Default;
+   }
+
+   public static OperatorsGeneration FindEqualityComparisonOperators(this IObjectCreationOperation operation)
+   {
+      return GetEnumParameterValue<OperatorsGeneration>(operation, Constants.Attributes.Properties.EQUALITY_COMPARISON_OPERATORS) ?? OperatorsGeneration.Default;
+   }
+
    private static T? GetEnumParameterValue<T>(IObjectCreationOperation initializer, string name)
       where T : struct, Enum
    {

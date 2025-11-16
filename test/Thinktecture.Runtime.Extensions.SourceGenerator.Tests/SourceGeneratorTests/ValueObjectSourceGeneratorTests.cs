@@ -2301,8 +2301,6 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
-                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",

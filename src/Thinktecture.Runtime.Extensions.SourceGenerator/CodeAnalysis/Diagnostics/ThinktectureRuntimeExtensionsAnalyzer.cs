@@ -60,6 +60,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
       DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes,
+      DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch,
    ];
 
    /// <inheritdoc />
@@ -588,6 +589,29 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                              keyType.Name);
          }
       }
+
+      if (attribute.FindSkipEqualityComparison() != true)
+         CheckForComparisonMismatch(context, type, attribute);
+   }
+
+   private static void CheckForComparisonMismatch(
+      OperationAnalysisContext context,
+      INamedTypeSymbol type,
+      IObjectCreationOperation attribute)
+   {
+      var comparison = attribute.FindComparisonOperators();
+      var equality = attribute.FindEqualityComparisonOperators();
+
+      if (comparison != equality)
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch,
+            attribute.Syntax.GetLocation(),
+            type.Name,
+            comparison.ToString(),
+            equality.ToString());
+      }
    }
 
    private static void ValidateKeyMemberComparers(
@@ -872,6 +896,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ValidateEnumDerivedTypes(context, enumType);
       EnumKeyMemberNameMustNotBeItem(context, attribute, tdsLocation);
       ValidateKeyedSmartEnum(context, enumType, attribute, tdsLocation, factory);
+      CheckForComparisonMismatch(context, enumType, attribute);
    }
 
    private static void ValidateKeyedSmartEnum(
@@ -1163,9 +1188,27 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
    }
 
-   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2)
+   private static void ReportDiagnostic(
+      OperationAnalysisContext context,
+      DiagnosticDescriptor descriptor,
+      Location location,
+      string arg0,
+      string arg1,
+      string arg2)
    {
-      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1, arg2));
+      ReportDiagnostic(context, descriptor, location, null, arg0, arg1, arg2);
+   }
+
+   private static void ReportDiagnostic(
+      OperationAnalysisContext context,
+      DiagnosticDescriptor descriptor,
+      Location location,
+      IEnumerable<Location>? additionalLocations,
+      string arg0,
+      string arg1,
+      string arg2)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, messageArgs: [arg0, arg1, arg2], additionalLocations: additionalLocations));
    }
 
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)

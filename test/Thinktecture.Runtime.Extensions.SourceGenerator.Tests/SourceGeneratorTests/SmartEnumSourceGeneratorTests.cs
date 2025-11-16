@@ -1316,7 +1316,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_with_EqualityComparisonOperators_set_to_None_if_ComparisonOperators_is_not_set_to_None()
+   public async Task Should_not_generate_EqualityComparisonOperators_if_set_to_None()
    {
       var source = """
          using System;
@@ -1336,8 +1336,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
-                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
-                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs", // equality operators are generated because ComparisonOperators is not set to None
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs");
    }

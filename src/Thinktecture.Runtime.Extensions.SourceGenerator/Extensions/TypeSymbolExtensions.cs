@@ -50,6 +50,21 @@ public static class TypeSymbolExtensions
       return valueObjectAttributeBase is not null;
    }
 
+   public static bool IsKeyedValueObjectType(
+      [NotNullWhen(true)] this ITypeSymbol? valueObjectType,
+      [NotNullWhen(true)] out AttributeData? valueObjectAttributeBase)
+   {
+      if (valueObjectType is null || valueObjectType.SpecialType != SpecialType.None)
+      {
+         valueObjectAttributeBase = null;
+         return false;
+      }
+
+      valueObjectAttributeBase = valueObjectType.FindAttribute(static attributeClass => attributeClass.IsKeyedValueObjectAttribute());
+
+      return valueObjectAttributeBase is not null;
+   }
+
    public static bool IsInternalsVisibleToAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)

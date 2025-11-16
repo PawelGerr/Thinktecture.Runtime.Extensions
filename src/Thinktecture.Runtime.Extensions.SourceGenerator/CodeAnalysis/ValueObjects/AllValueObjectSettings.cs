@@ -65,13 +65,14 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       SerializationFrameworks = valueObjectAttribute.FindSerializationFrameworks();
 
       // Comparison operators depend on the equality comparison operators
-      if (ComparisonOperators > EqualityComparisonOperators)
-         EqualityComparisonOperators = ComparisonOperators;
-
-      if (SkipEqualityComparison)
+      if (SkipEqualityComparison || EqualityComparisonOperators == OperatorsGeneration.None)
       {
-          ComparisonOperators = OperatorsGeneration.None;
-          EqualityComparisonOperators = OperatorsGeneration.None;
+         ComparisonOperators = OperatorsGeneration.None;
+         EqualityComparisonOperators = OperatorsGeneration.None;
+      }
+      else if (ComparisonOperators > EqualityComparisonOperators)
+      {
+         EqualityComparisonOperators = ComparisonOperators;
       }
    }
 

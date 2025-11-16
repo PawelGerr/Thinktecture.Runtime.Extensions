@@ -7,6 +7,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
                   TryCreateFactoryMethodName = "TryGet",
                   AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                  EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   DivisionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]

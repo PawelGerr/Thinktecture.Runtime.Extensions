@@ -1,6 +1,7 @@
 namespace Thinktecture.ValueObjects;
 
 [ValueObject<int>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
+                  EqualityComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   AdditionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   SubtractionOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
                   MultiplyOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads,
