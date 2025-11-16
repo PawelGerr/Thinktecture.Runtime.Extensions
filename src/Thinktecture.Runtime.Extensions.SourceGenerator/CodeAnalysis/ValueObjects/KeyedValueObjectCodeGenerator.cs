@@ -51,10 +51,11 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateValueObject(CancellationToken cancellationToken)
    {
       var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state is { IsReferenceType: true } && _state.KeyMember.IsString();
+      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty;
 
       _sb.GenerateStructLayoutAttributeIfRequired(_state.IsReferenceType, _state.Settings.HasStructLayoutAttribute);
 
-      if (_state is { Settings.SkipFactoryMethods: false })
+      if (_state is { Settings.SkipFactoryMethods: false } && !isGeneric)
       {
          _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
@@ -62,14 +63,14 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
-      
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" :");
+
       if (!_state.Settings.SkipEqualityComparison)
       {
-          _sb.Append(@"
+         _sb.Append(@"
       global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">,");
       }
-      
+
       _sb.Append(@"
       global::Thinktecture.IKeyedObject<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
       global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">,
@@ -145,8 +146,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipEqualityComparison)
       {
-          GenerateEquals();
-          GenerateGetHashCode();
+         GenerateEquals();
+         GenerateGetHashCode();
       }
 
       if (!_state.Settings.SkipToString)

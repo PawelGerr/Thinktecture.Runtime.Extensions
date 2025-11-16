@@ -1,22 +1,28 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<EqualityComparisonOperatorsGeneratorState>, ITypeInformationProvider<ITypeInformation>
+public sealed class EqualityComparisonOperatorsGeneratorState
+   : IEquatable<EqualityComparisonOperatorsGeneratorState>,
+     ITypeInformationProvider<ITypeInformation>,
+     IHasGenerics
 {
    public ITypeInformation Type { get; }
    public IMemberInformation? KeyMember { get; }
    public OperatorsGeneration OperatorsGeneration { get; }
    public ComparerInfo? EqualityComparer { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public EqualityComparisonOperatorsGeneratorState(
       ITypeInformation type,
       IMemberInformation? keyMember,
       OperatorsGeneration operatorsGeneration,
-      ComparerInfo? equalityComparer)
+      ComparerInfo? equalityComparer,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
       OperatorsGeneration = operatorsGeneration;
       EqualityComparer = equalityComparer;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(EqualityComparisonOperatorsGeneratorState other)
@@ -24,7 +30,8 @@ public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<Eq
       return TypeInformationComparer.Instance.Equals(Type, other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && OperatorsGeneration == other.OperatorsGeneration
-             && EqualityComparer == other.EqualityComparer;
+             && EqualityComparer == other.EqualityComparer
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -40,18 +47,9 @@ public readonly struct EqualityComparisonOperatorsGeneratorState : IEquatable<Eq
          hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (EqualityComparer?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }
-   }
-
-   public static bool operator ==(EqualityComparisonOperatorsGeneratorState left, EqualityComparisonOperatorsGeneratorState right)
-   {
-      return left.Equals(right);
-   }
-
-   public static bool operator !=(EqualityComparisonOperatorsGeneratorState left, EqualityComparisonOperatorsGeneratorState right)
-   {
-      return !(left == right);
    }
 }

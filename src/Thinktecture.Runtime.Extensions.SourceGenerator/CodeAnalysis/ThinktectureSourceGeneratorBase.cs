@@ -181,7 +181,11 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                                state.Left.Type.ContainingTypes,
                                                                                                state.Left.Type.Name,
                                                                                                state.Left.Type.NumberOfGenerics,
-                                                                                               new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
+                                                                                               new InterfaceCodeGeneratorState(
+                                                                                                  state.Left.Type,
+                                                                                                  state.Left.KeyMember,
+                                                                                                  state.Left.CreateFactoryMethodName,
+                                                                                                  state.Left.GenericParameters),
                                                                                                state.Right,
                                                                                                InterfaceCodeGeneratorFactory.Formattable));
    }
@@ -205,7 +209,11 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                               state.Left.Type.ContainingTypes,
                                                                                               state.Left.Type.Name,
                                                                                               state.Left.Type.NumberOfGenerics,
-                                                                                              new InterfaceCodeGeneratorState(state.Left.Type, state.Left.KeyMember, state.Left.CreateFactoryMethodName),
+                                                                                              new InterfaceCodeGeneratorState(
+                                                                                                 state.Left.Type,
+                                                                                                 state.Left.KeyMember,
+                                                                                                 state.Left.CreateFactoryMethodName,
+                                                                                                 state.Left.GenericParameters),
                                                                                               state.Right,
                                                                                               InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
    }
@@ -266,7 +274,11 @@ public abstract class ThinktectureSourceGeneratorBase
                       state.Type.ContainingTypes,
                       state.Type.Name,
                       state.Type.NumberOfGenerics,
-                      new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
+                      new InterfaceCodeGeneratorState(
+                         state.Type,
+                         state.KeyMember,
+                         state.CreateFactoryMethodName,
+                         state.GenericParameters),
                       tuple.Right,
                       InterfaceCodeGeneratorFactory.Create(generator));
       });
@@ -332,7 +344,11 @@ public abstract class ThinktectureSourceGeneratorBase
                                                    state.Type.ContainingTypes,
                                                    state.Type.Name,
                                                    state.Type.NumberOfGenerics,
-                                                   new InterfaceCodeGeneratorState(state.Type, state.KeyMember, state.CreateFactoryMethodName),
+                                                   new InterfaceCodeGeneratorState(
+                                                      state.Type,
+                                                      state.KeyMember,
+                                                      state.CreateFactoryMethodName,
+                                                      state.GenericParameters),
                                                    tuple.Right,
                                                    InterfaceCodeGeneratorFactory.Create(generator));
                                    });

@@ -1,6 +1,8 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ComparisonOperatorsGeneratorState : IEquatable<ComparisonOperatorsGeneratorState>
+public sealed class ComparisonOperatorsGeneratorState
+   : IEquatable<ComparisonOperatorsGeneratorState>,
+     IHasGenerics
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
@@ -8,6 +10,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
    public OperatorsGeneration OperatorsGeneration { get; }
    public ImplementedComparisonOperators KeyMemberOperators { get; }
    public string? ComparerAccessor { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public ComparisonOperatorsGeneratorState(
       ITypeInformation type,
@@ -15,7 +18,8 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
       string createFactoryMethodName,
       OperatorsGeneration operatorsGeneration,
       ImplementedComparisonOperators keyMemberOperators,
-      string? comparerAccessor)
+      string? comparerAccessor,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
@@ -23,6 +27,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
       OperatorsGeneration = operatorsGeneration;
       KeyMemberOperators = keyMemberOperators;
       ComparerAccessor = comparerAccessor;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(ComparisonOperatorsGeneratorState other)
@@ -32,7 +37,8 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && OperatorsGeneration == other.OperatorsGeneration
              && KeyMemberOperators == other.KeyMemberOperators
-             && ComparerAccessor == other.ComparerAccessor;
+             && ComparerAccessor == other.ComparerAccessor
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -50,6 +56,7 @@ public readonly struct ComparisonOperatorsGeneratorState : IEquatable<Comparison
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (int)KeyMemberOperators;
          hashCode = (hashCode * 397) ^ (ComparerAccessor?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }

@@ -93,7 +93,7 @@ public class EqualityComparisonOperatorsStateBuilder
    {
       _type ??= CreateType("global::Thinktecture.Tests.TestType", "TestType", isReferenceType: true, isEqualWithReferenceEquality: false);
 
-      return new EqualityComparisonOperatorsGeneratorState(_type, _keyMember, _operatorsGeneration, _equalityComparer);
+      return new EqualityComparisonOperatorsGeneratorState(_type, _keyMember, _operatorsGeneration, _equalityComparer, []);
    }
 
    private static ITypeInformation CreateType(

@@ -12,7 +12,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public void Should_not_generate_if_generic()
+   public async Task Should_generate_for_generic()
    {
       var source = """
          using System;
@@ -29,7 +29,13 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          """;
 
       var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
-      outputs.Should().BeEmpty();
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
    }
 
    [Fact]
@@ -2780,5 +2786,88 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_generic_keyless()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum]
+            public partial class TestKeylessEnum<T>
+               where T : class
+            {
+               public static readonly TestKeylessEnum<T> Item1 = default!;
+               public static readonly TestKeylessEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestKeylessEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestKeylessEnum`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_generic_string_key_with_constraint()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>]
+            public partial class TestStringKeyEnum<T>
+               where T : IComparable<T>
+            {
+               public static readonly TestStringKeyEnum<T> Item1 = default!;
+               public static readonly TestStringKeyEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestStringKeyEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestStringKeyEnum`1.Comparable.g.cs",
+                        "Thinktecture.Tests.TestStringKeyEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestStringKeyEnum`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestStringKeyEnum`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_generic_int_key_with_equatable_constraint()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            public partial class TestIntKeyEnum<T>
+               where T : IEquatable<T>
+            {
+               public static readonly TestIntKeyEnum<T> Item1 = default!;
+               public static readonly TestIntKeyEnum<T> Item2 = default!;
+               public static readonly TestIntKeyEnum<T> Item3 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestIntKeyEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.Comparable.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.Formattable.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.EqualityComparisonOperators.g.cs");
    }
 }

@@ -10,13 +10,17 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="ThinktectureRuntimeExtensions_SourceGenerator_GenerateJetBrainsAnnotations" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" />
   </ItemGroup>
 
 </Project>

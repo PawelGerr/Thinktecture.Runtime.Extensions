@@ -50,4 +50,14 @@ public class TryParse
       DecimalBasedClassValueObject.TryParse("invalid", null, out item).Should().BeFalse();
       item.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_support_TryParse_for_generic_string_based_value_objects()
+   {
+      var result = ValueObject_Generic_StringBased<object>.TryParse("test", null, out var obj);
+
+      result.Should().BeTrue();
+      obj.Should().NotBeNull();
+      obj!.Value.Should().Be("test");
+   }
 }

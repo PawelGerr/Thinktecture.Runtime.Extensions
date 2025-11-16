@@ -127,13 +127,15 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
       var parsables = validStates
          .Select((state, _) =>
          {
-            return new ParsableGeneratorState(state,
-                                              null,
-                                              state.AttributeInfo.ValidationError,
-                                              state.SkipIParsable,
-                                              false,
-                                              false,
-                                              state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String));
+            return new ParsableGeneratorState(
+               state,
+               null,
+               state.AttributeInfo.ValidationError,
+               state.SkipIParsable,
+               false,
+               false,
+               state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+               state.GenericParameters);
          });
       base.InitializeParsableCodeGenerator(context, parsables, options);
    }
@@ -157,7 +159,8 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
                                                  state,
                                                  null,
                                                  state.AttributeInfo,
-                                                 SerializationFrameworks.All))
+                                                 SerializationFrameworks.All,
+                                                 state.GenericParameters))
                                       .Combine(serializerGeneratorFactories)
                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                       .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));

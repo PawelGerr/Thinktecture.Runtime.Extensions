@@ -131,7 +131,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
             return null;
 
          if (type.Arity > 0)
-            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
+            return null; // Analyzer emits DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;

@@ -46,4 +46,27 @@ public class Get
       Action action = () => SmartEnum_StringBased.Get("invalid");
       action.Should().Throw<UnknownSmartEnumIdentifierException>().WithMessage("There is no item of type 'SmartEnum_StringBased' with the identifier 'invalid'.");
    }
+
+   [Fact]
+   public void Should_support_Get_with_key_for_generic_int_based_enum()
+   {
+      var item = SmartEnum_Generic_IntBased<string>.Get(1);
+      item.Should().BeSameAs(SmartEnum_Generic_IntBased<string>.Item1);
+
+      item = SmartEnum_Generic_IntBased<string>.Get(2);
+      item.Should().BeSameAs(SmartEnum_Generic_IntBased<string>.Item2);
+
+      item = SmartEnum_Generic_IntBased<string>.Get(3);
+      item.Should().BeSameAs(SmartEnum_Generic_IntBased<string>.Item3);
+   }
+
+   [Fact]
+   public void Should_support_Get_with_key_for_generic_string_based_enum()
+   {
+      var item = SmartEnum_Generic_StringBased<int>.Get("item1");
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item1);
+
+      item = SmartEnum_Generic_StringBased<int>.Get("item2");
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item2);
+   }
 }

@@ -1,6 +1,8 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ComparableGeneratorState : IEquatable<ComparableGeneratorState>
+public sealed class ComparableGeneratorState
+   : IEquatable<ComparableGeneratorState>,
+     IHasGenerics
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
@@ -8,6 +10,7 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
    public bool SkipIComparable { get; }
    public bool IsKeyMemberComparable { get; }
    public string? ComparerAccessor { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public ComparableGeneratorState(
       ITypeInformation type,
@@ -15,7 +18,8 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
       string createFactoryMethodName,
       bool skipIComparable,
       bool isKeyMemberComparable,
-      string? comparerAccessor)
+      string? comparerAccessor,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
@@ -23,6 +27,7 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
       SkipIComparable = skipIComparable;
       IsKeyMemberComparable = isKeyMemberComparable;
       ComparerAccessor = comparerAccessor;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(ComparableGeneratorState other)
@@ -32,7 +37,8 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && SkipIComparable == other.SkipIComparable
              && IsKeyMemberComparable == other.IsKeyMemberComparable
-             && ComparerAccessor == other.ComparerAccessor;
+             && ComparerAccessor == other.ComparerAccessor
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -50,18 +56,9 @@ public readonly struct ComparableGeneratorState : IEquatable<ComparableGenerator
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ (ComparerAccessor?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }
-   }
-
-   public static bool operator ==(ComparableGeneratorState left, ComparableGeneratorState right)
-   {
-      return left.Equals(right);
-   }
-
-   public static bool operator !=(ComparableGeneratorState left, ComparableGeneratorState right)
-   {
-      return !(left == right);
    }
 }

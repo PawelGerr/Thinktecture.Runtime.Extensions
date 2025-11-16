@@ -29,23 +29,53 @@ public sealed class KeyedMessagePackCodeGenerator : CodeGeneratorBase
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      if (_state.Type.Namespace is not null)
+      if (_state.Namespace is not null)
       {
          _sb.Append(@"
-namespace ").Append(_state.Type.Namespace).Append(@";
+namespace ").Append(_state.Namespace).Append(@";
 ");
       }
 
-      _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
+      _sb.RenderContainingTypesStart(_state.ContainingTypes);
+
+      var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty;
 
       _sb.Append(@"
-[global::MessagePack.MessagePackFormatter(typeof(global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ThinktectureMessagePackFormatter" : "ThinktectureStructMessagePackFormatter").Append("<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
-partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).Append(@"
-{
+[global::MessagePack.MessagePackFormatter(typeof(");
+
+      if (hasGenerics)
+      {
+         _sb.AppendTypeFullyQualifiedWithoutGenerics(_state, _state.ContainingTypes).AppendGenericTypeParameters(_state, constructOpenGeneric: true).Append(".ValueObjectMessagePackFormatter");
+      }
+      else
+      {
+         _sb.Append("global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ThinktectureMessagePackFormatter" : "ThinktectureStructMessagePackFormatter").Append("<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(">");
+      }
+
+      _sb.Append(@"))]
+");
+
+      _sb.Append("partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@"
+{");
+
+      if (hasGenerics)
+         GenerateFormatter(keyType);
+
+      _sb.Append(@"
 }");
 
-      _sb.RenderContainingTypesEnd(_state.Type.ContainingTypes)
-         .Append(@"
+      _sb.RenderContainingTypesEnd(_state.ContainingTypes);
+
+      _sb.Append(@"
 ");
+   }
+
+   private void GenerateFormatter(string keyType)
+   {
+      _sb.Append(@"
+
+   public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ThinktectureMessagePackFormatter" : "ThinktectureStructMessagePackFormatter").Append("<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">
+   {
+   }");
    }
 }

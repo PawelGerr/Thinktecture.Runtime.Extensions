@@ -573,7 +573,7 @@ public static class StringBuilderExtensions
       return sb.Append(type.TypeFullyQualified);
    }
 
-   public static StringBuilder AppendTypeFullyQualified<T>(
+   public static StringBuilder AppendTypeFullyQualifiedWithoutGenerics<T>(
       this StringBuilder sb,
       T type,
       ImmutableArray<ContainingTypeState> containingTypes)

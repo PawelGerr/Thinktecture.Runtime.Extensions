@@ -4,7 +4,8 @@ public sealed class KeyedValueObjectSourceGeneratorState
    : ITypeInformation,
      IKeyedSerializerGeneratorTypeInformation,
      IParsableTypeInformation,
-     IEquatable<KeyedValueObjectSourceGeneratorState>
+     IEquatable<KeyedValueObjectSourceGeneratorState>,
+     IHasGenerics
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
@@ -15,13 +16,14 @@ public sealed class KeyedValueObjectSourceGeneratorState
    public string Name { get; }
    public bool IsReferenceType { get; }
    public bool IsValueType { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
+   public int NumberOfGenerics => GenericParameters.Length;
 
    public NullableAnnotation NullableAnnotation => NullableAnnotation.NotAnnotated;
    public bool IsNullableStruct => false;
    public bool IsRecord => false;
    public bool IsTypeParameter => false;
    public bool IsEqualWithReferenceEquality => false;
-   public int NumberOfGenerics => 0;
 
    public string? FactoryValidationReturnType { get; }
 
@@ -46,6 +48,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       IsReferenceType = type.IsReferenceType;
       IsValueType = type.IsValueType;
       FactoryValidationReturnType = type.GetValidateFactoryArgumentsReturnType();
+      GenericParameters = type.GetGenericTypeParameters();
    }
 
    public override bool Equals(object? obj)
@@ -67,7 +70,8 @@ public sealed class KeyedValueObjectSourceGeneratorState
              && KeyMember.Equals(other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
-             && ContainingTypes.SequenceEqual(other.ContainingTypes);
+             && ContainingTypes.SequenceEqual(other.ContainingTypes)
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override int GetHashCode()
@@ -82,6 +86,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }

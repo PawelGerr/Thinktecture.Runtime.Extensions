@@ -350,7 +350,7 @@ file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.J
       if (!objectType.IsGenericType || objectType.IsGenericTypeDefinition)
          return false;
 
-      return typeof(").AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(@") == objectType.GetGenericTypeDefinition();
+      return typeof(").AppendTypeFullyQualifiedWithoutGenerics(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(@") == objectType.GetGenericTypeDefinition();
    }
 
    public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)

@@ -14,6 +14,56 @@ This file provides guidance to the AI assistant when working with code in this r
 - C# 11+ for generated code
 - Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
 
+## AI Assistant Guidelines: Zero-Tolerance for Hallucination
+
+When working with external libraries, frameworks, or any APIs (including .NET BCL, ASP.NET Core, Entity Framework Core, serialization frameworks, etc.), you MUST adhere to the following strict guidelines:
+
+### 1. Never Guess or Assume API Behavior
+
+- **DO NOT** make assumptions about API signatures, method names, parameter types, return types, or behavior
+- **DO NOT** rely on memory or general knowledge about libraries
+- **DO NOT** proceed with implementation if you are not 100% certain about API details
+
+### 2. Verify Using Context7 MCP
+
+When you need information about any external library or framework:
+
+1. **Use `mcp__context7__resolve-library-id`** to find the correct library ID
+2. **Use `mcp__context7__get-library-docs`** to retrieve up-to-date, accurate documentation
+3. **Base all implementation decisions on verified documentation**, not assumptions
+
+Examples of when to use Context7:
+
+- Working with .NET BCL types (System.Text.Json, System.Linq, System.Collections, etc.)
+- Integration with frameworks (ASP.NET Core, Entity Framework Core, xUnit, etc.)
+- Third-party libraries (MessagePack, Newtonsoft.Json, ProtoBuf, etc.)
+- Roslyn APIs for source generators
+- Any API where you are not 100% certain of the exact behavior
+
+### 3. Verification Over Speed
+
+- **It is better to take extra time to verify than to introduce bugs based on incorrect assumptions**
+- If documentation is unclear or incomplete, ask the user for clarification
+- If Context7 doesn't have the information, explicitly tell the user you need to verify before proceeding
+
+### 4. Explicit Uncertainty Communication
+
+When you encounter uncertainty:
+
+- **State clearly**: "I need to verify the API behavior using Context7"
+- **Never proceed silently** with guessed implementations
+- **Document verification steps** so the user understands your process
+
+### 5. This Project's Code is Authoritative
+
+- For Thinktecture.Runtime.Extensions library code itself (not external dependencies), use the codebase as the source of truth
+- Read actual source code using Serena tools to understand internal behavior
+- Only for external dependencies must you use Context7 for verification
+
+### Summary
+
+**Zero hallucination policy**: If you don't know it with 100% certainty, verify it. Use Context7 MCP for external APIs, use Serena tools for internal codebase exploration, and ask the user when neither provides sufficient clarity.
+
 ## Architecture Overview
 
 This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discriminated Unions** through Roslyn Source Generators. The core architecture consists of:
@@ -78,7 +128,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 #### Analyzers
 
 1. **`ThinktectureRuntimeExtensionsAnalyzer`**: Main diagnostic analyzer with 40+ diagnostic rules that validates correct usage of library features
-    - **Type structure**: Ensures types with `[SmartEnum]`, `[ValueObject]`, `[Union]`, or `[AdHocUnion]` are `partial`, are class/struct, not generic (except regular unions and complex value objects), not nested in generic types
+    - **Type structure**: Ensures types with `[SmartEnum]`, `[ValueObject]`, `[Union]`, or `[AdHocUnion]` are `partial`, are class/struct, not generic (except smart enums, keyed value objects, regular unions and complex value objects), not nested in generic types
     - **Constructor rules**: Validates constructors are private, no primary constructors allowed
     - **Member validation**:
         - Fields must be readonly, properties must be readonly (no set) or have private init
@@ -119,6 +169,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 **Keyed**: `[SmartEnum<TKey>]` - Type-safe enums with underlying key values
 
 - Key can be any non-nullable type (int, string, Guid, etc.)
+- **Can be generic**: Smart enums themselves may now be generic types (for example `SmartEnum_Generic_IntBased<T> where T : IEquatable<T>`). Analyzer rules still apply for containing types (no nesting inside generic types) but the enum type can declare its own generic parameters and constraints.
 - Configurable key member via `KeyMemberName`, `KeyMemberAccessModifier`, `KeyMemberKind`
 - Supports comparison operators if key is comparable
 - Supports `IParsable<T>`, `IComparable<T>`, `IFormattable` (depending on key type)
@@ -142,7 +193,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 - Comparison/equality operators: `ComparisonOperators`, `EqualityComparisonOperators`
 - Conversion operators: `ConversionToKeyMemberType`, `UnsafeConversionToKeyMemberType`, `ConversionFromKeyMemberType`
 - Can skip key member generation: `SkipKeyMember` (you implement it manually)
-- **Cannot be generic**: Keyed value objects must not have type parameters
+- **Can be generic**: Keyed value objects can have type parameters (e.g., `ValueObject_Generic<T> where T : IEquatable<T>`). Analyzer rules still apply for containing types (no nesting inside generic types) but the value object type can declare its own generic parameters and constraints.
 
 **Complex**: `[ComplexValueObject]` - Multi-property immutable types
 
@@ -287,7 +338,7 @@ The source generators follow a consistent pattern:
 5. **Type Information**: Rich type metadata captured in interfaces like `ITypeInformation`, `ITypedMemberState`, `IMemberState`, `IKeyMemberSettings`
 6. **Nullability Awareness**: Full support for nullable reference types and value types
 7. **Containing Types**: Handles nested types properly with `ContainingTypeState`
-8. **Generics Support**: Limited support - regular unions and complex value objects can be generic, but smart enums, keyed value objects, and ad-hoc unions cannot
+8. **Generics Support**: Smart enums, keyed value objects, regular unions, and complex value objects can be generic. Ad-hoc unions cannot be generic.
 
 ## Project Structure
 
@@ -316,7 +367,11 @@ The source generators follow a consistent pattern:
 - Comprehensive tests for generated code, serialization, and framework integration
 - Follow Arrange-Act-Assert pattern for unit tests
 - The tests should have same folder structure as the source code (e.g., with class `Ns1/Ns2/MyClass.cs` -> `Ns1/Ns2/MyCassTests/MyMethod.cs`)
-- Create a separate test class/file for every public member (eg. for class `MyClass` with method `MyMethod` create `MyCassTests/MyMethod.cs`)
+- **Test Organization**:
+    - **First, check for existing test classes** that test similar functionality (same class/method or related features)
+    - **Add new tests to existing test classes** when the test covers the same or closely related functionality
+    - **Only create new test classes/files** when there is no fitting existing test class for the functionality being tested
+    - Ideal structure: Separate test class/file for every public member (e.g., for class `MyClass` with method `MyMethod` create `MyCassTests/MyMethod.cs`), but consolidate related test cases in the same file
 - If the tests requires a `CSharpCompilation` use base class `test/Thinktecture.Runtime.Extensions.SourceGenerator.Tests/CompilationTestBase.cs`
 - When testing attributes, use real attributes, like `SmartEnumAttribute`, `ValueObjectAttribute`, `ComplexValueObjectAttribute`, `UnionAttribute`, `ObjectFactoryAttribute`, etc. Don't use fake attributes.
 

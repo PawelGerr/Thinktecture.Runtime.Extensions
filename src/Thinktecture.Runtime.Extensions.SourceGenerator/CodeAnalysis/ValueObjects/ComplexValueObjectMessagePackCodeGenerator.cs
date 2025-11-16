@@ -68,7 +68,7 @@ namespace ").Append(_type.Namespace).Append(@";
 [global::MessagePack.MessagePackFormatter(typeof(");
 
       if (isGeneric)
-         _sb.AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(".");
+         _sb.AppendTypeFullyQualifiedWithoutGenerics(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(".");
 
       _sb.Append(@"ValueObjectMessagePackFormatter))]
 partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTypeParameters(_type).Append(@"

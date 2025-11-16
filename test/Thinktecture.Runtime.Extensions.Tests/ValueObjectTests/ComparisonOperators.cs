@@ -108,4 +108,48 @@ public class ComparisonOperators
       (obj_1_key >= obj_2).Should().BeFalse();
       (obj_1 >= obj_2_key).Should().BeFalse();
    }
+
+   [Fact]
+   public void Should_support_less_than_operator_for_generic_int_based_value_objects()
+   {
+      var obj1 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj2 = ValueObject_Generic_IntBased<string>.Create(43);
+
+      (obj1 < obj2).Should().BeTrue();
+      (obj2 < obj1).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_support_greater_than_operator_for_generic_int_based_value_objects()
+   {
+      var obj1 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj2 = ValueObject_Generic_IntBased<string>.Create(43);
+
+      (obj2 > obj1).Should().BeTrue();
+      (obj1 > obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_support_less_than_or_equal_operator_for_generic_int_based_value_objects()
+   {
+      var obj1 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj2 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj3 = ValueObject_Generic_IntBased<string>.Create(43);
+
+      (obj1 <= obj2).Should().BeTrue();
+      (obj1 <= obj3).Should().BeTrue();
+      (obj3 <= obj1).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_support_greater_than_or_equal_operator_for_generic_int_based_value_objects()
+   {
+      var obj1 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj2 = ValueObject_Generic_IntBased<string>.Create(42);
+      var obj3 = ValueObject_Generic_IntBased<string>.Create(43);
+
+      (obj1 >= obj2).Should().BeTrue();
+      (obj3 >= obj1).Should().BeTrue();
+      (obj1 >= obj3).Should().BeFalse();
+   }
 }

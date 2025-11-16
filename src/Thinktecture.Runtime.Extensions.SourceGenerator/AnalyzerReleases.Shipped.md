@@ -16,7 +16,7 @@ TTRESG012 | ThinktectureRuntimeExtensionsAnalyzer | Error | Provided key member 
 TTRESG014 | ThinktectureRuntimeExtensionsAnalyzer | Error | Inner Smart Enum on first level must be private
 TTRESG015 | ThinktectureRuntimeExtensionsAnalyzer | Error | Inner Smart Enum on non-first level must be public
 TTRESG017 | ThinktectureRuntimeExtensionsAnalyzer | Error | The key member must not be nullable
-TTRESG033 | ThinktectureRuntimeExtensionsAnalyzer | Error | Smart Enums, value objects and ad hoc unions must not be generic
+TTRESG033 | ThinktectureRuntimeExtensionsAnalyzer | Error | Ad hoc unions must not be generic
 TTRESG034 | ThinktectureRuntimeExtensionsAnalyzer | Error | Field of the base class must be read-only
 TTRESG035 | ThinktectureRuntimeExtensionsAnalyzer | Error | Property of the base class must be read-only
 TTRESG036 | ThinktectureRuntimeExtensionsAnalyzer | Error | The key type must not be nullable

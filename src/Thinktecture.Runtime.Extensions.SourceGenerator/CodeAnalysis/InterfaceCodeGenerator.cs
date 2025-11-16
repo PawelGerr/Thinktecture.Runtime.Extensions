@@ -3,8 +3,8 @@ using System.Text;
 namespace Thinktecture.CodeAnalysis;
 
 public sealed class InterfaceCodeGenerator<TState, TType> : CodeGeneratorBase
-   where TState : ITypeInformationProvider<TType>
-   where TType: ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
+   where TState : ITypeInformationProvider<TType>, IHasGenerics
+   where TType : ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {
    private readonly IInterfaceCodeGenerator<TState> _codeGenerator;
    private readonly TState _state;
@@ -38,7 +38,7 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
 
       _sb.Append(@"
-partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).Append(" :");
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).AppendGenericTypeParameters(_state).Append(" :");
 
       _codeGenerator.GenerateBaseTypes(_sb, _state);
 

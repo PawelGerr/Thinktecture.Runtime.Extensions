@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
@@ -304,5 +305,128 @@ public class RoundTrip : JsonTestsBase
 
       var deserialized = Deserialize<PartiallyKnownDateSerializable>(json);
       deserialized.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_roundtrip_using_custom_factory_specified_by_ObjectFactoryAttribute()
+   {
+      var original = BoundaryWithFactories.Create(1, 2);
+      var json = Serialize<BoundaryWithFactories, string>(original);
+      json.Should().Be("\"1:2\"");
+      var deserialized = Deserialize<BoundaryWithFactories>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_with_ValidationErrorAttribute()
+   {
+      var original = TestSmartEnum_CustomError.Item1;
+      var json = Serialize<TestSmartEnum_CustomError, string, CustomValidationError>(original);
+      json.Should().Be("\"item1\"");
+      var deserialized = Deserialize<TestSmartEnum_CustomError>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_simple_value_object_with_ValidationErrorAttribute()
+   {
+      var original = StringBasedReferenceValueObjectWithCustomError.Create("value");
+      var json = Serialize<StringBasedReferenceValueObjectWithCustomError, string, StringBasedReferenceValidationError>(original);
+      json.Should().Be("\"value\"");
+      var deserialized = Deserialize<StringBasedReferenceValueObjectWithCustomError>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_with_ValidationErrorAttribute()
+   {
+      var original = BoundaryWithCustomError.Create(1, 2);
+      var json = Serialize(original, JsonNamingPolicy.CamelCase);
+      json.Should().Be("{\"lower\":1,\"upper\":2}");
+      var deserialized = Deserialize<BoundaryWithCustomError>(json, JsonNamingPolicy.CamelCase);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_keyed_value_object_having_custom_factory()
+   {
+      var original = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1);
+      var json = Serialize<IntBasedReferenceValueObjectWithCustomFactoryNames, int>(original);
+      json.Should().Be("1");
+      var deserialized = Deserialize<IntBasedReferenceValueObjectWithCustomFactoryNames>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_having_custom_factory()
+   {
+      var original = BoundaryWithCustomFactoryNames.Get(1, 2);
+      var json = Serialize(original, JsonNamingPolicy.CamelCase);
+      // camelCase serialization expected; do not assert exact casing for resilience
+      var deserialized = Deserialize<BoundaryWithCustomFactoryNames>(json, JsonNamingPolicy.CamelCase);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_with_numbers_as_string_when_number_handling_allows_string_reading()
+   {
+      var original = Boundary.Create(1, 2);
+      var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+      var json = JsonSerializer.Serialize(original, options);
+      json.Should().Be("{\"lower\":1,\"upper\":2}");
+
+      // simulate incoming numbers as strings
+      var incoming = "{ \"lower\": \"1\", \"upper\": 2}";
+      var readOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, NumberHandling = JsonNumberHandling.AllowReadingFromString };
+      var deserialized = JsonSerializer.Deserialize<Boundary>(incoming, readOptions);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_int_based_generic_smart_enum_items_for_constrained_type_argument()
+   {
+      foreach (var original in SmartEnum_Generic_IntBased<string>.Items)
+      {
+         var json = JsonSerializer.Serialize(original);
+         var deserialized = JsonSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_roundtrip_int_based_generic_smart_enum_items_for_another_constrained_type_argument()
+   {
+      foreach (var original in SmartEnum_Generic_IntBased<Guid>.Items)
+      {
+         var json = JsonSerializer.Serialize(original);
+         var deserialized = JsonSerializer.Deserialize<SmartEnum_Generic_IntBased<Guid>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_roundtrip_string_based_generic_smart_enum_items_for_constrained_type_argument()
+   {
+      foreach (var original in SmartEnum_Generic_StringBased<int>.Items)
+      {
+         var json = JsonSerializer.Serialize(original);
+         var deserialized = JsonSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_roundtrip_string_based_generic_smart_enum_items_for_another_constrained_type_argument()
+   {
+      foreach (var original in SmartEnum_Generic_StringBased<double>.Items)
+      {
+         var json = JsonSerializer.Serialize(original);
+         var deserialized = JsonSerializer.Deserialize<SmartEnum_Generic_StringBased<double>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
    }
 }

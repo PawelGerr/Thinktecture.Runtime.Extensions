@@ -38,4 +38,77 @@ public class Map
                                      item2: 2)
                           .Should().Be(2);
    }
+
+   [Fact]
+   public void Should_return_correct_value_for_generic_keyless_enum()
+   {
+      var result = SmartEnum_Generic_Keyless<string>.Item1.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("one");
+
+      result = SmartEnum_Generic_Keyless<string>.Item2.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("two");
+   }
+
+   [Fact]
+   public void Should_work_with_different_result_types_for_generic_keyless_enum()
+   {
+      var result = SmartEnum_Generic_Keyless<string>.Item1.Map(
+         item1: 1,
+         item2: 2);
+
+      result.Should().Be(1);
+
+      result = SmartEnum_Generic_Keyless<string>.Item2.Map(
+         item1: 1,
+         item2: 2);
+
+      result.Should().Be(2);
+   }
+
+   [Fact]
+   public void Should_return_correct_value_for_generic_int_based_enum()
+   {
+      var result = SmartEnum_Generic_IntBased<string>.Item1.Map(
+         item1: "one",
+         item2: "two",
+         item3: "three");
+
+      result.Should().Be("one");
+
+      result = SmartEnum_Generic_IntBased<string>.Item2.Map(
+         item1: "one",
+         item2: "two",
+         item3: "three");
+
+      result.Should().Be("two");
+
+      result = SmartEnum_Generic_IntBased<string>.Item3.Map(
+         item1: "one",
+         item2: "two",
+         item3: "three");
+
+      result.Should().Be("three");
+   }
+
+   [Fact]
+   public void Should_return_correct_value_for_generic_string_based_enum()
+   {
+      var result = SmartEnum_Generic_StringBased<int>.Item1.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("one");
+
+      result = SmartEnum_Generic_StringBased<int>.Item2.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("two");
+   }
 }

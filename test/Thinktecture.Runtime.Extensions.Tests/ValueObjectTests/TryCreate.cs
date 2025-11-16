@@ -91,4 +91,24 @@ public class TryCreate
       obj.Should().BeEquivalentTo(new { Lower = 1, Upper = 2 });
       error.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_return_true_for_valid_generic_int_based_value()
+   {
+      var result = ValueObject_Generic_IntBased<string>.TryCreate(42, out var obj);
+
+      result.Should().BeTrue();
+      obj.Should().NotBeNull();
+      obj!.Value.Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_return_true_for_valid_generic_string_based_value()
+   {
+      var result = ValueObject_Generic_StringBased<object>.TryCreate("test", out var obj);
+
+      result.Should().BeTrue();
+      obj.Should().NotBeNull();
+      obj!.Value.Should().Be("test");
+   }
 }

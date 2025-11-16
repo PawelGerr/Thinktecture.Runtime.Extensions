@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Thinktecture.Json;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
@@ -93,6 +94,79 @@ public class RoundTrip : JsonTestsBase
 
       var deserialized = JsonConvert.DeserializeObject<PartiallyKnownDateSerializable>(json);
       deserialized.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_roundtrip_using_custom_factory_specified_by_ObjectFactoryAttribute()
+   {
+      var original = BoundaryWithFactories.Create(1, 2);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("\"1:2\"");
+
+      var deserialized = JsonConvert.DeserializeObject<BoundaryWithFactories>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_with_ValidationErrorAttribute()
+   {
+      var original = TestSmartEnum_CustomError.Item1;
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("\"item1\"");
+
+      var deserialized = JsonConvert.DeserializeObject<TestSmartEnum_CustomError>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_simple_value_object_with_ValidationErrorAttribute()
+   {
+      var original = StringBasedReferenceValueObjectWithCustomError.Create("value");
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("\"value\"");
+
+      var deserialized = JsonConvert.DeserializeObject<StringBasedReferenceValueObjectWithCustomError>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_with_ValidationErrorAttribute()
+   {
+      var original = BoundaryWithCustomError.Create(1, 2);
+      var json = JsonConvert.SerializeObject(original, new JsonSerializerSettings
+                                                       {
+                                                          ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() }
+                                                       });
+
+      json.Should().Be("{\"lower\":1.0,\"upper\":2.0}");
+
+      var deserialized = JsonConvert.DeserializeObject<BoundaryWithCustomError>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_keyed_value_object_having_custom_factory()
+   {
+      var original = IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("1");
+
+      var deserialized = JsonConvert.DeserializeObject<IntBasedReferenceValueObjectWithCustomFactoryNames>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_having_custom_factory()
+   {
+      var original = BoundaryWithCustomFactoryNames.Get(1, 2);
+      var json = JsonConvert.SerializeObject(original);
+
+      var deserialized = JsonConvert.DeserializeObject<BoundaryWithCustomFactoryNames>(json);
+      deserialized.Should().BeEquivalentTo(original);
    }
 
    private struct TestStruct<T>

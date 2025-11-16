@@ -71,12 +71,14 @@ public sealed class SmartEnumSourceGenerator()
 
             return
             [
-               new ComparisonOperatorsGeneratorState(state.State,
-                                                     state.KeyMember,
-                                                     Constants.Methods.GET,
-                                                     state.Settings.ComparisonOperators,
-                                                     state.KeyMember.ComparisonOperators,
-                                                     state.AttributeInfo.KeyMemberComparerAccessor)
+               new ComparisonOperatorsGeneratorState(
+                  state.State,
+                  state.KeyMember,
+                  Constants.Methods.GET,
+                  state.Settings.ComparisonOperators,
+                  state.KeyMember.ComparisonOperators,
+                  state.AttributeInfo.KeyMemberComparerAccessor,
+                  state.State.GenericParameters)
             ];
          });
 
@@ -86,10 +88,12 @@ public sealed class SmartEnumSourceGenerator()
    private void InitializeEqualityComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(state.State,
-                                                                             state.KeyMember,
-                                                                             state.Settings.EqualityComparisonOperators,
-                                                                             state.AttributeInfo.KeyMemberEqualityComparerAccessor is null ? null : new ComparerInfo(state.AttributeInfo.KeyMemberEqualityComparerAccessor, true)));
+         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(
+                    state.State,
+                    state.KeyMember,
+                    state.Settings.EqualityComparisonOperators,
+                    state.AttributeInfo.KeyMemberEqualityComparerAccessor is null ? null : new ComparerInfo(state.AttributeInfo.KeyMemberEqualityComparerAccessor, true),
+                    state.State.GenericParameters));
 
       InitializeEqualityComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -104,13 +108,15 @@ public sealed class SmartEnumSourceGenerator()
 
             return
             [
-               new ParsableGeneratorState(state.State,
-                                          state.KeyMember,
-                                          state.State.ValidationError,
-                                          state.Settings.SkipIParsable,
-                                          state.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
-                                          true,
-                                          false)
+               new ParsableGeneratorState(
+                  state.State,
+                  state.KeyMember,
+                  state.State.ValidationError,
+                  state.Settings.SkipIParsable,
+                  state.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+                  true,
+                  false,
+                  state.State.GenericParameters)
             ];
          });
       InitializeParsableCodeGenerator(context, parsables, options);
@@ -126,12 +132,14 @@ public sealed class SmartEnumSourceGenerator()
 
             return
             [
-               new ComparableGeneratorState(state.State,
-                                            state.KeyMember,
-                                            Constants.Methods.GET,
-                                            state.Settings.SkipIComparable,
-                                            state.KeyMember.IsComparable,
-                                            state.AttributeInfo.KeyMemberComparerAccessor)
+               new ComparableGeneratorState(
+                  state.State,
+                  state.KeyMember,
+                  Constants.Methods.GET,
+                  state.Settings.SkipIComparable,
+                  state.KeyMember.IsComparable,
+                  state.AttributeInfo.KeyMemberComparerAccessor,
+                  state.State.GenericParameters)
             ];
          });
 
@@ -148,11 +156,13 @@ public sealed class SmartEnumSourceGenerator()
 
             return
             [
-               new FormattableGeneratorState(state.State,
-                                             state.KeyMember,
-                                             Constants.Methods.GET,
-                                             state.Settings.SkipIFormattable,
-                                             state.KeyMember.IsFormattable)
+               new FormattableGeneratorState(
+                  state.State,
+                  state.KeyMember,
+                  Constants.Methods.GET,
+                  state.Settings.SkipIFormattable,
+                  state.KeyMember.IsFormattable,
+                  state.State.GenericParameters)
             ];
          });
 
@@ -194,7 +204,8 @@ public sealed class SmartEnumSourceGenerator()
                                                             state.State,
                                                             state.KeyMember,
                                                             state.AttributeInfo,
-                                                            state.Settings.SerializationFrameworks))
+                                                            state.Settings.SerializationFrameworks,
+                                                            state.State.GenericParameters))
                                                  .Combine(serializerGeneratorFactories)
                                                  .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                                  .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));
@@ -261,7 +272,7 @@ public sealed class SmartEnumSourceGenerator()
 
    private static bool IsSmartEnumCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
-      return syntaxNode is ClassDeclarationSyntax classDeclaration && !classDeclaration.IsGeneric();
+      return syntaxNode is ClassDeclarationSyntax;
    }
 
    private static SourceGenContext? GetSourceGenContextOrNull(GeneratorAttributeSyntaxContext context, bool isKeyed, CancellationToken cancellationToken)
@@ -274,9 +285,6 @@ public sealed class SmartEnumSourceGenerator()
 
          if (type.TypeKind == TypeKind.Error)
             return null;
-
-         if (type.Arity > 0)
-            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;

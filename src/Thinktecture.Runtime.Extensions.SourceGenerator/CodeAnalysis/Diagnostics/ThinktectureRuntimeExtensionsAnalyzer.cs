@@ -26,7 +26,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic,
       DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
       DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-      DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric,
+      DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric,
       DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
       DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
       DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable,
@@ -560,8 +560,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
-      TypeMustNotBeGeneric(context, type, tdsLocation);
-
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.KeyMemberShouldNotBeNullable, attribute.Syntax.GetLocation());
@@ -850,7 +848,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, enumType, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, enumType);
-      TypeMustNotBeGeneric(context, enumType, tdsLocation);
       TypeMustNotBeInsideGenericType(context, enumType, tdsLocation);
 
       var items = enumType.GetEnumItems();
@@ -904,7 +901,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void TypeMustNotBeGeneric(OperationAnalysisContext context, INamedTypeSymbol type, Location tdsLocation)
    {
       if (!type.TypeParameters.IsDefaultOrEmpty)
-         ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric, tdsLocation, BuildTypeName(type));
+         ReportDiagnostic(context, DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric, tdsLocation, BuildTypeName(type));
    }
 
    private static void TypeMustNotBeInsideGenericType(OperationAnalysisContext context, INamedTypeSymbol type, Location tdsLocation)

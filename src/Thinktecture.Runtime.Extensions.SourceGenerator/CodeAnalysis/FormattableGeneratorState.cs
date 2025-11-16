@@ -1,25 +1,30 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct FormattableGeneratorState : IEquatable<FormattableGeneratorState>
+public sealed class FormattableGeneratorState
+   : IEquatable<FormattableGeneratorState>,
+     IHasGenerics
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
    public string CreateFactoryMethodName { get; }
    public bool SkipIFormattable { get; }
    public bool IsKeyMemberFormattable { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public FormattableGeneratorState(
       ITypeInformation type,
       IMemberInformation keyMember,
       string createFactoryMethodName,
       bool skipIFormattable,
-      bool isKeyMemberFormattable)
+      bool isKeyMemberFormattable,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
       CreateFactoryMethodName = createFactoryMethodName;
       SkipIFormattable = skipIFormattable;
       IsKeyMemberFormattable = isKeyMemberFormattable;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(FormattableGeneratorState other)
@@ -28,7 +33,8 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && SkipIFormattable == other.SkipIFormattable
-             && IsKeyMemberFormattable == other.IsKeyMemberFormattable;
+             && IsKeyMemberFormattable == other.IsKeyMemberFormattable
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -45,18 +51,9 @@ public readonly struct FormattableGeneratorState : IEquatable<FormattableGenerat
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberFormattable.GetHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }
-   }
-
-   public static bool operator ==(FormattableGeneratorState left, FormattableGeneratorState right)
-   {
-      return left.Equals(right);
-   }
-
-   public static bool operator !=(FormattableGeneratorState left, FormattableGeneratorState right)
-   {
-      return !(left == right);
    }
 }

@@ -75,4 +75,37 @@ public class ComparisonOperators
       (item_1_key >= item_2).Should().BeFalse();
       (item_1 >= item_2_key).Should().BeFalse();
    }
+
+   [Fact]
+   public void Should_support_comparison_operators_for_generic_int_based_enum()
+   {
+      var item1 = SmartEnum_Generic_IntBased<string>.Item1;
+      var item2 = SmartEnum_Generic_IntBased<string>.Item2;
+      var item3 = SmartEnum_Generic_IntBased<string>.Item3;
+
+      (item1 < item2).Should().BeTrue();
+      (item2 < item3).Should().BeTrue();
+      (item1 < item3).Should().BeTrue();
+
+      (item2 > item1).Should().BeTrue();
+      (item3 > item2).Should().BeTrue();
+      (item3 > item1).Should().BeTrue();
+
+      (item1 <= item1).Should().BeTrue();
+      (item1 <= item2).Should().BeTrue();
+      (item2 >= item2).Should().BeTrue();
+      (item3 >= item1).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_support_comparison_operators_for_generic_string_based_enum()
+   {
+      var item1 = SmartEnum_Generic_StringBased<int>.Item1;
+      var item2 = SmartEnum_Generic_StringBased<int>.Item2;
+
+      (item1 < item2).Should().BeTrue();
+      (item2 > item1).Should().BeTrue();
+      (item1 <= item1).Should().BeTrue();
+      (item2 >= item2).Should().BeTrue();
+   }
 }

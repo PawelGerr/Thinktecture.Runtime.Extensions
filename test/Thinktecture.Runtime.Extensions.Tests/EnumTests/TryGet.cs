@@ -61,4 +61,24 @@ public class TryGet
       SmartEnum_CaseSensitive.TryGet("ITEM2", out var item).Should().BeFalse();
       item.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_support_TryGet_with_key_for_generic_int_based_enum()
+   {
+      SmartEnum_Generic_IntBased<string>.TryGet(1, out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_Generic_IntBased<string>.Item1);
+
+      SmartEnum_Generic_IntBased<string>.TryGet(99, out item).Should().BeFalse();
+      item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_support_TryGet_with_key_for_generic_string_based_enum()
+   {
+      SmartEnum_Generic_StringBased<int>.TryGet("item1", out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item1);
+
+      SmartEnum_Generic_StringBased<int>.TryGet("nonexistent", out item).Should().BeFalse();
+      item.Should().BeNull();
+   }
 }

@@ -155,6 +155,153 @@ public class TTRESG001_FieldMustBeReadOnly
       }
    }
 
+   public class Keyless_enum_fields_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_non_readonly_enum_item()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static TestEnum {|#0:Item1|} = default;
+                  public static readonly TestEnum Item2 = default;
+               }
+            }
+            """;
+
+         var expectedCode = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+                  public static readonly TestEnum Item2 = default;
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Item1", "TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_static_non_readonly_non_enum_item()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static object {|#0:SomeStaticField|} = default;
+               }
+            }
+            """;
+
+         var expectedCode = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static readonly object {|#0:SomeStaticField|} = default;
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SomeStaticField", "TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_non_readonly_instance_field()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceField|};
+               }
+            }
+            """;
+
+         var expectedCode = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public readonly int InstanceField;
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceField", "TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_readonly_instance_field()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public readonly int {|#0:InstanceField|};
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+   }
+
    public class KeyedValueObject_fields_must_be_readonly
    {
       [Fact]

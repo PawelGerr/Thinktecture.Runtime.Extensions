@@ -48,4 +48,21 @@ public class Parse
       FluentActions.Invoking(() => SmartEnum_DecimalBased.Parse("invalid", null))
                    .Should().Throw<FormatException>().WithMessage("The input string 'invalid' was not in a correct format.");
    }
+
+   [Fact]
+   public void Should_support_Parse_for_generic_string_based_enum()
+   {
+      var item = SmartEnum_Generic_StringBased<int>.Parse("item1", null);
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item1);
+
+      item = SmartEnum_Generic_StringBased<int>.Parse("item2", null);
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item2);
+   }
+
+   [Fact]
+   public void Should_throw_on_Parse_with_invalid_key_for_generic_string_based_enum()
+   {
+      var action = () => SmartEnum_Generic_StringBased<int>.Parse("invalid", null);
+      action.Should().Throw<FormatException>();
+   }
 }

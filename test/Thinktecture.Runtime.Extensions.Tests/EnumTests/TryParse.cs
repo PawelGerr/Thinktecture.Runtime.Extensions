@@ -64,4 +64,14 @@ public class TryParse
       SmartEnum_CaseSensitive.TryParse("ITEM2", null, out caseSensitiveItem).Should().BeFalse();
       caseSensitiveItem.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_support_TryParse_for_generic_string_based_enum()
+   {
+      SmartEnum_Generic_StringBased<int>.TryParse("item1", null, out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item1);
+
+      SmartEnum_Generic_StringBased<int>.TryParse("invalid", null, out item).Should().BeFalse();
+      item.Should().BeNull();
+   }
 }

@@ -5,7 +5,7 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class InterfaceCodeGeneratorFactory<T, TType>(IInterfaceCodeGenerator<T> interfaceCodeGenerator)
    : ICodeGeneratorFactory<T>
-   where T : ITypeInformationProvider<TType>
+   where T : ITypeInformationProvider<TType>, IHasGenerics
    where TType : ITypeFullyQualified, INamespaceAndName, ITypeKindInformation
 {
    public string CodeGeneratorName => interfaceCodeGenerator.CodeGeneratorName;

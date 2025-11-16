@@ -2,7 +2,9 @@ using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorState>
+public sealed class OperatorsGeneratorState
+   : IEquatable<OperatorsGeneratorState>,
+     IHasGenerics
 {
    public ITypeInformation Type { get; }
    public IMemberInformation KeyMember { get; }
@@ -10,6 +12,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
    public OperatorsGeneration OperatorsGeneration { get; }
    public ImplementedOperators KeyMemberOperators { get; }
    public IOperatorsCodeGeneratorProvider GeneratorProvider { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public OperatorsGeneratorState(
       ITypeInformation type,
@@ -17,7 +20,8 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
       string createFactoryMethodName,
       OperatorsGeneration operatorsGeneration,
       ImplementedOperators keyMemberOperators,
-      IOperatorsCodeGeneratorProvider generatorProvider)
+      IOperatorsCodeGeneratorProvider generatorProvider,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
@@ -25,6 +29,7 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
       OperatorsGeneration = operatorsGeneration;
       KeyMemberOperators = keyMemberOperators;
       GeneratorProvider = generatorProvider;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(OperatorsGeneratorState other)
@@ -34,7 +39,8 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && OperatorsGeneration == other.OperatorsGeneration
              && KeyMemberOperators == other.KeyMemberOperators
-             && ReferenceEquals(GeneratorProvider, other.GeneratorProvider);
+             && ReferenceEquals(GeneratorProvider, other.GeneratorProvider)
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -52,18 +58,9 @@ public readonly struct OperatorsGeneratorState : IEquatable<OperatorsGeneratorSt
          hashCode = (hashCode * 397) ^ (int)OperatorsGeneration;
          hashCode = (hashCode * 397) ^ (int)KeyMemberOperators;
          hashCode = (hashCode * 397) ^ GeneratorProvider.GetHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }
-   }
-
-   public static bool operator ==(OperatorsGeneratorState left, OperatorsGeneratorState right)
-   {
-      return left.Equals(right);
-   }
-
-   public static bool operator !=(OperatorsGeneratorState left, OperatorsGeneratorState right)
-   {
-      return !(left == right);
    }
 }

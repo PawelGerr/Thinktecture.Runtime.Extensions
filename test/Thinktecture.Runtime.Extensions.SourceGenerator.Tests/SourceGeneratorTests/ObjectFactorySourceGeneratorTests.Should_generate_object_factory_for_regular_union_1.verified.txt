@@ -3,13 +3,13 @@
 
 namespace Thinktecture.Tests;
 
-partial record Result :
+partial record Result<T> :
    global::System.IParsable<global::Thinktecture.Tests.Result<T>>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.Result<T>? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Result<T>, string, global::Thinktecture.ValidationError>
+   private static global::Thinktecture.ValidationError? Validate<TFactory>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.Result<T>? result)
+      where TFactory : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Result<T>, string, global::Thinktecture.ValidationError>
    {
-      return T.Validate(key, provider, out result);
+      return TFactory.Validate(key, provider, out result);
    }
 
    /// <inheritdoc />

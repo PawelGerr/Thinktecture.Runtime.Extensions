@@ -205,6 +205,113 @@ public class WriteJson : JsonTestsBase
       json.Should().Be("{\"ClassProperty\":\"text\",\"NullableClassProperty\":\"nullable-text\",\"StructProperty\":42,\"NullableStructProperty\":43,\"Property\":\"00:00:10\",\"NullableProperty\":\"00:00:11\"}");
    }
 
+   [Fact]
+   public void Should_serialize_int_based_generic_smart_enum_Newtonsoft()
+   {
+      var json = Serialize<SmartEnum_Generic_IntBased<string>, int>(SmartEnum_Generic_IntBased<string>.Item1);
+
+      json.Should().Be("1");
+   }
+
+   [Fact]
+   public void Should_serialize_null_int_based_generic_smart_enum_as_null_Newtonsoft()
+   {
+      var json = Serialize<SmartEnum_Generic_IntBased<string>, int>(null);
+
+      json.Should().Be("null");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_int_based_generic_smart_enum_items_in_WriteJson_Newtonsoft()
+   {
+      foreach (var original in SmartEnum_Generic_IntBased<string>.Items)
+      {
+         var json = Serialize<SmartEnum_Generic_IntBased<string>, int>(original);
+
+         var deserialized = DeserializeEnum<SmartEnum_Generic_IntBased<string>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_serialize_int_based_generic_smart_enum_with_different_type_arguments_Newtonsoft()
+   {
+      var stringItem = SmartEnum_Generic_IntBased<string>.Item1;
+      var intItem = SmartEnum_Generic_IntBased<int>.Item1;
+
+      var stringJson = Serialize<SmartEnum_Generic_IntBased<string>, int>(stringItem);
+      var intJson = Serialize<SmartEnum_Generic_IntBased<int>, int>(intItem);
+
+      stringJson.Should().Be("1");
+      intJson.Should().Be("1");
+   }
+
+   [Fact]
+   public void Should_serialize_string_based_generic_smart_enum_Newtonsoft()
+   {
+      var json = Serialize<SmartEnum_Generic_StringBased<int>, string>(SmartEnum_Generic_StringBased<int>.Item1);
+
+      json.Should().Be("\"item1\"");
+   }
+
+   [Fact]
+   public void Should_serialize_null_string_based_generic_smart_enum_as_null_Newtonsoft()
+   {
+      var json = Serialize<SmartEnum_Generic_StringBased<int>, string>(null);
+
+      json.Should().Be("null");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_string_based_generic_smart_enum_items_in_WriteJson_Newtonsoft()
+   {
+      foreach (var original in SmartEnum_Generic_StringBased<int>.Items)
+      {
+         var json = Serialize<SmartEnum_Generic_StringBased<int>, string>(original);
+
+         var deserialized = DeserializeEnum<SmartEnum_Generic_StringBased<int>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_serialize_string_based_generic_smart_enum_with_different_type_arguments_Newtonsoft()
+   {
+      var intItem = SmartEnum_Generic_StringBased<int>.Item1;
+      var doubleItem = SmartEnum_Generic_StringBased<double>.Item1;
+
+      var intJson = Serialize<SmartEnum_Generic_StringBased<int>, string>(intItem);
+      var doubleJson = Serialize<SmartEnum_Generic_StringBased<double>, string>(doubleItem);
+
+      intJson.Should().Be("\"item1\"");
+      doubleJson.Should().Be("\"item1\"");
+   }
+
+   private static T DeserializeEnum<T>(string json)
+   {
+      using var reader = new StringReader(json);
+      using var jsonReader = new JsonTextReader(reader);
+
+      var serializer = JsonSerializer.CreateDefault();
+
+      return serializer.Deserialize<T>(jsonReader);
+   }
+
+   private static string Deserialize<T, TKey>(string json)
+      where T : IObjectFactory<T, TKey, ValidationError>, IConvertible<TKey>
+   {
+      using var reader = new StringReader(json);
+      using var jsonReader = new JsonTextReader(reader);
+
+      var serializer = JsonSerializer.CreateDefault();
+
+      return serializer.Deserialize<T>(jsonReader) is { } value
+                ? Serialize<T, TKey>(value)
+                : "null";
+   }
+
    private static string Serialize<T, TKey>(
       T value,
       NamingStrategy namingStrategy = null,

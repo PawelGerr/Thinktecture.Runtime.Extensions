@@ -477,6 +477,152 @@ public partial class RoundTripSerialize
       RoundTrip(obj);
    }
 
+   [Theory]
+   [InlineData(1, nameof(SmartEnum_Generic_IntBased<string>.Item1))]
+   [InlineData(2, nameof(SmartEnum_Generic_IntBased<string>.Item2))]
+   [InlineData(3, nameof(SmartEnum_Generic_IntBased<string>.Item3))]
+   public void Should_roundtrip_serialize_int_based_generic_smart_enum(int key, string itemName)
+   {
+      var item = itemName switch
+      {
+         nameof(SmartEnum_Generic_IntBased<string>.Item1) => SmartEnum_Generic_IntBased<string>.Item1,
+         nameof(SmartEnum_Generic_IntBased<string>.Item2) => SmartEnum_Generic_IntBased<string>.Item2,
+         nameof(SmartEnum_Generic_IntBased<string>.Item3) => SmartEnum_Generic_IntBased<string>.Item3,
+         _ => throw new ArgumentException("Invalid item name", nameof(itemName))
+      };
+
+      var bytes = MessagePackSerializer.Serialize(item);
+      var value = MessagePackSerializer.Deserialize<int>(bytes);
+
+      value.Should().Be(key);
+
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+      deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_serialize_null_to_nil_for_int_based_generic_smart_enum()
+   {
+      SmartEnum_Generic_IntBased<string> item = null;
+
+      // ReSharper disable once ExpressionIsAlwaysNull
+      var bytes = MessagePackSerializer.Serialize(item);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+
+      deserialized.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_throw_on_invalid_key_for_int_based_generic_smart_enum()
+   {
+      var bytes = MessagePackSerializer.Serialize(999);
+
+      FluentActions.Invoking(() => MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes))
+                   .Should().Throw<MessagePackSerializationException>()
+                   .WithInnerException<ValidationException>()
+                   .WithMessage("*SmartEnum_Generic_IntBased*999*");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_int_based_generic_smart_enum_items()
+   {
+      foreach (var original in SmartEnum_Generic_IntBased<string>.Items)
+      {
+         var bytes = MessagePackSerializer.Serialize(original);
+         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_work_with_different_type_arguments_for_int_based_generic_smart_enum()
+   {
+      var stringItem = SmartEnum_Generic_IntBased<string>.Item1;
+      var intItem = SmartEnum_Generic_IntBased<int>.Item1;
+
+      var stringBytes = MessagePackSerializer.Serialize(stringItem);
+      var intBytes = MessagePackSerializer.Serialize(intItem);
+
+      var stringDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(stringBytes);
+      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<int>>(intBytes);
+
+      stringDeserialized.Should().BeSameAs(stringItem);
+      intDeserialized.Should().BeSameAs(intItem);
+   }
+
+   [Theory]
+   [InlineData("item1", nameof(SmartEnum_Generic_StringBased<int>.Item1))]
+   [InlineData("item2", nameof(SmartEnum_Generic_StringBased<int>.Item2))]
+   public void Should_roundtrip_serialize_string_based_generic_smart_enum(string key, string itemName)
+   {
+      var item = itemName switch
+      {
+         nameof(SmartEnum_Generic_StringBased<int>.Item1) => SmartEnum_Generic_StringBased<int>.Item1,
+         nameof(SmartEnum_Generic_StringBased<int>.Item2) => SmartEnum_Generic_StringBased<int>.Item2,
+         _ => throw new ArgumentException("Invalid item name", nameof(itemName))
+      };
+
+      var bytes = MessagePackSerializer.Serialize(item);
+      var value = MessagePackSerializer.Deserialize<string>(bytes);
+
+      value.Should().Be(key);
+
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+      deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_serialize_null_to_nil_for_string_based_generic_smart_enum()
+   {
+      SmartEnum_Generic_StringBased<int> item = null;
+
+      // ReSharper disable once ExpressionIsAlwaysNull
+      var bytes = MessagePackSerializer.Serialize(item);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+
+      deserialized.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_throw_on_invalid_key_for_string_based_generic_smart_enum()
+   {
+      var bytes = MessagePackSerializer.Serialize("invalid");
+
+      FluentActions.Invoking(() => MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes))
+                   .Should().Throw<MessagePackSerializationException>()
+                   .WithInnerException<ValidationException>()
+                   .WithMessage("*SmartEnum_Generic_StringBased*invalid*");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_string_based_generic_smart_enum_items()
+   {
+      foreach (var original in SmartEnum_Generic_StringBased<int>.Items)
+      {
+         var bytes = MessagePackSerializer.Serialize(original);
+         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_work_with_different_type_arguments_for_string_based_generic_smart_enum()
+   {
+      var intItem = SmartEnum_Generic_StringBased<int>.Item1;
+      var doubleItem = SmartEnum_Generic_StringBased<double>.Item1;
+
+      var intBytes = MessagePackSerializer.Serialize(intItem);
+      var doubleBytes = MessagePackSerializer.Serialize(doubleItem);
+
+      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(intBytes);
+      var doubleDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<double>>(doubleBytes);
+
+      intDeserialized.Should().BeSameAs(intItem);
+      doubleDeserialized.Should().BeSameAs(doubleItem);
+   }
+
    private static void Roundtrip_serialize_types_with_struct_properties_using_resolver(
       bool skipValueObjectsWithMessagePackFormatter,
       object obj)

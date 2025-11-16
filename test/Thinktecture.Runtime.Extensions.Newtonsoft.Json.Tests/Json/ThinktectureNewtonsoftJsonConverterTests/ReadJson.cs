@@ -402,6 +402,135 @@ public class ReadJson : JsonTestsBase
       deserialized.Should().Be(expected);
    }
 
+   [Theory]
+   [InlineData(1, nameof(SmartEnum_Generic_IntBased<string>.Item1))]
+   [InlineData(2, nameof(SmartEnum_Generic_IntBased<string>.Item2))]
+   [InlineData(3, nameof(SmartEnum_Generic_IntBased<string>.Item3))]
+   public void Should_deserialize_int_based_generic_smart_enum(int key, string itemName)
+   {
+      var json = key.ToString();
+      var item = Deserialize<SmartEnum_Generic_IntBased<string>>(json);
+
+      var expectedItem = itemName switch
+      {
+         nameof(SmartEnum_Generic_IntBased<string>.Item1) => SmartEnum_Generic_IntBased<string>.Item1,
+         nameof(SmartEnum_Generic_IntBased<string>.Item2) => SmartEnum_Generic_IntBased<string>.Item2,
+         nameof(SmartEnum_Generic_IntBased<string>.Item3) => SmartEnum_Generic_IntBased<string>.Item3,
+         _ => throw new ArgumentException("Invalid item name", nameof(itemName))
+      };
+
+      item.Should().BeSameAs(expectedItem);
+   }
+
+   [Fact]
+   public void Should_deserialize_null_to_null_for_int_based_generic_smart_enum()
+   {
+      var item = Deserialize<SmartEnum_Generic_IntBased<string>>("null");
+      item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_throw_on_invalid_key_for_int_based_generic_smart_enum()
+   {
+      FluentActions.Invoking(() => Deserialize<SmartEnum_Generic_IntBased<string>>("999"))
+                   .Should().Throw<JsonSerializationException>()
+                   .WithMessage("*SmartEnum_Generic_IntBased*999*");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_int_based_generic_smart_enum_items()
+   {
+      foreach (var original in SmartEnum_Generic_IntBased<string>.Items)
+      {
+         var json = JsonConvert.SerializeObject(original);
+         var deserialized = Deserialize<SmartEnum_Generic_IntBased<string>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_work_with_different_type_arguments_for_int_based_generic_smart_enum()
+   {
+      var stringItem = SmartEnum_Generic_IntBased<string>.Item1;
+      var intItem = SmartEnum_Generic_IntBased<int>.Item1;
+
+      var stringJson = JsonConvert.SerializeObject(stringItem);
+      var intJson = JsonConvert.SerializeObject(intItem);
+
+      stringJson.Should().Be("1");
+      intJson.Should().Be("1");
+
+      var stringDeserialized = Deserialize<SmartEnum_Generic_IntBased<string>>(stringJson);
+      var intDeserialized = Deserialize<SmartEnum_Generic_IntBased<int>>(intJson);
+
+      stringDeserialized.Should().BeSameAs(stringItem);
+      intDeserialized.Should().BeSameAs(intItem);
+   }
+
+   [Theory]
+   [InlineData("\"item1\"", nameof(SmartEnum_Generic_StringBased<int>.Item1))]
+   [InlineData("\"item2\"", nameof(SmartEnum_Generic_StringBased<int>.Item2))]
+   public void Should_deserialize_string_based_generic_smart_enum(string json, string itemName)
+   {
+      var item = Deserialize<SmartEnum_Generic_StringBased<int>>(json);
+
+      var expectedItem = itemName switch
+      {
+         nameof(SmartEnum_Generic_StringBased<int>.Item1) => SmartEnum_Generic_StringBased<int>.Item1,
+         nameof(SmartEnum_Generic_StringBased<int>.Item2) => SmartEnum_Generic_StringBased<int>.Item2,
+         _ => throw new ArgumentException("Invalid item name", nameof(itemName))
+      };
+
+      item.Should().BeSameAs(expectedItem);
+   }
+
+   [Fact]
+   public void Should_deserialize_null_to_null_for_string_based_generic_smart_enum()
+   {
+      var item = Deserialize<SmartEnum_Generic_StringBased<int>>("null");
+      item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_throw_on_invalid_key_for_string_based_generic_smart_enum()
+   {
+      FluentActions.Invoking(() => Deserialize<SmartEnum_Generic_StringBased<int>>("\"invalid\""))
+                   .Should().Throw<JsonSerializationException>()
+                   .WithMessage("*SmartEnum_Generic_StringBased*invalid*");
+   }
+
+   [Fact]
+   public void Should_round_trip_all_string_based_generic_smart_enum_items()
+   {
+      foreach (var original in SmartEnum_Generic_StringBased<int>.Items)
+      {
+         var json = JsonConvert.SerializeObject(original);
+         var deserialized = Deserialize<SmartEnum_Generic_StringBased<int>>(json);
+
+         deserialized.Should().BeSameAs(original);
+      }
+   }
+
+   [Fact]
+   public void Should_work_with_different_type_arguments_for_string_based_generic_smart_enum()
+   {
+      var intItem = SmartEnum_Generic_StringBased<int>.Item1;
+      var doubleItem = SmartEnum_Generic_StringBased<double>.Item1;
+
+      var intJson = JsonConvert.SerializeObject(intItem);
+      var doubleJson = JsonConvert.SerializeObject(doubleItem);
+
+      intJson.Should().Be("\"item1\"");
+      doubleJson.Should().Be("\"item1\"");
+
+      var intDeserialized = Deserialize<SmartEnum_Generic_StringBased<int>>(intJson);
+      var doubleDeserialized = Deserialize<SmartEnum_Generic_StringBased<double>>(doubleJson);
+
+      intDeserialized.Should().BeSameAs(intItem);
+      doubleDeserialized.Should().BeSameAs(doubleItem);
+   }
+
    private static T Deserialize<T>(
       string json,
       NamingStrategy namingStrategy)

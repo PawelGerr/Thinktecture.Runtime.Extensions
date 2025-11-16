@@ -98,7 +98,7 @@ public class MultiplyOperatorsStateBuilder
       _type ??= CreateType("global::Thinktecture.Tests.TestType", "TestType", isReferenceType: true);
       _keyMember ??= CreateKeyMember("Value", "global::System.Int32", SpecialType.System_Int32, isReferenceType: false);
 
-      return new InterfaceCodeGeneratorState(_type, _keyMember, _createFactoryMethodName);
+      return new InterfaceCodeGeneratorState(_type, _keyMember, _createFactoryMethodName, []);
    }
 
    private static ITypeInformation CreateType(string typeFullyQualified, string name, bool isReferenceType)

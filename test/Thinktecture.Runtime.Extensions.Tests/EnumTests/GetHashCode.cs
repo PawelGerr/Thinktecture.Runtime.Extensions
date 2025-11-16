@@ -29,4 +29,13 @@ public class GetHashCode
 
       SmartEnum_CaseSensitive.LowerCased.GetHashCode().Should().Be(expected);
    }
+
+   [Fact]
+   public void Should_have_consistent_hashcode_for_generic_keyless_enum()
+   {
+      var item1 = SmartEnum_Generic_Keyless<string>.Item1;
+      var item1Again = SmartEnum_Generic_Keyless<string>.Item1;
+
+      item1.GetHashCode().Should().Be(item1Again.GetHashCode());
+   }
 }

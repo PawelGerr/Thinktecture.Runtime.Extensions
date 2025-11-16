@@ -137,7 +137,8 @@ public sealed class ValueObjectSourceGenerator()
                                                             state.State,
                                                             state.State.KeyMember,
                                                             state.AttributeInfo,
-                                                            state.Settings.SerializationFrameworks);
+                                                            state.Settings.SerializationFrameworks,
+                                                            state.State.GenericParameters);
 
                                                          return ImmutableArray.Create(serializerState);
                                                       })
@@ -165,7 +166,8 @@ public sealed class ValueObjectSourceGenerator()
                                                             state.State,
                                                             null,
                                                             state.AttributeInfo,
-                                                            state.Settings.SerializationFrameworks);
+                                                            state.Settings.SerializationFrameworks,
+                                                            state.State.GenericParameters);
 
                                                          return [serializerState];
                                                       })
@@ -194,11 +196,13 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeFormattableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var formattables = validStates
-         .Select((state, _) => new FormattableGeneratorState(state.State,
-                                                             state.State.KeyMember,
-                                                             state.Settings.CreateFactoryMethodName,
-                                                             state.Settings.SkipIFormattable,
-                                                             state.State.KeyMember.IsFormattable));
+         .Select((state, _) => new FormattableGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.SkipIFormattable,
+                    state.State.KeyMember.IsFormattable,
+                    state.State.GenericParameters));
 
       InitializeFormattableCodeGenerator(context, formattables, options);
    }
@@ -206,12 +210,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeComparableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new ComparableGeneratorState(state.State,
-                                                            state.State.KeyMember,
-                                                            state.Settings.CreateFactoryMethodName,
-                                                            state.Settings.SkipIComparable,
-                                                            state.State.KeyMember.IsComparable,
-                                                            state.AttributeInfo.KeyMemberComparerAccessor));
+         .Select((state, _) => new ComparableGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.SkipIComparable,
+                    state.State.KeyMember.IsComparable,
+                    state.AttributeInfo.KeyMemberComparerAccessor,
+                    state.State.GenericParameters));
 
       InitializeComparableCodeGenerator(context, comparables, options);
    }
@@ -219,13 +225,15 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
-         .Select((state, _) => new ParsableGeneratorState(state.State,
-                                                          state.State.KeyMember,
-                                                          state.State.ValidationError,
-                                                          state.Settings.SkipIParsable,
-                                                          state.State.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
-                                                          false,
-                                                          false));
+         .Select((state, _) => new ParsableGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.State.ValidationError,
+                    state.Settings.SkipIParsable,
+                    state.State.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+                    false,
+                    false,
+                    state.State.GenericParameters));
 
       InitializeParsableCodeGenerator(context, parsables, options);
    }
@@ -233,12 +241,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new ComparisonOperatorsGeneratorState(state.State,
-                                                                     state.State.KeyMember,
-                                                                     state.Settings.CreateFactoryMethodName,
-                                                                     state.Settings.ComparisonOperators,
-                                                                     state.State.KeyMember.ComparisonOperators,
-                                                                     state.AttributeInfo.KeyMemberComparerAccessor));
+         .Select((state, _) => new ComparisonOperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.ComparisonOperators,
+                    state.State.KeyMember.ComparisonOperators,
+                    state.AttributeInfo.KeyMemberComparerAccessor,
+                    state.State.GenericParameters));
 
       InitializeComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -246,10 +256,12 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeEqualityComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var comparables = validStates
-         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(state.State,
-                                                                             state.State.KeyMember,
-                                                                             state.Settings.EqualityComparisonOperators,
-                                                                             state.AttributeInfo.KeyMemberEqualityComparerAccessor is null ? null : new ComparerInfo(state.AttributeInfo.KeyMemberEqualityComparerAccessor, true)));
+         .Select((state, _) => new EqualityComparisonOperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.EqualityComparisonOperators,
+                    state.AttributeInfo.KeyMemberEqualityComparerAccessor is null ? null : new ComparerInfo(state.AttributeInfo.KeyMemberEqualityComparerAccessor, true),
+                    state.State.GenericParameters));
 
       InitializeEqualityComparisonOperatorsCodeGenerator(context, comparables, options);
    }
@@ -257,12 +269,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeAdditionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
-         .Select((state, _) => new OperatorsGeneratorState(state.State,
-                                                           state.State.KeyMember,
-                                                           state.Settings.CreateFactoryMethodName,
-                                                           state.Settings.AdditionOperators,
-                                                           state.State.KeyMember.AdditionOperators,
-                                                           AdditionOperatorsCodeGeneratorProvider.Instance));
+         .Select((state, _) => new OperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.AdditionOperators,
+                    state.State.KeyMember.AdditionOperators,
+                    AdditionOperatorsCodeGeneratorProvider.Instance,
+                    state.State.GenericParameters));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
    }
@@ -270,12 +284,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeSubtractionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
-         .Select((state, _) => new OperatorsGeneratorState(state.State,
-                                                           state.State.KeyMember,
-                                                           state.Settings.CreateFactoryMethodName,
-                                                           state.Settings.SubtractionOperators,
-                                                           state.State.KeyMember.SubtractionOperators,
-                                                           SubtractionOperatorsCodeGeneratorProvider.Instance));
+         .Select((state, _) => new OperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.SubtractionOperators,
+                    state.State.KeyMember.SubtractionOperators,
+                    SubtractionOperatorsCodeGeneratorProvider.Instance,
+                    state.State.GenericParameters));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
    }
@@ -283,12 +299,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeMultiplyOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
-         .Select((state, _) => new OperatorsGeneratorState(state.State,
-                                                           state.State.KeyMember,
-                                                           state.Settings.CreateFactoryMethodName,
-                                                           state.Settings.MultiplyOperators,
-                                                           state.State.KeyMember.MultiplyOperators,
-                                                           MultiplyOperatorsCodeGeneratorProvider.Instance));
+         .Select((state, _) => new OperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.MultiplyOperators,
+                    state.State.KeyMember.MultiplyOperators,
+                    MultiplyOperatorsCodeGeneratorProvider.Instance,
+                    state.State.GenericParameters));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
    }
@@ -296,12 +314,14 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeDivisionOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var operators = validStates
-         .Select((state, _) => new OperatorsGeneratorState(state.State,
-                                                           state.State.KeyMember,
-                                                           state.Settings.CreateFactoryMethodName,
-                                                           state.Settings.DivisionOperators,
-                                                           state.State.KeyMember.DivisionOperators,
-                                                           DivisionOperatorsCodeGeneratorProvider.Instance));
+         .Select((state, _) => new OperatorsGeneratorState(
+                    state.State,
+                    state.State.KeyMember,
+                    state.Settings.CreateFactoryMethodName,
+                    state.Settings.DivisionOperators,
+                    state.State.KeyMember.DivisionOperators,
+                    DivisionOperatorsCodeGeneratorProvider.Instance,
+                    state.State.GenericParameters));
 
       InitializeOperatorsCodeGenerator(context, operators, options);
    }
@@ -383,9 +403,6 @@ public sealed class ValueObjectSourceGenerator()
       {
          if (!TryGetType(context, out var type))
             return null;
-
-         if (type.Arity > 0)
-            return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumsValueObjectsAndAdHocUnionsMustNotBeGeneric
 
          if (context.Attributes.IsDefaultOrEmpty)
             return null;

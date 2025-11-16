@@ -114,7 +114,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public void Should_not_generate_code_for_keyed_class_with_generic()
+   public async Task Should_generate_code_for_keyed_class_with_int_generic()
    {
       var source = """
 
@@ -126,17 +126,123 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
            [ValueObject<int>]
-         	public partial class TestValueObject<T>
+         	public partial class GenericValueObject<T>
+               where T : IEquatable<T>
          	{
            }
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
-         source,
-         [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Type 'TestValueObject<T>' must not be generic"]);
-      output.Should().BeNull();
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Formattable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Comparable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_struct_with_int_generic()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>]
+         	public partial struct GenericValueObject<T>
+               where T : IEquatable<T>
+         	{
+           }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Formattable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.Comparable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_string_generic()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<string>]
+         	public partial class GenericStringValueObject<T>
+               where T : class
+         	{
+           }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericStringValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericStringValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericStringValueObject`1.Comparable.g.cs",
+                        "Thinktecture.Tests.GenericStringValueObject`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericStringValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_guid_and_multiple_type_parameters()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<Guid>]
+         	public partial class MultiGenericValueObject<T1, T2>
+               where T1 : class
+               where T2 : struct
+         	{
+           }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.MultiGenericValueObject`2.ValueObject.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.Formattable.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.Parsable.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.Comparable.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.EqualityComparisonOperators.g.cs");
    }
 
    [Fact]

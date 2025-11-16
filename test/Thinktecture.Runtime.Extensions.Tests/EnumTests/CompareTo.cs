@@ -31,4 +31,15 @@ public class CompareTo
 
       SmartEnum_CaseSensitive.UpperCased.CompareTo(SmartEnum_CaseSensitive.LowerCased).Should().Be(-32);
    }
+
+   [Fact]
+   public void Should_support_CompareTo_for_generic_int_based_enum()
+   {
+      var item1 = SmartEnum_Generic_IntBased<string>.Item1;
+      var item2 = SmartEnum_Generic_IntBased<string>.Item2;
+
+      item1.CompareTo(item2).Should().BeLessThan(0);
+      item2.CompareTo(item1).Should().BeGreaterThan(0);
+      item1.CompareTo(item1).Should().Be(0);
+   }
 }

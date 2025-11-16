@@ -348,7 +348,7 @@ file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serializat
       if (!typeToConvert.IsGenericType || typeToConvert.IsGenericTypeDefinition)
          return false;
 
-      return typeof(").AppendTypeFullyQualified(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(") == typeToConvert.GetGenericTypeDefinition();");
+      return typeof(").AppendTypeFullyQualifiedWithoutGenerics(_type, _type.ContainingTypes).AppendGenericTypeParameters(_type, constructOpenGeneric: true).Append(") == typeToConvert.GetGenericTypeDefinition();");
       }
       else
       {

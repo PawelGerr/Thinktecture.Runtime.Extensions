@@ -48,7 +48,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum(CancellationToken cancellationToken)
    {
-      if (_state.KeyMember is not null)
+      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty;
+
+      if (_state.KeyMember is not null && !isGeneric)
       {
          _sb.Append(@"
    [global::System.ComponentModel.TypeConverter(typeof(global::Thinktecture.ThinktectureTypeConverter<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state.KeyMember).Append(", ").AppendTypeFullyQualified(_state.ValidationError).Append(">))]");
@@ -79,8 +81,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(">").AppendGenericConstraints(_state, @"
-      ").Append(@"
+      global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">
    {");
 
       GenerateCustomDelegateTypes();

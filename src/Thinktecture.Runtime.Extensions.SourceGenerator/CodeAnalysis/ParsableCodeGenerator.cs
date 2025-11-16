@@ -52,12 +52,13 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       var isKeyTypeString = state.KeyMember?.IsString() == true;
       var keyType = isKeyTypeString || state.HasStringBasedValidateMethod ? "string" : state.KeyMember?.TypeFullyQualified;
+      var genericName = GetFreeGenericName(state);
 
       sb.Append(@"
-   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
+   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<").Append(genericName).Append(">(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
+      where ").Append(genericName).Append(" : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
    {
-      return T.Validate(key, provider, out result);
+      return ").Append(genericName).Append(@".Validate(key, provider, out result);
    }");
 
       if (_isForEnum && isKeyTypeString)
@@ -65,13 +66,57 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          sb.Append(@"
 
 #if NET9_0_OR_GREATER
-   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(state.ValidationError).Append(@">
+   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<").Append(genericName).Append(">(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
+      where ").Append(genericName).Append(" : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(state.ValidationError).Append(@">
    {
-      return T.Validate(key, provider, out result);
+      return ").Append(genericName).Append(@".Validate(key, provider, out result);
    }
 #endif");
       }
+   }
+
+   private static string GetFreeGenericName(ParsableGeneratorState state)
+   {
+      var isDefaultNameTaken = false;
+      var isFactoryNameTaken = false;
+      int? genericIndex = null;
+
+      for (var i = 0; i < state.GenericParameters.Length; i++)
+      {
+         var genericParameter = state.GenericParameters[i];
+
+         if (genericParameter.Name == "TFactory")
+         {
+            isFactoryNameTaken = true;
+            continue;
+         }
+
+         if (genericParameter.Name == "T")
+         {
+            isDefaultNameTaken = true;
+            continue;
+         }
+
+         if (!genericParameter.Name.StartsWith("T", StringComparison.Ordinal))
+            continue;
+
+         if (genericParameter.Name.Length == 1)
+         {
+            isDefaultNameTaken = true;
+            continue;
+         }
+
+         if (Int32.TryParse(genericParameter.Name.Substring(1), out var parsedValue))
+            genericIndex = parsedValue;
+      }
+
+      if (!isDefaultNameTaken)
+         return "T";
+
+      if (!isFactoryNameTaken)
+         return "TFactory";
+
+      return $"T{(genericIndex is null ? 1 : genericIndex.Value + 1)}";
    }
 
    private static void GenerateParse(StringBuilder sb, ParsableGeneratorState state)

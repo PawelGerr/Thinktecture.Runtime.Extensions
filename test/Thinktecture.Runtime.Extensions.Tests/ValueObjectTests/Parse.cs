@@ -46,4 +46,12 @@ public class Parse
       FluentActions.Invoking(() => DecimalBasedClassValueObject.Parse("invalid", null))
                    .Should().Throw<FormatException>().WithMessage("The input string 'invalid' was not in a correct format.");
    }
+
+   [Fact]
+   public void Should_support_Parse_for_generic_string_based_value_objects()
+   {
+      var obj = ValueObject_Generic_StringBased<object>.Parse("test", null);
+
+      obj.Value.Should().Be("test");
+   }
 }

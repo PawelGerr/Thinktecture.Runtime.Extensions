@@ -313,6 +313,311 @@ public class TTRESG003_PropertyMustBeReadOnly
       }
    }
 
+   public class Keyless_enum_properties_must_be_readonly
+   {
+      [Fact]
+      public async Task Should_trigger_on_non_readonly_instance_property()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
+
+         var expectedCode = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int InstanceProperty { get; }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_non_readonly_static_property()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int {|#0:InstanceProperty|} { get; set; }
+               }
+            }
+            """;
+
+         var expectedCode = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int InstanceProperty { get; }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("InstanceProperty", "TestEnum");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_getter_expression_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get => 42;
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_getter_expression_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     get => 42;
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_getter_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceProperty|}
+                  {
+                     get { return 42; }
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_getter_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     get { return 42; }
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_setter_expression_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public static class Helper
+               {
+                  public static int Property { get; set; }
+               }
+
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceProperty|}
+                  {
+                     set => Helper.Property = value;
+                  }
+               }
+            }
+            """;
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_setter_expression_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public static class Helper
+               {
+                  public static int Property { get; set; }
+               }
+
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     set => Helper.Property = value;
+                  }
+               }
+            }
+            """;
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_instance_property_with_setter_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public int {|#0:InstanceProperty|}
+                  {
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_static_property_with_setter_body()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum]
+            	public partial class TestEnum
+            	{
+                  public static readonly TestEnum Item1 = default;
+
+                  public static int {|#0:InstanceProperty|}
+                  {
+                     set { }
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+   }
+
    public class KeyedValueObject_properties_must_be_readonly
    {
       [Fact]

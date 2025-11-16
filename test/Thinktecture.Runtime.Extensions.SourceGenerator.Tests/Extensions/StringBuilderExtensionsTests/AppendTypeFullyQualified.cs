@@ -17,7 +17,7 @@ public class AppendTypeFullyQualified
          new ContainingTypeState("Inner", true, false, [])
       ]);
 
-      sb.AppendTypeFullyQualified(type, containing);
+      sb.AppendTypeFullyQualifiedWithoutGenerics(type, containing);
       sb.ToString().Should().Be("global::MyNs.Outer.Inner.MyType");
    }
 
@@ -26,7 +26,7 @@ public class AppendTypeFullyQualified
    {
       var sb = new StringBuilder();
       var type = new StringBuilderTestHelpers.FakeNamespaceAndName(null, "MyType");
-      sb.AppendTypeFullyQualified(type, []);
+      sb.AppendTypeFullyQualifiedWithoutGenerics(type, []);
       sb.ToString().Should().Be("global::MyType");
    }
 

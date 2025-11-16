@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorState>, ITypeInformationProvider<IParsableTypeInformation>
+public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorState>, ITypeInformationProvider<IParsableTypeInformation>, IHasGenerics
 {
    public IParsableTypeInformation Type { get; }
    public IMemberInformation? KeyMember { get; }
@@ -9,6 +9,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
    public bool IsKeyMemberParsable { get; }
    public bool IsEnum { get; }
    public bool HasStringBasedValidateMethod { get; }
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public ParsableGeneratorState(
       IParsableTypeInformation type,
@@ -17,7 +18,8 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       bool skipIParsable,
       bool isKeyMemberParsable,
       bool isEnum,
-      bool hasStringBasedValidateMethod)
+      bool hasStringBasedValidateMethod,
+      ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
       KeyMember = keyMember;
@@ -26,6 +28,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
       IsKeyMemberParsable = isKeyMemberParsable;
       IsEnum = isEnum;
       HasStringBasedValidateMethod = hasStringBasedValidateMethod;
+      GenericParameters = genericParameters;
    }
 
    public bool Equals(ParsableGeneratorState other)
@@ -36,7 +39,8 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
              && SkipIParsable == other.SkipIParsable
              && IsKeyMemberParsable == other.IsKeyMemberParsable
              && IsEnum == other.IsEnum
-             && HasStringBasedValidateMethod == other.HasStringBasedValidateMethod;
+             && HasStringBasedValidateMethod == other.HasStringBasedValidateMethod
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override bool Equals(object? obj)
@@ -55,6 +59,7 @@ public readonly struct ParsableGeneratorState : IEquatable<ParsableGeneratorStat
          hashCode = (hashCode * 397) ^ IsKeyMemberParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsEnum.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStringBasedValidateMethod.GetHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }

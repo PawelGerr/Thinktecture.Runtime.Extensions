@@ -376,4 +376,78 @@ public class GenerateImplementation
       // Assert
       await Verifier.Verify(sb.ToString());
    }
+
+   [Fact]
+   public async Task ForEnum_WithGenericTypeAndStringKey_GeneratesCorrectly()
+   {
+      // Arrange
+      var state = new ParsableStateBuilder()
+                  .WithGenericType("global::Thinktecture.Tests.GenericEnum", "GenericEnum", "<T>", "where T : class")
+                  .WithStringKeyMember("_key")
+                  .WithIsEnum()
+                  .Build();
+
+      var sb = new System.Text.StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.ForEnum.GenerateImplementation(sb, state);
+
+      // Assert
+      await Verifier.Verify(sb.ToString());
+   }
+
+   [Fact]
+   public async Task ForEnum_WithGenericTypeAndIntKey_GeneratesCorrectly()
+   {
+      // Arrange
+      var state = new ParsableStateBuilder()
+                  .WithGenericType("global::Thinktecture.Tests.GenericIntEnum", "GenericIntEnum", "<T>", "where T : System.IEquatable<T>")
+                  .WithIntKeyMember("_key")
+                  .WithIsEnum()
+                  .Build();
+
+      var sb = new System.Text.StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.ForEnum.GenerateImplementation(sb, state);
+
+      // Assert
+      await Verifier.Verify(sb.ToString());
+   }
+
+   [Fact]
+   public async Task ForValueObject_WithGenericTypeAndStringKey_GeneratesCorrectly()
+   {
+      // Arrange
+      var state = new ParsableStateBuilder()
+                  .WithGenericType("global::Thinktecture.Tests.GenericValueObject", "GenericValueObject", "<TKey, TValue>", "where TKey : notnull where TValue : class")
+                  .WithStringKeyMember("_value")
+                  .Build();
+
+      var sb = new System.Text.StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.ForValueObject.GenerateImplementation(sb, state);
+
+      // Assert
+      await Verifier.Verify(sb.ToString());
+   }
+
+   [Fact]
+   public async Task ForValueObject_WithGenericTypeAndIntKey_GeneratesCorrectly()
+   {
+      // Arrange
+      var state = new ParsableStateBuilder()
+                  .WithGenericType("global::Thinktecture.Tests.GenericIntValueObject", "GenericIntValueObject", "<T>", "where T : System.IComparable<T>")
+                  .WithIntKeyMember("_value")
+                  .Build();
+
+      var sb = new System.Text.StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.ForValueObject.GenerateImplementation(sb, state);
+
+      // Assert
+      await Verifier.Verify(sb.ToString());
+   }
 }
