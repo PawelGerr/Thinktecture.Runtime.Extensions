@@ -24,6 +24,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new("A");
                public static readonly TestEnum Item2 = new("B");
                private TestEnum(string key) { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -48,6 +50,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new("A");
                public static readonly TestEnum Item2 = new("B");
                private TestEnum(string key) { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -70,6 +74,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new("A");
                public static readonly TestEnum Item2 = new("B");
                private TestEnum(string key) { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -93,6 +99,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new("A");
                public static readonly TestEnum Item2 = new("B");
                private TestEnum(string key) { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -116,6 +124,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new();
                public static readonly TestEnum Item2 = new();
                private TestEnum() { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -140,6 +150,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new();
                public static readonly TestEnum Item2 = new();
                private TestEnum() { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;
@@ -163,6 +175,8 @@ public class TTRESG060_SmartEnumMustNotObjectFactoryConstructor
                public static readonly TestEnum Item1 = new();
                public static readonly TestEnum Item2 = new();
                private TestEnum() { }
+
+               public static ValidationError Validate(string value, IFormatProvider provider, out TestEnum item) => throw new NotImplementedException();
             }
          }
          """;

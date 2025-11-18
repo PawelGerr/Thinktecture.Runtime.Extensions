@@ -54,7 +54,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
       DiagnosticsDescriptors.ObjectFactoryMustHaveCorrespondingConstructor,
-      DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor,
+      DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor,
+      DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod,
+      DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod,
    ];
 
    /// <inheritdoc />
@@ -799,20 +801,45 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       IObjectCreationOperation attribute,
       INamedTypeSymbol attributeType)
    {
+      var valueType = attributeType.TypeArguments[0];
+      var location = objectType.GetTypeIdentifierLocation(context.CancellationToken);
+
       if (attribute.FindHasCorrespondingConstructor() == true)
       {
-         var valueType = attributeType.TypeArguments[0];
-
          if (objectType.IsSmartEnumType(out _))
          {
-            var location = objectType.GetTypeIdentifierLocation(context.CancellationToken);
-
-            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumMustNotObjectFactoryConstructor, location, objectType, valueType);
+            ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor, location, objectType, valueType);
          }
          else
          {
             CheckForConstructorWithArgument(context, objectType, valueType);
          }
+      }
+
+      var validationErrorType = objectType.FindAttribute(static attr => attr.IsValidationErrorAttribute())?.AttributeClass?.TypeArguments[0];
+
+      // TTRESG061: Check for static Validate method (always required)
+      if (!objectType.HasValidateMethod(valueType, validationErrorType))
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod,
+            location,
+            BuildTypeName(objectType),
+            BuildTypeName(objectType.WithNullableAnnotation(NullableAnnotation.Annotated)),
+            BuildTypeName(valueType),
+            BuildTypeName(valueType.WithNullableAnnotation(NullableAnnotation.Annotated)),
+            validationErrorType is null ? Constants.ValidationError.NAME : BuildTypeName(validationErrorType));
+      }
+
+      // TTRESG062: Check for ToValue method (conditionally required)
+      var useForSerialization = attribute.FindUseForSerialization() ?? SerializationFrameworks.None;
+      var useWithEntityFramework = attribute.FindUseWithEntityFramework() ?? false;
+
+      if ((useForSerialization != SerializationFrameworks.None || useWithEntityFramework)
+          && !objectType.HasToValueMethod(valueType))
+      {
+         ReportDiagnostic(context, DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod, location, objectType, valueType);
       }
    }
 
@@ -1162,6 +1189,16 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1, arg2));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2, string arg3)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1, arg2, arg3));
+   }
+
+   private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2, string arg3, string arg4)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1, arg2, arg3, arg4));
    }
 
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ITypeSymbol arg0, string arg1)

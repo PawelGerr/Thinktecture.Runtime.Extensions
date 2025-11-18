@@ -18,7 +18,10 @@ public class TTRESG059_ObjectFactoryMustHaveCorrespondingConstructor
          namespace TestNamespace
          {
             [ObjectFactory<int>(HasCorrespondingConstructor = true)]
-            public partial class {|#0:TestClass|};
+            public partial class {|#0:TestClass|}
+            {
+               public static ValidationError Validate(int value, IFormatProvider provider, out TestClass item) => throw new NotImplementedException();
+            }
          }
          """;
 
@@ -39,6 +42,8 @@ public class TTRESG059_ObjectFactoryMustHaveCorrespondingConstructor
             public partial class {|#0:TestClass|}
             {
                public TestClass(int value) { }
+
+               public static ValidationError Validate(int value, IFormatProvider provider, out TestClass item) => throw new NotImplementedException();
             }
          }
          """;
@@ -56,7 +61,10 @@ public class TTRESG059_ObjectFactoryMustHaveCorrespondingConstructor
          namespace TestNamespace
          {
             [ObjectFactory<int>(HasCorrespondingConstructor = false)]
-            public partial class {|#0:TestClass|};
+            public partial class {|#0:TestClass|}
+            {
+               public static ValidationError Validate(int value, IFormatProvider provider, out TestClass item) => throw new NotImplementedException();
+            }
          }
          """;
 
@@ -74,7 +82,10 @@ public class TTRESG059_ObjectFactoryMustHaveCorrespondingConstructor
          namespace TestNamespace
          {
             [ObjectFactory<int>]
-            public partial class {|#0:TestClass|};
+            public partial class {|#0:TestClass|}
+            {
+               public static ValidationError Validate(int value, IFormatProvider provider, out TestClass item) => throw new NotImplementedException();
+            }
          }
          """;
 
