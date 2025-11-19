@@ -1,9 +1,4 @@
 ﻿
-   private static global::Thinktecture.ValidationError? Validate<T>( key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.KeylessEnum? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.KeylessEnum, , global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.KeylessEnum Parse(string s, global::System.IFormatProvider? provider)

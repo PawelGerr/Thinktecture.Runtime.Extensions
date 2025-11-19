@@ -79,7 +79,7 @@ public static class AttributeDataExtensions
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_IFORMATTABLE);
    }
-   
+
    public static bool? FindSkipEqualityComparison(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, "SkipEqualityComparison");
@@ -171,6 +171,11 @@ public static class AttributeDataExtensions
    {
       return GetEnumParameterValue<StringComparison>(attributeData, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON)
              ?? StringComparison.OrdinalIgnoreCase;
+   }
+
+   public static bool HasDefaultStringComparison(this AttributeData attributeData)
+   {
+      return GetEnumParameterValue<StringComparison>(attributeData, "DefaultStringComparison") is not null;
    }
 
    public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)
@@ -294,6 +299,14 @@ public static class AttributeDataExtensions
          return null;
 
       return (comparerAccessorTypes, keyType);
+   }
+
+   public static bool NeedsToValueMethod(this AttributeData objectFactoryAttributeData)
+   {
+      var useForSerialization = objectFactoryAttributeData.FindUseForSerialization();
+      var useWithEntityFramework = objectFactoryAttributeData.FindUseWithEntityFramework();
+
+      return useForSerialization != SerializationFrameworks.None || useWithEntityFramework;
    }
 
    private static string? GetStringParameterValue(AttributeData attributeData, string name)

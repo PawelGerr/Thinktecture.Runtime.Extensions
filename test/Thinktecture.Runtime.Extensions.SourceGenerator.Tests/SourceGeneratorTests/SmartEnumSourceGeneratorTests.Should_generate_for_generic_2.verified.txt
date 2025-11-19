@@ -9,24 +9,11 @@ partial class TestEnum<T> :
    , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum<T>>
 #endif
 {
-   private static global::Thinktecture.ValidationError? Validate<TFactory>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum<T>? result)
-      where TFactory : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum<T>, string, global::Thinktecture.ValidationError>
-   {
-      return TFactory.Validate(key, provider, out result);
-   }
-
-#if NET9_0_OR_GREATER
-   private static global::Thinktecture.ValidationError? Validate<TFactory>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestEnum<T>? result)
-      where TFactory : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestEnum<T>, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>
-   {
-      return TFactory.Validate(key, provider, out result);
-   }
-#endif
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestEnum<T> Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum<T>>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestEnum<T>, string, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -38,7 +25,7 @@ partial class TestEnum<T> :
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestEnum<T> Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum<T>>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestEnum<T>, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -59,7 +46,7 @@ partial class TestEnum<T> :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum<T>>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestEnum<T>, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }
 
@@ -70,7 +57,7 @@ partial class TestEnum<T> :
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum<T> result)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestEnum<T>>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestEnum<T>, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }
 #endif

@@ -63,7 +63,6 @@ public class GenerateImplementation
       // Assert - Should use string directly, not parse int first
       var result = sb.ToString();
       result.Should().NotContain("ParseValue");
-      result.Should().Contain("Validate<global::Thinktecture.Tests.MixedType>(s, provider, out var result)");
       await Verifier.Verify(result);
    }
 

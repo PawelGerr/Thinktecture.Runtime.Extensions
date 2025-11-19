@@ -6,16 +6,11 @@ namespace Thinktecture.Tests;
 partial class TestClass :
    global::System.IParsable<global::Thinktecture.Tests.TestClass>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestClass? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestClass, string, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestClass Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestClass>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestClass, string, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -35,7 +30,7 @@ partial class TestClass :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.TestClass>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestClass, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }
 }

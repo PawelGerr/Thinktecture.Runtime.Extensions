@@ -1,15 +1,10 @@
 ﻿
-   private static global::Thinktecture.ValidationError? Validate<TFactory>(global::System.Int32 key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.GenericIntValueObject<T>? result)
-      where TFactory : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.GenericIntValueObject<T>, global::System.Int32, global::Thinktecture.ValidationError>
-   {
-      return TFactory.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.GenericIntValueObject<T> Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = ParseValue<global::System.Int32>(s, provider);
-      var validationError = Validate<global::Thinktecture.Tests.GenericIntValueObject<T>>(key, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericIntValueObject<T>, global::System.Int32, global::Thinktecture.ValidationError>(key, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -42,7 +37,7 @@
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.GenericIntValueObject<T>>(key, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericIntValueObject<T>, global::System.Int32, global::Thinktecture.ValidationError>(key, provider, out result!);
       return validationError is null;
    }
 

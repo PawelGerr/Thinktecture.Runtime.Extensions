@@ -8,17 +8,12 @@ partial class OuterClass
 partial class TestEnum2 :
    global::System.IParsable<global::Thinktecture.Tests.OuterClass.TestEnum2>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(int key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.OuterClass.TestEnum2? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.OuterClass.TestEnum2, int, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.OuterClass.TestEnum2 Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = ParseValue<int>(s, provider);
-      var validationError = Validate<global::Thinktecture.Tests.OuterClass.TestEnum2>(key, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.OuterClass.TestEnum2, int, global::Thinktecture.ValidationError>(key, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -51,7 +46,7 @@ partial class TestEnum2 :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.OuterClass.TestEnum2>(key, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.OuterClass.TestEnum2, int, global::Thinktecture.ValidationError>(key, provider, out result!);
       return validationError is null;
    }
 

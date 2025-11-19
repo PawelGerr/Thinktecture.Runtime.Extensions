@@ -1,7 +1,9 @@
 namespace Thinktecture.CodeAnalysis;
 
 public readonly struct ValidationErrorState(string typeFullyQualified)
-   : ITypeFullyQualified, IEquatable<ValidationErrorState>, IHashCodeComputable
+   : ITypeFullyQualified,
+     IEquatable<ValidationErrorState>,
+     IHashCodeComputable
 {
    public static readonly ValidationErrorState Default = new("global::Thinktecture.ValidationError");
 

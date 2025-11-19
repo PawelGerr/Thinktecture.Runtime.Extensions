@@ -1,22 +1,9 @@
 ﻿
-   private static global::Thinktecture.Tests.CountryValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.Country? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Country, string, global::Thinktecture.Tests.CountryValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
-
-#if NET9_0_OR_GREATER
-   private static global::Thinktecture.Tests.CountryValidationError? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.Country? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Country, global::System.ReadOnlySpan<char>, global::Thinktecture.Tests.CountryValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
-#endif
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.Country Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.Country>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Country, string, global::Thinktecture.Tests.CountryValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -28,7 +15,7 @@
    /// <inheritdoc />
    public static global::Thinktecture.Tests.Country Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.Country>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Country, global::Thinktecture.Tests.CountryValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -49,7 +36,7 @@
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.Country>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Country, string, global::Thinktecture.Tests.CountryValidationError>(s, provider, out result!);
       return validationError is null;
    }
 
@@ -60,7 +47,7 @@
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.Country result)
    {
-      var validationError = Validate<global::Thinktecture.Tests.Country>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Country, global::Thinktecture.Tests.CountryValidationError>(s, provider, out result!);
       return validationError is null;
    }
 #endif

@@ -1,14 +1,9 @@
 ﻿
-   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.MixedType? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.MixedType, string, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.MixedType Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.MixedType>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.MixedType, string, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -28,6 +23,6 @@
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.MixedType>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.MixedType, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }

@@ -15,6 +15,13 @@ public static class Constants
       public const AccessModifier DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER = AccessModifier.Private;
    }
 
+   public static class ValidationError
+   {
+      public const string NAME = "ValidationError";
+      public const string NAMESPACE = "Thinktecture";
+      public const string FULL_NAME = $"{NAMESPACE}.{NAME}";
+   }
+
    public static class Modules
    {
       public const string THINKTECTURE_RUNTIME_EXTENSIONS_JSON = "Thinktecture.Runtime.Extensions.Json.dll";
@@ -48,6 +55,18 @@ public static class Constants
       public static class IDisallowDefaultValue
       {
          public const string NAME = "IDisallowDefaultValue";
+         public const string NAMESPACE = "Thinktecture";
+      }
+
+      public static class ObjectFactory
+      {
+         public const string NAME = "IObjectFactory";
+         public const string NAMESPACE = "Thinktecture";
+      }
+
+      public static class Convertible
+      {
+         public const string NAME = "IConvertible";
          public const string NAMESPACE = "Thinktecture";
       }
    }

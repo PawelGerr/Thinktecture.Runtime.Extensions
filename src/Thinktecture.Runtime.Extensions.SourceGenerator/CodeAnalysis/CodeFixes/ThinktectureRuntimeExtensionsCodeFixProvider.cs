@@ -21,6 +21,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _DEFINE_VALUE_OBJECT_EQUALITY_COMPARER = "Define Value Object equality comparer";
    private const string _DEFINE_VALUE_OBJECT_COMPARER = "Define Value Object comparer";
    private const string _ALIGN_COMPARISON_EQUALITY_OPERATORS = "Align comparison/equality operators";
+   private const string _GENERATE_VALIDATE_METHOD = "Generate Validate method";
+   private const string _GENERATE_TO_VALUE_METHOD = "Generate ToValue method";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -41,6 +43,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.UnionRecordMustBeSealed.Id,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id,
       DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch.Id,
+      DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod.Id,
+      DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod.Id,
    ];
 
    /// <inheritdoc />
@@ -125,6 +129,14 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_REQUIRED, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().MemberDeclaration, SyntaxKind.RequiredKeyword), _MAKE_MEMBER_REQUIRED), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_GENERATE_VALIDATE_METHOD, t => GenerateValidateMethodAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _GENERATE_VALIDATE_METHOD), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod.Id)
+         {
+            context.RegisterCodeFix(CodeAction.Create(_GENERATE_TO_VALUE_METHOD, t => GenerateToValueMethodAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _GENERATE_TO_VALUE_METHOD), diagnostic);
          }
       }
    }
@@ -400,9 +412,140 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return newDoc;
    }
 
-   private static ThrowStatementSyntax BuildThrowNotImplementedException()
+   private static async Task<Document> GenerateValidateMethodAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
    {
-      var notImplementedExceptionType = SyntaxFactory.ParseTypeName($"global::System.{nameof(NotImplementedException)}");
+      if (declaration is null)
+         return document;
+
+      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (model is null)
+         return document;
+
+      var objectType = model.GetDeclaredSymbol(declaration, cancellationToken);
+
+      if (objectType is null)
+         return document;
+
+      var validationErrorType = objectType.FindAttribute(static attr => attr.IsValidationErrorAttribute())?.AttributeClass?.TypeArguments[0];
+      var newDeclaration = declaration;
+
+      var attributes = objectType.GetAttributes();
+
+      for (var i = 0; i < attributes.Length; i++)
+      {
+         var attribute = attributes[i];
+
+         if (attribute.AttributeClass?.IsObjectFactoryAttribute() != true)
+            continue;
+
+         var valueType = attribute.AttributeClass.TypeArguments[0];
+
+         if (objectType.HasValidateMethod(valueType, validationErrorType))
+            continue;
+
+         var objectTypeName = SyntaxFactory.ParseTypeName(objectType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+         var valueTypeName = SyntaxFactory.ParseTypeName(valueType.WithNullableAnnotation(NullableAnnotation.Annotated).ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+         var validationErrorTypeName = validationErrorType is null
+                                          ? SyntaxFactory.ParseTypeName("ValidationError")
+                                          : SyntaxFactory.ParseTypeName(validationErrorType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+
+         var valueParameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("value"))
+                                           .WithType(valueTypeName);
+
+         var providerParameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("provider"))
+                                              .WithType(SyntaxFactory.NullableType(SyntaxFactory.ParseTypeName("IFormatProvider")));
+
+         var itemOutType = objectType.IsReferenceType
+                              ? SyntaxFactory.NullableType(objectTypeName)
+                              : objectTypeName;
+
+         var itemParameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("item"))
+                                          .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.OutKeyword)))
+                                          .WithType(itemOutType);
+
+         var returnType = SyntaxFactory.NullableType(validationErrorTypeName);
+
+         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
+
+         var validateMethod = SyntaxFactory.MethodDeclaration(returnType, "Validate")
+                                           .WithModifiers(SyntaxFactory.TokenList(
+                                                             SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                                                             SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
+                                           .WithParameterList(SyntaxFactory.ParameterList(
+                                                                 SyntaxFactory.SeparatedList([valueParameter, providerParameter, itemParameter])))
+                                           .WithBody(methodBody)
+                                           .WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed);
+
+         newDeclaration = newDeclaration.AddMembers(validateMethod);
+      }
+
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      var newDoc = document.WithSyntaxRoot(newRoot);
+
+      return newDoc;
+   }
+
+   private static async Task<Document> GenerateToValueMethodAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? declaration,
+      CancellationToken cancellationToken)
+   {
+      if (declaration is null)
+         return document;
+
+      var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (model is null)
+         return document;
+
+      var objectType = model.GetDeclaredSymbol(declaration, cancellationToken);
+
+      if (objectType is null)
+         return document;
+
+      var attributes = objectType.GetAttributes();
+      var newDeclaration = declaration;
+
+      for (var i = 0; i < attributes.Length; i++)
+      {
+         var attribute = attributes[i];
+
+         if (attribute.AttributeClass?.IsObjectFactoryAttribute() != true)
+            continue;
+
+         var valueType = attribute.AttributeClass.TypeArguments[0];
+
+         if (!attribute.NeedsToValueMethod() || objectType.HasToValueMethod(valueType))
+            continue;
+
+         var valueTypeName = SyntaxFactory.ParseTypeName(valueType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+
+         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
+
+         var toValueMethod = SyntaxFactory.MethodDeclaration(valueTypeName, "ToValue")
+                                          .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
+                                          .WithParameterList(SyntaxFactory.ParameterList())
+                                          .WithBody(methodBody)
+                                          .WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed);
+
+         newDeclaration = newDeclaration.AddMembers(toValueMethod);
+      }
+
+      var newRoot = root.ReplaceNode(declaration, newDeclaration);
+      var newDoc = document.WithSyntaxRoot(newRoot);
+
+      return newDoc;
+   }
+
+   private static ThrowStatementSyntax BuildThrowNotImplementedException(bool fullyQualified = true)
+   {
+      var notImplementedExceptionType = SyntaxFactory.ParseTypeName(fullyQualified ? $"global::System.{nameof(NotImplementedException)}" : nameof(NotImplementedException));
       var newNotImplementedException = SyntaxFactory.ObjectCreationExpression(notImplementedExceptionType, SyntaxFactory.ArgumentList(), null);
       var throwStatement = SyntaxFactory.ThrowStatement(newNotImplementedException);
       return throwStatement;

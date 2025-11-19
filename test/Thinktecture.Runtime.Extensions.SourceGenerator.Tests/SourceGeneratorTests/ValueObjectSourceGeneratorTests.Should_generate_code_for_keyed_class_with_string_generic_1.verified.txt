@@ -6,16 +6,11 @@ namespace Thinktecture.Tests;
 partial class GenericStringValueObject<T> :
    global::System.IParsable<global::Thinktecture.Tests.GenericStringValueObject<T>>
 {
-   private static global::Thinktecture.ValidationError? Validate<TFactory>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.GenericStringValueObject<T>? result)
-      where TFactory : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.GenericStringValueObject<T>, string, global::Thinktecture.ValidationError>
-   {
-      return TFactory.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.GenericStringValueObject<T> Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.GenericStringValueObject<T>>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericStringValueObject<T>, string, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -35,7 +30,7 @@ partial class GenericStringValueObject<T> :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.GenericStringValueObject<T>>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericStringValueObject<T>, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }
 }

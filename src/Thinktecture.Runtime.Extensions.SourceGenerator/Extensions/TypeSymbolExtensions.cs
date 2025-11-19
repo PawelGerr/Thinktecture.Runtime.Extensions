@@ -31,6 +31,14 @@ public static class TypeSymbolExtensions
              || type.SpecialType == SpecialType.System_MulticastDelegate;
    }
 
+   public static bool IsIFormatProvider([NotNullWhen(true)] this ITypeSymbol? type)
+   {
+      if (type is null || type.TypeKind == TypeKind.Error)
+         return false;
+
+      return type is { Name: "IFormatProvider", ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true } };
+   }
+
    /// <summary>
    /// Keyed or complex value object.
    /// </summary>
@@ -324,13 +332,33 @@ public static class TypeSymbolExtensions
       };
    }
 
-   public static bool IsObjectFactoryAttribute(this INamedTypeSymbol type)
+   public static bool IsObjectFactoryAttribute(this INamedTypeSymbol? type)
    {
       return type is
       {
          Name: Constants.Attributes.ObjectFactory.NAME,
          TypeArguments.Length: 1,
          ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
+      };
+   }
+
+   public static bool IsObjectFactoryInterface(this INamedTypeSymbol type)
+   {
+      return type is
+      {
+         Name: Constants.Interfaces.ObjectFactory.NAME,
+         TypeArguments.Length: 3,
+         ContainingNamespace: { Name: Constants.Interfaces.ObjectFactory.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
+      };
+   }
+
+   public static bool IsConvertibleInterface(this INamedTypeSymbol type)
+   {
+      return type is
+      {
+         Name: Constants.Interfaces.Convertible.NAME,
+         TypeArguments.Length: 1,
+         ContainingNamespace: { Name: Constants.Interfaces.Convertible.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true }
       };
    }
 
@@ -342,6 +370,11 @@ public static class TypeSymbolExtensions
          TypeArguments.Length: 1,
          ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true }
       };
+   }
+
+   public static bool IsDefaultValidationErrorType(this ITypeSymbol type)
+   {
+      return type is { Name: Constants.ValidationError.NAME, ContainingNamespace: { Name: Constants.ValidationError.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
    public static bool IsKeyMemberComparerAttribute(this INamedTypeSymbol? attributeType)
@@ -631,7 +664,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
       CancellationToken cancellationToken,
-      OperationAnalysisContext? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
@@ -653,7 +686,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
-      OperationAnalysisContext? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       void ReportField(IFieldSymbol field)
       {
@@ -1033,6 +1066,146 @@ public static class TypeSymbolExtensions
 
          if (@interface.IsIDisallowDefaultValue())
             return true;
+      }
+
+      return false;
+   }
+
+   public static bool HasValidateMethod(
+      this ITypeSymbol objectType,
+      ITypeSymbol valueType,
+      ITypeSymbol? validationError)
+   {
+      var members = objectType.GetMembers();
+
+      for (var i = 0; i < members.Length; i++)
+      {
+         var member = members[i];
+
+         if (member is not IMethodSymbol method)
+            continue;
+
+         if (!method.IsStatic)
+            continue;
+
+         if (method.Parameters.Length != 3)
+            continue;
+
+         if (method.MethodKind == MethodKind.ExplicitInterfaceImplementation)
+         {
+            var foundInterface = false;
+
+            for (var j = 0; j < method.ExplicitInterfaceImplementations.Length; j++)
+            {
+               var interfaceMember = method.ExplicitInterfaceImplementations[j];
+
+               if (interfaceMember.Name == "Validate"
+                   && interfaceMember.ContainingType.IsObjectFactoryInterface()
+                   && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[0], objectType)
+                   && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[1], valueType)
+                   && (validationError is not null
+                          ? SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[2], validationError)
+                          : interfaceMember.ContainingType.TypeArguments[2].IsDefaultValidationErrorType())
+                   && objectType.FindImplementationForInterfaceMember(interfaceMember) is not null)
+               {
+                  foundInterface = true;
+                  break;
+               }
+            }
+
+            if (!foundInterface)
+               continue;
+         }
+         else if (method.MethodKind != MethodKind.Ordinary || method.Name != "Validate")
+         {
+            continue;
+         }
+
+         // Check parameter 1: TValue? value
+         if (!SymbolEqualityComparer.Default.Equals(method.Parameters[0].Type, valueType))
+            continue;
+
+         // Check parameter 2: IFormatProvider? provider
+         if (!method.Parameters[1].Type.IsIFormatProvider())
+            continue;
+
+         // Check parameter 3: out T? item (or out T item for structs)
+         var outParam = method.Parameters[2];
+
+         if (outParam.RefKind != RefKind.Out)
+            continue;
+
+         if (!SymbolEqualityComparer.Default.Equals(outParam.Type, objectType))
+            continue;
+
+         // Check return type (validation error type)
+         if (validationError is not null)
+         {
+            if (!SymbolEqualityComparer.Default.Equals(validationError, method.ReturnType))
+               continue;
+         }
+         else if (!method.ReturnType.IsDefaultValidationErrorType())
+         {
+            continue;
+         }
+
+         return true;
+      }
+
+      return false;
+   }
+
+   public static bool HasToValueMethod(
+      this ITypeSymbol objectType,
+      ITypeSymbol valueType)
+   {
+      var members = objectType.GetMembers();
+
+      for (var i = 0; i < members.Length; i++)
+      {
+         var member = members[i];
+
+         if (member is not IMethodSymbol method)
+            continue;
+
+         if (method.IsStatic)
+            continue;
+
+         if (!method.Parameters.IsEmpty)
+            continue;
+
+         if (method.MethodKind == MethodKind.ExplicitInterfaceImplementation)
+         {
+            var foundInterface = false;
+
+            for (var j = 0; j < method.ExplicitInterfaceImplementations.Length; j++)
+            {
+               var interfaceMember = method.ExplicitInterfaceImplementations[j];
+
+               if (interfaceMember.Name == "ToValue"
+                   && interfaceMember.ContainingType.IsConvertibleInterface()
+                   && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[0], valueType)
+                   && objectType.FindImplementationForInterfaceMember(interfaceMember) is not null)
+               {
+                  foundInterface = true;
+                  break;
+               }
+            }
+
+            if (!foundInterface)
+               continue;
+         }
+         else if (method.MethodKind != MethodKind.Ordinary || method.Name != "ToValue")
+         {
+            continue;
+         }
+
+         // Check return type: TValue (ignoring nullability)
+         if (!SymbolEqualityComparer.Default.Equals(method.ReturnType, valueType))
+            continue;
+
+         // Found a matching ToValue method
+         return true;
       }
 
       return false;

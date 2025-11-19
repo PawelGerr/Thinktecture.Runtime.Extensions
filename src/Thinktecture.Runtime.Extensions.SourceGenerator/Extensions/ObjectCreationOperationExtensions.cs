@@ -35,6 +35,16 @@ public static class ObjectCreationOperationExtensions
       return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.HAS_CORRESPONDING_CONSTRUCTOR);
    }
 
+   public static SerializationFrameworks? FindUseForSerialization(this IObjectCreationOperation operation)
+   {
+      return (SerializationFrameworks?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.USE_FOR_SERIALIZATION);
+   }
+
+   public static bool? FindUseWithEntityFramework(this IObjectCreationOperation operation)
+   {
+      return GetBooleanParameterValue(operation.Initializer, Constants.Attributes.Properties.USE_WITH_ENTITY_FRAMEWORK);
+   }
+
    public static AccessModifier? FindKeyMemberAccessModifier(this IObjectCreationOperation operation)
    {
       var modifier = (AccessModifier?)GetIntegerParameterValue(operation.Initializer, Constants.Attributes.Properties.KEY_MEMBER_ACCESS_MODIFIER);

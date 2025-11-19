@@ -1,14 +1,9 @@
 ﻿
-   private static global::Thinktecture.ValidationError? Validate<T>(string key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.TestType? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.TestType, string, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.TestType Parse(string s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<global::Thinktecture.Tests.TestType>(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestType, string, global::Thinktecture.ValidationError>(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -28,6 +23,6 @@
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.TestType>(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestType, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }

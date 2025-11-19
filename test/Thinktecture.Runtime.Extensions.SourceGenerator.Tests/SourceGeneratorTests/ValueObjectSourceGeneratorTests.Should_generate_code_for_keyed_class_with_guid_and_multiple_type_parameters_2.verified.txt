@@ -6,17 +6,12 @@ namespace Thinktecture.Tests;
 partial class MultiGenericValueObject<T1, T2> :
    global::System.IParsable<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(global::System.Guid key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>, global::System.Guid, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.MultiGenericValueObject<T1, T2> Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = ParseValue<global::System.Guid>(s, provider);
-      var validationError = Validate<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>>(key, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>, global::System.Guid, global::Thinktecture.ValidationError>(key, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -49,7 +44,7 @@ partial class MultiGenericValueObject<T1, T2> :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>>(key, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.MultiGenericValueObject<T1, T2>, global::System.Guid, global::Thinktecture.ValidationError>(key, provider, out result!);
       return validationError is null;
    }
 
