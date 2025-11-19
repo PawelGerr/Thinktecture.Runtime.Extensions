@@ -170,8 +170,8 @@ public record TTRESG058_AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefa
          {
             public partial struct OtherValueObject : IDisallowDefaultValue;
 
-            [ValueObject<OtherValueObject>(AllowDefaultStructs = true)]
-            public partial class {|#0:TestValueObject|};
+            [{|#0:ValueObject<OtherValueObject>(AllowDefaultStructs = true)|}]
+            public partial class TestValueObject;
          }
          """;
 

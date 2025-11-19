@@ -606,7 +606,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       bool populateValueObjectMemberSettings,
       CancellationToken cancellationToken,
-      OperationAnalysisContext? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       var allowedCaptureSymbols = reportDiagnostic is not null;
 
@@ -628,7 +628,7 @@ public static class TypeSymbolExtensions
       bool instanceMembersOnly,
       CancellationToken cancellationToken,
       Location? locationOfDerivedType = null,
-      OperationAnalysisContext? reportDiagnostic = null)
+      SymbolAnalysisContext? reportDiagnostic = null)
    {
       void ReportField(IFieldSymbol field)
       {

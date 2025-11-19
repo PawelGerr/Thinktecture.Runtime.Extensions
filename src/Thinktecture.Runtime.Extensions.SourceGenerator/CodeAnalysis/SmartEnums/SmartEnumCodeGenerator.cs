@@ -1091,21 +1091,6 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateEnsureValid(IMemberState keyProperty)
-   {
-      _sb.Append(@"
-
-      /// <summary>
-      /// Checks whether current enumeration item is valid.
-      /// </summary>
-      /// <exception cref=""System.InvalidOperationException"">The enumeration item is not valid.</exception>
-      public void EnsureValid()
-      {
-         if (!IsValid)
-            throw new global::System.InvalidOperationException($""The current enumeration item of type \""").Append(_state.Name).Append(@"\"" with identifier \""{this.").Append(keyProperty.Name).Append(@"}\"" is not valid."");
-      }");
-   }
-
    private void GenerateToValue(IMemberState keyProperty)
    {
       _sb.Append(@"

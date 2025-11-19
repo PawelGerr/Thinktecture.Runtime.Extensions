@@ -35,8 +35,6 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    {
       var isKeyTypeString = state.KeyMember?.IsString() == true;
 
-      GenerateValidate(sb, state);
-
       GenerateParse(sb, state);
 
       if (_isForEnum && isKeyTypeString)
@@ -46,32 +44,6 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
       if (_isForEnum && isKeyTypeString)
          GenerateTryParseForReadOnlySpanOfChar(sb, state);
-   }
-
-   private void GenerateValidate(StringBuilder sb, ParsableGeneratorState state)
-   {
-      var isKeyTypeString = state.KeyMember?.IsString() == true;
-      var keyType = isKeyTypeString || state.HasStringBasedValidateMethod ? "string" : state.KeyMember?.TypeFullyQualified;
-
-      sb.Append(@"
-   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(").Append(keyType).Append(" key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">
-   {
-      return T.Validate(key, provider, out result);
-   }");
-
-      if (_isForEnum && isKeyTypeString)
-      {
-         sb.Append(@"
-
-#if NET9_0_OR_GREATER
-   private static ").AppendTypeFullyQualified(state.ValidationError).Append("? Validate<T>(global::System.ReadOnlySpan<char> key, global::System.IFormatProvider? provider, out ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" result)
-      where T : global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(state.Type).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(state.ValidationError).Append(@">
-   {
-      return T.Validate(key, provider, out result);
-   }
-#endif");
-      }
    }
 
    private void GenerateParse(StringBuilder sb, ParsableGeneratorState state)
@@ -87,14 +59,14 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out var result);");
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", string, ").AppendTypeFullyQualified(state.ValidationError).Append(">(s, provider, out var result);");
       }
       else if (state.KeyMember is not null)
       {
          needParseMethod = true;
          sb.Append(@"
       var key = ParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider);
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out var result);");
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(">(key, provider, out var result);");
       }
 
       sb.Append(@"
@@ -126,7 +98,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    /// <inheritdoc />
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(@">(s, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">(s, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -160,7 +132,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       {
          sb.Append(@"
 
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(s, provider, out result!);");
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", string, ").AppendTypeFullyQualified(state.ValidationError).Append(">(s, provider, out result!);");
       }
       else if (state.KeyMember is not null)
       {
@@ -173,7 +145,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return false;
       }
 
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(">(key, provider, out result!);");
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(">(key, provider, out result!);");
       }
 
       sb.Append(@"
@@ -204,7 +176,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(state.Type).Append(@" result)
    {
-      var validationError = Validate<").AppendTypeFullyQualified(state.Type).Append(@">(s, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">(s, provider, out result!);
       return validationError is null;
    }
 #endif");

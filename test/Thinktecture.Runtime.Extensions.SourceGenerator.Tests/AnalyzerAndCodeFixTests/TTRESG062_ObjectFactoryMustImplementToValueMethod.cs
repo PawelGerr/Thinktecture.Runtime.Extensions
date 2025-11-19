@@ -80,32 +80,12 @@ public class TTRESG062_ObjectFactoryMustImplementToValueMethod
          }
          """;
 
-      var expectedCode = """
-         #nullable enable
-         using System;
-         using Thinktecture;
-
-         namespace TestNamespace
-         {
-            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-            public partial class {|#0:TestClass|} : IConvertible<string>
-            {
-               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
-               {
-                  item = null;
-                  return null;
-               }
-
-                 public string ToValue()
-                 {
-                     throw new NotImplementedException();
-                 }
-             }
-         }
-         """;
-
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestClass", "string");
-      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ObjectFactoryAttribute<>).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(
+         code,
+         [typeof(ObjectFactoryAttribute<>).Assembly],
+         expected,
+         Verifier.Diagnostic("CS0535", "'TestClass' does not implement interface member 'IConvertible<string>.ToValue()'").WithSpan(8, 37, 8, 57));
    }
 
    [Fact]
@@ -720,7 +700,7 @@ public class TTRESG062_ObjectFactoryMustImplementToValueMethod
    }
 
    [Fact]
-   public async Task Should_trigger_for_one_of_two_object_factory()
+   public async Task Should_trigger_for_one_of_two_object_factory_when_both_need_one()
    {
       var code = """
          #nullable enable
@@ -779,6 +759,70 @@ public class TTRESG062_ObjectFactoryMustImplementToValueMethod
                string IConvertible<string>.ToValue()
                {
                   throw new NotImplementedException();
+               }
+
+                 public int ToValue()
+                 {
+                     throw new NotImplementedException();
+                 }
+             }
+         }
+         """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestClass", "int");
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ObjectFactoryAttribute<>).Assembly], expected);
+   }
+
+   [Fact]
+   public async Task Should_trigger_for_one_of_two_object_factory_when_one_need_one()
+   {
+      var code = """
+         #nullable enable
+         using System;
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ObjectFactory<string>]
+            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.All)]
+            public partial class {|#0:TestClass|}
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = null;
+                  return null;
+               }
+
+               public static ValidationError? Validate(int value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = null;
+                  return null;
+               }
+            }
+         }
+         """;
+
+      var expectedCode = """
+         #nullable enable
+         using System;
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ObjectFactory<string>]
+            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.All)]
+            public partial class {|#0:TestClass|}
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = null;
+                  return null;
+               }
+
+               public static ValidationError? Validate(int value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = null;
+                  return null;
                }
 
                  public int ToValue()

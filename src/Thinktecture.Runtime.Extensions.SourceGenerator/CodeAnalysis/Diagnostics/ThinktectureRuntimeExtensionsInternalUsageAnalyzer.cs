@@ -268,18 +268,6 @@ public sealed class ThinktectureRuntimeExtensionsInternalUsageAnalyzer : Diagnos
 
    private static void ReportDiagnostic(
       SymbolAnalysisContext context,
-      ImmutableArray<SyntaxReference> syntaxReferences,
-      ITypeSymbol internalType)
-   {
-      var location = syntaxReferences.IsDefaultOrEmpty
-                        ? Location.None
-                        : syntaxReferences[0].GetSyntax().GetLocation();
-
-      ReportDiagnostic(context, location, internalType);
-   }
-
-   private static void ReportDiagnostic(
-      SymbolAnalysisContext context,
       Location location,
       ITypeSymbol internalType)
    {

@@ -515,7 +515,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          var valueType = attribute.AttributeClass.TypeArguments[0];
 
-         if (objectType.HasToValueMethod(valueType))
+         if (!attribute.NeedsToValueMethod() || objectType.HasToValueMethod(valueType))
             continue;
 
          var valueTypeName = SyntaxFactory.ParseTypeName(valueType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));

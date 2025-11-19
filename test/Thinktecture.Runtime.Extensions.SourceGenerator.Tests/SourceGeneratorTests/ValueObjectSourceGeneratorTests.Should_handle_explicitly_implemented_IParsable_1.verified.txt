@@ -6,17 +6,12 @@ namespace Thinktecture.Tests;
 partial class ValueObjectForStructWithExplicitInterfaceImplementation :
    global::System.IParsable<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation>
 {
-   private static global::Thinktecture.ValidationError? Validate<T>(global::Thinktecture.Tests.StructWithExplicitInterfaceImplementation key, global::System.IFormatProvider? provider, out global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation? result)
-      where T : global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation, global::Thinktecture.Tests.StructWithExplicitInterfaceImplementation, global::Thinktecture.ValidationError>
-   {
-      return T.Validate(key, provider, out result);
-   }
 
    /// <inheritdoc />
    public static global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation Parse(string s, global::System.IFormatProvider? provider)
    {
       var key = ParseValue<global::Thinktecture.Tests.StructWithExplicitInterfaceImplementation>(s, provider);
-      var validationError = Validate<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation>(key, provider, out var result);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation, global::Thinktecture.Tests.StructWithExplicitInterfaceImplementation, global::Thinktecture.ValidationError>(key, provider, out var result);
 
       if(validationError is null)
          return result!;
@@ -49,7 +44,7 @@ partial class ValueObjectForStructWithExplicitInterfaceImplementation :
          return false;
       }
 
-      var validationError = Validate<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation>(key, provider, out result!);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ValueObjectForStructWithExplicitInterfaceImplementation, global::Thinktecture.Tests.StructWithExplicitInterfaceImplementation, global::Thinktecture.ValidationError>(key, provider, out result!);
       return validationError is null;
    }
 
