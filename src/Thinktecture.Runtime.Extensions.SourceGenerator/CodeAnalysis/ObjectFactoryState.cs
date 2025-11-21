@@ -10,6 +10,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public bool UseWithEntityFramework { get; }
    public bool UseForModelBinding { get; }
    public bool HasCorrespondingConstructor { get; }
+   public bool IsReadOnlySpanOfChar { get; } // derived information from SpecialType, no need to add to Equals/GetHashCode
 
    public ObjectFactoryState(
       ITypeSymbol type,
@@ -24,6 +25,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
       UseWithEntityFramework = useWithEntityFramework;
       UseForModelBinding = useForModelBinding;
       HasCorrespondingConstructor = hasCorrespondingConstructor;
+      IsReadOnlySpanOfChar = type.IsReadOnlySpanOfChar();
    }
 
    public override bool Equals(object? obj)

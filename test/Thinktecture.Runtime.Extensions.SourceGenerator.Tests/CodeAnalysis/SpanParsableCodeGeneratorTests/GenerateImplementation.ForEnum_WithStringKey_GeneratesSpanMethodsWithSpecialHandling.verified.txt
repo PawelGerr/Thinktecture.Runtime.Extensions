@@ -1,0 +1,26 @@
+﻿
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.StringEnum Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+   {
+      var validationError = global::Thinktecture.Tests.StringEnum.Validate(s, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"StringEnum\".");
+   }
+#endif
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static bool TryParse(
+      global::System.ReadOnlySpan<char> s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.StringEnum result)
+   {
+      var validationError = global::Thinktecture.Tests.StringEnum.Validate(s, provider, out result!);
+      return validationError is null;
+   }
+#endif

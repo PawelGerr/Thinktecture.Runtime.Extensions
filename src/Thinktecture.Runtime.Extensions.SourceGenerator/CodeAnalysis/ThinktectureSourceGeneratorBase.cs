@@ -224,7 +224,7 @@ public abstract class ThinktectureSourceGeneratorBase
       IncrementalValueProvider<GeneratorOptions> options)
    {
       parsables = parsables
-                  .Where(state => !state.SkipIParsable && (state.KeyMember?.IsString() == true || state.IsKeyMemberParsable || state.HasStringBasedValidateMethod))
+                  .Where(state => state.MustGenerateIParsable())
                   .Collect()
                   .Select(static (states, _) => states.IsDefaultOrEmpty
                                                    ? ImmutableArray<ParsableGeneratorState>.Empty
@@ -239,7 +239,33 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                             state.Left.Type.NumberOfGenerics,
                                                                                             state.Left,
                                                                                             state.Right,
-                                                                                            InterfaceCodeGeneratorFactory.Parsable(state.Left.IsEnum)));
+                                                                                            InterfaceCodeGeneratorFactory.Parsable));
+   }
+
+   protected void InitializeSpanParsableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<SpanParsableGeneratorState> parsables,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      parsables = parsables
+                  .Where(state => !state.SkipISpanParsable
+                                  && (state.KeyMember?.IsSpanParsable == true || state.HasReadOnlySpanOfCharBasedValidateMethod)
+                                  && state.MustGenerateIParsable())
+                  .Collect()
+                  .Select(static (states, _) => states.IsDefaultOrEmpty
+                                                   ? ImmutableArray<SpanParsableGeneratorState>.Empty
+                                                   : states.Distinct(TypeOnlyComparer.Instance))
+                  .WithComparer(SetComparer<SpanParsableGeneratorState>.Instance)
+                  .SelectMany((states, _) => states);
+
+      context.RegisterSourceOutput(parsables.Combine(options), (ctx, state) => GenerateCode(ctx,
+                                                                                            state.Left.Type.Namespace,
+                                                                                            state.Left.Type.ContainingTypes,
+                                                                                            state.Left.Type.Name,
+                                                                                            state.Left.Type.NumberOfGenerics,
+                                                                                            state.Left,
+                                                                                            state.Right,
+                                                                                            InterfaceCodeGeneratorFactory.SpanParsable(state.Left.IsEnum)));
    }
 
    protected void InitializeComparisonOperatorsCodeGenerator(

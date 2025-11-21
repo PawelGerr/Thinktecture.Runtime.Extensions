@@ -40,7 +40,7 @@ public abstract class SourceGeneratorTestsBase
    {
       outputs.Should().HaveCount(fileNames.Length);
 
-      var verifyTasks = fileNames.Select((fileName, i) =>
+      var verifyTasks = fileNames.Select(fileName =>
                                  {
                                     string content;
 
@@ -57,10 +57,7 @@ public abstract class SourceGeneratorTestsBase
                                        throw new Exception($"Output file '{fileName}' is too big. Actual size: {content.Length}. Max size: {_maxOutputSize}.");
 
                                     var verify = Verifier.Verify(content);
-                                    var paramText = parameterText;
-
-                                    if (fileNames.Length > 1)
-                                       paramText += i.ToString();
+                                    var paramText = parameterText + (String.IsNullOrWhiteSpace(parameterText) || parameterText.EndsWith("_") ? "file=" : "_file=") + fileName.Replace("`", "");
 
                                     if (!string.IsNullOrWhiteSpace(paramText))
                                        verify = verify.UseTextForParameters(paramText);

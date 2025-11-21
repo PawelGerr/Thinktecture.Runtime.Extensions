@@ -23,10 +23,11 @@ public sealed class InterfaceCodeGeneratorFactory<T, TType>(IInterfaceCodeGenera
 
 public static class InterfaceCodeGeneratorFactory
 {
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForValueObject = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForValueObject);
-   private static readonly ICodeGeneratorFactory<ParsableGeneratorState> _parsableForEnum = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.ForEnum);
+   private static readonly ICodeGeneratorFactory<SpanParsableGeneratorState> _spanParsableForValueObject = new InterfaceCodeGeneratorFactory<SpanParsableGeneratorState, IParsableTypeInformation>(SpanParsableCodeGenerator.ForValueObject);
+   private static readonly ICodeGeneratorFactory<SpanParsableGeneratorState> _spanParsableForEnum = new InterfaceCodeGeneratorFactory<SpanParsableGeneratorState, IParsableTypeInformation>(SpanParsableCodeGenerator.ForEnum);
    private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _comparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(ComparableCodeGenerator.Default);
 
+   public static readonly ICodeGeneratorFactory<ParsableGeneratorState> Parsable = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.Instance);
    public static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> Formattable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(FormattableCodeGenerator.Instance);
 
    public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Comparable(string? comparerAccessor)
@@ -36,11 +37,11 @@ public static class InterfaceCodeGeneratorFactory
                 : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
    }
 
-   public static ICodeGeneratorFactory<ParsableGeneratorState> Parsable(bool forEnum)
+   public static ICodeGeneratorFactory<SpanParsableGeneratorState> SpanParsable(bool forEnum)
    {
       return forEnum
-                ? _parsableForEnum
-                : _parsableForValueObject;
+                ? _spanParsableForEnum
+                : _spanParsableForValueObject;
    }
 
    public static bool EqualityComparison(

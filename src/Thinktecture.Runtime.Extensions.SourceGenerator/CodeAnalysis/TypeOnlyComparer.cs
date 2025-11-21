@@ -10,6 +10,7 @@ public sealed class TypeOnlyComparer
    : IEqualityComparer<FormattableGeneratorState>,
      IEqualityComparer<ComparableGeneratorState>,
      IEqualityComparer<ParsableGeneratorState>,
+     IEqualityComparer<SpanParsableGeneratorState>,
      IEqualityComparer<ComparisonOperatorsGeneratorState>,
      IEqualityComparer<EqualityComparisonOperatorsGeneratorState>,
      IEqualityComparer<OperatorsGeneratorState>,
@@ -25,6 +26,7 @@ public sealed class TypeOnlyComparer
    public bool Equals(FormattableGeneratorState x, FormattableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(ComparableGeneratorState x, ComparableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(ParsableGeneratorState x, ParsableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
+   public bool Equals(SpanParsableGeneratorState x, SpanParsableGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(ComparisonOperatorsGeneratorState x, ComparisonOperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(EqualityComparisonOperatorsGeneratorState x, EqualityComparisonOperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
    public bool Equals(OperatorsGeneratorState x, OperatorsGeneratorState y) => x.Type.TypeFullyQualified == y.Type.TypeFullyQualified;
@@ -38,6 +40,7 @@ public sealed class TypeOnlyComparer
    public int GetHashCode(FormattableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComparableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ParsableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
+   public int GetHashCode(SpanParsableGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(ComparisonOperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(EqualityComparisonOperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();
    public int GetHashCode(OperatorsGeneratorState obj) => obj.Type.TypeFullyQualified.GetHashCode();

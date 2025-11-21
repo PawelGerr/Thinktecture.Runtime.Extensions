@@ -38,7 +38,10 @@ namespace ").Append(_state.Type.Namespace).Append(@";
       _sb.RenderContainingTypesStart(_state.Type.ContainingTypes);
 
       _sb.Append(@"
-partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).AppendGenericTypeParameters(_state).Append(" :");
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Type.Name).AppendGenericTypeParameters(_state);
+
+      if (_codeGenerator.CanAppendColon)
+         _sb.Append(" :");
 
       _codeGenerator.GenerateBaseTypes(_sb, _state);
 

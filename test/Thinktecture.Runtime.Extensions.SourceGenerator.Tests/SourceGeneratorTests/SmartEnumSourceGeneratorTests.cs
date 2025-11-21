@@ -34,6 +34,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum`1.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
    }
@@ -60,6 +61,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -181,6 +183,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -209,6 +212,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -237,6 +241,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -280,6 +285,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -305,6 +311,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "TestEnum.SmartEnum.g.cs",
                         "TestEnum.Comparable.g.cs",
                         "TestEnum.Parsable.g.cs",
+                        "TestEnum.SpanParsable.g.cs",
                         "TestEnum.ComparisonOperators.g.cs",
                         "TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -368,6 +375,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -394,6 +402,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -421,6 +430,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -451,6 +461,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -481,6 +492,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -519,6 +531,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -548,6 +561,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -578,6 +592,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -608,6 +623,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -638,6 +654,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -667,6 +684,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -696,6 +714,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -725,6 +744,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -754,6 +774,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -783,6 +804,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -812,6 +834,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -841,6 +864,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -870,6 +894,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -899,6 +924,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -928,6 +954,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -963,6 +990,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -993,6 +1021,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1022,6 +1051,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1047,6 +1077,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests._1TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests._1TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests._1TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests._1TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests._1TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests._1TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests._1TestEnum.Formattable.g.cs");
@@ -1073,6 +1104,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1100,9 +1132,76 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_custom_ISpanParsable_key_based_class()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public readonly struct CustomSpanParsableKey : ISpanParsable<CustomSpanParsableKey>, IEquatable<CustomSpanParsableKey>
+            {
+               public int Value { get; }
+
+               public CustomSpanParsableKey(int value) => Value = value;
+
+               public static CustomSpanParsableKey Parse(string s, IFormatProvider? provider)
+                  => new(int.Parse(s, provider));
+
+               public static bool TryParse(string? s, IFormatProvider? provider, out CustomSpanParsableKey result)
+               {
+                  if (int.TryParse(s, provider, out var value))
+                  {
+                     result = new CustomSpanParsableKey(value);
+                     return true;
+                  }
+
+                  result = default;
+                  return false;
+               }
+
+               public static CustomSpanParsableKey Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
+                  => new(int.Parse(s, provider));
+
+               public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out CustomSpanParsableKey result)
+               {
+                  if (int.TryParse(s, provider, out var value))
+                  {
+                     result = new CustomSpanParsableKey(value);
+                     return true;
+                  }
+
+                  result = default;
+                  return false;
+               }
+
+               public bool Equals(CustomSpanParsableKey other) => Value == other.Value;
+               public override bool Equals(object? obj) => obj is CustomSpanParsableKey other && Equals(other);
+               public override int GetHashCode() => Value.GetHashCode();
+            }
+
+            [SmartEnum<CustomSpanParsableKey>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
    [Fact]
@@ -1127,6 +1226,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1154,6 +1254,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1181,6 +1282,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1232,6 +1334,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1259,6 +1362,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1285,6 +1389,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1312,7 +1417,8 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs");
    }
 
    [Fact]
@@ -1337,7 +1443,8 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs");
    }
 
    [Fact]
@@ -1362,7 +1469,8 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
-                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs");
    }
 
    [Fact]
@@ -1387,6 +1495,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1414,6 +1523,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1440,6 +1550,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1467,6 +1578,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1493,6 +1605,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1520,6 +1633,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1566,6 +1680,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1595,6 +1710,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.OuterClass.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.OuterClass.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1675,6 +1791,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1702,6 +1819,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1729,6 +1847,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1757,6 +1876,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1784,6 +1904,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1811,6 +1932,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
@@ -1838,6 +1960,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -1931,6 +2054,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1958,6 +2082,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -1985,6 +2110,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2012,6 +2138,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2039,6 +2166,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2066,6 +2194,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2093,6 +2222,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
@@ -2120,6 +2250,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
@@ -2147,6 +2278,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2174,6 +2306,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2200,6 +2333,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2226,6 +2360,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2252,6 +2387,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2278,6 +2414,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2304,6 +2441,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2344,6 +2482,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2391,6 +2530,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2428,11 +2568,13 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.OuterClass.TestEnum1.SmartEnum.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum1.Comparable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum1.Parsable.g.cs",
+                        "Thinktecture.Tests.OuterClass.TestEnum1.SpanParsable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum1.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.SmartEnum.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.Comparable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.Parsable.g.cs",
+                        "Thinktecture.Tests.OuterClass.TestEnum2.SpanParsable.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.OuterClass.TestEnum2.Formattable.g.cs");
@@ -2460,6 +2602,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2486,6 +2629,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2512,6 +2656,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2539,6 +2684,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2565,6 +2711,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2600,6 +2747,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.Level1.Level2.Level3.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2630,6 +2778,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2666,6 +2815,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2693,6 +2843,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2720,6 +2871,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
@@ -2746,6 +2898,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2781,6 +2934,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum.Comparable.g.cs",
                         "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.Formattable.g.cs");
@@ -2835,6 +2989,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestStringKeyEnum`1.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestStringKeyEnum`1.Comparable.g.cs",
                         "Thinktecture.Tests.TestStringKeyEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestStringKeyEnum`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestStringKeyEnum`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestStringKeyEnum`1.EqualityComparisonOperators.g.cs");
    }
@@ -2865,7 +3020,292 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestIntKeyEnum`1.Comparable.g.cs",
                         "Thinktecture.Tests.TestIntKeyEnum`1.Formattable.g.cs",
                         "Thinktecture.Tests.TestIntKeyEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestIntKeyEnum`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestIntKeyEnum`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestIntKeyEnum`1.EqualityComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_IParsable_but_not_ISpanParsable_when_SkipISpanParsable_is_true()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>(SkipISpanParsable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_IParsable_or_ISpanParsable_when_both_SkipIParsable_and_SkipISpanParsable_are_true()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>(SkipIParsable = true, SkipISpanParsable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_IParsable_and_ISpanParsable_when_SkipIParsable_true_but_SkipISpanParsable_false()
+   {
+      // Dependency constraint: SkipISpanParsable should be forced to true, when SkipIParsable is true
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>(SkipIParsable = true, SkipISpanParsable = false)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_IParsable_only_when_SkipISpanParsable_true_for_Guid_key()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<Guid>(SkipISpanParsable = true)]
+         	public partial class TestEnum
+         	{
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_string_based_enum_with_string_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+            [ObjectFactory<string>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_int_based_enum_with_string_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>]
+            [ObjectFactory<string>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public async Task Should_generate_for_string_based_enum_with_reaonlyspan_of_char_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_string_based_enum_with_string_and_reaonlyspan_of_char_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+            [ObjectFactory<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_int_based_enum_with_reaonlyspan_of_char_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_int_based_enum_with_string_and_reaonlyspan_of_char_based_object_factory()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>]
+            [ObjectFactory<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+#endif
 }

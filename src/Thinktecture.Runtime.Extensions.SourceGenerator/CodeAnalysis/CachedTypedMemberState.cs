@@ -1,62 +1,72 @@
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class CachedTypedMemberState : IEquatable<CachedTypedMemberState>, ITypedMemberState
+public sealed class CachedTypedMemberState(ITypedMemberState typedMemberState)
+   : IEquatable<CachedTypedMemberState>,
+     ITypedMemberState
 {
-   private readonly int _hashCode;
+   private readonly int _hashCode = typedMemberState.GetHashCode();
 
-   public string TypeFullyQualified { get; }
-   public string TypeMinimallyQualified { get; }
-   public SpecialType SpecialType { get; }
-   public TypeKind TypeKind { get; }
-   public bool IsReferenceType { get; }
-   public bool IsValueType { get; }
-   public bool IsTypeParameter { get; }
-   public bool IsReferenceTypeOrNullableStruct { get; }
-   public bool IsNullableStruct { get; }
-   public NullableAnnotation NullableAnnotation { get; }
-   public bool IsFormattable { get; }
-   public bool IsComparable { get; }
-   public bool IsParsable { get; }
-   public bool IsToStringReturnTypeNullable { get; }
-   public ImplementedComparisonOperators ComparisonOperators { get; }
-   public ImplementedOperators AdditionOperators { get; }
-   public ImplementedOperators SubtractionOperators { get; }
-   public ImplementedOperators MultiplyOperators { get; }
-   public ImplementedOperators DivisionOperators { get; }
-
-   public CachedTypedMemberState(ITypedMemberState typedMemberState)
-   {
-      _hashCode = typedMemberState.GetHashCode();
-
-      TypeFullyQualified = typedMemberState.TypeFullyQualified;
-      TypeMinimallyQualified = typedMemberState.TypeMinimallyQualified;
-      SpecialType = typedMemberState.SpecialType;
-      TypeKind = typedMemberState.TypeKind;
-      IsReferenceType = typedMemberState.IsReferenceType;
-      IsValueType = typedMemberState.IsValueType;
-      IsTypeParameter = typedMemberState.IsTypeParameter;
-      IsReferenceTypeOrNullableStruct = typedMemberState.IsReferenceTypeOrNullableStruct;
-      IsNullableStruct = typedMemberState.IsNullableStruct;
-      NullableAnnotation = typedMemberState.NullableAnnotation;
-      IsFormattable = typedMemberState.IsFormattable;
-      IsComparable = typedMemberState.IsComparable;
-      IsParsable = typedMemberState.IsParsable;
-      IsToStringReturnTypeNullable = typedMemberState.IsToStringReturnTypeNullable;
-      ComparisonOperators = typedMemberState.ComparisonOperators;
-      AdditionOperators = typedMemberState.AdditionOperators;
-      SubtractionOperators = typedMemberState.SubtractionOperators;
-      MultiplyOperators = typedMemberState.MultiplyOperators;
-      DivisionOperators = typedMemberState.DivisionOperators;
-   }
+   public string TypeFullyQualified { get; } = typedMemberState.TypeFullyQualified;
+   public string TypeMinimallyQualified { get; } = typedMemberState.TypeMinimallyQualified;
+   public SpecialType SpecialType { get; } = typedMemberState.SpecialType;
+   public TypeKind TypeKind { get; } = typedMemberState.TypeKind;
+   public bool IsReferenceType { get; } = typedMemberState.IsReferenceType;
+   public bool IsValueType { get; } = typedMemberState.IsValueType;
+   public bool IsTypeParameter { get; } = typedMemberState.IsTypeParameter;
+   public bool IsReferenceTypeOrNullableStruct { get; } = typedMemberState.IsReferenceTypeOrNullableStruct;
+   public bool IsNullableStruct { get; } = typedMemberState.IsNullableStruct;
+   public NullableAnnotation NullableAnnotation { get; } = typedMemberState.NullableAnnotation;
+   public bool IsFormattable { get; } = typedMemberState.IsFormattable;
+   public bool IsComparable { get; } = typedMemberState.IsComparable;
+   public bool IsParsable { get; } = typedMemberState.IsParsable;
+   public bool IsSpanParsable { get; } = typedMemberState.IsSpanParsable;
+   public bool IsToStringReturnTypeNullable { get; } = typedMemberState.IsToStringReturnTypeNullable;
+   public ImplementedComparisonOperators ComparisonOperators { get; } = typedMemberState.ComparisonOperators;
+   public ImplementedOperators AdditionOperators { get; } = typedMemberState.AdditionOperators;
+   public ImplementedOperators SubtractionOperators { get; } = typedMemberState.SubtractionOperators;
+   public ImplementedOperators MultiplyOperators { get; } = typedMemberState.MultiplyOperators;
+   public ImplementedOperators DivisionOperators { get; } = typedMemberState.DivisionOperators;
 
    public override bool Equals(object? obj)
    {
-      return ReferenceEquals(this, obj);
+      return obj switch
+      {
+         CachedTypedMemberState cachedTypedMemberState => Equals(cachedTypedMemberState),
+         ITypedMemberState typedMemberState => Equals(typedMemberState),
+         _ => false
+      };
    }
 
    public bool Equals(ITypedMemberState? other)
    {
-      return ReferenceEquals(this, other);
+      switch (other)
+      {
+         case CachedTypedMemberState cachedTypedMemberState:
+            return ReferenceEquals(this, cachedTypedMemberState);
+         case null:
+            return false;
+      }
+
+      if (ReferenceEquals(this, other))
+         return true;
+
+      return TypeFullyQualified == other.TypeFullyQualified
+             && SpecialType == other.SpecialType
+             && TypeKind == other.TypeKind
+             && NullableAnnotation == other.NullableAnnotation
+             && IsNullableStruct == other.IsNullableStruct
+             && IsReferenceType == other.IsReferenceType
+             && IsValueType == other.IsValueType
+             && IsFormattable == other.IsFormattable
+             && IsComparable == other.IsComparable
+             && IsParsable == other.IsParsable
+             && IsSpanParsable == other.IsSpanParsable
+             && IsToStringReturnTypeNullable == other.IsToStringReturnTypeNullable
+             && ComparisonOperators == other.ComparisonOperators
+             && AdditionOperators == other.AdditionOperators
+             && SubtractionOperators == other.SubtractionOperators
+             && MultiplyOperators == other.MultiplyOperators
+             && DivisionOperators == other.DivisionOperators;
    }
 
    public bool Equals(CachedTypedMemberState? other)

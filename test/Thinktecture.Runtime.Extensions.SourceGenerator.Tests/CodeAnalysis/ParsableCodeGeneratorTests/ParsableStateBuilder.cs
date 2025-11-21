@@ -16,11 +16,9 @@ namespace Thinktecture.Runtime.Tests.CodeAnalysis.ParsableCodeGeneratorTests;
 public class ParsableStateBuilder
 {
    private IParsableTypeInformation? _type;
-   private IMemberInformation? _keyMember;
+   private IParsableMemberInformation? _keyMember;
    private ValidationErrorState _validationError = ValidationErrorState.Default;
    private bool _skipIParsable;
-   private bool _isKeyMemberParsable;
-   private bool _isEnum;
    private bool _hasStringBasedValidateMethod;
    private string? _genericTypeParameters; // e.g. "<T>" or "<TKey, TValue>"
    private string? _genericConstraints;    // e.g. "where T : IComparable<T>"
@@ -46,7 +44,24 @@ public class ParsableStateBuilder
    public ParsableStateBuilder WithGuidKeyMember(string name = "Key")
    {
       _keyMember = CreateKeyMember(name, "global::System.Guid", SpecialType.None);
-      _isKeyMemberParsable = true;
+      return this;
+   }
+
+   public ParsableStateBuilder WithDecimalKeyMember(string name = "Key")
+   {
+      _keyMember = CreateKeyMember(name, "global::System.Decimal", SpecialType.System_Decimal);
+      return this;
+   }
+
+   public ParsableStateBuilder WithDateTimeKeyMember(string name = "Key")
+   {
+      _keyMember = CreateKeyMember(name, "global::System.DateTime", SpecialType.System_DateTime);
+      return this;
+   }
+
+   public ParsableStateBuilder WithLongKeyMember(string name = "Key")
+   {
+      _keyMember = CreateKeyMember(name, "global::System.Int64", SpecialType.System_Int64);
       return this;
    }
 
@@ -65,12 +80,6 @@ public class ParsableStateBuilder
    public ParsableStateBuilder WithSkipIParsable(bool skip = true)
    {
       _skipIParsable = skip;
-      return this;
-   }
-
-   public ParsableStateBuilder WithIsEnum(bool isEnum = true)
-   {
-      _isEnum = isEnum;
       return this;
    }
 
@@ -99,8 +108,6 @@ public class ParsableStateBuilder
          _keyMember,
          _validationError,
          _skipIParsable,
-         _isKeyMemberParsable,
-         _isEnum,
          _hasStringBasedValidateMethod,
          genericParameters);
    }
@@ -174,17 +181,22 @@ public class ParsableStateBuilder
       type.Namespace.Returns("Thinktecture.Tests");
       type.IsReferenceType.Returns(true);
       type.NullableAnnotation.Returns(NullableAnnotation.None);
+
       return type;
    }
 
-   private static IMemberInformation CreateKeyMember(string name, string typeFullyQualified, SpecialType specialType)
+   private static IParsableMemberInformation CreateKeyMember(string name, string typeFullyQualified, SpecialType specialType)
    {
-      var member = Substitute.For<IMemberInformation>();
+      var member = Substitute.For<IParsableMemberInformation>();
       member.Name.Returns(name);
       member.TypeFullyQualified.Returns(typeFullyQualified);
       member.SpecialType.Returns(specialType);
       member.IsReferenceType.Returns(specialType == SpecialType.System_String);
       member.NullableAnnotation.Returns(NullableAnnotation.None);
+      member.NullableAnnotation.Returns(NullableAnnotation.None);
+      member.IsParsable.Returns(true);
+      member.IsSpanParsable.Returns(true);
+
       return member;
    }
 }

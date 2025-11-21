@@ -106,6 +106,7 @@ public static class Constants
          public const string SKIP_EQUALITY_COMPARISON = "SkipEqualityComparison";
          public const string SKIP_IFORMATTABLE = "SkipIFormattable";
          public const string SKIP_IPARSABLE = "SkipIParsable";
+         public const string SKIP_ISPAN_PARSABLE = "SkipISpanParsable";
          public const string SKIP_KEY_MEMBER = "SkipKeyMember";
          public const string SKIP_TO_STRING = "SkipToString";
          public const string STOP_AT = "StopAt";

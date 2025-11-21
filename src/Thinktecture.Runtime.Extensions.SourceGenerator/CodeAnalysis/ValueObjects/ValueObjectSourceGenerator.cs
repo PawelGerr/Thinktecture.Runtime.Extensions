@@ -58,6 +58,7 @@ public sealed class ValueObjectSourceGenerator()
 
       InitializeSerializerGenerators(context, states, options, serializerGeneratorFactories);
       InitializeParsableCodeGenerator(context, states, options);
+      InitializeSpanParsableCodeGenerator(context, states, options);
 
       InitializeFormattableCodeGenerator(context, states, options);
       InitializeComparableCodeGenerator(context, states, options);
@@ -225,17 +226,37 @@ public sealed class ValueObjectSourceGenerator()
    private void InitializeParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
    {
       var parsables = validStates
-         .Select((state, _) => new ParsableGeneratorState(
-                    state.State,
-                    state.State.KeyMember,
-                    state.State.ValidationError,
-                    state.Settings.SkipIParsable,
-                    state.State.KeyMember.IsParsable && !state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
-                    false,
-                    false,
-                    state.State.GenericParameters));
+                      // Object factory will generate IParsable implementation
+                      .Where(state => !state.AttributeInfo.ObjectFactories.Any(t => t.TypeFullyQualified == state.State.KeyMember.TypeFullyQualified
+                                                                                    || t.SpecialType == SpecialType.System_String))
+                      .Select((state, _) => new ParsableGeneratorState(
+                                 state.State,
+                                 state.State.KeyMember,
+                                 state.State.ValidationError,
+                                 state.Settings.SkipIParsable,
+                                 hasStringBasedValidateMethod: false,
+                                 state.State.GenericParameters));
 
       InitializeParsableCodeGenerator(context, parsables, options);
+   }
+
+   private void InitializeSpanParsableCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var parsables = validStates
+                      // Object factory will generate ISpanParsable implementation
+                      .Where(state => !state.AttributeInfo.ObjectFactories.Any(t => t.IsReadOnlySpanOfChar))
+                      .Select((state, _) => new SpanParsableGeneratorState(
+                                 state.State,
+                                 state.State.KeyMember,
+                                 state.State.ValidationError,
+                                 state.Settings.SkipIParsable,
+                                 state.Settings.SkipISpanParsable,
+                                 isEnum: false,
+                                 hasStringBasedValidateMethod: false,
+                                 hasReadOnlySpanOfCharBasedValidateMethod: false,
+                                 state.State.GenericParameters));
+
+      InitializeSpanParsableCodeGenerator(context, parsables, options);
    }
 
    private void InitializeComparisonOperatorsCodeGenerator(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<KeyedValidSourceGenState> validStates, IncrementalValueProvider<GeneratorOptions> options)

@@ -16,7 +16,9 @@ public sealed class ObjectFactorySourceGeneratorState :
    public bool IsRefStruct { get; }
    public NullableAnnotation NullableAnnotation { get; }
    public bool IsNullableStruct { get; }
+   public bool HasParsableKeyMember { get; }
    public bool SkipIParsable { get; }
+   public bool SkipISpanParsable { get; }
    public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
@@ -26,7 +28,8 @@ public sealed class ObjectFactorySourceGeneratorState :
    public ObjectFactorySourceGeneratorState(
       INamedTypeSymbol type,
       AttributeInfo attributeInfo,
-      AttributeData? thinktectureComponentAttribute)
+      AttributeData? thinktectureComponentAttribute,
+      ITypedMemberState? keyMember)
    {
       AttributeInfo = attributeInfo;
 
@@ -42,6 +45,8 @@ public sealed class ObjectFactorySourceGeneratorState :
       ContainingTypes = type.GetContainingTypes();
       GenericParameters = type.GetGenericTypeParameters();
       SkipIParsable = thinktectureComponentAttribute?.FindSkipIParsable() ?? false;
+      SkipISpanParsable = (thinktectureComponentAttribute?.FindSkipISpanParsable() ?? false) || SkipIParsable;
+      HasParsableKeyMember = keyMember?.IsParsable ?? false;
    }
 
    public override bool Equals(object? obj)
@@ -60,6 +65,7 @@ public sealed class ObjectFactorySourceGeneratorState :
              && IsValueType == other.IsValueType
              && IsRefStruct == other.IsRefStruct
              && NullableAnnotation == other.NullableAnnotation
+             && HasParsableKeyMember == other.HasParsableKeyMember
              && SkipIParsable == other.SkipIParsable
              && AttributeInfo.Equals(other.AttributeInfo)
              && GenericParameters.SequenceEqual(other.GenericParameters)
@@ -76,6 +82,7 @@ public sealed class ObjectFactorySourceGeneratorState :
          hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRefStruct.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
+         hashCode = (hashCode * 397) ^ HasParsableKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();

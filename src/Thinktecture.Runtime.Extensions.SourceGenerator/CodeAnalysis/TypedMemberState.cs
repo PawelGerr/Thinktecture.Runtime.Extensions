@@ -16,6 +16,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
    public bool IsParsable { get; }
+   public bool IsSpanParsable { get; }
    public bool IsToStringReturnTypeNullable { get; }
    public ImplementedComparisonOperators ComparisonOperators { get; }
    public ImplementedOperators AdditionOperators { get; }
@@ -50,6 +51,10 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
          else if (@interface.IsParsableInterface(type))
          {
             IsParsable = true;
+         }
+         else if (@interface.IsSpanParsableInterface(type))
+         {
+            IsSpanParsable = true;
          }
          else if (@interface.IsIAdditionOperators(type))
          {
@@ -189,6 +194,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
              && IsParsable == other.IsParsable
+             && IsSpanParsable == other.IsSpanParsable
              && IsToStringReturnTypeNullable == other.IsToStringReturnTypeNullable
              && ComparisonOperators == other.ComparisonOperators
              && AdditionOperators == other.AdditionOperators
@@ -211,6 +217,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsSpanParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsToStringReturnTypeNullable.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
          hashCode = (hashCode * 397) ^ (int)AdditionOperators;

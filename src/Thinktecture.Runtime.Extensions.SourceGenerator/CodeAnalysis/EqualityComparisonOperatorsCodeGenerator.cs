@@ -38,6 +38,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
    public string CodeGeneratorName => "EqualityComparisonOperators-CodeGenerator";
    public string FileNameSuffix => ".EqualityComparisonOperators";
+   public bool CanAppendColon => true;
 
    private EqualityComparisonOperatorsCodeGenerator(
       bool withKeyTypeOverloads,

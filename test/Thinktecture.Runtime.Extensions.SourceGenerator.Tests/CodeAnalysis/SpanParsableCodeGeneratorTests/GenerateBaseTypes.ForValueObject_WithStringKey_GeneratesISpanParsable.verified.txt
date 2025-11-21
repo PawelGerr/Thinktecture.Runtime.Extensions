@@ -1,0 +1,4 @@
+﻿
+#if NET9_0_OR_GREATER
+   : global::System.ISpanParsable<global::Thinktecture.Tests.StringValueObject>
+#endif

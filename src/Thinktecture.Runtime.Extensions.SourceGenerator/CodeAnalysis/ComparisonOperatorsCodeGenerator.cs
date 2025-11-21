@@ -46,6 +46,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public string CodeGeneratorName => "ComparisonOperators-CodeGenerator";
    public string FileNameSuffix => ".ComparisonOperators";
+   public bool CanAppendColon => true;
 
    private ComparisonOperatorsCodeGenerator(
       bool withKeyTypeOverloads,

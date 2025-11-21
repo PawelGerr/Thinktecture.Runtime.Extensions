@@ -44,6 +44,7 @@ public sealed class SubtractionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public string CodeGeneratorName => "SubtractionOperators-CodeGenerator";
    public string FileNameSuffix => ".SubtractionOperators";
+   public bool CanAppendColon => true;
 
    private SubtractionOperatorsCodeGenerator(ImplementedOperators keyMemberOperators, bool withKeyTypeOverloads)
    {

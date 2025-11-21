@@ -97,6 +97,27 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    public bool SkipIParsable { get; set; }
 
    /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="ISpanParsable{T}"/> or not.
+   /// </summary>
+   /// <remarks>
+   /// <para>
+   /// Note that this property is dependent on <see cref="SkipIParsable"/>.
+   /// If <see cref="SkipIParsable"/> is set to <c>true</c> then <see cref="SkipISpanParsable"/> is set to <c>true</c> as well.
+   /// </para>
+   /// <para>
+   /// This setting has no effect if:
+   /// </para>
+   /// <para>
+   /// the key is neither a <see cref="string"/> nor an <see cref="ISpanParsable{T}"/> itself.
+   /// </para>
+   /// </remarks>
+   public bool SkipISpanParsable
+   {
+      get => field || SkipIParsable;
+      set;
+   }
+
+   /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/>.
    /// </summary>
    /// <remarks>
@@ -137,7 +158,7 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    public OperatorsGeneration DivisionOperators { get; set; }
 
    private OperatorsGeneration _comparisonOperators;
-   
+
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
@@ -151,8 +172,8 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </remarks>
    public OperatorsGeneration ComparisonOperators
    {
-       get => SkipEqualityComparison ? OperatorsGeneration.None : _comparisonOperators;
-       set => _comparisonOperators = value;
+      get => SkipEqualityComparison ? OperatorsGeneration.None : _comparisonOperators;
+      set => _comparisonOperators = value;
    }
 
    private OperatorsGeneration _equalityComparisonOperators;
@@ -167,16 +188,16 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </remarks>
    public OperatorsGeneration EqualityComparisonOperators
    {
-       get
-       {
-           if (SkipEqualityComparison)
-               return OperatorsGeneration.None;
-           
-           return ComparisonOperators > _equalityComparisonOperators
-               ? ComparisonOperators
-               : _equalityComparisonOperators;
-       }
-       set => _equalityComparisonOperators = value;
+      get
+      {
+         if (SkipEqualityComparison)
+            return OperatorsGeneration.None;
+
+         return ComparisonOperators > _equalityComparisonOperators
+                   ? ComparisonOperators
+                   : _equalityComparisonOperators;
+      }
+      set => _equalityComparisonOperators = value;
    }
 
    /// <summary>

@@ -11,19 +11,6 @@
       throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"GenericEnum<T>\".");
    }
 
-#if NET9_0_OR_GREATER
-   /// <inheritdoc />
-   public static global::Thinktecture.Tests.GenericEnum<T> Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
-   {
-      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericEnum<T>, global::Thinktecture.ValidationError>(s, provider, out var result);
-
-      if(validationError is null)
-         return result!;
-
-      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"GenericEnum<T>\".");
-   }
-#endif
-
    /// <inheritdoc />
    public static bool TryParse(
       string? s,
@@ -39,15 +26,3 @@
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericEnum<T>, string, global::Thinktecture.ValidationError>(s, provider, out result!);
       return validationError is null;
    }
-
-#if NET9_0_OR_GREATER
-   /// <inheritdoc />
-   public static bool TryParse(
-      global::System.ReadOnlySpan<char> s,
-      global::System.IFormatProvider? provider,
-      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.GenericEnum<T> result)
-   {
-      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericEnum<T>, global::Thinktecture.ValidationError>(s, provider, out result!);
-      return validationError is null;
-   }
-#endif

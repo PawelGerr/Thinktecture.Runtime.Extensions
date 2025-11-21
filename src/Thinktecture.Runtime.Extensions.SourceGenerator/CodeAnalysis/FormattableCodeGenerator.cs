@@ -8,6 +8,7 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
 
    public string CodeGeneratorName => "Formattable-CodeGenerator";
    public string FileNameSuffix => ".Formattable";
+   public bool CanAppendColon => true;
 
    public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {

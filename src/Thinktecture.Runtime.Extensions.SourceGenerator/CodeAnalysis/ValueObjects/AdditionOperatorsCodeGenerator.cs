@@ -44,6 +44,7 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public string CodeGeneratorName => "AdditionOperators-CodeGenerator";
    public string FileNameSuffix => ".AdditionOperators";
+   public bool CanAppendColon => true;
 
    private AdditionOperatorsCodeGenerator(
       ImplementedOperators keyMemberOperators,

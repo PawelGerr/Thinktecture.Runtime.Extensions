@@ -57,7 +57,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.SmartEnumMustNotHaveObjectFactoryConstructor,
       DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod,
       DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod,
-      DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneAttribute,
+      DiagnosticsDescriptors.TypeMustNotHaveMoreThanOneAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,

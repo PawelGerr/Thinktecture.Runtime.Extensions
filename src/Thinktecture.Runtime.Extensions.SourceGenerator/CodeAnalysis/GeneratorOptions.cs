@@ -25,7 +25,7 @@ public sealed class GeneratorOptions : IEquatable<GeneratorOptions>
 
       return CounterEnabled == other.CounterEnabled
              && GenerateJetbrainsAnnotations == other.GenerateJetbrainsAnnotations
-             && Logging.NullableEquals(other.Logging);
+             && Logging.NullableStructEquals(other.Logging);
    }
 
    public override bool Equals(object? obj)

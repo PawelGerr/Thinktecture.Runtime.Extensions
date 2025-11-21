@@ -46,6 +46,9 @@ public abstract class ObjectFactoryAttribute : Attribute
 /// <typeparam name="T">Type of the value to be able to create a value object from.</typeparam>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
 public class ObjectFactoryAttribute<T> : ObjectFactoryAttribute
+#if NET9_0_OR_GREATER
+   where T : allows ref struct
+#endif
 {
    /// <summary>
    /// Initializes new instance of type <see cref="ObjectFactoryAttribute{T}"/>.

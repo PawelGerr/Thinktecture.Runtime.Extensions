@@ -1,0 +1,28 @@
+﻿
+
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.ProductId Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ProductId, string, global::Thinktecture.ValidationError>(s, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"ProductId\".");
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.ProductId result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ProductId, string, global::Thinktecture.ValidationError>(s, provider, out result!);
+      return validationError is null;
+   }

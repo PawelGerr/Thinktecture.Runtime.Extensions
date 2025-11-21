@@ -1,0 +1,34 @@
+﻿
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.LongValueObject Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+   {
+      var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<global::System.Int64>(s, provider);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.LongValueObject, global::System.Int64, global::Thinktecture.ValidationError>(key, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"LongValueObject\".");
+   }
+#endif
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   public static bool TryParse(
+      global::System.ReadOnlySpan<char> s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.LongValueObject result)
+   {
+
+      if(!global::Thinktecture.Internal.StaticAbstractInvoker.TryParseValue<global::System.Int64>(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.LongValueObject, global::System.Int64, global::Thinktecture.ValidationError>(key, provider, out result!);
+      return validationError is null;
+   }
+#endif

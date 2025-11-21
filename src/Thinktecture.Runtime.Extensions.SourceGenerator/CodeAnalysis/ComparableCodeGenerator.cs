@@ -10,6 +10,7 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 
    public string CodeGeneratorName => "Comparable-CodeGenerator";
    public string FileNameSuffix => ".Comparable";
+   public bool CanAppendColon => true;
 
    public ComparableCodeGenerator(string? comparerAccessor)
    {

@@ -92,7 +92,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 1. **`SmartEnumSourceGenerator`**: Generates code for types annotated with `[SmartEnum<T>]` or `[SmartEnum]`
     - Creates factory methods (`Create`, `TryCreate`, `Get`, `Parse`, `TryParse`)
     - Generates equality, comparison, and conversion operators
-    - Implements `IParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
+    - Implements `IParsable<T>` and `ISpanParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
     - Generates exhaustive `Switch`/`Map` methods for pattern matching
     - Integrates with serializers (JSON, MessagePack, Newtonsoft.Json)
 
@@ -100,7 +100,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
     - Handles both keyed (simple) and complex value objects
     - Creates factory methods (`Create`, `TryCreate`, `Validate`)
     - Generates equality members (`Equals`, `GetHashCode`, operators)
-    - Implements `IParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
+    - Implements `IParsable<T>` and `ISpanParsable<T>`, `IComparable<T>`, `IFormattable` interfaces
     - Supports arithmetic operators (`+`, `-`, `*`, `/`) when configured
     - Integrates with serializers (JSON, MessagePack, Newtonsoft.Json)
 
@@ -172,9 +172,10 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 - **Can be generic**: Smart enums themselves may now be generic types (for example `SmartEnum_Generic_IntBased<T> where T : IEquatable<T>`). Analyzer rules still apply for containing types (no nesting inside generic types) but the enum type can declare its own generic parameters and constraints.
 - Configurable key member via `KeyMemberName`, `KeyMemberAccessModifier`, `KeyMemberKind`
 - Supports comparison operators if key is comparable
-- Supports `IParsable<T>`, `IComparable<T>`, `IFormattable` (depending on key type)
+- Supports `IParsable<T>` and `ISpanParsable<T>`, `IComparable<T>`, `IFormattable`
+- **ISpanParsable support**: If key type implements `ISpanParsable<TKey>`, the smart enum implements `ISpanParsable<T>` with zero-allocation parsing via `Parse(ReadOnlySpan<char>, IFormatProvider?)` and `TryParse`. Applies to numeric types (int, long, decimal, etc.), DateTime, DateTimeOffset, TimeSpan, Guid, Version, string, and more.
 - Configurable conversion operators: `ConversionToKeyMemberType`, `ConversionFromKeyMemberType`
-- Can skip interfaces: `SkipIComparable`, `SkipIParsable`, `SkipIFormattable`, `SkipToString`
+- Can skip interfaces: `SkipIComparable`, `SkipIParsable`, `SkipISpanParsable`, `SkipIFormattable`, `SkipToString`
 - Can control operator generation: `ComparisonOperators`, `EqualityComparisonOperators`
 - Can control `Switch`/`Map` generation: `SwitchMethods`, `MapMethods`
 
@@ -192,7 +193,10 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 - Supports arithmetic operators: `AdditionOperators`, `SubtractionOperators`, `MultiplyOperators`, `DivisionOperators`
 - Comparison/equality operators: `ComparisonOperators`, `EqualityComparisonOperators`
 - Conversion operators: `ConversionToKeyMemberType`, `UnsafeConversionToKeyMemberType`, `ConversionFromKeyMemberType`
+- Supports `IParsable<T>` and `ISpanParsable<T>`
+- **ISpanParsable support**: If key type implements `ISpanParsable<TKey>`, the value object implements `ISpanParsable<T>` with zero-allocation parsing via `Parse(ReadOnlySpan<char>, IFormatProvider?)` and `TryParse`. Applies to numeric types (int, long, decimal, etc.), DateTime, DateTimeOffset, TimeSpan, Guid, Version, string, and more.
 - Can skip key member generation: `SkipKeyMember` (you implement it manually)
+- Can skip interfaces: `SkipIParsable`, `SkipISpanParsable`, `SkipIComparable`, `SkipIFormattable`
 - **Can be generic**: Keyed value objects can have type parameters (e.g., `ValueObject_Generic<T> where T : IEquatable<T>`). Analyzer rules still apply for containing types (no nesting inside generic types) but the value object type can declare its own generic parameters and constraints.
 
 **Complex**: `[ComplexValueObject]` - Multi-property immutable types
@@ -208,7 +212,7 @@ The `Thinktecture.Runtime.Extensions.SourceGenerator` project contains multiple 
 **Common settings**:
 
 - `SkipFactoryMethods`: Skip generation of `Create`, `TryCreate`, `Validate`
-- `SkipIParsable`, `SkipIComparable`, `SkipIFormattable`: Skip interface implementations
+- `SkipIParsable`, `SkipISpanParsable`, `SkipIComparable`, `SkipIFormattable`: Skip interface implementations
 - `SkipEqualityComparison`: Skip generation of equality members (`Equals`, `GetHashCode`, `==`, `!=`, `IEquatable<T>`) - also sets `ComparisonOperators` and `EqualityComparisonOperators` to `None`
 - Validation: Implement `ValidateFactoryArguments` (preferred) or `ValidateConstructorArguments`
 
@@ -394,6 +398,10 @@ The source generators follow a consistent pattern:
 6. **Smart Enum items**: Must be public static readonly fields - non-static fields or properties won't be recognized as items
 7. **Serialization**: Reference integration packages in the same project as your types for automatic code generation, or manually register converter factories
 8. **Partial keyword**: Types must be marked `partial` for source generators to work
+9. **ISpanParsable<T>**: Requires NET9+ and automatically generated when key type implements `ISpanParsable<TKey>`; provides zero-allocation parsing from `ReadOnlySpan<char>`
+10. **Culture-specific parsing**: Always pass appropriate `IFormatProvider` when parsing/formatting culture-sensitive types (decimals, dates); use `CultureInfo.InvariantCulture` for consistent cross-culture behavior
+11. **Arithmetic operators**: Use unchecked arithmetic context - overflow/underflow wraps around rather than throwing exceptions; test edge cases with `int.MaxValue`, `int.MinValue`, etc.
+12. **Custom ISpanParsable types**: Custom types implementing `ISpanParsable<T>` can be used as keys for Smart Enums and Value Objects with full zero-allocation parsing support
 
 ### Common Issues
 
@@ -405,6 +413,50 @@ The source generators follow a consistent pattern:
 6. **Serialization not working**: Ensure integration package is referenced, or manually register converters/formatters
 7. **EF Core not converting**: Call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
 8. **Switch/Map not exhaustive**: Ensure all enum items or union types are handled; consider using generated overloads for compile-time exhaustiveness checking
+9. **ISpanParsable not available**: Requires NET9+; ensure project targets `net9.0` or later and key type implements `ISpanParsable<TKey>`
+10. **Parse/TryParse culture issues**: Incorrect decimal separators or date formats - pass correct `CultureInfo` to Parse/TryParse methods
+11. **Arithmetic overflow/underflow**: Operations use unchecked arithmetic and wrap around; use explicit checks if overflow protection needed
+
+### ISpanParsable Implementation Details (NET9+)
+
+**Overview**: Smart Enums and Value Objects with parsable key types automatically implement `ISpanParsable<T>` for zero-allocation parsing from `ReadOnlySpan<char>`.
+
+**Key Features**:
+- **Zero-allocation parsing**: No string allocation when parsing from `ReadOnlySpan<char>`
+- **Automatic generation**: Enabled when key type implements `ISpanParsable<TKey>` (numeric types, DateTime, Guid, etc.)
+- **Culture support**: Full `IFormatProvider` parameter threading for culture-specific parsing
+- **Custom types**: Works with custom structs/classes that implement `ISpanParsable<T>`
+- **Object factory integration**: Can be overridden with `[ObjectFactory<ReadOnlySpan<char>>]`
+
+**Implementation Architecture**:
+```csharp
+// Generated for Smart Enum with int key:
+#if NET9_0_OR_GREATER
+public static MyEnum Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
+{
+    // Parses key using StaticAbstractInvoker.ParseValue<int>(s, provider)
+    // Validates key exists in enum
+    // Returns enum instance or throws FormatException
+}
+
+public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out MyEnum? result)
+{
+    // Same logic but returns false instead of throwing
+}
+#endif
+```
+
+**Key Types with ISpanParsable Support**:
+- Numeric: `int`, `long`, `decimal`, `byte`, `short`, `uint`, `ulong`, `ushort`, `double`, `float`, `sbyte`
+- Date/Time: `DateTime`, `DateTimeOffset`, `TimeSpan`
+- Other: `Guid`, `Version`, `string`, custom types implementing `ISpanParsable<T>`
+
+**StaticAbstractInvoker Pattern**:
+- Uses C# 11 static abstract interface members (SAIM)
+- Provides generic parsing via `TValue.Parse(ReadOnlySpan<char>, IFormatProvider?)`
+- Marked with `[MethodImpl(MethodImplOptions.AggressiveInlining)]` for performance
+- Uses `allows ref struct` constraint (NET9+) to support `ReadOnlySpan<char>`
+
 
 ## Common Patterns and Use Cases
 
@@ -485,7 +537,9 @@ Notes:
     - KeyMemberKind: MemberKind — default Property
     - KeyMemberName: string — default "_key" if private field; otherwise "Key"
     - SkipIComparable: bool — skip IComparable<T> when key not comparable
-    - SkipIParsable: bool — skip IParsable<T> when key not string/IParsable
+    - SkipIParsable: bool — skip IParsable<T> when key not string/IParsable; independent from SkipISpanParsable (but see note)
+    - SkipISpanParsable: bool — skip ISpanParsable<T> when key not string/ISpanParsable; independent from SkipIParsable (but see note)
+    - Note: ISpanParsable<T> inherits from IParsable<T>, so setting SkipISpanParsable=false will automatically set SkipIParsable=false if needed
     - ComparisonOperators: OperatorsGeneration — comparison operators (depends on EqualityComparisonOperators)
     - EqualityComparisonOperators: OperatorsGeneration — equality operators; coerced to at least ComparisonOperators
     - SkipIFormattable: bool — skip IFormattable when key not IFormattable
@@ -512,7 +566,9 @@ Notes:
     - NullInFactoryMethodsYieldsNull: bool — Create/TryCreate/Validate return null on null input (class + factories only; implied true if EmptyStringInFactoryMethodsYieldsNull is true)
     - EmptyStringInFactoryMethodsYieldsNull: bool — string-key empty/whitespace yields null (class + factories only)
     - SkipIComparable: bool — skip if key not comparable and no custom comparer
-    - SkipIParsable: bool — skip if factories skipped or key not string/IParsable
+    - SkipIParsable: bool — skip IParsable<T> if factories skipped or key not string/IParsable; independent from SkipISpanParsable (but see note)
+    - SkipISpanParsable: bool — skip ISpanParsable<T> if factories skipped or key not string/ISpanParsable; independent from SkipIParsable (but see note)
+    - Note: ISpanParsable<T> inherits from IParsable<T>, so setting SkipISpanParsable=false will automatically set SkipIParsable=false if needed
     - AdditionOperators: OperatorsGeneration — requires key supports these ops
     - SubtractionOperators: OperatorsGeneration — requires key supports these ops
     - MultiplyOperators: OperatorsGeneration — requires key supports these ops

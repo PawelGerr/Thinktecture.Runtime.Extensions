@@ -7,6 +7,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    public string KeyMemberName { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
+   public bool SkipISpanParsable { get; }
    public OperatorsGeneration ComparisonOperators { get; }
    public OperatorsGeneration EqualityComparisonOperators { get; }
    public bool SkipIFormattable { get; }
@@ -25,6 +26,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       KeyMemberName = attribute.FindKeyMemberName() ?? KeyMemberAccessModifier.GetDefaultSmartEnumKeyMemberName(KeyMemberKind);
       SkipIComparable = attribute.FindSkipIComparable() ?? false;
       SkipIParsable = attribute.FindSkipIParsable() ?? false;
+      SkipISpanParsable = (attribute.FindSkipISpanParsable() ?? false) || SkipIParsable; // ISpanParsable<T> inherits from IParsable<T>, so if IParsable is skipped, ISpanParsable must also be skipped
       ComparisonOperators = attribute.FindComparisonOperators();
       EqualityComparisonOperators = attribute.FindEqualityComparisonOperators();
       SkipIFormattable = attribute.FindSkipIFormattable() ?? false;
@@ -64,6 +66,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
              && KeyMemberName == other.KeyMemberName
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
+             && SkipISpanParsable == other.SkipISpanParsable
              && ComparisonOperators == other.ComparisonOperators
              && EqualityComparisonOperators == other.EqualityComparisonOperators
              && SkipIFormattable == other.SkipIFormattable
@@ -85,6 +88,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
          hashCode = (hashCode * 397) ^ KeyMemberName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipISpanParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)ComparisonOperators;
          hashCode = (hashCode * 397) ^ (int)EqualityComparisonOperators;
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();

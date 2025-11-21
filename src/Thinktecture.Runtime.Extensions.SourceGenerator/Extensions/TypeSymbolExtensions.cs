@@ -131,7 +131,7 @@ public static class TypeSymbolExtensions
       return attributeType is { Name: Constants.Attributes.ValueObject.COMPLEX_NAME, ContainingNamespace: { Name: Constants.Attributes.NAMESPACE, ContainingNamespace.IsGlobalNamespace: true } };
    }
 
-   public static bool IsSmartEnumAttribute(this ITypeSymbol? attributeType)
+   public static bool IsSmartEnumAttribute([NotNullWhen(true)] this ITypeSymbol? attributeType)
    {
       if (attributeType is null || attributeType.TypeKind == TypeKind.Error)
          return false;
@@ -509,6 +509,28 @@ public static class TypeSymbolExtensions
                 IsGenericType: true
              }
              && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter);
+   }
+
+   public static bool IsSpanParsableInterface(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)
+   {
+      return @interface is
+             {
+                Name: "ISpanParsable",
+                ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true },
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 1 }
+             }
+             && SymbolEqualityComparer.Default.Equals(@interface.TypeArguments[0], genericTypeParameter);
+   }
+
+   public static bool IsReadOnlySpanOfChar(this ITypeSymbol type)
+   {
+      return type is INamedTypeSymbol
+             {
+                Name: "ReadOnlySpan",
+                ContainingNamespace: { Name: "System", ContainingNamespace.IsGlobalNamespace: true },
+                TypeArguments: { IsDefaultOrEmpty: false, Length: 1 }
+             } namedType
+             && namedType.TypeArguments[0].SpecialType == SpecialType.System_Char;
    }
 
    public static bool IsIAdditionOperators(this INamedTypeSymbol @interface, ITypeSymbol genericTypeParameter)

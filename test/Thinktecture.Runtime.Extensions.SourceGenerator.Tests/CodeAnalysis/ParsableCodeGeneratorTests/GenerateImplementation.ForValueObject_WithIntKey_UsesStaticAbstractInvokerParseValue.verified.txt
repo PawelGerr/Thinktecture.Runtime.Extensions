@@ -1,0 +1,36 @@
+﻿
+
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.Amount Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<global::System.Int32>(s, provider);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Amount, global::System.Int32, global::Thinktecture.ValidationError>(key, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"Amount\".");
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.Amount result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      if(!global::Thinktecture.Internal.StaticAbstractInvoker.TryParseValue<global::System.Int32>(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate < global::Thinktecture.Tests.Amount,  global::System.Int32, global::Thinktecture.ValidationError > (key, provider, out result!);
+      
+      return validationError is null;
+   }

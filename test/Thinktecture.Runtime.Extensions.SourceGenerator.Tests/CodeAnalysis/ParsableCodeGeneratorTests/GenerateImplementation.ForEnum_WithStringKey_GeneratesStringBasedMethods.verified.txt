@@ -1,0 +1,28 @@
+﻿
+
+   /// <inheritdoc />
+   public static global::Thinktecture.Tests.ProductGroup Parse(string s, global::System.IFormatProvider? provider)
+   {
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ProductGroup, string, global::Thinktecture.ValidationError>(s, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"ProductGroup\".");
+   }
+
+   /// <inheritdoc />
+   public static bool TryParse(
+      string? s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.ProductGroup result)
+   {
+      if(s is null)
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.ProductGroup, string, global::Thinktecture.ValidationError>(s, provider, out result!);
+      return validationError is null;
+   }

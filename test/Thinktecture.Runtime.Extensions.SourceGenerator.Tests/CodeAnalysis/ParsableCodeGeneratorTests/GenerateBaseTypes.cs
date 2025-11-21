@@ -13,13 +13,12 @@ public class GenerateBaseTypes
       // Arrange
       var state = new ParsableStateBuilder()
                   .WithStringKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       sb.Length.Should().BeGreaterThan(0);
@@ -29,28 +28,20 @@ public class GenerateBaseTypes
    public async Task GenerateBaseTypes_MultipleCallsToSameStringBuilder_AppendsContent()
    {
       // Arrange
-      var state1 = new ParsableStateBuilder()
-                   .WithType("global::Thinktecture.Tests.Type1", "Type1")
-                   .WithStringKeyMember()
-                   .WithIsEnum()
-                   .Build();
-
-      var state2 = new ParsableStateBuilder()
-                   .WithType("global::Thinktecture.Tests.Type2", "Type2")
-                   .WithIntKeyMember()
-                   .Build();
+      var state = new ParsableStateBuilder()
+                  .WithType("global::Thinktecture.Tests.Type1", "Type1")
+                  .WithStringKeyMember()
+                  .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state1);
-      ParsableCodeGenerator.ForValueObject.GenerateBaseTypes(sb, state2);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       var result = sb.ToString();
       result.Should().Contain("Type1");
-      result.Should().Contain("Type2");
-      result.Should().Contain("ISpanParsable");
+      result.Should().Contain("IParsable");
       await Verifier.Verify(result);
    }
 
@@ -66,7 +57,7 @@ public class GenerateBaseTypes
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForValueObject.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -84,7 +75,7 @@ public class GenerateBaseTypes
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForValueObject.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -102,26 +93,25 @@ public class GenerateBaseTypes
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForValueObject.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
    }
 
    [Fact]
-   public async Task ForEnum_WithStringKey_GeneratesIParsableAndISpanParsable()
+   public async Task ForEnum_WithStringKey_GeneratesIParsableOnly()
    {
       // Arrange
       var state = new ParsableStateBuilder()
                   .WithType("global::Thinktecture.Tests.TestEnum", "TestEnum")
                   .WithStringKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -134,13 +124,12 @@ public class GenerateBaseTypes
       var state = new ParsableStateBuilder()
                   .WithType("global::Thinktecture.Tests.TestEnum", "TestEnum")
                   .WithIntKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -153,13 +142,12 @@ public class GenerateBaseTypes
       var state = new ParsableStateBuilder()
                   .WithType("global::Thinktecture.Tests.TestEnum", "TestEnum")
                   .WithGuidKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -172,13 +160,12 @@ public class GenerateBaseTypes
       var state = new ParsableStateBuilder()
                   .WithType("global::Thinktecture.Tests.TestEnum", "TestEnum")
                   .WithoutKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());
@@ -191,13 +178,12 @@ public class GenerateBaseTypes
       var state = new ParsableStateBuilder()
                   .WithType("global::Thinktecture.Tests.Nested.Complex<T>.InnerEnum", "InnerEnum")
                   .WithStringKeyMember()
-                  .WithIsEnum()
                   .Build();
 
       var sb = new StringBuilder();
 
       // Act
-      ParsableCodeGenerator.ForEnum.GenerateBaseTypes(sb, state);
+      ParsableCodeGenerator.Instance.GenerateBaseTypes(sb, state);
 
       // Assert
       await Verifier.Verify(sb.ToString());

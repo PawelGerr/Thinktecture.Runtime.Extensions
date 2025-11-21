@@ -1,6 +1,6 @@
 namespace Thinktecture.CodeAnalysis;
 
-public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
+public sealed class KeyMemberState : IParsableMemberInformation, IMemberState, IEquatable<KeyMemberState>
 {
    private readonly ITypedMemberState _typedMemberState;
 
@@ -20,6 +20,7 @@ public sealed class KeyMemberState : IMemberState, IEquatable<KeyMemberState>
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
+   public bool IsSpanParsable => _typedMemberState.IsSpanParsable;
    public bool IsToStringReturnTypeNullable => _typedMemberState.IsToStringReturnTypeNullable;
    public ImplementedComparisonOperators ComparisonOperators => _typedMemberState.ComparisonOperators;
    public ImplementedOperators AdditionOperators => _typedMemberState.AdditionOperators;

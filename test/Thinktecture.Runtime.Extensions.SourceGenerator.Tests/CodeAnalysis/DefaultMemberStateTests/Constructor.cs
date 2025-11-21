@@ -300,6 +300,7 @@ public class Constructor
       public bool IsFormattable => false;
       public bool IsComparable => false;
       public bool IsParsable => false;
+      public bool IsSpanParsable => false;
       public bool IsToStringReturnTypeNullable => false;
       public ImplementedComparisonOperators ComparisonOperators => ImplementedComparisonOperators.None;
       public ImplementedOperators AdditionOperators => ImplementedOperators.None;

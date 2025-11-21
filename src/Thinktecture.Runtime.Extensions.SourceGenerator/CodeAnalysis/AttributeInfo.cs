@@ -113,7 +113,7 @@ public readonly struct AttributeInfo : IEquatable<AttributeInfo>
          if (numberOfSourceGenAttributes > 1)
          {
             info = default;
-            return (DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneAttribute, [type.ToMinimallyQualifiedDisplayString()]);
+            return (DiagnosticsDescriptors.TypeMustNotHaveMoreThanOneAttribute, [type.ToMinimallyQualifiedDisplayString()]);
          }
       }
 

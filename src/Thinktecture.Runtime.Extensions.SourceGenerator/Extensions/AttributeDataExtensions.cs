@@ -75,6 +75,11 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_IPARSABLE);
    }
 
+   public static bool? FindSkipISpanParsable(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_ISPAN_PARSABLE);
+   }
+
    public static bool? FindSkipIFormattable(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_IFORMATTABLE);
@@ -82,7 +87,7 @@ public static class AttributeDataExtensions
 
    public static bool? FindSkipEqualityComparison(this AttributeData attributeData)
    {
-      return GetBooleanParameterValue(attributeData, "SkipEqualityComparison");
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.SKIP_EQUALITY_COMPARISON);
    }
 
    public static OperatorsGeneration FindAdditionOperators(this AttributeData attributeData)

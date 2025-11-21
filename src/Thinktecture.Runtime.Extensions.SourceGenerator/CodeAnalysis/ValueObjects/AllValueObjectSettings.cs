@@ -14,6 +14,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
    public bool NullInFactoryMethodsYieldsNull { get; }
    public bool SkipIComparable { get; }
    public bool SkipIParsable { get; }
+   public bool SkipISpanParsable { get; }
    public bool SkipIFormattable { get; }
    public bool SkipEqualityComparison { get; }
    public bool SkipToString { get; }
@@ -47,6 +48,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;
       SkipIParsable = SkipFactoryMethods || (valueObjectAttribute.FindSkipIParsable() ?? false);
+      SkipISpanParsable = SkipFactoryMethods || (valueObjectAttribute.FindSkipISpanParsable() ?? false) || SkipIParsable; // ISpanParsable<T> inherits from IParsable<T>, so if IParsable is skipped, ISpanParsable must also be skipped
       SkipIFormattable = valueObjectAttribute.FindSkipIFormattable() ?? false;
       SkipEqualityComparison = valueObjectAttribute.FindSkipEqualityComparison() ?? false;
       SkipToString = valueObjectAttribute.FindSkipToString() ?? false;
@@ -100,6 +102,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
              && NullInFactoryMethodsYieldsNull == other.NullInFactoryMethodsYieldsNull
              && SkipIComparable == other.SkipIComparable
              && SkipIParsable == other.SkipIParsable
+             && SkipISpanParsable == other.SkipISpanParsable
              && SkipIFormattable == other.SkipIFormattable
              && SkipEqualityComparison == other.SkipEqualityComparison
              && SkipToString == other.SkipToString
@@ -134,6 +137,7 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
          hashCode = (hashCode * 397) ^ NullInFactoryMethodsYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipISpanParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipEqualityComparison.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipToString.GetHashCode();

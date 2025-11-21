@@ -39,6 +39,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
 
       InitializeFactoryGeneration(context, validStates, options);
       InitializeParsableCodeGenerator(context, validStates, options);
+      InitializeSpanParsableCodeGenerator(context, validStates, options);
       InitializeSerializerGenerators(context, validStates, options);
 
       InitializeDiagnosticReporting(context, typeOrError);
@@ -91,7 +92,17 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
          if (factory is null)
             return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a object factory"]);
 
-         return new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute);
+         ITypedMemberState? keyMember = null;
+
+         if (thinktectureComponentAttribute is not null)
+         {
+            keyMember = (thinktectureComponentAttribute.AttributeClass.IsSmartEnumAttribute() || thinktectureComponentAttribute.AttributeClass.IsKeyedValueObjectAttribute())
+                        && !thinktectureComponentAttribute.AttributeClass.TypeArguments.IsDefaultOrEmpty // to filter out keyless enums
+                           ? factory.Create(thinktectureComponentAttribute.AttributeClass.TypeArguments[0])
+                           : null;
+         }
+
+         return new ObjectFactorySourceGeneratorState(type, attributeInfo, thinktectureComponentAttribute, keyMember);
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {
@@ -132,12 +143,32 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
                null,
                state.AttributeInfo.ValidationError,
                state.SkipIParsable,
-               false,
-               false,
-               state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+               hasStringBasedValidateMethod: state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
                state.GenericParameters);
          });
       base.InitializeParsableCodeGenerator(context, parsables, options);
+   }
+
+   private void InitializeSpanParsableCodeGenerator(
+      IncrementalGeneratorInitializationContext context,
+      IncrementalValuesProvider<ObjectFactorySourceGeneratorState> validStates,
+      IncrementalValueProvider<GeneratorOptions> options)
+   {
+      var parsables = validStates
+         .Select((state, _) =>
+         {
+            return new SpanParsableGeneratorState(
+               state,
+               null,
+               state.AttributeInfo.ValidationError,
+               state.SkipIParsable,
+               state.SkipISpanParsable,
+               isEnum: false,
+               hasStringBasedValidateMethod: state.HasParsableKeyMember || state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+               hasReadOnlySpanOfCharBasedValidateMethod: state.AttributeInfo.ObjectFactories.Any(t => t.IsReadOnlySpanOfChar),
+               state.GenericParameters);
+         });
+      base.InitializeSpanParsableCodeGenerator(context, parsables, options);
    }
 
    private void InitializeSerializerGenerators(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<ObjectFactorySourceGeneratorState> validStates, IncrementalValueProvider<GeneratorOptions> options)

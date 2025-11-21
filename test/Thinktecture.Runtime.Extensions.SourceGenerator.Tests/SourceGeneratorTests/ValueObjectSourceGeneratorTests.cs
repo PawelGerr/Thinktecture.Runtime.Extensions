@@ -139,6 +139,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.GenericValueObject`1.ValueObject.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Formattable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Comparable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.EqualityComparisonOperators.g.cs",
@@ -174,6 +175,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.GenericValueObject`1.ValueObject.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Formattable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericValueObject`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.Comparable.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.GenericValueObject`1.EqualityComparisonOperators.g.cs",
@@ -208,6 +210,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.GenericStringValueObject`1.ValueObject.g.cs",
                         "Thinktecture.Tests.GenericStringValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericStringValueObject`1.SpanParsable.g.cs",
                         "Thinktecture.Tests.GenericStringValueObject`1.Comparable.g.cs",
                         "Thinktecture.Tests.GenericStringValueObject`1.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.GenericStringValueObject`1.EqualityComparisonOperators.g.cs");
@@ -240,6 +243,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.MultiGenericValueObject`2.ValueObject.g.cs",
                         "Thinktecture.Tests.MultiGenericValueObject`2.Formattable.g.cs",
                         "Thinktecture.Tests.MultiGenericValueObject`2.Parsable.g.cs",
+                        "Thinktecture.Tests.MultiGenericValueObject`2.SpanParsable.g.cs",
                         "Thinktecture.Tests.MultiGenericValueObject`2.Comparable.g.cs",
                         "Thinktecture.Tests.MultiGenericValueObject`2.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.MultiGenericValueObject`2.EqualityComparisonOperators.g.cs");
@@ -398,6 +402,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
@@ -477,6 +482,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
@@ -508,6 +514,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -543,6 +550,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -578,6 +586,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -611,6 +620,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -640,6 +650,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -669,6 +680,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -699,6 +711,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -733,6 +746,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -763,6 +777,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -797,6 +812,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -830,6 +846,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -859,6 +876,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -889,6 +907,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -920,6 +939,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -983,6 +1003,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -1015,6 +1036,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -1048,6 +1070,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -1302,6 +1325,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests._1TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests._1TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests._1TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests._1TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests._1TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests._1TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests._1TestValueObject.AdditionOperators.g.cs",
@@ -1570,7 +1594,78 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_custom_ISpanParsable_key_based_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            public readonly struct CustomSpanParsableKey : ISpanParsable<CustomSpanParsableKey>, IEquatable<CustomSpanParsableKey>
+            {
+               public int Value { get; }
+
+               public CustomSpanParsableKey(int value) => Value = value;
+
+               public static CustomSpanParsableKey Parse(string s, IFormatProvider? provider)
+                  => new(int.Parse(s, provider));
+
+               public static bool TryParse(string? s, IFormatProvider? provider, out CustomSpanParsableKey result)
+               {
+                  if (int.TryParse(s, provider, out var value))
+                  {
+                     result = new CustomSpanParsableKey(value);
+                     return true;
+                  }
+
+                  result = default;
+                  return false;
+               }
+
+               public static CustomSpanParsableKey Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
+                  => new(int.Parse(s, provider));
+
+               public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out CustomSpanParsableKey result)
+               {
+                  if (int.TryParse(s, provider, out var value))
+                  {
+                     result = new CustomSpanParsableKey(value);
+                     return true;
+                  }
+
+                  result = default;
+                  return false;
+               }
+
+               public bool Equals(CustomSpanParsableKey other) => Value == other.Value;
+               public override bool Equals(object? obj) => obj is CustomSpanParsableKey other && Equals(other);
+               public override int GetHashCode() => Value.GetHashCode();
+            }
+
+            [ValueObject<CustomSpanParsableKey>]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
 
@@ -1601,6 +1696,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -1632,6 +1728,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -1668,6 +1765,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -1702,6 +1800,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -1887,6 +1986,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -1950,6 +2050,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
    }
@@ -1983,6 +2084,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs");
@@ -2018,6 +2120,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2050,6 +2153,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2108,6 +2212,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2174,6 +2279,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2208,6 +2314,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2267,6 +2374,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
@@ -2301,6 +2409,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
@@ -2334,6 +2443,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2394,6 +2504,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2455,6 +2566,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2489,6 +2601,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
                         "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
@@ -2496,4 +2609,396 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
                         "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_IParsable_but_not_ISpanParsable_when_SkipISpanParsable_is_true()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipISpanParsable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_IParsable_or_ISpanParsable_when_both_SkipIParsable_and_SkipISpanParsable_are_true()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipIParsable = true, SkipISpanParsable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_generate_IParsable_and_ISpanParsable_when_SkipIParsable_true_but_SkipISpanParsable_false()
+   {
+      // Dependency constraint: SkipISpanParsable should be forced to true, when SkipIParsable is true
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipIParsable = true, SkipISpanParsable = false)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_skip_both_when_SkipFactoryMethods_is_true_regardless_of_explicit_values()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipFactoryMethods = true, SkipIParsable = false, SkipISpanParsable = false)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_IParsable_only_when_SkipISpanParsable_true_for_Guid_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<Guid>(SkipISpanParsable = true)]
+         	public partial class TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_IParsable_only_for_struct_when_SkipISpanParsable_is_true()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(SkipISpanParsable = true)]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs"
+      );
+   }
+
+   [Fact]
+   public async Task Should_generate_string_value_object_with_string_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [ObjectFactory<string>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_int_value_object_with_string_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public async Task Should_generate_string_value_object_with_readonlyspan_of_char_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_string_value_object_with_string_and_readonlyspan_of_char_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [ObjectFactory<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_int_value_object_with_readonlyspan_of_char_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_int_value_object_with_string_and_readonlyspan_of_char_object_factory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>]
+            [ObjectFactory<ReadOnlySpan<char>>]
+         	public partial struct TestValueObject
+         	{
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
+   }
+#endif
 }

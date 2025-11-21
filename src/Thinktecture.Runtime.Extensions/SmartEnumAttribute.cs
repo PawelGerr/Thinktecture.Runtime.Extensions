@@ -85,6 +85,27 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public bool SkipIParsable { get; set; }
 
    /// <summary>
+   /// Indication whether the generator should skip the implementation of <see cref="ISpanParsable{T}"/> or not.
+   /// </summary>
+   /// <remarks>
+   /// <para>
+   /// Note that this property is dependent on <see cref="SkipIParsable"/>.
+   /// If <see cref="SkipIParsable"/> is set to <c>true</c> then <see cref="SkipISpanParsable"/> is set to <c>true</c> as well.
+   /// </para>
+   /// <para>
+   /// This setting has no effect if:
+   /// </para>
+   /// <para>
+   /// the key is neither a <see cref="string"/> nor an <see cref="ISpanParsable{T}"/> itself.
+   /// </para>
+   /// </remarks>
+   public bool SkipISpanParsable
+   {
+      get => field || SkipIParsable;
+      set;
+   }
+
+   /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
    /// Please note that the comparison operators depend on <see cref="EqualityComparisonOperators"/>. For example, if <see cref="ComparisonOperators"/> are set to <see cref="OperatorsGeneration.DefaultWithKeyTypeOverloads"/>

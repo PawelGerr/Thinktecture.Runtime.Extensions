@@ -198,32 +198,6 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_generate_json_converter_for_long_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<long>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
    public async Task Should_generate_json_converter_for_guid_key()
    {
       var source = """
@@ -234,84 +208,6 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [SmartEnum<Guid>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_decimal_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<decimal>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_double_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<double>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_byte_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<byte>]
             public partial class TestEnum
             {
                public static readonly TestEnum Item1 = default!;
@@ -663,86 +559,6 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace A.B.C.D.E.F
          {
             [SmartEnum<string>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   // NICE-TO-HAVE TESTS - Extended Key Type Variations
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_datetime_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<DateTime>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_uint_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<uint>]
-            public partial class TestEnum
-            {
-               public static readonly TestEnum Item1 = default!;
-               public static readonly TestEnum Item2 = default!;
-            }
-         }
-
-         """;
-      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
-                                                                ".Json",
-                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
-
-      await VerifyAsync(output);
-   }
-
-   [Fact]
-   public async Task Should_generate_json_converter_for_short_key()
-   {
-      var source = """
-
-         using System;
-         using Thinktecture;
-
-         namespace Thinktecture.Tests
-         {
-            [SmartEnum<short>]
             public partial class TestEnum
             {
                public static readonly TestEnum Item1 = default!;

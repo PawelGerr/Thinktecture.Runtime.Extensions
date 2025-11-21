@@ -367,6 +367,7 @@ public class Constructor
       public bool IsFormattable { get; }
       public bool IsComparable { get; }
       public bool IsParsable { get; }
+      public bool IsSpanParsable { get; }
       public bool IsToStringReturnTypeNullable { get; }
       public ImplementedComparisonOperators ComparisonOperators { get; }
       public ImplementedOperators AdditionOperators { get; }
@@ -390,7 +391,8 @@ public class Constructor
          ImplementedOperators multiplyOperators,
          ImplementedOperators divisionOperators,
          bool isNullableStruct,
-         NullableAnnotation nullableAnnotation)
+         NullableAnnotation nullableAnnotation,
+         bool isSpanParsable = false)
       {
          TypeFullyQualified = typeFullyQualified;
          TypeMinimallyQualified = typeFullyQualified;
@@ -401,6 +403,7 @@ public class Constructor
          IsFormattable = isFormattable;
          IsComparable = isComparable;
          IsParsable = isParsable;
+         IsSpanParsable = isSpanParsable;
          IsToStringReturnTypeNullable = isToStringReturnTypeNullable;
          ComparisonOperators = comparisonOperators;
          AdditionOperators = additionOperators;

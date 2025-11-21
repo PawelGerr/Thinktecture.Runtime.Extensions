@@ -4,46 +4,22 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGeneratorState>
 {
-   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForValueObject = new ParsableCodeGenerator(false);
-   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> ForEnum = new ParsableCodeGenerator(true);
-
-   private readonly bool _isForEnum;
+   public static readonly IInterfaceCodeGenerator<ParsableGeneratorState> Instance = new ParsableCodeGenerator();
 
    public string CodeGeneratorName => "Parsable-CodeGenerator";
    public string FileNameSuffix => ".Parsable";
-
-   private ParsableCodeGenerator(bool isForEnum)
-   {
-      _isForEnum = isForEnum;
-   }
+   public bool CanAppendColon => true;
 
    public void GenerateBaseTypes(StringBuilder sb, ParsableGeneratorState state)
    {
       sb.Append(@"
    global::System.IParsable<").AppendTypeFullyQualified(state.Type).Append(">");
-
-      if (_isForEnum && state.KeyMember?.IsString() == true)
-      {
-         sb.Append(@"
-#if NET9_0_OR_GREATER
-   , global::System.ISpanParsable<").AppendTypeFullyQualified(state.Type).Append(@">
-#endif");
-      }
    }
 
    public void GenerateImplementation(StringBuilder sb, ParsableGeneratorState state)
    {
-      var isKeyTypeString = state.KeyMember?.IsString() == true;
-
       GenerateParse(sb, state);
-
-      if (_isForEnum && isKeyTypeString)
-         GenerateParseForReadOnlySpanOfChar(sb, state);
-
       GenerateTryParse(sb, state);
-
-      if (_isForEnum && isKeyTypeString)
-         GenerateTryParseForReadOnlySpanOfChar(sb, state);
    }
 
    private static void GenerateParse(StringBuilder sb, ParsableGeneratorState state)
@@ -54,8 +30,6 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
-      var needParseMethod = false;
-
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
@@ -63,9 +37,8 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       }
       else if (state.KeyMember is not null)
       {
-         needParseMethod = true;
          sb.Append(@"
-      var key = ParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider);
+      var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider);
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(">(key, provider, out var result);");
       }
 
@@ -76,38 +49,6 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
 
       throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
    }");
-
-      if (needParseMethod)
-      {
-         sb.Append(@"
-
-   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-   private static TValue ParseValue<TValue>(string s, global::System.IFormatProvider? provider)
-      where TValue : global::System.IParsable<TValue>
-   {
-      return TValue.Parse(s, provider);
-   }");
-      }
-   }
-
-   private static void GenerateParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
-   {
-      sb.Append(@"
-
-#if NET9_0_OR_GREATER
-   /// <inheritdoc />
-   public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
-   {
-      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">(s, provider, out var result);
-
-      if(validationError is null)
-         return result!;
-
-      throw new global::System.FormatException(validationError.ToString() ?? ""Unable to parse \""").Append(state.Type.Name).Append(@"\""."");
-   }");
-
-      sb.Append(@"
-#endif");
    }
 
    private static void GenerateTryParse(StringBuilder sb, ParsableGeneratorState state)
@@ -126,8 +67,6 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          return false;
       }");
 
-      var needParseMethod = false;
-
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
@@ -136,49 +75,20 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       }
       else if (state.KeyMember is not null)
       {
-         needParseMethod = true;
          sb.Append(@"
 
-      if (!TryParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider, out var key))
+      if(!global::Thinktecture.Internal.StaticAbstractInvoker.TryParseValue<").AppendTypeFullyQualified(state.KeyMember).Append(@">(s, provider, out var key))
       {
          result = default;
          return false;
       }
 
-      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(">(key, provider, out result!);");
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate < ").AppendTypeFullyQualified(state.Type).Append(",  ").AppendTypeFullyQualified(state.KeyMember).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@" > (key, provider, out result!);
+      ");
       }
 
       sb.Append(@"
       return validationError is null;
    }");
-
-      if (needParseMethod)
-      {
-         sb.Append(@"
-
-   [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-   private static bool TryParseValue<TValue>(string? s, global::System.IFormatProvider? provider, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out TValue result)
-      where TValue : global::System.IParsable<TValue>
-   {
-      return TValue.TryParse(s, provider, out result);
-   }");
-      }
-   }
-
-   private static void GenerateTryParseForReadOnlySpanOfChar(StringBuilder sb, ParsableGeneratorState state)
-   {
-      sb.Append(@"
-
-#if NET9_0_OR_GREATER
-   /// <inheritdoc />
-   public static bool TryParse(
-      global::System.ReadOnlySpan<char> s,
-      global::System.IFormatProvider? provider,
-      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(state.Type).Append(@" result)
-   {
-      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<").AppendTypeFullyQualified(state.Type).Append(", ").AppendTypeFullyQualified(state.ValidationError).Append(@">(s, provider, out result!);
-      return validationError is null;
-   }
-#endif");
    }
 }
