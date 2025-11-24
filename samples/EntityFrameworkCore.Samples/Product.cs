@@ -16,8 +16,7 @@ public class Product
    public required DayMonth ScheduledDeliveryDate { get; set; }
    public required TextOrNumberSerializable TextOrNumber { get; set; }
 
-   private Boundary? _boundary;
-   public Boundary Boundary => _boundary ?? throw new InvalidOperationException("Boundary is not loaded.");
+   public Boundary Boundary => field ?? throw new InvalidOperationException("Boundary is not loaded.");
 
    [SetsRequiredMembers]
    private Product(
@@ -50,6 +49,6 @@ public class Product
       OpenEndDate endDate = default)
       : this(id, name, category, productType, endDate, scheduledDeliveryDate, textOrNumber)
    {
-      _boundary = boundary;
+      Boundary = boundary;
    }
 }

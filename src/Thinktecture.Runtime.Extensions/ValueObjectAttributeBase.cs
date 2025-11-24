@@ -16,26 +16,22 @@ public abstract class ValueObjectAttributeBase : Attribute
    /// </summary>
    public AccessModifier ConstructorAccessModifier { get; set; }
 
-   private string? _createFactoryMethodName;
-
    /// <summary>
    /// The name of the factory method "Create".
    /// </summary>
    public string CreateFactoryMethodName
    {
-      get => _createFactoryMethodName ?? "Create";
-      set => _createFactoryMethodName = String.IsNullOrWhiteSpace(value) ? null : value.Trim();
+      get => field ?? "Create";
+      set => field = String.IsNullOrWhiteSpace(value) ? null : value.Trim();
    }
-
-   private string? _tryCreateFactoryMethodName;
 
    /// <summary>
    /// The name of the factory method "TryCreate".
    /// </summary>
    public string TryCreateFactoryMethodName
    {
-      get => _tryCreateFactoryMethodName ?? "TryCreate";
-      set => _tryCreateFactoryMethodName = String.IsNullOrWhiteSpace(value) ? null : value.Trim();
+      get => field ?? "TryCreate";
+      set => field = String.IsNullOrWhiteSpace(value) ? null : value.Trim();
    }
 
    /// <summary>
@@ -52,8 +48,6 @@ public abstract class ValueObjectAttributeBase : Attribute
    /// </summary>
    public bool AllowDefaultStructs { get; set; }
 
-   private string? _defaultInstancePropertyName;
-
    /// <summary>
    /// The name of the static property containing the <c>default</c> instance of the struct.
    /// Default name is "Empty" (analogous to <c>Guid.Empty</c>).
@@ -63,8 +57,8 @@ public abstract class ValueObjectAttributeBase : Attribute
    /// </summary>
    public string DefaultInstancePropertyName
    {
-      get => _defaultInstancePropertyName ?? "Empty";
-      set => _defaultInstancePropertyName = value;
+      get => field ?? "Empty";
+      set;
    }
 
    /// <summary>

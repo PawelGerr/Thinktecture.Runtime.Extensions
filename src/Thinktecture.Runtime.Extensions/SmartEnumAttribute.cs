@@ -56,16 +56,14 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// </summary>
    public MemberKind KeyMemberKind { get; set; }
 
-   private string? _keyMemberName;
-
    /// <summary>
    /// The name of the key member.
    /// Default: <c>_key</c> if the key member is a private field; otherwise <c>Key</c>.
    /// </summary>
    public string KeyMemberName
    {
-      get => _keyMemberName ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_key" : "Key");
-      set => _keyMemberName = value;
+      get => field ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_key" : "Key");
+      set;
    }
 
    /// <summary>
@@ -116,8 +114,6 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// </summary>
    public OperatorsGeneration ComparisonOperators { get; set; }
 
-   private OperatorsGeneration _equalityComparisonOperators;
-
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
    ///
@@ -126,8 +122,8 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// </summary>
    public OperatorsGeneration EqualityComparisonOperators
    {
-      get => ComparisonOperators > _equalityComparisonOperators ? ComparisonOperators : _equalityComparisonOperators;
-      set => _equalityComparisonOperators = value;
+      get => ComparisonOperators > field ? ComparisonOperators : field;
+      set;
    }
 
    /// <summary>

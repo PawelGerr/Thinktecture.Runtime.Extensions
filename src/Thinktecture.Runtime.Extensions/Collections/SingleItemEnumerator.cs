@@ -4,17 +4,15 @@ namespace Thinktecture.Collections;
 
 internal sealed class SingleItemEnumerator<T> : IEnumerator<T>
 {
-   private readonly T _item;
-
    private int _index;
 
-   public T Current => _index == 1 ? _item : default!;
+   public T Current => _index == 1 ? field : default!;
 
    object IEnumerator.Current => Current!;
 
    public SingleItemEnumerator(T item)
    {
-      _item = item;
+      Current = item;
    }
 
    public bool MoveNext()

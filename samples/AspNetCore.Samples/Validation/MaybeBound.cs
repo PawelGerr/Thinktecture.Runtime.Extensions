@@ -9,14 +9,13 @@ public class MaybeBound<T, TKey, TValidationError> : IMaybeBound, IValidatableOb
    where TKey : IParsable<TKey>
    where TValidationError : class, IValidationError<TValidationError>
 {
-   private readonly T? _value;
-   public T? Value => Error is null ? _value : throw new ValidationException(Error);
+   public T? Value => Error is null ? field : throw new ValidationException(Error);
 
    public string? Error { get; }
 
    private MaybeBound(T? value, string? error)
    {
-      _value = value;
+      Value = value;
       Error = error;
    }
 

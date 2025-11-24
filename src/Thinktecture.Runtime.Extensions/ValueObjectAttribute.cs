@@ -26,16 +26,14 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </summary>
    public MemberKind KeyMemberKind { get; set; }
 
-   private string? _keyMemberName;
-
    /// <summary>
    /// The name of the key member.
    /// Default: <c>_value</c> if the key member is a private field; otherwise <c>Value</c>.
    /// </summary>
    public string KeyMemberName
    {
-      get => _keyMemberName ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_value" : "Value");
-      set => _keyMemberName = value;
+      get => field ?? (KeyMemberAccessModifier == AccessModifier.Private && KeyMemberKind == MemberKind.Field ? "_value" : "Value");
+      set;
    }
 
    /// <summary>
@@ -45,8 +43,6 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// If the member is a property with a backing field, then the property must have an <c>init</c> setter.
    /// </summary>
    public bool SkipKeyMember { get; set; }
-
-   private bool _nullInFactoryMethodsYieldsNull;
 
    /// <summary>
    /// By default, providing <c>null</c> to methods "Create", "Validate" and "TryCreate" is not allowed.
@@ -60,8 +56,8 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </remarks>
    public bool NullInFactoryMethodsYieldsNull
    {
-      get => _nullInFactoryMethodsYieldsNull || EmptyStringInFactoryMethodsYieldsNull;
-      set => _nullInFactoryMethodsYieldsNull = value;
+      get => field || EmptyStringInFactoryMethodsYieldsNull;
+      set;
    }
 
    /// <summary>
@@ -157,8 +153,6 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </remarks>
    public OperatorsGeneration DivisionOperators { get; set; }
 
-   private OperatorsGeneration _comparisonOperators;
-
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
    ///
@@ -172,11 +166,9 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// </remarks>
    public OperatorsGeneration ComparisonOperators
    {
-      get => SkipEqualityComparison ? OperatorsGeneration.None : _comparisonOperators;
-      set => _comparisonOperators = value;
+      get => SkipEqualityComparison ? OperatorsGeneration.None : field;
+      set;
    }
-
-   private OperatorsGeneration _equalityComparisonOperators;
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IEqualityOperators{TSelf,TOther,TResult}"/>.
@@ -193,11 +185,11 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
          if (SkipEqualityComparison)
             return OperatorsGeneration.None;
 
-         return ComparisonOperators > _equalityComparisonOperators
+         return ComparisonOperators > field
                    ? ComparisonOperators
-                   : _equalityComparisonOperators;
+                   : field;
       }
-      set => _equalityComparisonOperators = value;
+      set;
    }
 
    /// <summary>

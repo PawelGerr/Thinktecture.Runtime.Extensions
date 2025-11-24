@@ -10,8 +10,7 @@ namespace Thinktecture.EntityFrameworkCore.Infrastructure;
 
 internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsExtension
 {
-   private DbContextOptionsExtensionInfo? _info;
-   public DbContextOptionsExtensionInfo Info => _info ??= new ThinktectureDbContextOptionsExtensionInfo(this);
+   public DbContextOptionsExtensionInfo Info => field ??= new ThinktectureDbContextOptionsExtensionInfo(this);
 
    public ThinktectureValueConverterSettings Settings { get; private set; }
 
@@ -59,8 +58,7 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
       private readonly ThinktectureDbContextOptionsExtension _extension;
       public override bool IsDatabaseProvider => false;
 
-      private string? _logFragment;
-      public override string LogFragment => _logFragment ??= CreateLogFragment();
+      public override string LogFragment => field ??= CreateLogFragment();
 
       private string CreateLogFragment()
       {
