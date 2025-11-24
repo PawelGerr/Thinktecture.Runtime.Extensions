@@ -9,25 +9,41 @@
     <File Path="global.json" />
     <File Path="LICENSE.md" />
     <File Path="README.md" />
-    <File Path="CLAUDE.md" />
     <File Path="src\Thinktecture.Runtime.Extensions.SourceGenerator\AnalyzerReleases.Shipped.md" />
     <File Path="src\Thinktecture.Runtime.Extensions.SourceGenerator\AnalyzerReleases.Unshipped.md" />
-    <File Path=".clinerules" />
+  </Folder>
+  <Folder Name="/assets/.claude/">
+    <File Path=".claude/CLAUDE-ATTRIBUTES.md" />
+    <File Path=".claude/CLAUDE-FEATURE-DEV.md" />
+    <File Path=".claude/CLAUDE-REVIEW.md" />
+    <File Path=".claude/CLAUDE-TESTING.md" />
+    <File Path=".claude/CLAUDE.md" />
+  </Folder>
+  <Folder Name="/assets/.claude/agents/">
+    <File Path=".claude\agents\documentation-updater.md" />
+    <File Path=".claude\agents\feature-implementation-planner.md" />
+    <File Path=".claude\agents\feature-implementer.md" />
+    <File Path=".claude\agents\feature-reviewer.md" />
+    <File Path=".claude\agents\feature-test-writer.md" />
+  </Folder>
+  <Folder Name="/assets/.clinerules/">
+    <File Path=".clinerules/01.general.md" />
+    <File Path=".clinerules/02.feature-dev.md" />
+    <File Path=".clinerules/03.attributes.md" />
+    <File Path=".clinerules/04.review.md" />
+    <File Path=".clinerules/05.testing.md" />
   </Folder>
   <Folder Name="/assets/.github/">
     <File Path=".github\workflows\claude.yml" />
     <File Path=".github\workflows\claude-code-review.yml" />
+    <File Path=".github/copilot-review.md" />
+    <File Path=".github/copilot-testing.md" />
     <File Path=".github\workflows\ci.ps1" />
+    <File Path=".github/copilot-attributes.md" />
+    <File Path=".github/copilot-feature-dev.md" />
     <File Path=".github/copilot-instructions.md" />
     <File Path=".github\workflows\mcp-config.json" />
     <File Path=".github\workflows\main.yml" />
-  </Folder>
-  <Folder Name="/assets/agents/">
-    <File Path=".claude\agents\feature-implementation-planner.md" />
-    <File Path=".claude\agents\feature-implementer.md" />
-    <File Path=".claude\agents\feature-test-writer.md" />
-    <File Path=".claude\agents\feature-reviewer.md" />
-    <File Path=".claude\agents\documentation-updater.md" />
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/AspNetCore.Samples/AspNetCore.Samples.csproj" />

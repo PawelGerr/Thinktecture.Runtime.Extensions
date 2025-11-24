@@ -35,7 +35,6 @@ When you need information about any external library or framework:
 3. **Base all implementation decisions on verified documentation**, not assumptions
 
 Examples of when to use Context7:
-
 - Working with .NET BCL types (System.Text.Json, System.Linq, System.Collections, etc.)
 - Integration with frameworks (ASP.NET Core, Entity Framework Core, xUnit, etc.)
 - Third-party libraries (MessagePack, Newtonsoft.Json, ProtoBuf, etc.)
@@ -51,7 +50,6 @@ Examples of when to use Context7:
 ### 4. Explicit Uncertainty Communication
 
 When you encounter uncertainty:
-
 - **State clearly**: "I need to verify the API behavior using Context7"
 - **Never proceed silently** with guessed implementations
 - **Document verification steps** so the user understands your process
@@ -96,32 +94,31 @@ This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discr
 
 - **Keyless `[SmartEnum]`**: Type-safe enums without underlying values (items as public static readonly fields)
 - **Keyed `[SmartEnum<TKey>]`**: Type-safe enums with underlying key values (int, string, Guid, custom types)
-    - Can be generic types
-    - Supports `IParsable<T>`, `ISpanParsable<T>` (NET9+, zero-allocation), `IComparable<T>`, `IFormattable`
-    - Configurable operators, conversion, Switch/Map generation
+  - Can be generic types
+  - Supports `IParsable<T>`, `ISpanParsable<T>` (NET9+, zero-allocation), `IComparable<T>`, `IFormattable`
+  - Configurable operators, conversion, Switch/Map generation
 
 #### Value Objects
 
 - **Simple `[ValueObject<TKey>]`**: Single-value immutable types (e.g., Amount, ProductId)
-    - String keys MUST specify `[KeyMemberEqualityComparer<...>]`
-    - Supports arithmetic operators, `IParsable<T>`, `ISpanParsable<T>` (NET9+)
-    - Can be generic types
+  - String keys MUST specify `[KeyMemberEqualityComparer<...>]`
+  - Supports arithmetic operators, `IParsable<T>`, `ISpanParsable<T>` (NET9+)
+  - Can be generic types
 - **Complex `[ComplexValueObject]`**: Multi-property immutable types (e.g., DateRange)
-    - Use `[IgnoreMember]` to exclude properties
-    - Use `[MemberEqualityComparer<...>]` for custom per-member equality
-    - Can be generic types
+  - Use `[IgnoreMember]` to exclude properties
+  - Use `[MemberEqualityComparer<...>]` for custom per-member equality
+  - Can be generic types
 
 #### Discriminated Unions
 
 - **Ad-hoc `[Union<T1, T2>]` or `[AdHocUnion(typeof(T1), typeof(T2))]`**: Simple 2-5 type combinations
-    - Implicit conversion operators, IsT1/AsT1 properties, Switch/Map
+  - Implicit conversion operators, IsT1/AsT1 properties, Switch/Map
 - **Regular `[Union]`**: Inheritance-based unions with derived types
-    - Static factory methods, Switch/Map over all derived types
+  - Static factory methods, Switch/Map over all derived types
 
 ### Source Generation Pattern
 
 Types must be `partial` classes/structs. Generator creates:
-
 - Constructors and factory methods (`Create`, `TryCreate`, `Validate`)
 - Equality members (`Equals`, `GetHashCode`, operators)
 - Conversion operators and `IParsable<T>` implementations
@@ -140,8 +137,8 @@ Types must be `partial` classes/structs. Generator creates:
 ### Validation Implementation
 
 - **Always prefer `ValidateFactoryArguments`** over `ValidateConstructorArguments`
-    - `ValidateFactoryArguments` returns `ValidationError` for better framework integration
-    - `ValidateConstructorArguments` can only throw exceptions, integrates poorly with frameworks
+  - `ValidateFactoryArguments` returns `ValidationError` for better framework integration
+  - `ValidateConstructorArguments` can only throw exceptions, integrates poorly with frameworks
 - Use `ref` parameters to normalize values during validation
 
 ### Framework Integration Quick Reference
@@ -190,14 +187,13 @@ Types must be `partial` classes/structs. Generator creates:
 
 For specific tasks, consult these specialized documentation files:
 
-- **[copilot-feature-dev.md](copilot-feature-dev.md)**: Source generator architecture, implementing new features, state objects, code generator patterns
-- **[copilot-testing.md](copilot-testing.md)**: Testing strategy, test organization, frameworks (xUnit, Verify, AwesomeAssertions)
-- **[copilot-testing.md](copilot-review.md)**: Code review checklists, best practices verification, common pitfalls
-- **[copilot-attributes.md](copilot-attributes.md)**: Complete attribute reference with all properties and configuration options
+- **[CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md)**: Source generator architecture, implementing new features, state objects, code generator patterns
+- **[CLAUDE-TESTING.md](CLAUDE-TESTING.md)**: Testing strategy, test organization, frameworks (xUnit, Verify, AwesomeAssertions)
+- **[CLAUDE-REVIEW.md](CLAUDE-REVIEW.md)**: Code review checklists, best practices verification, common pitfalls
+- **[CLAUDE-ATTRIBUTES.md](CLAUDE-ATTRIBUTES.md)**: Complete attribute reference with all properties and configuration options
 
 **When to consult specialized docs:**
-
-- Implementing a new feature → Read copilot-feature-dev.md
-- Writing or updating tests → Read copilot-testing.md
-- Reviewing code changes → Read copilot-testing.md
-- Working with attributes or need configuration details → Read copilot-attributes.md
+- Implementing a new feature → Read CLAUDE-FEATURE-DEV.md
+- Writing or updating tests → Read CLAUDE-TESTING.md
+- Reviewing code changes → Read CLAUDE-REVIEW.md
+- Working with attributes or need configuration details → Read CLAUDE-ATTRIBUTES.md
