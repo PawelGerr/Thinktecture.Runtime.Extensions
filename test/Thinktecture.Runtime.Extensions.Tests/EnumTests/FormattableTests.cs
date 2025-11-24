@@ -50,6 +50,7 @@ public class FormattableTests
    public void Should_pass_format_string_to_underlying_type()
    {
       var originalCulture = CultureInfo.CurrentCulture;
+
       try
       {
          CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -62,8 +63,8 @@ public class FormattableTests
    }
 
    [Theory]
-   [InlineData("D", "en-US", "01/01/2024")]
-   [InlineData("d", "en-US", "01/01/2024")]
+   [InlineData("D", "en-US", "Monday, January 1, 2024")]
+   [InlineData("d", "en-US", "1/1/2024")]
    [InlineData("D", "de-DE", "Montag, 1. Januar 2024")]
    [InlineData("d", "de-DE", "01.01.2024")]
    public void Should_format_datetime_with_different_format_strings(string format, string cultureName, string expected)
