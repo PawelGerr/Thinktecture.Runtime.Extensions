@@ -32,6 +32,51 @@ When a user requests a plan for implementing a feature, you will create a struct
     - Plan for serialization framework integration if applicable
     - Address nullability and multi-targeting concerns
 
+### API Verification Planning
+
+When your plan involves external APIs, you MUST:
+
+1. **Identify All External Dependencies**: List every external API the implementation will use
+   - .NET BCL types and methods (System.*, except internal Thinktecture types)
+   - Roslyn APIs for source generators (Microsoft.CodeAnalysis.*)
+   - Framework integration APIs (EF Core, ASP.NET Core, serialization frameworks)
+   - Testing framework APIs (if test planning is included)
+
+2. **Add Verification Steps**: Include explicit verification requirements in the plan:
+   ```
+   Example:
+   - Step 3: Verify System.Text.Json JsonConverter<T> API using Context7 MCP
+     - Need to confirm: Constructor parameters, WriteJson/ReadJson signatures
+   - Step 5: Verify Roslyn IIncrementalGenerator.Initialize signature using Context7 MCP
+     - Need to confirm: IncrementalGeneratorInitializationContext methods
+   ```
+
+3. **Flag Uncertain APIs**: If you're uncertain about any API, mark it clearly:
+   ```
+   ⚠️ VERIFY: The exact signature of MessagePackFormatter<T>.Serialize needs verification
+   ⚠️ VERIFY: Entity Framework Core value converter registration API may have changed
+   ```
+
+4. **Zero-Hallucination Reminder**: Include in every plan:
+   ```markdown
+   ## ⚠️ Implementation Requirements - Zero Hallucination Policy
+
+   All external APIs must be verified using Context7 MCP before implementation:
+   - DO NOT assume API signatures, method names, parameters, or behavior
+   - DO NOT rely on memory or general knowledge about libraries
+   - DO NOT proceed with implementation if not 100% certain about API details
+
+   The implementer must:
+   1. Use `mcp__context7__resolve-library-id` to find each external library
+   2. Use `mcp__context7__get-library-docs` to retrieve accurate documentation
+   3. Base all implementation decisions on verified documentation
+   4. Document verification steps so stakeholders understand the process
+
+   For Thinktecture.Runtime.Extensions internal code, use Serena tools to read the actual source.
+   ```
+
+This ensures the implementer knows upfront which APIs require verification and understands the zero-hallucination policy.
+
 4. **Implementation Steps**
    Break down the implementation into logical, sequential steps:
     - Core library changes (attributes, interfaces, base types)
@@ -89,6 +134,47 @@ Structure your plan using clear markdown with:
 - **EF Core**: Consider version-specific implementations (8, 9, 10) with shared sources
 - **Package Management**: All package versions must be managed in Directory.Packages.props
 - **Documentation**: XML docs are required for all public APIs
+
+### Feature-Specific Planning Considerations
+
+**ISpanParsable Support (NET9+):**
+When planning parsing features:
+- Consider zero-allocation span-based parsing for NET9+
+- Plan for `#if NET9_0_OR_GREATER` conditional compilation
+- Include `StaticAbstractInvoker.ParseValue<TKey>` pattern in design
+- Account for `allows ref struct` constraint requirements
+- Plan `IFormatProvider` parameter threading through all parsing methods
+
+**Validation Patterns:**
+When planning validation features:
+- **Prefer `ValidateFactoryArguments`** over `ValidateConstructorArguments` in all plans
+- Plan for `ValidationError` return types (better framework integration)
+- Include `ref` parameter usage for value normalization
+- Consider async validation scenarios if applicable
+
+**Arithmetic Operators:**
+When planning arithmetic operator features:
+- Plan for **BOTH checked and unchecked operator versions**
+- Default (checked) version MUST throw `OverflowException` on overflow/underflow
+- Unchecked version wraps around on overflow/underflow
+- Include test scenarios for:
+  - Default behavior throws OverflowException
+  - Unchecked context wraps around
+  - Both overflow and underflow cases
+
+**String-Based Types:**
+When planning string key or member features:
+- **Always require explicit equality comparer specification**
+- Plan for `[KeyMemberEqualityComparer<TType, string, StringComparer>]`
+- Plan for `[MemberEqualityComparer<TType, string, StringComparer>]` for complex types
+- Recommend `StringComparer.Ordinal` or `StringComparer.OrdinalIgnoreCase` as defaults
+
+**Generic Type Support:**
+When planning features with generic types:
+- Smart Enums, Keyed Value Objects, Regular Unions, Complex Value Objects CAN be generic
+- Ad-hoc Unions CANNOT be generic (plan analyzer enforcement)
+- Consider generic type constraints in design
+- Plan for proper generic type parameter handling in code generation
 
 ## When to Seek Clarification
 

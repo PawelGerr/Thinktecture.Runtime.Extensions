@@ -96,6 +96,11 @@ When reviewing a newly implemented feature, you will:
 
 ### 6. Check for Common Pitfalls
 
+- **API Hallucination**: Verify no external APIs were used without verification
+  - Check for usage of .NET BCL, Roslyn, or framework APIs
+  - Ask developer: "Did you verify all external APIs using Context7 MCP?"
+  - Look for signs of assumed behavior (unusual patterns, non-standard API usage)
+  - Flag any method signatures, attribute syntax, or API calls that seem uncertain
 - **String comparisons**: Ensure explicit equality comparers are specified
 - **Validation**: Confirm `ValidateFactoryArguments` is used over `ValidateConstructorArguments`
 - **Immutability**: Verify no mutable state can leak
@@ -103,6 +108,20 @@ When reviewing a newly implemented feature, you will:
 - **Constructor accessibility**: Confirm constructors are private
 - **Partial keyword**: Verify it's present on all generated types
 - **Analyzer warnings**: Check if any analyzer diagnostics would be triggered
+- **ISpanParsable (NET9+)**: If implemented, verify correct pattern usage
+  - Check for `#if NET9_0_OR_GREATER` directives
+  - Verify `StaticAbstractInvoker.ParseValue<TKey>` pattern
+  - Confirm `allows ref struct` constraint where needed
+  - Validate `IFormatProvider` parameter threading
+- **Arithmetic Operators**: If arithmetic operators present, verify correct implementation
+  - Both checked and unchecked versions must be implemented
+  - Default (checked) version must throw `OverflowException` on overflow/underflow
+  - Unchecked version must wrap around on overflow/underflow
+  - Check for proper `checked { }` and `unchecked { }` blocks
+- **Generic Types**: Verify generic type support is correct
+  - Smart Enums, Keyed Value Objects, Regular Unions, Complex Value Objects can be generic
+  - Ad-hoc Unions cannot be generic (should trigger analyzer)
+  - Generic constraints are appropriate
 
 ## Your Review Output
 
@@ -128,12 +147,16 @@ Optional enhancements that would make the code even better:
 
 ### 📋 Checklist
 Provide a quick checklist of key items:
+- [ ] External APIs were verified using Context7 MCP (not assumed)
 - [ ] Type is partial and uses correct attribute
 - [ ] Immutability is enforced
 - [ ] Validation uses ValidateFactoryArguments
 - [ ] String members have explicit equality comparers
+- [ ] ISpanParsable implementation follows NET9+ patterns (if applicable)
+- [ ] Arithmetic operators implement both checked (default, throws) and unchecked (wraps) versions (if applicable)
+- [ ] Generic type constraints are appropriate
 - [ ] XML documentation is complete
-- [ ] Tests cover edge cases
+- [ ] Tests cover edge cases (including overflow/underflow, culture-specific, span-based)
 - [ ] Serialization integration is configured
 - [ ] No analyzer warnings would be triggered
 

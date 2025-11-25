@@ -100,6 +100,49 @@ public void Should_add_numbers_correctly(int a, int b, int expected)
 - Invalid inputs (wrong format, out of range)
 - Culture-specific scenarios (for parsing/formatting)
 
+## Test Project Organization
+
+### Overview
+
+The test suite is organized into multiple projects, each with a specific purpose:
+
+1. **`Thinktecture.Runtime.Extensions.SourceGenerator.Tests`**: Tests for source generators and analyzers themselves
+2. **`Thinktecture.Runtime.Extensions.Tests.Shared`**: Compilation smoke tests
+3. **`Thinktecture.Runtime.Extensions.Tests`**: Core runtime functionality tests
+4. **Framework integration test projects**: Tests for specific framework integrations (JSON, EF Core, etc.)
+
+### Thinktecture.Runtime.Extensions.Tests.Shared
+
+**Purpose**: Compilation smoke testing - simple type declarations that verify source generators produce compilable code.
+
+**CRITICAL FOR NEW FEATURES**: When adding a new feature, **always create new test types in this project** that exercise the new feature configuration.
+
+**Key characteristics**:
+- These are **partial type declarations** with attributes
+- Minimal implementation (often just the attribute decoration)
+- If the project builds successfully, the source generator produces valid C# code
+- These types virtually guarantee compilation correctness
+- Other test projects reference and test these types
+
+**Organization**:
+- **`TestEnums/`**: Smart enum test types (e.g., `SmartEnum_ClassBased.cs`, `SmartEnum_CaseSensitive.cs`)
+- **`TestValueObjects/`**: Value object test types (e.g., `IntBasedStructValueObject.cs`, `StringBasedReferenceValueObject.cs`)
+- **`TestAdHocUnions/`**: Ad-hoc union test types
+- **`TestRegularUnions/`**: Regular union test types
+
+**Pattern**:
+```csharp
+[ValueObject<int>(KeyMemberKind = MemberKind.Property,
+                  KeyMemberName = "Property",
+                  KeyMemberAccessModifier = AccessModifier.Public)]
+public partial struct IntBasedStructValueObject;
+```
+
+**Best practices**:
+- Create separate types for each meaningful feature variation or configuration
+- Name types descriptively to indicate what feature/configuration they test
+- Keep implementations minimal - focus on compilation verification
+
 ## Test Organization
 
 ### Folder Structure

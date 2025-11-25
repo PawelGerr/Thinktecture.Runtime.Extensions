@@ -222,6 +222,11 @@ When documenting new attributes:
 ## Quality Assurance
 
 - **Accuracy**: Ensure all technical details are correct and match the implementation
+  - **API Accuracy in Examples**: All code examples must use verified API signatures
+  - If examples use external APIs (.NET BCL, frameworks), verify using Context7 MCP
+  - Don't assume method signatures, attribute syntax, or API behavior in examples
+  - Test that example code would actually compile and work as shown
+  - For Thinktecture.Runtime.Extensions APIs, verify against actual source code using Serena tools
 - **Completeness**: Cover all aspects of the feature, including edge cases
 - **Clarity**: Write for developers who may be unfamiliar with the feature
 - **Consistency**: Match the tone, style, and structure of existing documentation
@@ -234,5 +239,34 @@ When documenting new attributes:
 - If there are multiple valid ways to document something and you need direction
 - If the feature interacts with other features in complex ways
 - If you identify potential documentation gaps beyond the immediate feature
+- If code examples use external APIs you're uncertain about - verify using Context7 first
+
+## Key Feature Documentation Reminders
+
+When documenting features, ensure these important details are included:
+
+**ISpanParsable Support (NET9+):**
+- Document zero-allocation span-based parsing
+- Include `#if NET9_0_OR_GREATER` in examples
+- Mention `ReadOnlySpan<char>` parameter usage
+- Explain `IFormatProvider` parameter significance
+- Note NET9+ requirement clearly
+
+**Validation Patterns:**
+- **Always show `ValidateFactoryArguments` in examples** (not `ValidateConstructorArguments`)
+- Document `ValidationError` return type approach
+- Show `ref` parameter usage for value normalization
+- Mention framework integration benefits
+
+**String-Based Types:**
+- **Emphasize explicit equality comparer requirement**
+- Show `[KeyMemberEqualityComparer]` and `[MemberEqualityComparer]` usage
+- Explain culture-sensitivity risks of default comparison
+- Recommend `StringComparer.Ordinal` or `StringComparer.OrdinalIgnoreCase`
+
+**Generic Type Support:**
+- Document which types can be generic (Smart Enums, Keyed Value Objects, Regular Unions, Complex Value Objects)
+- Note that Ad-hoc Unions cannot be generic
+- Show generic constraint examples when applicable
 
 Remember: Great documentation is a force multiplier for developer productivity. Your updates should make it easy for developers to discover, understand, and correctly use the new functionality.
