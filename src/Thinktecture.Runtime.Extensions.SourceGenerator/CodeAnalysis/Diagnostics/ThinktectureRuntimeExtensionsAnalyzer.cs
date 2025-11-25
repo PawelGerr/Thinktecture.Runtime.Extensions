@@ -58,6 +58,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod,
       DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod,
       DiagnosticsDescriptors.TypeMustNotHaveMoreThanOneAttribute,
+      DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseWithEntityFramework,
+      DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseForModelBinding,
+      DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithOverlappingSerializationFrameworks,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
@@ -529,6 +532,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       ImmutableArray<AttributeData> objectFactoryAttributes,
       bool isSmartEnum)
    {
+      if (objectFactoryAttributes.Length > 1)
+      {
+         CheckObjectFactoryUseWithEntityFrameworkConflicts(context, type, objectFactoryAttributes);
+         CheckObjectFactoryUseForModelBindingConflicts(context, type, objectFactoryAttributes);
+         CheckObjectFactorySerializationFrameworksConflicts(context, type, objectFactoryAttributes);
+      }
+
       for (var i = 0; i < objectFactoryAttributes.Length; i++)
       {
          ValidateObjectFactory(context, type, objectFactoryAttributes[i], isSmartEnum);
@@ -882,6 +892,88 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             objectType.GetTypeIdentifierLocation(context.CancellationToken),
             objectType,
             valueType);
+      }
+   }
+
+   private static void CheckObjectFactoryUseWithEntityFrameworkConflicts(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      ImmutableArray<AttributeData> objectFactoryAttributes)
+   {
+      var countWithEntityFramework = 0;
+
+      for (var i = 0; i < objectFactoryAttributes.Length; i++)
+      {
+         if (!objectFactoryAttributes[i].FindUseWithEntityFramework())
+            continue;
+
+         countWithEntityFramework++;
+
+         if (countWithEntityFramework <= 1)
+            continue;
+
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseWithEntityFramework,
+            type.GetTypeIdentifierLocation(context.CancellationToken),
+            type);
+
+         return;
+      }
+   }
+
+   private static void CheckObjectFactoryUseForModelBindingConflicts(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      ImmutableArray<AttributeData> objectFactoryAttributes)
+   {
+      var countWithModelBinding = 0;
+
+      for (var i = 0; i < objectFactoryAttributes.Length; i++)
+      {
+         if (!objectFactoryAttributes[i].FindUseForModelBinding())
+            continue;
+
+         countWithModelBinding++;
+
+         if (countWithModelBinding <= 1)
+            continue;
+
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseForModelBinding,
+            type.GetTypeIdentifierLocation(context.CancellationToken),
+            type);
+
+         return;
+      }
+   }
+
+   private static void CheckObjectFactorySerializationFrameworksConflicts(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      ImmutableArray<AttributeData> objectFactoryAttributes)
+   {
+      var combinedFrameworks = SerializationFrameworks.None;
+
+      for (var i = 0; i < objectFactoryAttributes.Length; i++)
+      {
+         var frameworks = objectFactoryAttributes[i].FindUseForSerialization();
+         var overlap = combinedFrameworks & frameworks;
+
+         if (overlap != SerializationFrameworks.None)
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithOverlappingSerializationFrameworks,
+               type.GetTypeIdentifierLocation(context.CancellationToken),
+               BuildTypeName(type),
+               overlap.ToString());
+
+            return;
+         }
+
+         combinedFrameworks |= frameworks;
       }
    }
 

@@ -709,8 +709,8 @@ public class TTRESG062_ObjectFactoryMustImplementToValueMethod
 
          namespace TestNamespace
          {
-            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.All)]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
             public partial class {|#0:TestClass|} : IConvertible<string>
             {
                public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
@@ -740,8 +740,8 @@ public class TTRESG062_ObjectFactoryMustImplementToValueMethod
 
          namespace TestNamespace
          {
-            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.All)]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+            [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
             public partial class {|#0:TestClass|} : IConvertible<string>
             {
                public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
