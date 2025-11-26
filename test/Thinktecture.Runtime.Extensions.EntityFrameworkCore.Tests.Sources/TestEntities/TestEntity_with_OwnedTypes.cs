@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
@@ -28,7 +29,8 @@ public class TestEntity_with_OwnedTypes
 
    public static void Configure(
       ModelBuilder modelBuilder,
-      ValueConverterRegistration valueConverterRegistration)
+      ValueConverterRegistration valueConverterRegistration,
+      Configuration configuration)
    {
       var configureOnEntityTypeLevel = valueConverterRegistration
                                           is ValueConverterRegistration.EntityConfiguration
@@ -45,20 +47,20 @@ public class TestEntity_with_OwnedTypes
          });
 
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-            builder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+            builder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
          builder.OwnsOne(e => e.Inline_Inline,
                          navigationBuilder =>
                          {
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsOne(
                                e => e.InlineEntity,
                                innerBuilder =>
                                {
                                   if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                });
                          });
 
@@ -66,7 +68,7 @@ public class TestEntity_with_OwnedTypes
                          navigationBuilder =>
                          {
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsOne(
                                e => e.SeparateEntity,
@@ -75,7 +77,7 @@ public class TestEntity_with_OwnedTypes
                                   innerBuilder.ToTable("InlineEntities_SeparateOne");
 
                                   if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                });
                          });
 
@@ -83,7 +85,7 @@ public class TestEntity_with_OwnedTypes
                          navigationBuilder =>
                          {
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsMany(e => e.SeparateEntities,
                                                        innerBuilder =>
@@ -91,7 +93,7 @@ public class TestEntity_with_OwnedTypes
                                                           innerBuilder.ToTable("InlineEntities_SeparateMany");
 
                                                           if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                                             innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                                             innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                                        });
                          });
 
@@ -101,14 +103,14 @@ public class TestEntity_with_OwnedTypes
                              navigationBuilder.ToTable("SeparateEntitiesMany_Inline");
 
                              if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                              navigationBuilder.OwnsOne(
                                 e => e.InlineEntity,
                                 innerBuilder =>
                                 {
                                    if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                 });
                           });
 
@@ -118,7 +120,7 @@ public class TestEntity_with_OwnedTypes
                              navigationBuilder.ToTable("SeparateEntitiesMany_SeparateEntitiesOne");
 
                              if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                              navigationBuilder.OwnsOne(
                                 e => e.SeparateEntity,
@@ -127,7 +129,7 @@ public class TestEntity_with_OwnedTypes
                                    innerBuilder.ToTable("SeparateEntitiesMany_SeparateEntitiesOne_Inner");
 
                                    if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                 });
                           });
 
@@ -137,7 +139,7 @@ public class TestEntity_with_OwnedTypes
                              navigationBuilder.ToTable("SeparateEntitiesMany_SeparateEntitiesMany");
 
                              if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                              navigationBuilder.OwnsMany(
                                 e => e.SeparateEntities,
@@ -146,7 +148,7 @@ public class TestEntity_with_OwnedTypes
                                    innerBuilder.ToTable("SeparateEntitiesMany_SeparateEntitiesMany_Inner");
 
                                    if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                      innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                 });
                           });
 
@@ -156,14 +158,14 @@ public class TestEntity_with_OwnedTypes
                             navigationBuilder.ToTable("SeparateEntitiesOne_Inline");
 
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsOne(
                                e => e.InlineEntity,
                                innerBuilder =>
                                {
                                   if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                });
                          });
 
@@ -173,7 +175,7 @@ public class TestEntity_with_OwnedTypes
                             navigationBuilder.ToTable("SeparateEntitiesOne_SeparateOne");
 
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsOne(
                                e => e.SeparateEntity,
@@ -182,7 +184,7 @@ public class TestEntity_with_OwnedTypes
                                   innerBuilder.ToTable("SeparateEntitiesOne_SeparateOne_Inner");
 
                                   if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                });
                          });
 
@@ -192,7 +194,7 @@ public class TestEntity_with_OwnedTypes
                             navigationBuilder.ToTable("SeparateEntitiesOne_SeparateMany");
 
                             if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                               navigationBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
 
                             navigationBuilder.OwnsMany(
                                e => e.SeparateEntities,
@@ -201,12 +203,12 @@ public class TestEntity_with_OwnedTypes
                                   innerBuilder.ToTable("SeparateEntitiesOne_SeparateMany_Inner");
 
                                   if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(true);
+                                     innerBuilder.Property(e => e.TestEnum).HasThinktectureValueConverter(configuration);
                                });
                          });
 
          if (configureOnEntityTypeLevel)
-            builder.AddThinktectureValueConverters(true);
+            builder.AddThinktectureValueConverters(configuration);
       });
    }
 }

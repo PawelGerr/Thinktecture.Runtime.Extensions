@@ -11,20 +11,30 @@ namespace Thinktecture.EntityFrameworkCore.Infrastructure;
 internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsExtension
 {
    public DbContextOptionsExtensionInfo Info => field ??= new ThinktectureDbContextOptionsExtensionInfo(this);
+   public ThinktectureValueConverterSettings Settings { get; private set; } = new(true, Configuration.Default, null);
 
-   public ThinktectureValueConverterSettings Settings { get; private set; }
-
-   public ThinktectureDbContextOptionsExtension()
+   public ThinktectureDbContextOptionsExtension UseThinktectureValueConverters(
+      Configuration configuration)
    {
-      Settings = new ThinktectureValueConverterSettings(true, true, null);
+      Settings = new ThinktectureValueConverterSettings(true, configuration, null);
+
+      return this;
    }
 
+   [Obsolete("Use UseThinktectureValueConverters(Configuration) instead.")]
    public ThinktectureDbContextOptionsExtension UseThinktectureValueConverters(
       bool useThinktectureConverters,
       bool useConstructorForRead = true,
       Action<IConventionProperty>? configureEnumsAndKeyedValueObjects = null)
    {
-      Settings = new ThinktectureValueConverterSettings(useThinktectureConverters, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      var configuration = new Configuration
+                          {
+                             UseConstructorForRead = useConstructorForRead
+                          };
+      Settings = new ThinktectureValueConverterSettings(
+         useThinktectureConverters,
+         configuration,
+         configureEnumsAndKeyedValueObjects);
 
       return this;
    }
@@ -65,7 +75,7 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
          if (!_extension.Settings.IsEnabled)
             return String.Empty;
 
-         return $"ThinktectureValueConverters(IsEnabled={_extension.Settings.IsEnabled}, UseConstructorForRead={_extension.Settings.UseConstructorForRead}) ";
+         return $"ThinktectureValueConverters(IsEnabled={_extension.Settings.IsEnabled}, UseConstructorForRead={_extension.Settings.Configuration.UseConstructorForRead}) ";
       }
 
       public ThinktectureDbContextOptionsExtensionInfo(ThinktectureDbContextOptionsExtension extension)
@@ -87,7 +97,7 @@ internal sealed class ThinktectureDbContextOptionsExtension : IDbContextOptionsE
 
       public override void PopulateDebugInfo(IDictionary<string, string> debugInfo)
       {
-         debugInfo["Thinktecture:ValueConverters"] = $"ThinktectureValueConverters(Enabled={_extension.Settings.IsEnabled}, UseConstructorForRead={_extension.Settings.UseConstructorForRead})";
+         debugInfo["Thinktecture:ValueConverters"] = $"ThinktectureValueConverters(Enabled={_extension.Settings.IsEnabled})";
       }
    }
 }

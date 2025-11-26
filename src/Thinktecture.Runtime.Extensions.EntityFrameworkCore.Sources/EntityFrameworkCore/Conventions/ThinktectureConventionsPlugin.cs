@@ -3,26 +3,20 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Thinktecture.EntityFrameworkCore.Internal;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Internal;
 
 namespace Thinktecture.EntityFrameworkCore.Conventions;
 
-internal sealed class ThinktectureConventionsPlugin
+internal sealed class ThinktectureConventionsPlugin(
+   Configuration configuration,
+   Action<IConventionProperty>? configureSmartEnumsAndKeyedValueObjects)
    : INavigationAddedConvention,
      IPropertyAddedConvention,
      IEntityTypeAddedConvention,
      IPropertyElementTypeChangedConvention
 {
-   private readonly bool _useConstructorForRead;
-   private readonly Action<IConventionProperty> _configureEnumsAndKeyedValueObjects;
-
-   public ThinktectureConventionsPlugin(bool useConstructorForRead, Action<IConventionProperty>? configureEnumsAndKeyedValueObjects)
-   {
-      _useConstructorForRead = useConstructorForRead;
-      _configureEnumsAndKeyedValueObjects = configureEnumsAndKeyedValueObjects ?? Empty.Action;
-   }
-
    public void ProcessEntityTypeAdded(IConventionEntityTypeBuilder entityTypeBuilder, IConventionContext<IConventionEntityTypeBuilder> context)
    {
       AddSmartEnumAndKeyedValueObjects(entityTypeBuilder);
@@ -122,7 +116,7 @@ internal sealed class ThinktectureConventionsPlugin
          return;
 
       elementType.SetValueConverter(GetValueConverter(metadata));
-      _configureEnumsAndKeyedValueObjects(propertyBuilder.Metadata);
+      ApplyConfigurationToProperty(propertyBuilder.Metadata, metadata);
    }
 
    private void ProcessNavigation(IConventionNavigation navigation)
@@ -158,11 +152,92 @@ internal sealed class ThinktectureConventionsPlugin
    private void SetConverterAndExecuteCallback(IConventionProperty property, ConversionMetadata metadata)
    {
       property.SetValueConverter(GetValueConverter(metadata));
-      _configureEnumsAndKeyedValueObjects(property);
+      ApplyConfigurationToProperty(property, metadata);
+   }
+
+   private void ApplyConfigurationToProperty(IConventionProperty property, ConversionMetadata conversionMetadata)
+   {
+      var metadata = MetadataLookup.Find(conversionMetadata.Type);
+
+      switch (metadata)
+      {
+         case Metadata.Keyed.SmartEnum smartEnumMetadata:
+         {
+            ApplyToSmartEnumProperty(
+               property,
+               configuration.SmartEnums.MaxLengthStrategy,
+               smartEnumMetadata);
+
+            break;
+         }
+         case Metadata.Keyed.ValueObject keyedValueObjectMetadata:
+         {
+            ApplyToKeyedValueObjectProperty(
+               property,
+               configuration.KeyedValueObjects.MaxLengthStrategy,
+               keyedValueObjectMetadata);
+            break;
+         }
+      }
+
+      // Apply legacy callback if present
+      configureSmartEnumsAndKeyedValueObjects?.Invoke(property);
    }
 
    private ValueConverter GetValueConverter(ConversionMetadata metadata)
    {
-      return ThinktectureValueConverterFactory.Create(metadata, _useConstructorForRead);
+      return ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead: configuration.UseConstructorForRead);
+   }
+
+   private void ApplyToSmartEnumProperty(
+      IConventionProperty property,
+      ISmartEnumMaxLengthStrategy strategy,
+      Metadata.Keyed.SmartEnum smartEnumMetadata)
+   {
+      var items = smartEnumMetadata.Items.Value;
+
+      if (items.Count == 0)
+         return;
+
+      // Check if we should overwrite existing max length
+      if (!strategy.OverwriteExistingMaxLength)
+      {
+         var existingMaxLength = property.GetMaxLength();
+
+         if (existingMaxLength.HasValue)
+            return;
+      }
+
+      var maxLengthChange = MaxLengthCache.GetOrComputeSmartEnumMaxLength(
+         strategy,
+         smartEnumMetadata.Type,
+         smartEnumMetadata.KeyType,
+         items);
+
+      if (maxLengthChange.IsSet)
+         property.Builder.HasMaxLength(maxLengthChange.Value);
+   }
+
+   private void ApplyToKeyedValueObjectProperty(
+      IConventionProperty property,
+      IKeyedValueObjectMaxLengthStrategy strategy,
+      Metadata.Keyed.ValueObject keyedValueObjectMetadata)
+   {
+      // Check if we should overwrite existing max length
+      if (!strategy.OverwriteExistingMaxLength)
+      {
+         var existingMaxLength = property.GetMaxLength();
+
+         if (existingMaxLength.HasValue)
+            return;
+      }
+
+      var maxLengthChange = MaxLengthCache.GetOrComputeKeyedValueObjectMaxLength(
+         strategy,
+         keyedValueObjectMetadata.Type,
+         keyedValueObjectMetadata.KeyType);
+
+      if (maxLengthChange.IsSet)
+         property.Builder.HasMaxLength(maxLengthChange.Value);
    }
 }

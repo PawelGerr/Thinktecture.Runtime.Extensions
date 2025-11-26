@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
+using Thinktecture.EntityFrameworkCore;
 using Thinktecture.SmartEnums;
 using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
@@ -162,23 +163,23 @@ public class Program
              })
              .AddDbContext<ProductsDbContext>(builder => builder.UseSqlServer(configuration.GetConnectionString("default"))
                                                                 .EnableSensitiveDataLogging()
-                                                                .UseThinktectureValueConverters(configureEnumsAndKeyedValueObjects: property =>
-                                                                {
-                                                                   if (property.ClrType == typeof(ProductType))
-                                                                   {
-                                                                      var maxLength = ProductType.Items.Max(i => i.Key.Length);
-                                                                      property.SetMaxLength(RoundUp(maxLength));
-                                                                   }
-                                                                   else if (property.ClrType == typeof(ProductCategory))
-                                                                   {
-                                                                      var maxLength = ProductCategory.Items.Max(i => i.Name.Length);
-                                                                      property.SetMaxLength(RoundUp(maxLength));
-                                                                   }
-                                                                   else if (property.ClrType == typeof(ProductName))
-                                                                   {
-                                                                      property.SetMaxLength(200);
-                                                                   }
-                                                                }))
+                                                                .UseThinktectureValueConverters(new Configuration
+                                                                                                {
+                                                                                                   SmartEnums = new SmartEnumConfiguration
+                                                                                                                {
+                                                                                                                   MaxLengthStrategy = DefaultSmartEnumMaxLengthStrategy.Instance
+                                                                                                                },
+                                                                                                   KeyedValueObjects = new KeyedValueObjectConfiguration
+                                                                                                                       {
+                                                                                                                          MaxLengthStrategy = new CustomKeyedValueObjectMaxLengthStrategy(static (type, _) =>
+                                                                                                                          {
+                                                                                                                             if (type == typeof(ProductName))
+                                                                                                                                return 200;
+
+                                                                                                                             return MaxLengthChange.None;
+                                                                                                                          })
+                                                                                                                       }
+                                                                                                }))
              .BuildServiceProvider();
    }
 
@@ -188,10 +189,5 @@ public class Program
              .AddJsonFile("appsettings.json")
              .AddUserSecrets<Program>()
              .Build();
-   }
-
-   private static int RoundUp(int value)
-   {
-      return value + (10 - value % 10);
    }
 }

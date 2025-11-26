@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Thinktecture.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
+using Thinktecture.Runtime.Tests.TestValueObjects;
 
 // ReSharper disable InconsistentNaming
 namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
@@ -17,7 +20,6 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       private static readonly Type _stringSmartEnumConverterType = _converterType.MakeGenericType(typeof(SmartEnum_StringBased), typeof(string), typeof(ValidationError));
 
       private readonly TestDbContext _ctx = new(new DbContextOptionsBuilder<TestDbContext>()
-                                                .UseSqlite("DataSource=:memory:")
                                                 .EnableServiceProviderCaching(false)
                                                 .Options,
                                                 ValueConverterRegistration.OnModelCreating);
@@ -135,6 +137,403 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       {
          var property = entityType.FindProperty(propertyName) ?? throw new Exception($"Property with the name '{propertyName}' not found.");
          property.GetValueConverter().Should().BeOfType(converterType ?? _stringSmartEnumConverterType);
+      }
+
+      [Fact]
+      public void Should_persist_and_retrieve_smart_enums_with_default_configuration()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entity = new TestEntity_with_Enum_and_ValueObjects
+                      {
+                         Id = Guid.NewGuid(),
+                         SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                         SmartEnum_IntBased = SmartEnum_IntBased.Item2,
+                         StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest1"),
+                         TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop1", "modelprop2")
+                      };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.Add(entity);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         retrieved.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item1);
+         retrieved.SmartEnum_IntBased.Should().Be(SmartEnum_IntBased.Item2);
+      }
+
+      [Fact]
+      public void Should_apply_default_max_length_for_string_based_smart_enums()
+      {
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options); // Uses Configuration.Default
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+
+         property.GetMaxLength().Should().Be(10);
+      }
+
+      [Fact]
+      public void Should_not_apply_max_length_to_int_based_smart_enums()
+      {
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options);
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_IntBased));
+
+         // Int-based smart enums should not have max length
+         property.GetMaxLength().Should().BeNull();
+      }
+
+      [Fact]
+      public void Should_not_apply_max_length_when_using_NoMaxLength_configuration()
+      {
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters(Configuration.NoMaxLength)
+                       .Options;
+
+         using var ctx = new TestDbContext(options);
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+
+         // With NoMaxLength configuration, no max length should be set
+         property.GetMaxLength().Should().BeNull();
+      }
+
+      [Fact]
+      public void Should_persist_and_retrieve_with_NoMaxLength_configuration()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters(Configuration.NoMaxLength)
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entity = new TestEntity_with_Enum_and_ValueObjects
+                      {
+                         Id = Guid.NewGuid(),
+                         SmartEnum_StringBased = SmartEnum_StringBased.Item2,
+                         SmartEnum_IntBased = SmartEnum_IntBased.Item3,
+                         StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest2"),
+                         TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop3", "modelprop4")
+                      };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.Add(entity);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         retrieved.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item2);
+         retrieved.SmartEnum_IntBased.Should().Be(SmartEnum_IntBased.Item3);
+      }
+
+      [Fact]
+      public void Should_apply_fixed_max_length_with_custom_configuration()
+      {
+         var customConfig = new Configuration
+                            {
+                               SmartEnums = new SmartEnumConfiguration
+                                            {
+                                               MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(100)
+                                            },
+                               KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
+                            };
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters(customConfig)
+                       .Options;
+
+         using var ctx = new TestDbContext(options);
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+
+         // Custom configuration with FixedSmartEnumMaxLengthStrategy(100) should set max length to 100
+         property.GetMaxLength().Should().Be(100);
+      }
+
+      [Fact]
+      public void Should_persist_and_retrieve_with_custom_fixed_max_length()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var customConfig = new Configuration
+                            {
+                               SmartEnums = new SmartEnumConfiguration
+                                            {
+                                               MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                                            },
+                               KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
+                            };
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters(customConfig)
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entity = new TestEntity_with_Enum_and_ValueObjects
+                      {
+                         Id = Guid.NewGuid(),
+                         SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                         SmartEnum_IntBased = SmartEnum_IntBased.Item4,
+                         StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest3"),
+                         TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop5", "modelprop6")
+                      };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.Add(entity);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         retrieved.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item1);
+         retrieved.SmartEnum_IntBased.Should().Be(SmartEnum_IntBased.Item4);
+      }
+
+      [Fact]
+      public void Should_handle_null_smart_enum_values()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entity = new TestEntity_with_Enum_and_ValueObjects
+                      {
+                         Id = Guid.NewGuid(),
+                         SmartEnum_StringBased = null,
+                         SmartEnum_IntBased = SmartEnum_IntBased.Item1,
+                         StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest4"),
+                         TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop7", "modelprop8")
+                      };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.Add(entity);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         retrieved.SmartEnum_StringBased.Should().BeNull();
+         retrieved.SmartEnum_IntBased.Should().Be(SmartEnum_IntBased.Item1);
+      }
+
+      [Fact]
+      public void Should_work_with_multiple_entities_in_same_context()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entity1 = new TestEntity_with_Enum_and_ValueObjects
+                       {
+                          Id = Guid.NewGuid(),
+                          SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                          SmartEnum_IntBased = SmartEnum_IntBased.Item1,
+                          StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest5"),
+                          TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop9", "modelprop10")
+                       };
+
+         var entity2 = new TestEntity_with_Enum_and_ValueObjects
+                       {
+                          Id = Guid.NewGuid(),
+                          SmartEnum_StringBased = SmartEnum_StringBased.Item2,
+                          SmartEnum_IntBased = SmartEnum_IntBased.Item2,
+                          StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest6"),
+                          TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop11", "modelprop12")
+                       };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.AddRange(entity1, entity2);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.OrderBy(e => e.Id).ToList();
+         retrieved.Should().HaveCount(2);
+      }
+
+      [Fact]
+      public void Should_apply_custom_max_length_strategy()
+      {
+         var customConfig = new Configuration
+                            {
+                               SmartEnums = new SmartEnumConfiguration
+                                            {
+                                               MaxLengthStrategy = new CustomSmartEnumMaxLengthStrategy((_, keyType, _) =>
+                                               {
+                                                  // Custom logic: always return 42 for string-based enums
+                                                  if (keyType == typeof(string))
+                                                     return new MaxLengthChange(42);
+
+                                                  return MaxLengthChange.None;
+                                               })
+                                            },
+                               KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
+                            };
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters(customConfig)
+                       .Options;
+
+         using var ctx = new TestDbContext(options);
+         var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+
+         // Custom strategy should set max length to 42
+         property.GetMaxLength().Should().Be(42);
+      }
+
+      [Fact]
+      public void Should_update_existing_entities()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         // Create and save initial entity
+         var entity = new TestEntity_with_Enum_and_ValueObjects
+                      {
+                         Id = Guid.NewGuid(),
+                         SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                         SmartEnum_IntBased = SmartEnum_IntBased.Item1,
+                         StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest7"),
+                         TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop13", "modelprop14")
+                      };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.Add(entity);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         // Update the entity
+         var toUpdate = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         toUpdate.SmartEnum_StringBased = SmartEnum_StringBased.Item2;
+         toUpdate.SmartEnum_IntBased = SmartEnum_IntBased.Item2;
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         // Verify update
+         var retrieved = ctx.TestEntities_with_Enum_and_ValueObjects.Single(e => e.Id == entity.Id);
+         retrieved.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item2);
+         retrieved.SmartEnum_IntBased.Should().Be(SmartEnum_IntBased.Item2);
+      }
+
+      [Fact]
+      public void Should_work_with_queries()
+      {
+         using var sqliteConnection = new SqliteConnection("DataSource=:memory:;cache=shared");
+         sqliteConnection.Open();
+
+         var options = new DbContextOptionsBuilder<TestDbContext>()
+                       .UseSqlite(sqliteConnection)
+                       .EnableServiceProviderCaching(false)
+                       .UseThinktectureValueConverters()
+                       .Options;
+
+         using var ctx = new TestDbContext(options, setConnectionString: false);
+         ctx.Database.EnsureCreated();
+
+         var entities = new[]
+                        {
+                           new TestEntity_with_Enum_and_ValueObjects
+                           {
+                              Id = Guid.NewGuid(),
+                              SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                              SmartEnum_IntBased = SmartEnum_IntBased.Item1,
+                              StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest8"),
+                              TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop15", "modelprop16")
+                           },
+                           new TestEntity_with_Enum_and_ValueObjects
+                           {
+                              Id = Guid.NewGuid(),
+                              SmartEnum_StringBased = SmartEnum_StringBased.Item2,
+                              SmartEnum_IntBased = SmartEnum_IntBased.Item2,
+                              StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest9"),
+                              TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop17", "modelprop18")
+                           },
+                           new TestEntity_with_Enum_and_ValueObjects
+                           {
+                              Id = Guid.NewGuid(),
+                              SmartEnum_StringBased = SmartEnum_StringBased.Item1,
+                              SmartEnum_IntBased = SmartEnum_IntBased.Item3,
+                              StringBasedStructValueObject = StringBasedStructValueObject.Create("modeltest10"),
+                              TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("modelprop19", "modelprop20")
+                           }
+                        };
+
+         ctx.TestEntities_with_Enum_and_ValueObjects.AddRange(entities);
+         ctx.SaveChanges();
+
+         ctx.ChangeTracker.Clear();
+
+         // Query with Where clause
+         var item1Results = ctx.TestEntities_with_Enum_and_ValueObjects
+                               .Where(e => e.SmartEnum_StringBased == SmartEnum_StringBased.Item1)
+                               .ToList();
+
+         item1Results.Should().HaveCount(2);
+         item1Results.Should().AllSatisfy(e => e.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item1));
       }
 
       public void Dispose()

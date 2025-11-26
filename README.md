@@ -55,9 +55,8 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 # Migrations
 
+* [Migration from v9 to v10 (preview)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v9-to-v10)
 * [Migration from v8 to v9](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v8-to-v9)
-* [Migration from v7 to v8](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v7-to-v8)
-* [Migration from v6 to v7](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v6-to-v7)
 
 # Ideas and real-world use cases
 

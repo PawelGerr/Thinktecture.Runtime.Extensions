@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
@@ -10,7 +11,8 @@ public class TestEntityWithComplexValueObjectAsComplexType
 
    public static void Configure(
       ModelBuilder modelBuilder,
-      ValueConverterRegistration valueConverterRegistration)
+      ValueConverterRegistration valueConverterRegistration,
+      Configuration configuration)
    {
       modelBuilder.Entity<TestEntityWithComplexValueObjectAsComplexType>(builder =>
       {
@@ -21,14 +23,14 @@ public class TestEntityWithComplexValueObjectAsComplexType
                                     var propertyBuilder = b.Property(t => t.TestEnum);
 
                                     if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
-                                       propertyBuilder.HasThinktectureValueConverter();
+                                       propertyBuilder.HasThinktectureValueConverter(configuration);
 
                                     if (valueConverterRegistration == ValueConverterRegistration.ComplexTypeConfiguration)
-                                       b.AddThinktectureValueConverters();
+                                       b.AddThinktectureValueConverters(configuration);
                                  });
 
          if (valueConverterRegistration == ValueConverterRegistration.EntityConfiguration)
-            builder.AddThinktectureValueConverters();
+            builder.AddThinktectureValueConverters(configuration);
       });
    }
 }

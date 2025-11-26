@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.TestEntities;
 
@@ -14,7 +15,8 @@ public class TestEntity_with_Types_having_ObjectFactories
 
    public static void Configure(
       ModelBuilder modelBuilder,
-      ValueConverterRegistration valueConverterRegistration)
+      ValueConverterRegistration valueConverterRegistration,
+      Configuration configuration)
    {
       var configureOnEntityTypeLevel = valueConverterRegistration
                                           is ValueConverterRegistration.EntityConfiguration
@@ -24,13 +26,13 @@ public class TestEntity_with_Types_having_ObjectFactories
       {
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
-            builder.Property(e => e.TestComplexValueObject_ObjectFactory).HasThinktectureValueConverter();
-            builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter();
-            builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter();
+            builder.Property(e => e.TestComplexValueObject_ObjectFactory).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter(configuration);
          }
 
          if (configureOnEntityTypeLevel)
-            builder.AddThinktectureValueConverters();
+            builder.AddThinktectureValueConverters(configuration);
       });
    }
 }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Thinktecture.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
+using Thinktecture.Internal;
 
 namespace Thinktecture;
 
@@ -21,6 +23,36 @@ public static class ComplexTypePropertyBuilderExtensions
    {
       var converter = ThinktectureValueConverterFactory.Create(typeof(TProperty), useConstructorForRead);
       propertyBuilder.HasConversion(converter);
+
+      return propertyBuilder;
+   }
+
+   /// <summary>
+   /// Configures a complex type property to use value converter for Smart Enums and Value Objects.
+   /// </summary>
+   /// <typeparam name="TProperty">The property type.</typeparam>
+   /// <param name="propertyBuilder">The complex type property builder.</param>
+   /// <returns>The complex type property builder for chaining.</returns>
+   public static ComplexTypePropertyBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
+      this ComplexTypePropertyBuilder<TProperty> propertyBuilder)
+   {
+      return HasThinktectureValueConverter(propertyBuilder, Configuration.Default);
+   }
+
+   /// <summary>
+   /// Configures a complex type property to use value converter for Smart Enums and Value Objects.
+   /// </summary>
+   /// <typeparam name="TProperty">The property type.</typeparam>
+   /// <param name="propertyBuilder">The complex type property builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <returns>The complex type property builder for chaining.</returns>
+   public static ComplexTypePropertyBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
+      this ComplexTypePropertyBuilder<TProperty> propertyBuilder,
+      Configuration configuration)
+   {
+      var converter = ThinktectureValueConverterFactory.Create(typeof(TProperty), configuration.UseConstructorForRead);
+      propertyBuilder.HasConversion(converter);
+      new MutableItem(typeof(TProperty), propertyBuilder.Metadata).ApplyMaxLengthFromStrategy(configuration);
 
       return propertyBuilder;
    }

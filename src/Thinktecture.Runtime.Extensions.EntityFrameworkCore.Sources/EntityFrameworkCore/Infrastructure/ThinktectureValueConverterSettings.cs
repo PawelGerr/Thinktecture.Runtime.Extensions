@@ -4,5 +4,5 @@ namespace Thinktecture.EntityFrameworkCore.Infrastructure;
 
 internal sealed record ThinktectureValueConverterSettings(
    bool IsEnabled,
-   bool UseConstructorForRead,
+   Configuration Configuration,
    Action<IConventionProperty>? ConfigureEnumsAndKeyedValueObjects);

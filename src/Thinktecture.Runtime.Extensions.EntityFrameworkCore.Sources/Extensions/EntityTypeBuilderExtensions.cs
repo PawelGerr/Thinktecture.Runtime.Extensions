@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Thinktecture.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Internal;
 
@@ -22,9 +23,12 @@ public static class EntityTypeBuilderExtensions
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <typeparam name="T">The entity type.</typeparam>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static EntityTypeBuilder<T> AddThinktectureValueConverters<T>(
       this EntityTypeBuilder<T> entityTypeBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool addConvertersForOwnedTypes = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
       where T : class
@@ -46,17 +50,24 @@ public static class EntityTypeBuilderExtensions
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static EntityTypeBuilder AddThinktectureValueConverters(
       this EntityTypeBuilder entityTypeBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
       bool addConvertersForOwnedTypes = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
       configureEnumsAndKeyedValueObjects ??= Empty.Action;
 
+      var configuration = new Configuration
+                          {
+                             UseConstructorForRead = useConstructorForRead
+                          };
+
       AddConvertersToEntity(
          entityTypeBuilder.Metadata,
-         useConstructorForRead,
+         configuration,
          addConvertersForOwnedTypes,
          configureEnumsAndKeyedValueObjects);
 
@@ -72,8 +83,10 @@ public static class EntityTypeBuilderExtensions
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddThinktectureValueConverters<TEntity, TRelatedEntity>(
       this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
       bool addConvertersForOwnedTypes = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
@@ -97,17 +110,24 @@ public static class EntityTypeBuilderExtensions
    /// <param name="addConvertersForOwnedTypes">Indication whether to search for owned entities recursively and add value converters to their properties.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static OwnedNavigationBuilder AddThinktectureValueConverters(
       this OwnedNavigationBuilder entityTypeBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
       bool addConvertersForOwnedTypes = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
       configureEnumsAndKeyedValueObjects ??= Empty.Action;
 
+      var configuration = new Configuration
+                          {
+                             UseConstructorForRead = useConstructorForRead
+                          };
+
       AddConvertersToEntity(
          entityTypeBuilder.OwnedEntityType,
-         useConstructorForRead,
+         configuration,
          addConvertersForOwnedTypes,
          configureEnumsAndKeyedValueObjects);
 
@@ -122,8 +142,10 @@ public static class EntityTypeBuilderExtensions
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static ComplexPropertyBuilder<TComplex> AddThinktectureValueConverters<TComplex>(
       this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
       where TComplex : class
@@ -143,41 +165,260 @@ public static class EntityTypeBuilderExtensions
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from the database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The entity type builder for method chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static ComplexPropertyBuilder AddThinktectureValueConverters(
       this ComplexPropertyBuilder complexPropertyBuilder,
+      // ReSharper disable once MethodOverloadWithOptionalParameter
       bool useConstructorForRead = true,
       Action<IMutableProperty>? configureEnumsAndKeyedValueObjects = null)
    {
       configureEnumsAndKeyedValueObjects ??= Empty.Action;
 
+      var configuration = new Configuration
+                          {
+                             UseConstructorForRead = useConstructorForRead
+                          };
+
       AddConvertersForComplexProperty(
          complexPropertyBuilder.Metadata,
-         useConstructorForRead,
+         configuration,
          configureEnumsAndKeyedValueObjects);
+
+      return complexPropertyBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <typeparam name="T">The entity type.</typeparam>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static EntityTypeBuilder<T> AddThinktectureValueConverters<T>(
+      this EntityTypeBuilder<T> entityTypeBuilder)
+      where T : class
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <typeparam name="T">The entity type.</typeparam>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static EntityTypeBuilder<T> AddThinktectureValueConverters<T>(
+      this EntityTypeBuilder<T> entityTypeBuilder,
+      Configuration configuration)
+      where T : class
+   {
+      ArgumentNullException.ThrowIfNull(configuration);
+
+      AddConvertersToEntity(
+         entityTypeBuilder.Metadata,
+         configuration,
+         true,
+         Empty.Action);
+
+      return entityTypeBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects
+   /// with default configuration.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static EntityTypeBuilder AddThinktectureValueConverters(
+      this EntityTypeBuilder entityTypeBuilder)
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static EntityTypeBuilder AddThinktectureValueConverters(
+      this EntityTypeBuilder entityTypeBuilder,
+      Configuration configuration)
+   {
+      ArgumentNullException.ThrowIfNull(configuration);
+
+      AddConvertersToEntity(
+         entityTypeBuilder.Metadata,
+         configuration,
+         true,
+         Empty.Action);
+
+      return entityTypeBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects
+   /// with default configuration.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddThinktectureValueConverters<TEntity, TRelatedEntity>(
+      this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder)
+      where TEntity : class
+      where TRelatedEntity : class
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static OwnedNavigationBuilder<TEntity, TRelatedEntity> AddThinktectureValueConverters<TEntity, TRelatedEntity>(
+      this OwnedNavigationBuilder<TEntity, TRelatedEntity> entityTypeBuilder,
+      Configuration configuration)
+      where TEntity : class
+      where TRelatedEntity : class
+   {
+      AddConvertersToEntity(
+         entityTypeBuilder.OwnedEntityType,
+         configuration,
+         true,
+         Empty.Action);
+
+      return entityTypeBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects
+   /// with default configuration.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static OwnedNavigationBuilder AddThinktectureValueConverters(
+      this OwnedNavigationBuilder entityTypeBuilder)
+   {
+      return entityTypeBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="entityTypeBuilder">The entity type builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <returns>The entity type builder for method chaining.</returns>
+   public static OwnedNavigationBuilder AddThinktectureValueConverters(
+      this OwnedNavigationBuilder entityTypeBuilder,
+      Configuration configuration)
+   {
+      ArgumentNullException.ThrowIfNull(configuration);
+
+      AddConvertersToEntity(
+         entityTypeBuilder.OwnedEntityType,
+         configuration,
+         true,
+         Empty.Action);
+
+      return entityTypeBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects
+   /// with default configuration.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <typeparam name="TComplex">The complex type.</typeparam>
+   /// <returns>The complex property builder for method chaining.</returns>
+   public static ComplexPropertyBuilder<TComplex> AddThinktectureValueConverters<TComplex>(
+      this ComplexPropertyBuilder<TComplex> complexPropertyBuilder)
+      where TComplex : class
+   {
+      return complexPropertyBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <typeparam name="TComplex">The complex type.</typeparam>
+   /// <returns>The complex property builder for method chaining.</returns>
+   public static ComplexPropertyBuilder<TComplex> AddThinktectureValueConverters<TComplex>(
+      this ComplexPropertyBuilder<TComplex> complexPropertyBuilder,
+      Configuration configuration)
+      where TComplex : class
+   {
+      ((ComplexPropertyBuilder)complexPropertyBuilder).AddThinktectureValueConverters(configuration);
+
+      return complexPropertyBuilder;
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects
+   /// with default configuration.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <returns>The complex property builder for method chaining.</returns>
+   public static ComplexPropertyBuilder AddThinktectureValueConverters(
+      this ComplexPropertyBuilder complexPropertyBuilder)
+   {
+      return complexPropertyBuilder.AddThinktectureValueConverters(Configuration.Default);
+   }
+
+   /// <summary>
+   /// Adds value converter to all properties that are Smart Enums or keyed Value Objects.
+   /// Properties with a value provider are skipped.
+   /// </summary>
+   /// <param name="complexPropertyBuilder">The complex property builder.</param>
+   /// <param name="configuration">Configuration options for Thinktecture EF Core integration.</param>
+   /// <returns>The complex property builder for method chaining.</returns>
+   public static ComplexPropertyBuilder AddThinktectureValueConverters(
+      this ComplexPropertyBuilder complexPropertyBuilder,
+      Configuration configuration)
+   {
+      ArgumentNullException.ThrowIfNull(configuration);
+
+      AddConvertersForComplexProperty(
+         complexPropertyBuilder.Metadata,
+         configuration,
+         Empty.Action);
 
       return complexPropertyBuilder;
    }
 
    internal static void AddConvertersToEntity(
       this IMutableEntityType entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       bool addConvertersForOwnedTypes,
       Action<IMutableProperty> configureEnumsAndKeyedValueObjects)
    {
-      AddSmartEnumAndKeyedValueObjects(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      AddSmartEnumAndKeyedValueObjects(entity, configuration, configureEnumsAndKeyedValueObjects);
       AddNonKeyedValueObjectMembers(entity);
 
-      AddConverterForScalarProperties(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
-      AddConverterForComplexProperties(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
-      AddConvertersForNavigations(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      AddConverterForScalarProperties(entity, configuration, configureEnumsAndKeyedValueObjects);
+      AddConverterForComplexProperties(entity, configuration, configureEnumsAndKeyedValueObjects);
+      AddConvertersForNavigations(entity, configuration, configureEnumsAndKeyedValueObjects);
 
       if (addConvertersForOwnedTypes)
-         AddConvertersForOwnedTypes(entity, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+         AddConvertersForOwnedTypes(entity, configuration, configureEnumsAndKeyedValueObjects);
    }
 
    private static void AddSmartEnumAndKeyedValueObjects(
       IMutableEntityType entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
@@ -186,25 +427,25 @@ public static class EntityTypeBuilderExtensions
          if (entity.FindNavigation(propertyInfo) is not null)
             continue;
 
-         AddConverterToNonNavigation(entity, propertyInfo, useConstructorForRead, configure);
+         AddConverterToNonNavigation(entity, propertyInfo, configuration, configure);
       }
    }
 
    private static void AddSmartEnumAndKeyedValueObjects(
       IMutableTypeBase entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
       {
-         AddConverterToNonNavigation(entity, propertyInfo, useConstructorForRead, configure);
+         AddConverterToNonNavigation(entity, propertyInfo, configuration, configure);
       }
    }
 
    private static void AddConverterToNonNavigation(
       IMutableTypeBase entity,
       PropertyInfo propertyInfo,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       if (entity.IsIgnored(propertyInfo.Name))
@@ -231,7 +472,7 @@ public static class EntityTypeBuilderExtensions
 
       var property = entity.AddProperty(propertyInfo);
 
-      SetConverterAndExecuteCallback(useConstructorForRead, configure, property, metadata);
+      SetConverterAndExecuteCallback(configuration, configure, property, metadata);
    }
 
    private static void AddNonKeyedValueObjectMembers(
@@ -263,7 +504,7 @@ public static class EntityTypeBuilderExtensions
 
    private static void AddConvertersForNavigations(
       IMutableEntityType entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       List<(IMutableNavigation, ConversionMetadata)>? navigationsToConvert = null;
@@ -285,13 +526,13 @@ public static class EntityTypeBuilderExtensions
       {
          var property = FindPropertyBuilder(builders, entity, navigation.Item1.Name);
 
-         SetConverterAndExecuteCallback(useConstructorForRead, configure, property.Metadata, navigation.Item2);
+         SetConverterAndExecuteCallback(configuration, configure, property.Metadata, navigation.Item2);
       }
    }
 
    private static void AddConvertersForOwnedTypes(
       IMutableEntityType entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       foreach (var navigation in entity.GetNavigations())
@@ -301,7 +542,7 @@ public static class EntityTypeBuilderExtensions
 
          AddConvertersToEntity(
             navigation.TargetEntityType,
-            useConstructorForRead,
+            configuration,
             true,
             configure);
       }
@@ -309,7 +550,7 @@ public static class EntityTypeBuilderExtensions
 
    private static void AddConverterForScalarProperties(
       IMutableTypeBase entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       foreach (var property in entity.GetProperties())
@@ -321,20 +562,20 @@ public static class EntityTypeBuilderExtensions
 
          if (property.IsPrimitiveCollection)
          {
-            AddConverterForPrimitiveCollections(property, useConstructorForRead, configure);
+            AddConverterForPrimitiveCollections(property, configuration, configure);
             continue;
          }
 
          if (property.ClrType.FindMetadataForValueConverter() is not { } metadata)
             continue;
 
-         SetConverterAndExecuteCallback(useConstructorForRead, configure, property, metadata);
+         SetConverterAndExecuteCallback(configuration, configure, property, metadata);
       }
    }
 
    private static void AddConverterForPrimitiveCollections(
       IMutableProperty property,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure)
    {
       var elementType = property.GetElementType();
@@ -345,32 +586,33 @@ public static class EntityTypeBuilderExtensions
       if (elementType.ClrType.FindMetadataForValueConverter() is not { } metadata)
          return;
 
-      var valueConverter = ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead);
+      var valueConverter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       elementType.SetValueConverter(valueConverter);
+      new MutableItem(metadata.Type, elementType).ApplyMaxLengthFromStrategy(configuration);
       configure(property);
    }
 
    private static void AddConverterForComplexProperties(
       IMutableTypeBase entity,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configureEnumsAndKeyedValueObjects)
    {
       foreach (var complexProperty in entity.GetComplexProperties())
       {
-         AddConvertersForComplexProperty(complexProperty, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+         AddConvertersForComplexProperty(complexProperty, configuration, configureEnumsAndKeyedValueObjects);
       }
    }
 
    private static void AddConvertersForComplexProperty(
       IMutableComplexProperty complexProperty,
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configureEnumsAndKeyedValueObjects)
    {
-      AddSmartEnumAndKeyedValueObjects(complexProperty.ComplexType, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      AddSmartEnumAndKeyedValueObjects(complexProperty.ComplexType, configuration, configureEnumsAndKeyedValueObjects);
       AddNonKeyedValueObjectMembers(complexProperty.ComplexType);
 
-      AddConverterForScalarProperties(complexProperty.ComplexType, useConstructorForRead, configureEnumsAndKeyedValueObjects);
-      AddConverterForComplexProperties(complexProperty.ComplexType, useConstructorForRead, configureEnumsAndKeyedValueObjects);
+      AddConverterForScalarProperties(complexProperty.ComplexType, configuration, configureEnumsAndKeyedValueObjects);
+      AddConverterForComplexProperties(complexProperty.ComplexType, configuration, configureEnumsAndKeyedValueObjects);
    }
 
    private static PropertyBuilder FindPropertyBuilder((EntityTypeBuilder?, OwnedNavigationBuilder?) builders, IMutableEntityType entityType, string propertyName)
@@ -411,13 +653,14 @@ public static class EntityTypeBuilderExtensions
    }
 
    private static void SetConverterAndExecuteCallback(
-      bool useConstructorForRead,
+      Configuration configuration,
       Action<IMutableProperty> configure,
       IMutableProperty property,
       ConversionMetadata metadata)
    {
-      var valueConverter = ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead);
+      var valueConverter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       property.SetValueConverter(valueConverter);
+      new MutableItem(metadata.Type, property).ApplyMaxLengthFromStrategy(configuration);
       configure(property);
    }
 }
