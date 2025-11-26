@@ -23,7 +23,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().AllSatisfy(m => m.Kind.Should().Be(SymbolKind.Field));
@@ -45,7 +45,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().BeEmpty();
    }
@@ -66,7 +66,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("_instanceField");
@@ -88,7 +88,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().Contain(m => m.Name == "_instanceField");
@@ -115,7 +115,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("_field1");
@@ -136,7 +136,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should return the property, not the backing field
       result.Should().HaveCount(1);
@@ -161,7 +161,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().AllSatisfy(m => m.Kind.Should().Be(SymbolKind.Property));
@@ -182,7 +182,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -203,7 +203,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -229,7 +229,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -251,7 +251,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -273,7 +273,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: false, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().Contain(m => m.Name == "Name");
       result.Should().Contain(m => m.Name == "Count");
@@ -294,7 +294,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().BeEmpty();
    }
@@ -314,7 +314,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -335,7 +335,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -358,7 +358,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should only return the field, not the computed property
       result.Should().HaveCount(1);
@@ -382,7 +382,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should only return the field, not the computed property
       result.Should().HaveCount(1);
@@ -406,7 +406,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should only return the field, not the computed property
       result.Should().HaveCount(1);
@@ -430,7 +430,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().Contain(m => m.Name == "_field" && m.Kind == SymbolKind.Field);
@@ -453,7 +453,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -474,7 +474,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -493,7 +493,7 @@ public class TestClass;
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().BeEmpty();
    }
@@ -515,7 +515,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should return the backing field only, not the write-only property
       result.Should().HaveCount(1);
@@ -547,7 +547,7 @@ public class DerivedClass : ExternalLib.ExternalBase
       var factory = TypedMemberStateFactory.Create(derivedCompilation);
       var derivedType = GetTypeSymbol(derivedCompilation, "Test.DerivedClass");
 
-      var result = derivedType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = derivedType.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should only return members from the derived class, not base class
       result.Should().HaveCount(1);
@@ -574,7 +574,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Should only return the field, indexers are not included
       result.Should().HaveCount(1);
@@ -596,7 +596,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -617,7 +617,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("Name");
@@ -639,7 +639,7 @@ public record TestRecord
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestRecord");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().Contain(m => m.Name == "Name");
@@ -662,7 +662,7 @@ public struct TestStruct
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestStruct");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().Contain(m => m.Name == "_field");
@@ -685,7 +685,7 @@ public record struct TestRecordStruct
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestRecordStruct");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(2);
       result.Should().Contain(m => m.Name == "Name");
@@ -710,7 +710,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       result.Should().HaveCount(4);
    }
@@ -730,7 +730,7 @@ public class TestClass
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 
-      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, default).ToList();
+      var result = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, instanceMembersOnly: true, populateValueObjectMemberSettings: false, cancellationToken: TestContext.Current.CancellationToken).ToList();
 
       // Event backing fields should be excluded (CanBeReferencedByName check)
       result.Should().BeEmpty();

@@ -268,7 +268,7 @@ namespace Test;
 public class TestClass;
 ";
       var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
-      var syntaxTree = CSharpSyntaxTree.ParseText(src, parseOptions);
+      var syntaxTree = CSharpSyntaxTree.ParseText(src, parseOptions, cancellationToken: TestContext.Current.CancellationToken);
       var references = AppDomain.CurrentDomain.GetAssemblies()
                                 .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
                                 .Select(a => MetadataReference.CreateFromFile(a.Location));

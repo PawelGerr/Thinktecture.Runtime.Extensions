@@ -28,7 +28,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -57,7 +57,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -83,7 +83,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -107,7 +107,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -137,7 +137,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -167,7 +167,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Value");
    }
@@ -291,8 +291,8 @@ public partial class MyClass
    public partial int Value => _value;
 }
 ";
-      var declarationTree = CSharpSyntaxTree.ParseText(declarationSource, path: "MyClass.Declaration.cs");
-      var implementationTree = CSharpSyntaxTree.ParseText(implementationSource, path: "MyClass.Implementation.cs");
+      var declarationTree = CSharpSyntaxTree.ParseText(declarationSource, path: "MyClass.Declaration.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var implementationTree = CSharpSyntaxTree.ParseText(implementationSource, path: "MyClass.Implementation.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -381,7 +381,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("this");
    }
@@ -407,7 +407,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("this");
    }
@@ -484,7 +484,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("this");
    }
@@ -505,7 +505,7 @@ public record Person(string Name, int Age);
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Name");
    }
@@ -526,7 +526,7 @@ public record struct Point(int X, int Y);
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("X");
    }
@@ -547,7 +547,7 @@ public record Person(string Name, int Age);
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Age");
    }
@@ -571,8 +571,8 @@ public partial class MyClass
    public int GeneratedProperty { get; set; }
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -605,7 +605,7 @@ public class MyClass
    public int GeneratedProperty { get; set; }
 }
 ";
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs");
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -643,8 +643,8 @@ public partial class MyClass
    public int DesignerProperty { get; set; }
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var designerTree = CSharpSyntaxTree.ParseText(designerSource, path: "MyClass.Designer.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var designerTree = CSharpSyntaxTree.ParseText(designerSource, path: "MyClass.Designer.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -685,8 +685,8 @@ public partial class MyClass
    public int GeneratedProperty { get; set; }
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.generated.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.generated.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -727,8 +727,8 @@ public partial class MyClass
    public int GeneratedProperty { get; set; }
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.i.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.i.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -1145,7 +1145,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("AttributedProperty");
    }
@@ -1399,9 +1399,9 @@ public partial class MyClass
    public partial int Value => _value;
 }
 ";
-      var tree1 = CSharpSyntaxTree.ParseText(partialClass1Source, path: "AMyClass.Part1.cs");
-      var tree2 = CSharpSyntaxTree.ParseText(partialClass2Source, path: "BMyClass.Part2.cs");
-      var tree3 = CSharpSyntaxTree.ParseText(partialClass3Source, path: "ZMyClass.Part3.cs");
+      var tree1 = CSharpSyntaxTree.ParseText(partialClass1Source, path: "AMyClass.Part1.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var tree2 = CSharpSyntaxTree.ParseText(partialClass2Source, path: "BMyClass.Part2.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var tree3 = CSharpSyntaxTree.ParseText(partialClass3Source, path: "ZMyClass.Part3.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 using Thinktecture.Swashbuckle;
-using Xunit.Abstractions;
 using static VerifyXunit.Verifier;
 
 namespace Thinktecture.Runtime.Tests.Swashbuckle;

@@ -13,7 +13,6 @@ using Microsoft.OpenApi;
 using NSubstitute;
 using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Swashbuckle;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.Swashbuckle;
 
@@ -42,7 +41,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
       appBuilder.Services
                 .AddSingleton(Substitute.For<IHostLifetime>())
                 .AddSingleton<IServer, TestServer>()
-                .AddLogging(builder => builder.AddXunit(_testOutputHelper))
+                .AddLogging(builder => builder.AddXUnit(_testOutputHelper))
                 .AddEndpointsApiExplorer()
                 .AddSwaggerGen(options =>
                 {
@@ -82,7 +81,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
                       var controllerFeatureProvider = manager.FeatureProviders.Single(p => p is ControllerFeatureProvider);
                       var controllerFeatureProviderIndex = manager.FeatureProviders.IndexOf(controllerFeatureProvider);
 
-                      manager.FeatureProviders[controllerFeatureProviderIndex] = new TestControllerFeatureProvider();
+                      manager.FeatureProviders[controllerFeatureProviderIndex] = new TestControllerFeatureProvider(_controllerType);
 
                       manager.ApplicationParts.Add(new TestApplicationPart(_controllerType));
                    });
@@ -118,12 +117,12 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
       return await response.Content.ReadAsStringAsync();
    }
 
-   public Task InitializeAsync()
+   public ValueTask InitializeAsync()
    {
-      return Task.CompletedTask;
+      return ValueTask.CompletedTask;
    }
 
-   public async Task DisposeAsync()
+   public async ValueTask DisposeAsync()
    {
       if (_app is null)
          return;

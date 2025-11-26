@@ -84,7 +84,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Event1");
    }
@@ -110,7 +110,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Event2");
    }
@@ -136,7 +136,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("Event3");
    }
@@ -165,8 +165,8 @@ public partial class MyClass
    public event EventHandler GeneratedEvent;
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -201,7 +201,7 @@ public class MyClass
    public event EventHandler GeneratedEvent;
 }
 ";
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs");
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -497,7 +497,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("CustomEvent");
    }
@@ -620,8 +620,8 @@ public partial class MyClass
    public event EventHandler DesignerEvent;
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var designerTree = CSharpSyntaxTree.ParseText(designerSource, path: "MyClass.Designer.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var designerTree = CSharpSyntaxTree.ParseText(designerSource, path: "MyClass.Designer.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -666,8 +666,8 @@ public partial class MyClass
    public event EventHandler GeneratedEvent;
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.generated.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.generated.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -712,8 +712,8 @@ public partial class MyClass
    public event EventHandler GeneratedEvent;
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.i.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.i.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -768,7 +768,7 @@ public class MyClass
       deltaLocation.Should().NotBe(Location.None);
 
       // Verify each points to the correct identifier
-      var sourceText = alphaLocation.SourceTree?.GetText().ToString();
+      var sourceText = alphaLocation.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       sourceText?.Substring(alphaLocation.SourceSpan.Start, alphaLocation.SourceSpan.Length).Should().Be("Alpha");
       sourceText?.Substring(betaLocation.SourceSpan.Start, betaLocation.SourceSpan.Length).Should().Be("Beta");
       sourceText?.Substring(gammaLocation.SourceSpan.Start, gammaLocation.SourceSpan.Length).Should().Be("Gamma");
@@ -799,7 +799,7 @@ public class MyClass
 
       location.Should().NotBe(Location.None);
       location.IsInSource.Should().BeTrue();
-      var sourceText = location.SourceTree?.GetText().ToString();
+      var sourceText = location.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText?.Substring(location.SourceSpan.Start, location.SourceSpan.Length);
       locationText.Should().Be("AttributedEvent");
    }
@@ -852,8 +852,8 @@ public partial class MyClass
    public event EventHandler GeneratedEvent;
 }
 ";
-      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs");
-      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs");
+      var userTree = CSharpSyntaxTree.ParseText(userSource, path: "MyClass.cs", cancellationToken: TestContext.Current.CancellationToken);
+      var generatedTree = CSharpSyntaxTree.ParseText(generatedSource, path: "MyClass.g.cs", cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -899,7 +899,7 @@ public class MyClass
       var uppercaseLocation = uppercaseEvent.GetEventLocation(CancellationToken.None);
 
       // Verify each gets the correct location (case-sensitive)
-      var sourceText = lowercaseLocation.SourceTree?.GetText().ToString();
+      var sourceText = lowercaseLocation.SourceTree?.GetText(TestContext.Current.CancellationToken).ToString();
       sourceText?.Substring(lowercaseLocation.SourceSpan.Start, lowercaseLocation.SourceSpan.Length).Should().Be("myevent");
       sourceText?.Substring(mixedcaseLocation.SourceSpan.Start, mixedcaseLocation.SourceSpan.Length).Should().Be("MyEvent");
       sourceText?.Substring(uppercaseLocation.SourceSpan.Start, uppercaseLocation.SourceSpan.Length).Should().Be("MYEVENT");

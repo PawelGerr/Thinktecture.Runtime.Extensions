@@ -190,8 +190,8 @@ public partial class MultiPartialClass
    public void Method1() { }
 }
 ";
-      var syntaxTree1 = CSharpSyntaxTree.ParseText(src1, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
-      var syntaxTree2 = CSharpSyntaxTree.ParseText(src2, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview));
+      var syntaxTree1 = CSharpSyntaxTree.ParseText(src1, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview), cancellationToken: TestContext.Current.CancellationToken);
+      var syntaxTree2 = CSharpSyntaxTree.ParseText(src2, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview), cancellationToken: TestContext.Current.CancellationToken);
 
       var references = AppDomain.CurrentDomain.GetAssemblies()
                                 .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))

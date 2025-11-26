@@ -7,7 +7,6 @@ using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
-using Xunit.Abstractions;
 using static VerifyXunit.Verifier;
 
 namespace Thinktecture.Runtime.Tests.Swashbuckle;

@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using MessagePack;
 using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.Formatters;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

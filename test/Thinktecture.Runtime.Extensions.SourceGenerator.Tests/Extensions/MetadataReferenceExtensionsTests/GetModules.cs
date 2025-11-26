@@ -101,8 +101,8 @@ public class Class2
 {
 }";
       var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Preview);
-      var syntaxTree1 = CSharpSyntaxTree.ParseText(source1, parseOptions);
-      var syntaxTree2 = CSharpSyntaxTree.ParseText(source2, parseOptions);
+      var syntaxTree1 = CSharpSyntaxTree.ParseText(source1, parseOptions, cancellationToken: TestContext.Current.CancellationToken);
+      var syntaxTree2 = CSharpSyntaxTree.ParseText(source2, parseOptions, cancellationToken: TestContext.Current.CancellationToken);
 
       var references = AppDomain.CurrentDomain.GetAssemblies()
                                 .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
@@ -228,7 +228,7 @@ public class TestClass
 
       // Create a module reference by getting the module metadata from the compilation
       using var ms = new System.IO.MemoryStream();
-      var emitResult = compilation.Emit(ms);
+      var emitResult = compilation.Emit(ms, cancellationToken: TestContext.Current.CancellationToken);
       emitResult.Success.Should().BeTrue();
 
       ms.Position = 0;
@@ -258,7 +258,7 @@ public class ModuleClass
 
       // Emit as a module (OutputKind.NetModule would be ideal, but we can test with DLL)
       using var ms = new System.IO.MemoryStream();
-      var emitResult = compilation.Emit(ms);
+      var emitResult = compilation.Emit(ms, cancellationToken: TestContext.Current.CancellationToken);
       emitResult.Success.Should().BeTrue();
 
       ms.Position = 0;
@@ -287,7 +287,7 @@ public class CustomModuleClass
       var compilation = CreateCompilation(source, "CustomModuleName");
 
       using var ms = new System.IO.MemoryStream();
-      var emitResult = compilation.Emit(ms);
+      var emitResult = compilation.Emit(ms, cancellationToken: TestContext.Current.CancellationToken);
       emitResult.Success.Should().BeTrue();
 
       ms.Position = 0;
@@ -315,7 +315,7 @@ public class TestClass
       var compilation = CreateCompilation(source);
 
       using var ms = new System.IO.MemoryStream();
-      var emitResult = compilation.Emit(ms);
+      var emitResult = compilation.Emit(ms, cancellationToken: TestContext.Current.CancellationToken);
       emitResult.Success.Should().BeTrue();
 
       ms.Position = 0;

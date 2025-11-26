@@ -24,8 +24,8 @@
     <PackageReference Include="AwesomeAssertions" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp" />
-    <PackageReference Include="Verify.Xunit" />
-    <PackageReference Include="xunit" />
+    <PackageReference Include="Verify.XunitV3" />
+    <PackageReference Include="xunit.v3" />
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
   </ItemGroup>
 

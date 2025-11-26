@@ -154,9 +154,9 @@ public class FirstNodeOrDefault
    {
       // Arrange
       var statements = Enumerable.Range(0, 1000)
-         .Select(i => $"int x{i} = {i};")
-         .Append("return 42;")
-         .ToArray();
+                                 .Select(i => $"int x{i} = {i};")
+                                 .Append("return 42;")
+                                 .ToArray();
       var list = CreateStatementList(statements);
 
       // Act
@@ -195,8 +195,8 @@ public class FirstNodeOrDefault
    {
       // Arrange
       var statements = Enumerable.Range(0, size)
-         .Select(i => $"int x{i} = {i};")
-         .ToArray();
+                                 .Select(i => $"int x{i} = {i};")
+                                 .ToArray();
       var list = CreateStatementList(statements);
 
       // Act
@@ -225,8 +225,8 @@ class TestClass
    int Method2() => 42;
    string Property { get; set; }
 }";
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
       var members = classDeclaration.Members;
 
@@ -248,8 +248,8 @@ class TestClass
 
       // Act
       var result = list.FirstNodeOrDefault(s =>
-         s is LocalDeclarationStatementSyntax local &&
-         local.Declaration.Type.ToString().Contains("string"));
+                                              s is LocalDeclarationStatementSyntax local &&
+                                              local.Declaration.Type.ToString().Contains("string"));
 
       // Assert
       result.Should().NotBeNull();
@@ -272,8 +272,8 @@ class TestClass
    }}
 }}";
 
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
       var block = method.Body!;
 

@@ -16,7 +16,7 @@ public class GetFactoryOrNull : CompilationTestBase
    {
       // Create a compilation with no references, so System.Object will be an error type
       var source = "public class C { }";
-      var syntaxTree = CSharpSyntaxTree.ParseText(source);
+      var syntaxTree = CSharpSyntaxTree.ParseText(source, cancellationToken: TestContext.Current.CancellationToken);
 
       var compilation = CSharpCompilation.Create(
          "TestAssembly",
@@ -114,7 +114,7 @@ public class GetFactoryOrNull : CompilationTestBase
    public void Should_handle_compilation_without_version_information()
    {
       var source = "public class C { }";
-      var syntaxTree = CSharpSyntaxTree.ParseText(source);
+      var syntaxTree = CSharpSyntaxTree.ParseText(source, cancellationToken: TestContext.Current.CancellationToken);
 
       // Create a minimal reference that has System.Object but potentially no version info
       var coreAssembly = typeof(object).Assembly;

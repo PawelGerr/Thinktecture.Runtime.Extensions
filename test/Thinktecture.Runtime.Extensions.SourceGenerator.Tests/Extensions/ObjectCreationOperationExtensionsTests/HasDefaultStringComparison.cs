@@ -27,12 +27,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();
@@ -65,12 +65,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();
@@ -97,12 +97,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();
@@ -129,12 +129,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();
@@ -161,12 +161,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();
@@ -196,12 +196,12 @@ public class HasDefaultStringComparison : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
-         .DescendantNodes()
-         .OfType<AttributeSyntax>()
-         .First();
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
+                                      .DescendantNodes()
+                                      .OfType<AttributeSyntax>()
+                                      .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       var operation = attributeOperation?.Operation as IObjectCreationOperation;
 
       operation.Should().NotBeNull();

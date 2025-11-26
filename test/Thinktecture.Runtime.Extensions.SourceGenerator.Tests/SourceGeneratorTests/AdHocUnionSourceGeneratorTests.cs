@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Thinktecture.CodeAnalysis.AdHocUnions;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

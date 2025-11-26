@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Xunit.Extensions.Logging" />
+    <PackageReference Include="MartinCostello.Logging.XUnit.v3" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" />
   </ItemGroup>
 

@@ -51,10 +51,10 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       ],
                    };
       _ctx.Add(entity);
-      await _ctx.SaveChangesAsync();
+      await _ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
       _ctx.ChangeTracker.Clear();
-      (await _ctx.TestEntities_with_Enum_and_ValueObjects.SingleAsync())
+      (await _ctx.TestEntities_with_Enum_and_ValueObjects.SingleAsync(TestContext.Current.CancellationToken))
          .Should().BeEquivalentTo(entity);
    }
 
@@ -70,7 +70,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       TestComplexValueObject_ObjectFactory_and_Constructor = TestComplexValueObject_ObjectFactory_and_Constructor.Create("value 3", "value 4"),
                    };
       _ctx.Add(entity);
-      await _ctx.SaveChangesAsync();
+      await _ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
       await using var command = _ctx.Database.GetDbConnection().CreateCommand();
       command.CommandText = @"
@@ -80,10 +80,10 @@ SET
     Boundary_Lower = 30,
     TestComplexValueObject_ObjectFactory_and_Constructor = ''
 ";
-      await command.ExecuteNonQueryAsync();
+      await command.ExecuteNonQueryAsync(TestContext.Current.CancellationToken);
 
       _ctx.ChangeTracker.Clear();
-      var loadedEntity = await _ctx.TestEntities_with_Enum_and_ValueObjects.SingleAsync();
+      var loadedEntity = await _ctx.TestEntities_with_Enum_and_ValueObjects.SingleAsync(TestContext.Current.CancellationToken);
       loadedEntity.StringBasedStructValueObject.Property.Should().Be(String.Empty);
       loadedEntity.Boundary.Lower.Should().Be(30);
       loadedEntity.Boundary.Upper.Should().Be(20);
@@ -117,7 +117,7 @@ SET
                             && e.IntBasedStructValueObject == nullableInt16
                             && e.IntBasedStructValueObject == deci
                             && e.IntBasedStructValueObject == nullableDecimal)
-                .ToListAsync();
+                .ToListAsync(TestContext.Current.CancellationToken);
    }
 
    [Fact]
@@ -128,11 +128,11 @@ SET
          new TestComplexType { TestEnum = SmartEnum_StringBased.Item1 });
 
       _ctx.Add(entity);
-      await _ctx.SaveChangesAsync();
+      await _ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
       _ctx.ChangeTracker.Clear();
 
-      var loadedEntity = await _ctx.ComplexValueObject_with_ComplexType.SingleAsync();
+      var loadedEntity = await _ctx.ComplexValueObject_with_ComplexType.SingleAsync(TestContext.Current.CancellationToken);
       loadedEntity.Id.Should().Be(entity.Id);
       loadedEntity.TestComplexType.Should().BeEquivalentTo(entity.TestComplexType);
    }

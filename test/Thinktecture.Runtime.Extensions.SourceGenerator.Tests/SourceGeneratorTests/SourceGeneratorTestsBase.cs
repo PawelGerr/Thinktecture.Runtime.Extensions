@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using VerifyXunit;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

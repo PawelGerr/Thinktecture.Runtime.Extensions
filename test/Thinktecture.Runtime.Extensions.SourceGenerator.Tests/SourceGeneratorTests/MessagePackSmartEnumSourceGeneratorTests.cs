@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using MessagePack;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.Formatters;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 
@@ -172,7 +171,6 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(output);
    }
-
 
    // Key Type Variations Tests
 

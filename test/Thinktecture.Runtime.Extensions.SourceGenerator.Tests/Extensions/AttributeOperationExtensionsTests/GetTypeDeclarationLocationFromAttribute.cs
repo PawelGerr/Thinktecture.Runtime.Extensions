@@ -27,18 +27,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("TestClass");
@@ -62,18 +62,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("TestStruct");
@@ -99,18 +99,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("TestRecord");
@@ -134,18 +134,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("TestRecordStruct");
@@ -169,18 +169,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("ITestInterface");
@@ -207,18 +207,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("InnerClass");
@@ -248,18 +248,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("Level3");
@@ -284,18 +284,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("GenericType");
@@ -320,18 +320,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       // Should return the entire attribute location since there's no type declaration
@@ -356,18 +356,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("PartialTestClass");
@@ -394,30 +394,30 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
       // Get the first attribute (SmartEnum)
-      var firstAttributeSyntax = syntaxTree.GetRoot()
+      var firstAttributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                            .DescendantNodes()
                                            .OfType<AttributeSyntax>()
                                            .First();
 
-      var firstAttributeOperation = semanticModel.GetOperation(firstAttributeSyntax) as IAttributeOperation;
+      var firstAttributeOperation = semanticModel.GetOperation(firstAttributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       firstAttributeOperation.Should().NotBeNull();
 
       var firstResult = firstAttributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       // Get the second attribute (Obsolete)
-      var secondAttributeSyntax = syntaxTree.GetRoot()
+      var secondAttributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                             .DescendantNodes()
                                             .OfType<AttributeSyntax>()
                                             .Skip(1)
                                             .First();
 
-      var secondAttributeOperation = semanticModel.GetOperation(secondAttributeSyntax) as IAttributeOperation;
+      var secondAttributeOperation = semanticModel.GetOperation(secondAttributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       secondAttributeOperation.Should().NotBeNull();
 
       var secondResult = secondAttributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       // Both should return the same type identifier location
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var firstLocationText = sourceText.Substring(firstResult.SourceSpan.Start, firstResult.SourceSpan.Length);
       var secondLocationText = sourceText.Substring(secondResult.SourceSpan.Start, secondResult.SourceSpan.Length);
 
@@ -444,18 +444,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("ConfiguredEnum");
@@ -484,18 +484,18 @@ public class GetTypeDeclarationLocationFromAttribute : CompilationTestBase
       var syntaxTree = compilation.SyntaxTrees.First();
       var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-      var attributeSyntax = syntaxTree.GetRoot()
+      var attributeSyntax = syntaxTree.GetRoot(TestContext.Current.CancellationToken)
                                       .DescendantNodes()
                                       .OfType<AttributeSyntax>()
                                       .First();
 
-      var attributeOperation = semanticModel.GetOperation(attributeSyntax) as IAttributeOperation;
+      var attributeOperation = semanticModel.GetOperation(attributeSyntax, TestContext.Current.CancellationToken) as IAttributeOperation;
       attributeOperation.Should().NotBeNull();
 
       var result = attributeOperation!.GetTypeDeclarationLocationFromAttribute();
 
       result.Should().NotBeNull();
-      var sourceText = syntaxTree.GetText().ToString();
+      var sourceText = syntaxTree.GetText(TestContext.Current.CancellationToken).ToString();
       var locationText = sourceText.Substring(result.SourceSpan.Start, result.SourceSpan.Length);
 
       locationText.Should().Be("VariousTypeTest");

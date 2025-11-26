@@ -151,9 +151,9 @@ public class FirstNodeOrDefault
    {
       // Arrange
       var parameters = Enumerable.Range(0, 1000)
-         .Select(i => $"int param{i}")
-         .Append("string targetParam")
-         .ToArray();
+                                 .Select(i => $"int param{i}")
+                                 .Append("string targetParam")
+                                 .ToArray();
       var list = CreateParameterList(parameters);
 
       // Act
@@ -192,8 +192,8 @@ public class FirstNodeOrDefault
    {
       // Arrange
       var parameters = Enumerable.Range(0, size)
-         .Select(i => $"int param{i}")
-         .ToArray();
+                                 .Select(i => $"int param{i}")
+                                 .ToArray();
       var list = CreateParameterList(parameters);
 
       // Act
@@ -223,8 +223,8 @@ class TestClass
       SomeMethod(1, ""test"", 3.14, true);
    }
 }";
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var invocation = root.DescendantNodes().OfType<InvocationExpressionSyntax>().First();
       var arguments = invocation.ArgumentList.Arguments;
 
@@ -245,7 +245,7 @@ class TestClass
 
       // Act
       var result = list.FirstNodeOrDefault(p =>
-         p.Modifiers.Any(m => m.IsKind(SyntaxKind.RefKeyword)));
+                                              p.Modifiers.Any(m => m.IsKind(SyntaxKind.RefKeyword)));
 
       // Assert
       result.Should().NotBeNull();
@@ -264,8 +264,8 @@ class TestClass
    {
    }
 }";
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
       var parameters = method.ParameterList.Parameters;
 
@@ -288,8 +288,8 @@ class TestClass
    {
    }
 }";
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
       var parameters = method.ParameterList.Parameters;
 
@@ -327,8 +327,8 @@ class TestClass
    {
    }
 }";
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
       var parameters = method.ParameterList.Parameters;
 
@@ -354,8 +354,8 @@ class TestClass
    }}
 }}";
 
-      var tree = CSharpSyntaxTree.ParseText(code);
-      var root = tree.GetRoot();
+      var tree = CSharpSyntaxTree.ParseText(code, cancellationToken: TestContext.Current.CancellationToken);
+      var root = tree.GetRoot(TestContext.Current.CancellationToken);
       var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
 
       return method.ParameterList.Parameters;

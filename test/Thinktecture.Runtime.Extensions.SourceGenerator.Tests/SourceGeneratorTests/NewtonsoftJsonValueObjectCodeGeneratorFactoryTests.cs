@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Thinktecture.CodeAnalysis.ValueObjects;
 using Thinktecture.Json;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

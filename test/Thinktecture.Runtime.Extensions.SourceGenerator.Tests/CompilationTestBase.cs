@@ -13,7 +13,7 @@ public abstract class CompilationTestBase
    protected static TypeDeclarationSyntax GetTypeDeclaration(string source, string typeName)
    {
       var syntaxTree = GetSyntaxTree(source);
-      var root = syntaxTree.GetRoot();
+      var root = syntaxTree.GetRoot(TestContext.Current.CancellationToken);
 
       var typeDeclaration = root.DescendantNodes()
                                 .OfType<TypeDeclarationSyntax>()
@@ -26,7 +26,7 @@ public abstract class CompilationTestBase
       where T : MemberDeclarationSyntax
    {
       var syntaxTree = GetSyntaxTree(source);
-      var root = syntaxTree.GetRoot();
+      var root = syntaxTree.GetRoot(TestContext.Current.CancellationToken);
 
       var memberDeclaration = root.DescendantNodes()
                                   .OfType<T>()

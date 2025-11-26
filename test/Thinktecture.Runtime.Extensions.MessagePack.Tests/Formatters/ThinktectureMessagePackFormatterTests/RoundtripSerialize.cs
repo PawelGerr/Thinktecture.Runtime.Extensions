@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using MessagePack;
 using MessagePack.Resolvers;
 using Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests.TestClasses;
@@ -125,8 +124,8 @@ public partial class RoundTripSerialize
    [Fact]
    public void Should_roundtrip_serialize_string_based_enum_having_formatter()
    {
-      var bytes = MessagePackSerializer.Serialize(StringBasedEnumWithFormatter.ValueA, StandardResolver.Options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<StringBasedEnumWithFormatter>(bytes, StandardResolver.Options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(StringBasedEnumWithFormatter.ValueA, StandardResolver.Options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<StringBasedEnumWithFormatter>(bytes, StandardResolver.Options, TestContext.Current.CancellationToken);
 
       value.Should().Be(StringBasedEnumWithFormatter.ValueA);
    }
@@ -134,8 +133,8 @@ public partial class RoundTripSerialize
    [Fact]
    public void Should_roundtrip_serialize_int_based_enum_having_formatter()
    {
-      var bytes = MessagePackSerializer.Serialize(IntBasedEnumWithFormatter.Value1, StandardResolver.Options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<IntBasedEnumWithFormatter>(bytes, StandardResolver.Options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(IntBasedEnumWithFormatter.Value1, StandardResolver.Options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<IntBasedEnumWithFormatter>(bytes, StandardResolver.Options, TestContext.Current.CancellationToken);
 
       value.Should().Be(IntBasedEnumWithFormatter.Value1);
    }
@@ -206,8 +205,8 @@ public partial class RoundTripSerialize
       T value,
       Action<T> assert)
    {
-      var bytes = MessagePackSerializer.Serialize(value, _options, CancellationToken.None);
-      var deserializedValue = MessagePackSerializer.Deserialize<T>(bytes, _options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(value, _options, TestContext.Current.CancellationToken);
+      var deserializedValue = MessagePackSerializer.Deserialize<T>(bytes, _options, TestContext.Current.CancellationToken);
 
       if (assert is not null)
       {
@@ -224,8 +223,8 @@ public partial class RoundTripSerialize
       TOut expected,
       Action<TOut> assert = null)
    {
-      var bytes = MessagePackSerializer.Serialize(serialize, _options, CancellationToken.None);
-      var deserializedValue = MessagePackSerializer.Deserialize<TOut>(bytes, _options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(serialize, _options, TestContext.Current.CancellationToken);
+      var deserializedValue = MessagePackSerializer.Deserialize<TOut>(bytes, _options, TestContext.Current.CancellationToken);
 
       if (assert is not null)
       {
@@ -252,8 +251,8 @@ public partial class RoundTripSerialize
    [MemberData(nameof(DataForValueObjectWithMultipleProperties))]
    public void Should_roundtrip_serialize_ValueObjectWithMultipleProperties(ValueObjectWithMultipleProperties expectedValueObject)
    {
-      var bytes = MessagePackSerializer.Serialize(expectedValueObject);
-      var value = MessagePackSerializer.Deserialize<ValueObjectWithMultipleProperties>(bytes);
+      var bytes = MessagePackSerializer.Serialize(expectedValueObject, cancellationToken: TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<ValueObjectWithMultipleProperties>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(expectedValueObject);
    }
@@ -265,8 +264,8 @@ public partial class RoundTripSerialize
    {
       var options = withCustomResolver ? _options : StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(BoundaryWithFactories.Create(1, 2), options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<BoundaryWithFactories>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithFactories.Create(1, 2), options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithFactories>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(BoundaryWithFactories.Create(1, 2));
    }
@@ -276,8 +275,8 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(TestSmartEnum_CustomError.Item1, options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<TestSmartEnum_CustomError>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(TestSmartEnum_CustomError.Item1, options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<TestSmartEnum_CustomError>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(TestSmartEnum_CustomError.Item1);
    }
@@ -287,8 +286,8 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(StringBasedReferenceValueObjectWithCustomError.Create("value"), options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<StringBasedReferenceValueObjectWithCustomError>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(StringBasedReferenceValueObjectWithCustomError.Create("value"), options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<StringBasedReferenceValueObjectWithCustomError>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(StringBasedReferenceValueObjectWithCustomError.Create("value"));
    }
@@ -298,8 +297,8 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomError.Create(1, 2), options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomError>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomError.Create(1, 2), options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomError>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(BoundaryWithCustomError.Create(1, 2));
    }
@@ -309,8 +308,8 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1), options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<IntBasedReferenceValueObjectWithCustomFactoryNames>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1), options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<IntBasedReferenceValueObjectWithCustomFactoryNames>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
    }
@@ -320,8 +319,8 @@ public partial class RoundTripSerialize
    {
       var options = StandardResolver.Options;
 
-      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomFactoryNames.Get(1, 2), options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomFactoryNames>(bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(BoundaryWithCustomFactoryNames.Get(1, 2), options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<BoundaryWithCustomFactoryNames>(bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(BoundaryWithCustomFactoryNames.Get(1, 2));
    }
@@ -491,12 +490,12 @@ public partial class RoundTripSerialize
          _ => throw new ArgumentException("Invalid item name", nameof(itemName))
       };
 
-      var bytes = MessagePackSerializer.Serialize(item);
-      var value = MessagePackSerializer.Deserialize<int>(bytes);
+      var bytes = MessagePackSerializer.Serialize(item, cancellationToken: TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<int>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
       value.Should().Be(key);
 
-      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
       deserialized.Should().BeSameAs(item);
    }
 
@@ -506,8 +505,8 @@ public partial class RoundTripSerialize
       SmartEnum_Generic_IntBased<string> item = null;
 
       // ReSharper disable once ExpressionIsAlwaysNull
-      var bytes = MessagePackSerializer.Serialize(item);
-      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+      var bytes = MessagePackSerializer.Serialize(item, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
       deserialized.Should().BeNull();
    }
@@ -515,7 +514,7 @@ public partial class RoundTripSerialize
    [Fact]
    public void Should_throw_on_invalid_key_for_int_based_generic_smart_enum()
    {
-      var bytes = MessagePackSerializer.Serialize(999);
+      var bytes = MessagePackSerializer.Serialize(999, cancellationToken: TestContext.Current.CancellationToken);
 
       FluentActions.Invoking(() => MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes))
                    .Should().Throw<MessagePackSerializationException>()
@@ -528,8 +527,8 @@ public partial class RoundTripSerialize
    {
       foreach (var original in SmartEnum_Generic_IntBased<string>.Items)
       {
-         var bytes = MessagePackSerializer.Serialize(original);
-         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes);
+         var bytes = MessagePackSerializer.Serialize(original, cancellationToken: TestContext.Current.CancellationToken);
+         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
          deserialized.Should().BeSameAs(original);
       }
@@ -541,11 +540,11 @@ public partial class RoundTripSerialize
       var stringItem = SmartEnum_Generic_IntBased<string>.Item1;
       var intItem = SmartEnum_Generic_IntBased<int>.Item1;
 
-      var stringBytes = MessagePackSerializer.Serialize(stringItem);
-      var intBytes = MessagePackSerializer.Serialize(intItem);
+      var stringBytes = MessagePackSerializer.Serialize(stringItem, cancellationToken: TestContext.Current.CancellationToken);
+      var intBytes = MessagePackSerializer.Serialize(intItem, cancellationToken: TestContext.Current.CancellationToken);
 
-      var stringDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(stringBytes);
-      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<int>>(intBytes);
+      var stringDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<string>>(stringBytes, cancellationToken: TestContext.Current.CancellationToken);
+      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_IntBased<int>>(intBytes, cancellationToken: TestContext.Current.CancellationToken);
 
       stringDeserialized.Should().BeSameAs(stringItem);
       intDeserialized.Should().BeSameAs(intItem);
@@ -563,12 +562,12 @@ public partial class RoundTripSerialize
          _ => throw new ArgumentException("Invalid item name", nameof(itemName))
       };
 
-      var bytes = MessagePackSerializer.Serialize(item);
-      var value = MessagePackSerializer.Deserialize<string>(bytes);
+      var bytes = MessagePackSerializer.Serialize(item, cancellationToken: TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize<string>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
       value.Should().Be(key);
 
-      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
       deserialized.Should().BeSameAs(item);
    }
 
@@ -578,8 +577,8 @@ public partial class RoundTripSerialize
       SmartEnum_Generic_StringBased<int> item = null;
 
       // ReSharper disable once ExpressionIsAlwaysNull
-      var bytes = MessagePackSerializer.Serialize(item);
-      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+      var bytes = MessagePackSerializer.Serialize(item, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
       deserialized.Should().BeNull();
    }
@@ -587,7 +586,7 @@ public partial class RoundTripSerialize
    [Fact]
    public void Should_throw_on_invalid_key_for_string_based_generic_smart_enum()
    {
-      var bytes = MessagePackSerializer.Serialize("invalid");
+      var bytes = MessagePackSerializer.Serialize("invalid", cancellationToken: TestContext.Current.CancellationToken);
 
       FluentActions.Invoking(() => MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes))
                    .Should().Throw<MessagePackSerializationException>()
@@ -600,8 +599,8 @@ public partial class RoundTripSerialize
    {
       foreach (var original in SmartEnum_Generic_StringBased<int>.Items)
       {
-         var bytes = MessagePackSerializer.Serialize(original);
-         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes);
+         var bytes = MessagePackSerializer.Serialize(original, cancellationToken: TestContext.Current.CancellationToken);
+         var deserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(bytes, cancellationToken: TestContext.Current.CancellationToken);
 
          deserialized.Should().BeSameAs(original);
       }
@@ -613,11 +612,11 @@ public partial class RoundTripSerialize
       var intItem = SmartEnum_Generic_StringBased<int>.Item1;
       var doubleItem = SmartEnum_Generic_StringBased<double>.Item1;
 
-      var intBytes = MessagePackSerializer.Serialize(intItem);
-      var doubleBytes = MessagePackSerializer.Serialize(doubleItem);
+      var intBytes = MessagePackSerializer.Serialize(intItem, cancellationToken: TestContext.Current.CancellationToken);
+      var doubleBytes = MessagePackSerializer.Serialize(doubleItem, cancellationToken: TestContext.Current.CancellationToken);
 
-      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(intBytes);
-      var doubleDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<double>>(doubleBytes);
+      var intDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<int>>(intBytes, cancellationToken: TestContext.Current.CancellationToken);
+      var doubleDeserialized = MessagePackSerializer.Deserialize<SmartEnum_Generic_StringBased<double>>(doubleBytes, cancellationToken: TestContext.Current.CancellationToken);
 
       intDeserialized.Should().BeSameAs(intItem);
       doubleDeserialized.Should().BeSameAs(doubleItem);
@@ -630,8 +629,8 @@ public partial class RoundTripSerialize
       var resolver = CompositeResolver.Create(new ThinktectureMessageFormatterResolver(skipValueObjectsWithMessagePackFormatter), StandardResolver.Instance);
       var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
 
-      var bytes = MessagePackSerializer.Serialize(obj, options, CancellationToken.None);
-      var value = MessagePackSerializer.Deserialize(obj.GetType(), bytes, options, CancellationToken.None);
+      var bytes = MessagePackSerializer.Serialize(obj, options, TestContext.Current.CancellationToken);
+      var value = MessagePackSerializer.Deserialize(obj.GetType(), bytes, options, TestContext.Current.CancellationToken);
 
       value.Should().BeEquivalentTo(obj);
    }

@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Thinktecture.CodeAnalysis.ValueObjects;
 using Thinktecture.Text.Json.Serialization;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.ObjectFactories;
 using Thinktecture.Json;
-using Xunit.Abstractions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 

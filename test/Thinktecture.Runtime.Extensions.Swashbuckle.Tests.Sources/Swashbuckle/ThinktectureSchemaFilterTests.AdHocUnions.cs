@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Runtime.Tests.TestAdHocUnions;
-using Xunit.Abstractions;
 using static VerifyXunit.Verifier;
 
 namespace Thinktecture.Runtime.Tests.Swashbuckle;
