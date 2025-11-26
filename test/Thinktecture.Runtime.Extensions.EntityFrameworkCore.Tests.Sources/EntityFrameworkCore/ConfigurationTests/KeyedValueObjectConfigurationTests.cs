@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.ConfigurationTests;
@@ -23,14 +21,14 @@ public class KeyedValueObjectConfigurationTests
    public void Equals_should_return_true_for_same_strategy()
    {
       var config1 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
+                    };
 
       var config2 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
+                    };
 
       config1.Equals(config2).Should().BeTrue();
    }
@@ -39,14 +37,14 @@ public class KeyedValueObjectConfigurationTests
    public void Equals_should_return_false_for_different_strategy()
    {
       var config1 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
+                    };
 
       var config2 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(100)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(100)
+                    };
 
       config1.Equals(config2).Should().BeFalse();
    }
@@ -68,14 +66,14 @@ public class KeyedValueObjectConfigurationTests
    public void GetHashCode_should_be_consistent_with_Equals()
    {
       var config1 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
+                    };
 
       var config2 = new KeyedValueObjectConfiguration
-      {
-         MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedKeyedValueObjectMaxLengthStrategy(50)
+                    };
 
       config1.GetHashCode().Should().Be(config2.GetHashCode());
    }

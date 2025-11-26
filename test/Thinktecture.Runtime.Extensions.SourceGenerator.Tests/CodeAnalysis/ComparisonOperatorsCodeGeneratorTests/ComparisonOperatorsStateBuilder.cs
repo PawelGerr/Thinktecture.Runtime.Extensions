@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using NSubstitute;
 using Thinktecture.CodeAnalysis;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Thinktecture.EntityFrameworkCore;
-
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.SmartEnumMaxLengthStrategyTests;
 
@@ -74,9 +72,9 @@ public class FixedSmartEnumMaxLengthStrategyTests
    {
       var strategy = new FixedSmartEnumMaxLengthStrategy(50);
       var items = new List<ISmartEnumItem>
-      {
-         new TestSmartEnumItem("VeryLongStringThatExceedsFiftyCharactersInLength", new object(), "Item1")
-      };
+                  {
+                     new TestSmartEnumItem("VeryLongStringThatExceedsFiftyCharactersInLength", new object(), "Item1")
+                  };
 
       var result = strategy.GetMaxLength(typeof(object), typeof(string), items);
 

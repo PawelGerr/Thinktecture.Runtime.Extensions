@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Thinktecture.EntityFrameworkCore;
-
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.SmartEnumMaxLengthStrategyTests;
 
@@ -64,10 +62,10 @@ public class NoOpSmartEnumMaxLengthStrategyTests
    public void GetMaxLength_should_work_with_populated_items()
    {
       var items = new List<ISmartEnumItem>
-      {
-         new TestSmartEnumItem("ABC", new object(), "Item1"),
-         new TestSmartEnumItem("DEFGHIJ", new object(), "Item2")
-      };
+                  {
+                     new TestSmartEnumItem("ABC", new object(), "Item1"),
+                     new TestSmartEnumItem("DEFGHIJ", new object(), "Item2")
+                  };
 
       var result = _strategy.GetMaxLength(typeof(object), typeof(string), items);
 

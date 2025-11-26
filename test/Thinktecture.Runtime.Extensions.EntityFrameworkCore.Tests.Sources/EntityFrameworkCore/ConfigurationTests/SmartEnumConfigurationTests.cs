@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.ConfigurationTests;
@@ -29,14 +27,14 @@ public class SmartEnumConfigurationTests
    public void Equals_should_return_true_for_same_strategy()
    {
       var config1 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                    };
 
       var config2 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                    };
 
       config1.Equals(config2).Should().BeTrue();
    }
@@ -45,14 +43,14 @@ public class SmartEnumConfigurationTests
    public void Equals_should_return_false_for_different_strategy()
    {
       var config1 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                    };
 
       var config2 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(100)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(100)
+                    };
 
       config1.Equals(config2).Should().BeFalse();
    }
@@ -74,14 +72,14 @@ public class SmartEnumConfigurationTests
    public void GetHashCode_should_be_consistent_with_Equals()
    {
       var config1 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                    };
 
       var config2 = new SmartEnumConfiguration
-      {
-         MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
-      };
+                    {
+                       MaxLengthStrategy = new FixedSmartEnumMaxLengthStrategy(50)
+                    };
 
       config1.GetHashCode().Should().Be(config2.GetHashCode());
    }

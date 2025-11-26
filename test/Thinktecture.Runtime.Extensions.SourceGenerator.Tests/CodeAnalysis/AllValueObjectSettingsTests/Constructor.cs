@@ -1,5 +1,4 @@
 using System.Linq;
-using Thinktecture.CodeAnalysis;
 using Thinktecture.CodeAnalysis.ValueObjects;
 
 namespace Thinktecture.Runtime.Tests.CodeAnalysis.AllValueObjectSettingsTests;

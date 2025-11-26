@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore.ConfigurationTests;
@@ -40,18 +38,18 @@ public class ConfigurationTests
    public void Equals_should_return_true_for_same_configuration_values()
    {
       var config1 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.Default,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
-         UseConstructorForRead = true
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.Default,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
+                       UseConstructorForRead = true
+                    };
 
       var config2 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.Default,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
-         UseConstructorForRead = true
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.Default,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
+                       UseConstructorForRead = true
+                    };
 
       config1.Equals(config2).Should().BeTrue();
    }
@@ -60,16 +58,16 @@ public class ConfigurationTests
    public void Equals_should_return_false_for_different_smart_enum_configuration()
    {
       var config1 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.Default,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.Default,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
+                    };
 
       var config2 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.NoMaxLength,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.NoMaxLength,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength
+                    };
 
       config1.Equals(config2).Should().BeFalse();
    }
@@ -78,14 +76,14 @@ public class ConfigurationTests
    public void Equals_should_return_false_for_different_use_constructor_for_read()
    {
       var config1 = new Configuration
-      {
-         UseConstructorForRead = true
-      };
+                    {
+                       UseConstructorForRead = true
+                    };
 
       var config2 = new Configuration
-      {
-         UseConstructorForRead = false
-      };
+                    {
+                       UseConstructorForRead = false
+                    };
 
       config1.Equals(config2).Should().BeFalse();
    }
@@ -107,18 +105,18 @@ public class ConfigurationTests
    public void GetHashCode_should_be_consistent_with_Equals()
    {
       var config1 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.Default,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
-         UseConstructorForRead = true
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.Default,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
+                       UseConstructorForRead = true
+                    };
 
       var config2 = new Configuration
-      {
-         SmartEnums = SmartEnumConfiguration.Default,
-         KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
-         UseConstructorForRead = true
-      };
+                    {
+                       SmartEnums = SmartEnumConfiguration.Default,
+                       KeyedValueObjects = KeyedValueObjectConfiguration.NoMaxLength,
+                       UseConstructorForRead = true
+                    };
 
       config1.GetHashCode().Should().Be(config2.GetHashCode());
    }

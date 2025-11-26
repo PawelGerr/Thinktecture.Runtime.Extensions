@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Thinktecture.EntityFrameworkCore;
 
 namespace Thinktecture.Runtime.Tests.EntityFrameworkCore;
