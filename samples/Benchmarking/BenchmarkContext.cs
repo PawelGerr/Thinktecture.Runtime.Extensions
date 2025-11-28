@@ -1,5 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -13,14 +14,23 @@ public class BenchmarkContext : IDisposable
 
    public BenchmarkContext()
    {
+      var configuration = GetConfiguration();
       var services = new ServiceCollection()
                      .AddLogging(builder => builder.AddConsole())
                      .AddDbContext<BenchmarkDbContext>(builder => builder
-                                                                  .UseSqlServer("Server=localhost;Database=TT_RE_Benchmarking;Integrated Security=true;TrustServerCertificate=true;")
+                                                                  .UseSqlServer(configuration.GetConnectionString("default"))
                                                                   .UseLoggerFactory(NullLoggerFactory.Instance)
                                                                   .UseThinktectureValueConverters());
 
       RootServiceProvider = services.BuildServiceProvider();
+   }
+
+   private static IConfiguration GetConfiguration()
+   {
+      return new ConfigurationBuilder()
+             .AddJsonFile("appsettings.json")
+             .AddUserSecrets<Program>()
+             .Build();
    }
 
    public void Dispose()

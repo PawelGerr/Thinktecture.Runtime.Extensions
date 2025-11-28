@@ -10,19 +10,16 @@ namespace Thinktecture.Benchmarks;
 
 /*
 
-29.04.2025
+28.11.2025
 
-.NET 9.0.4
+Runtime=.NET 10.0
 
-| Method                      | Mean      | Error     | StdDev   | Median    | Allocated |
-|---------------------------- |----------:|----------:|---------:|----------:|----------:|
-| RegularEnum_StringConverter | 13.255 ms | 2.0776 ms | 5.792 ms | 11.534 ms |   7.16 MB |
-| SmartEnum_StringBased       | 10.681 ms | 1.2877 ms | 3.611 ms |  9.393 ms |   8.21 MB |
-| RegularEnum_IntBased        |  6.979 ms | 0.7776 ms | 2.168 ms |  6.708 ms |   6.67 MB |
-| SmartEnum_IntBased    |  8.175 ms | 1.1949 ms | 3.210 ms |  7.129 ms |   7.72 MB |
-
-
-
+| Method                      | Mean     | Error     | StdDev    | Allocated |
+|---------------------------- |---------:|----------:|----------:|----------:|
+| RegularEnum_StringConverter | 6.663 ms | 0.1269 ms | 0.3364 ms |   7.14 MB |
+| SmartEnum_StringBased       | 6.859 ms | 0.2158 ms | 0.5570 ms |   8.19 MB |
+| RegularEnum_IntBased        | 5.860 ms | 0.1823 ms | 0.4804 ms |   6.66 MB |
+| SmartEnum_IntBased          | 6.377 ms | 0.1824 ms | 0.4838 ms |   7.71 MB |
 
  */
 

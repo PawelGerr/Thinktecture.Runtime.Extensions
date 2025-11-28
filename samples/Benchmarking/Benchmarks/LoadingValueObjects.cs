@@ -11,13 +11,13 @@ namespace Thinktecture.Benchmarks;
 
 29.04.2025
 
-.NET 9.0.4
+Runtime=.NET 10.0
 
-| Method                         | Mean     | Error   | StdDev   | Gen0      | Gen1      | Allocated |
-|------------------------------- |---------:|--------:|---------:|----------:|----------:|----------:|
-| Entity_without_ValueObjects    | 148.3 ms | 4.80 ms | 13.46 ms | 3000.0000 | 2000.0000 |   79.8 MB |
-| Entity_with_StructValueObjects | 158.2 ms | 5.80 ms | 16.56 ms | 3000.0000 | 2000.0000 |  87.86 MB |
-| Entity_with_ClassValueObjects  | 195.2 ms | 8.42 ms | 23.89 ms | 4000.0000 | 3000.0000 |  84.38 MB |
+| Method                         | Mean     | Error   | StdDev  | Gen0      | Gen1      | Allocated |
+|------------------------------- |---------:|--------:|--------:|----------:|----------:|----------:|
+| Entity_without_ValueObjects    | 111.6 ms | 2.21 ms | 3.44 ms | 3000.0000 | 2000.0000 |  79.21 MB |
+| Entity_with_StructValueObjects | 115.5 ms | 2.09 ms | 4.58 ms | 3000.0000 | 2000.0000 |  87.27 MB |
+| Entity_with_ClassValueObjects  | 150.4 ms | 2.93 ms | 4.56 ms | 4000.0000 | 3000.0000 |  83.79 MB |
 
  */
 
