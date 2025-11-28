@@ -164,6 +164,19 @@ Types must be `partial` classes/structs. Generator creates:
 - Pattern matching methods (`Switch`, `Map`)
 - Integration with serializers and frameworks
 
+### Runtime Metadata System
+
+Generated types implement `IMetadataOwner` interface with runtime metadata that enables:
+
+- Serialization framework integration (JSON, MessagePack, Protobuf, etc.)
+- Type conversion and model binding
+- Discovery of key types and validation error types
+- Custom object factory resolution
+
+The `MetadataLookup` class provides cached metadata discovery via reflection. Object factories have priority over key-based metadata for conversion scenarios.
+
+**For detailed information**: See "Runtime Metadata System" section in [CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md) - essential reading when implementing serialization integrations or custom conversion logic.
+
 ## Development Guidelines
 
 ### Code Style
@@ -226,7 +239,7 @@ Types must be `partial` classes/structs. Generator creates:
 
 For specific tasks, consult these specialized documentation files:
 
-- **[CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md)**: Source generator architecture, implementing new features, state objects, code generator patterns
+- **[CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md)**: Source generator architecture, runtime metadata system (MetadataLookup), implementing new features, state objects, code generator patterns
 - **[CLAUDE-TESTING.md](CLAUDE-TESTING.md)**: Testing strategy, test organization, frameworks (xUnit, Verify, AwesomeAssertions)
 - **[CLAUDE-REVIEW.md](CLAUDE-REVIEW.md)**: Code review checklists, best practices verification, common pitfalls
 - **[CLAUDE-ATTRIBUTES.md](CLAUDE-ATTRIBUTES.md)**: Complete attribute reference with all properties and configuration options
@@ -234,6 +247,7 @@ For specific tasks, consult these specialized documentation files:
 **When to consult specialized docs:**
 
 - Implementing a new feature → Read CLAUDE-FEATURE-DEV.md
+- Working with serialization/framework integration → Read CLAUDE-FEATURE-DEV.md (Runtime Metadata System section)
 - Writing or updating tests → Read CLAUDE-TESTING.md
 - Reviewing code changes → Read CLAUDE-REVIEW.md
 - Working with attributes or need configuration details → Read CLAUDE-ATTRIBUTES.md
