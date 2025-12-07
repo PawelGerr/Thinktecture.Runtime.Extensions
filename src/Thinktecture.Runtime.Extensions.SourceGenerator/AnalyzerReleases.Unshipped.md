@@ -7,9 +7,10 @@
  TTRESG063 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
  TTRESG064 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
  TTRESG065 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
- TTRESG066 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors
- TTRESG067 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors
- TTRESG068 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors
- TTRESG069 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors
- TTRESG070 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors
+ TTRESG066 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
+ TTRESG067 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
+ TTRESG068 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
+ TTRESG069 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
+ TTRESG070 | ThinktectureRuntimeExtensionsAnalyzer | Error    | DiagnosticsDescriptors 
  TTRESG105 | ThinktectureRuntimeExtensionsAnalyzer | Warning  | DiagnosticsDescriptors 
+ TTRESG106 | ThinktectureRuntimeExtensionsAnalyzer | Warning  | DiagnosticsDescriptors 

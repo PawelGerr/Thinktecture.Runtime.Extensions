@@ -50,6 +50,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly,
       DiagnosticsDescriptors.UnionRecordMustBeSealed,
       DiagnosticsDescriptors.NonAbstractDerivedUnionIsLessAccessibleThanBaseUnion,
+      DiagnosticsDescriptors.InnerTypeDoesNotDeriveFromUnion,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfValueObjectIsStructButKeyTypeIsClass,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfSomeMembersDisallowDefaultValues,
       DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
@@ -523,6 +524,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       CheckConstructors(context, type, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
+      CheckForNonDerivedUnionTypes(context, type);
       ValidateUnionDerivedTypes(context, type);
    }
 
@@ -1159,6 +1161,31 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             {
                ReportDiagnostic(context, DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly, derivedType.GetTypeIdentifierLocation(context.CancellationToken), derivedType);
             }
+         }
+      }
+   }
+
+   private static void CheckForNonDerivedUnionTypes(SymbolAnalysisContext context, INamedTypeSymbol type)
+   {
+      var allInnerTypes = type.GetTypeMembers();
+      var baseTypeTuple = (type, type.GetGenericTypeDefinition());
+
+      for (var i = 0; i < allInnerTypes.Length; i++)
+      {
+         var innerType = allInnerTypes[i];
+
+         // Skip non-class types (enums, delegates, etc.)
+         if (innerType.TypeKind != TypeKind.Class)
+            continue;
+
+         if (!innerType.IsDerivedFrom(baseTypeTuple))
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.InnerTypeDoesNotDeriveFromUnion,
+               innerType.GetTypeIdentifierLocation(context.CancellationToken),
+               innerType,
+               type);
          }
       }
    }

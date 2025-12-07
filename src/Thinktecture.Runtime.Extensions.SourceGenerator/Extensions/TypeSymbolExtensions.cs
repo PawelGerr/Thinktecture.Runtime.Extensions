@@ -655,7 +655,7 @@ public static class TypeSymbolExtensions
       }
    }
 
-   private static bool IsDerivedFrom(
+   public static bool IsDerivedFrom(
       this ITypeSymbol? type,
       (INamedTypeSymbol Type, INamedTypeSymbol TypeDef) baseType)
    {
@@ -663,9 +663,9 @@ public static class TypeSymbolExtensions
       {
          if (baseType.Type.TypeKind == TypeKind.Interface)
          {
-            foreach (var @interface in type.Interfaces)
+            for (var i = 0; i < type.Interfaces.Length; i++)
             {
-               if (SymbolEqualityComparer.Default.Equals(@interface, baseType.Type))
+               if (SymbolEqualityComparer.Default.Equals(type.Interfaces[i], baseType.Type))
                   return true;
             }
          }
