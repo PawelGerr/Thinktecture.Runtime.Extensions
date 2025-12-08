@@ -1432,4 +1432,30 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestUnion.RegularUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_not_prefix_parameter_names_when_union_is_inside_regular_class()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Container
+            {
+               [Union]
+               public partial record Result
+               {
+                  public sealed record Success : Result;
+                  public sealed record Failure(string Error) : Result;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Container.Result.RegularUnion.g.cs");
+   }
 }

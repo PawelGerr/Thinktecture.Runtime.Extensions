@@ -58,9 +58,9 @@ public partial class ThinktectureRequestBodyFilter : IRequestBodyFilter
       if (metadata is null)
       {
          var children = node.Switch(
-            nodeNamedLeaf: _ => [],
-            nodeNamedContainer: n => n.Children,
-            nodeRoot: n => n.Children);
+            namedLeaf: _ => [],
+            namedContainer: n => n.Children,
+            root: n => n.Children);
 
          foreach (var child in children)
          {

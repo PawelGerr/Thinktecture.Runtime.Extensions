@@ -26,7 +26,7 @@ public class MakeFullyQualifiedArgumentName
    {
       var list = types.Select(n => new ContainingTypeState(n, true, false, [])).ToImmutableArray();
       var sb = new StringBuilder("prefix"); // ensure restoration works
-      var result = ContainingTypesExtensions.MakeFullyQualifiedArgumentName(list, member, skipRoot, sb);
+      var result = ContainingTypesExtensions.MakeFullyQualifiedArgumentName(list, member, skipLevels: skipRoot ? 1 : 0, sb);
 
       result.Should().Be(expected);
       sb.Length.Should().Be("prefix".Length); // sb is restored

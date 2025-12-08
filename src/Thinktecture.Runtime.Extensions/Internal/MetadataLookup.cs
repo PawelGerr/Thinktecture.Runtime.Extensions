@@ -109,8 +109,8 @@ public static class MetadataLookup
    private static (LambdaExpression? FromCtor, LambdaExpression? FromFactory) GetFromExpressions(Metadata.Keyed keyedMetadata)
    {
       return keyedMetadata.Switch(
-         keyedSmartEnum: m => (null, m.ConvertFromKeyExpression),
-         keyedValueObject: m => ((LambdaExpression?)m.ConvertFromKeyExpressionViaConstructor, m.ConvertFromKeyExpression));
+         smartEnum: m => (null, m.ConvertFromKeyExpression),
+         valueObject: m => ((LambdaExpression?)m.ConvertFromKeyExpressionViaConstructor, m.ConvertFromKeyExpression));
    }
 
    private static ConversionMetadata? GetConversionMetadata(

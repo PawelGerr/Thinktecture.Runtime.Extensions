@@ -314,8 +314,8 @@ public class DiscriminatedUnionsDemos
       void HandleFailure(ApiResponse.Failure failure)
       {
          failure.Switch(
-            failureNotFound: notFound => logger.Information("[Switch] Not Found"),
-            failureUnauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
+            notFound: notFound => logger.Information("[Switch] Not Found"),
+            unauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
          );
       }
    }

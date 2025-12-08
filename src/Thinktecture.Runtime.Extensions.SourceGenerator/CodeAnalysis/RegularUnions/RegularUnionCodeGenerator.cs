@@ -77,13 +77,18 @@ public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
       return typeMembers;
    }
 
-   private static TypeMember MakeTypeMember(
+   private TypeMember MakeTypeMember(
       RegularUnionTypeMemberState typeMember,
       TypeMember? baseType,
       StringBuilder sb)
    {
+      // Skip all containing types of the union itself + the union's own type
+      // This ensures parameter names are just the member name (e.g., "success")
+      // unless the member is nested in another union within this union
+      var skipLevels = _state.ContainingTypes.Length + 1;
+
       var argName = typeMember.ContainingTypes
-                              .MakeFullyQualifiedArgumentName(typeMember.Name, skipRootContainingType: true, sb);
+                              .MakeFullyQualifiedArgumentName(typeMember.Name, skipLevels, sb);
 
       return new TypeMember(typeMember, argName, baseType, []);
    }

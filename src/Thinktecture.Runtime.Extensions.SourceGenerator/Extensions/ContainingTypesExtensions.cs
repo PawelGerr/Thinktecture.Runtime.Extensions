@@ -8,13 +8,15 @@ public static class ContainingTypesExtensions
    public static string MakeFullyQualifiedArgumentName(
       this ImmutableArray<ContainingTypeState> containingTypes,
       string typeMemberName,
-      bool skipRootContainingType,
+      int skipLevels,
       StringBuilder sb)
    {
       var originalLen = sb.Length;
 
-      for (var i = skipRootContainingType ? 1 : 0; i < containingTypes.Length; i++)
+      for (var i = skipLevels; i < containingTypes.Length; i++)
+      {
          sb.Append(containingTypes[i].Name);
+      }
 
       sb.Append(typeMemberName);
 
