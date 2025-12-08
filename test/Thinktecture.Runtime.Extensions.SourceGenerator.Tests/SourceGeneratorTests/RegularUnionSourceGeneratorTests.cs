@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public RegularUnionSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 20_000)
+      : base(output, 34_000)
    {
    }
 
@@ -1457,5 +1457,614 @@ public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.Container.Result.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_default_parameter_names_for_two_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class ApiResponse
+            {
+               public sealed class Success : ApiResponse;
+
+               [Union]
+               public abstract partial class Failure : ApiResponse
+               {
+                  private Failure() { }
+
+                  public sealed class NotFound : Failure;
+                  public sealed class Unauthorized : Failure;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ApiResponse.RegularUnion.g.cs",
+                        "Thinktecture.Tests.ApiResponse.Failure.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_simple_parameter_names_for_two_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class ApiResponse
+            {
+               public sealed class Success : ApiResponse;
+
+               [Union]
+               public abstract partial class Failure : ApiResponse
+               {
+                  private Failure() { }
+
+                  public sealed class NotFound : Failure;
+                  public sealed class Unauthorized : Failure;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ApiResponse.RegularUnion.g.cs",
+                        "Thinktecture.Tests.ApiResponse.Failure.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_default_parameter_names_for_three_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class Response
+            {
+               public sealed class Success : Response;
+
+               [Union]
+               public abstract partial class ErrorCategory : Response
+               {
+                  private ErrorCategory() { }
+
+                  [Union]
+                  public abstract partial class ClientError : ErrorCategory
+                  {
+                     private ClientError() { }
+
+                     public sealed class BadRequest : ClientError;
+                     public sealed class NotFound : ClientError;
+                  }
+
+                  [Union]
+                  public abstract partial class ServerError : ErrorCategory
+                  {
+                     private ServerError() { }
+
+                     public sealed class InternalError : ServerError;
+                     public sealed class ServiceUnavailable : ServerError;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Response.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ClientError.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ServerError.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_simple_parameter_names_for_three_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class Response
+            {
+               public sealed class Success : Response;
+
+               [Union]
+               public abstract partial class ErrorCategory : Response
+               {
+                  private ErrorCategory() { }
+
+                  [Union]
+                  public abstract partial class ClientError : ErrorCategory
+                  {
+                     private ClientError() { }
+
+                     public sealed class BadRequest : ClientError;
+                     public sealed class NotFound : ClientError;
+                  }
+
+                  [Union]
+                  public abstract partial class ServerError : ErrorCategory
+                  {
+                     private ServerError() { }
+
+                     public sealed class InternalError : ServerError;
+                     public sealed class ServiceUnavailable : ServerError;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Response.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ClientError.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ServerError.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_default_parameter_names_for_four_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class DeepNested
+            {
+               public class Level1 : DeepNested
+               {
+                  private Level1() { }
+
+                  public class Level2 : Level1
+                  {
+                     private Level2() { }
+
+                     public class Level3 : Level2
+                     {
+                        private Level3() { }
+
+                        public sealed class Level4(string Value) : Level3;
+                     }
+                  }
+               }
+
+               public sealed class TopLevel : DeepNested;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.DeepNested.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_simple_parameter_names_for_four_level_nested_types()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class DeepNested
+            {
+               public class Level1 : DeepNested
+               {
+                  private Level1() { }
+
+                  public class Level2 : Level1
+                  {
+                     private Level2() { }
+
+                     public class Level3 : Level2
+                     {
+                        private Level3() { }
+
+                        public sealed class Level4(string Value) : Level3;
+                     }
+                  }
+               }
+
+               public sealed class TopLevel : DeepNested;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.DeepNested.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_default_parameter_names_with_UnionSwitchMapOverload()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            [UnionSwitchMapOverload(StopAt = [typeof(ErrorCategory)])]
+            public partial class Response
+            {
+               public sealed class Success : Response;
+
+               [Union]
+               public abstract partial class ErrorCategory : Response
+               {
+                  private ErrorCategory() { }
+
+                  [Union]
+                  public abstract partial class ClientError : ErrorCategory
+                  {
+                     private ClientError() { }
+
+                     public sealed class BadRequest : ClientError;
+                     public sealed class NotFound : ClientError;
+                  }
+
+                  [Union]
+                  public abstract partial class ServerError : ErrorCategory
+                  {
+                     private ServerError() { }
+
+                     public sealed class InternalError : ServerError;
+                     public sealed class ServiceUnavailable : ServerError;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Response.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ClientError.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ServerError.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_simple_parameter_names_with_UnionSwitchMapOverload()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            [UnionSwitchMapOverload(StopAt = [typeof(ErrorCategory)])]
+            public partial class Response
+            {
+               public sealed class Success : Response;
+
+               [Union]
+               public abstract partial class ErrorCategory : Response
+               {
+                  private ErrorCategory() { }
+
+                  [Union]
+                  public abstract partial class ClientError : ErrorCategory
+                  {
+                     private ClientError() { }
+
+                     public sealed class BadRequest : ClientError;
+                     public sealed class NotFound : ClientError;
+                  }
+
+                  [Union]
+                  public abstract partial class ServerError : ErrorCategory
+                  {
+                     private ServerError() { }
+
+                     public sealed class InternalError : ServerError;
+                     public sealed class ServiceUnavailable : ServerError;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Response.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ClientError.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ServerError.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_simple_parameter_names_with_multiple_UnionSwitchMapOverload()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            [UnionSwitchMapOverload(StopAt = [typeof(ErrorCategory)])]
+            [UnionSwitchMapOverload(StopAt = [typeof(ErrorCategory.ClientError), typeof(ErrorCategory.ServerError)])]
+            public partial class Response
+            {
+               public sealed class Success : Response;
+
+               [Union]
+               public abstract partial class ErrorCategory : Response
+               {
+                  private ErrorCategory() { }
+
+                  [Union]
+                  public abstract partial class ClientError : ErrorCategory
+                  {
+                     private ClientError() { }
+
+                     public sealed class BadRequest : ClientError;
+                     public sealed class NotFound : ClientError;
+                  }
+
+                  [Union]
+                  public abstract partial class ServerError : ErrorCategory
+                  {
+                     private ServerError() { }
+
+                     public sealed class InternalError : ServerError;
+                     public sealed class ServiceUnavailable : ServerError;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Response.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ClientError.RegularUnion.g.cs",
+                        "Thinktecture.Tests.Response.ErrorCategory.ServerError.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_mixed_nested_and_non_nested_with_default_names()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class MixedResponse
+            {
+               public sealed class Success(string Value) : MixedResponse;
+               public sealed class Pending : MixedResponse;
+
+               [Union]
+               public abstract partial class Error : MixedResponse
+               {
+                  private Error() { }
+
+                  public sealed class NotFound : Error;
+                  public sealed class Timeout : Error;
+               }
+
+               public sealed class Cancelled : MixedResponse;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.MixedResponse.RegularUnion.g.cs",
+                        "Thinktecture.Tests.MixedResponse.Error.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_mixed_nested_and_non_nested_with_simple_names()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class MixedResponse
+            {
+               public sealed class Success(string Value) : MixedResponse;
+               public sealed class Pending : MixedResponse;
+
+               [Union]
+               public abstract partial class Error : MixedResponse
+               {
+                  private Error() { }
+
+                  public sealed class NotFound : Error;
+                  public sealed class Timeout : Error;
+               }
+
+               public sealed class Cancelled : MixedResponse;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.MixedResponse.RegularUnion.g.cs",
+                        "Thinktecture.Tests.MixedResponse.Error.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_types_with_special_characters_with_simple_names()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class _TestUnion
+            {
+               public class _Category : _TestUnion
+               {
+                  private _Category() { }
+
+                  public sealed class _1Type : _Category;
+                  public sealed class _2Type : _Category;
+               }
+
+               public sealed class _Direct : _TestUnion;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests._TestUnion.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_generic_nested_types_with_default_names()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class Container<T>
+            {
+               public sealed class Value(T Data) : Container<T>;
+
+               public class Wrapper : Container<T>
+               {
+                  private Wrapper() { }
+
+                  public sealed class Inner(T Data) : Wrapper;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Container`1.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_generic_nested_types_with_simple_names()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+            public partial class Container<T>
+            {
+               public sealed class Value(T Data) : Container<T>;
+
+               public class Wrapper : Container<T>
+               {
+                  private Wrapper() { }
+
+                  public sealed class Inner(T Data) : Wrapper;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Container`1.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_backward_compatibility_when_property_not_set()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union]
+            public partial class BackwardCompatTest
+            {
+               public sealed class Direct : BackwardCompatTest;
+
+               public class Category : BackwardCompatTest
+               {
+                  private Category() { }
+
+                  public sealed class Item1(string Value) : Category;
+                  public sealed class Item2(int Value) : Category;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.BackwardCompatTest.RegularUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_explicit_default_mode()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Default)]
+            public partial class ExplicitDefaultTest
+            {
+               public sealed class Direct : ExplicitDefaultTest;
+
+               public class Category : ExplicitDefaultTest
+               {
+                  private Category() { }
+
+                  public sealed class Item1(string Value) : Category;
+                  public sealed class Item2(int Value) : Category;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<RegularUnionSourceGenerator>(source, typeof(UnionAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.ExplicitDefaultTest.RegularUnion.g.cs");
    }
 }

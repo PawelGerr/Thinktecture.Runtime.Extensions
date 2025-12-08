@@ -3,6 +3,7 @@
 This reference lists all constructor arguments and configurable properties for attributes in Thinktecture.Runtime.Extensions.
 
 **Notes**:
+
 - Defaults shown reflect runtime defaults from constructors or property getters
 - Some properties only take effect under certain conditions (see descriptions)
 - All attributes are in the `Thinktecture` namespace
@@ -15,17 +16,17 @@ Base class for `ValueObjectAttribute<TKey>` and `ComplexValueObjectAttribute`.
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `SkipFactoryMethods` | `bool` | `false` | Do not generate `Create`, `TryCreate`, `Validate` methods |
-| `ConstructorAccessModifier` | `AccessModifier` | `Private` | Access modifier for generated constructor |
-| `CreateFactoryMethodName` | `string` | `"Create"` | Name for the Create factory method (whitespace resets to default) |
-| `TryCreateFactoryMethodName` | `string` | `"TryCreate"` | Name for the TryCreate factory method (whitespace resets to default) |
-| `SkipToString` | `bool` | `false` | Skip `ToString()` generation |
-| `AllowDefaultStructs` | `bool` | `false` | Allow `default(struct)` instances (structs only) |
-| `DefaultInstancePropertyName` | `string` | `"Empty"` | Name of default instance property (structs only, when AllowDefaultStructs = true) |
-| `SerializationFrameworks` | `SerializationFrameworks` | `All` | Which serialization frameworks to generate integration code for |
-| `SkipEqualityComparison` | `bool` | `false` | Skip generation of equality members (`Equals`, `GetHashCode`, `==`, `!=`, `IEquatable<T>`) - also sets `ComparisonOperators` and `EqualityComparisonOperators` to `None` |
+| Property                      | Type                      | Default       | Description                                                                                                                                                              |
+|-------------------------------|---------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SkipFactoryMethods`          | `bool`                    | `false`       | Do not generate `Create`, `TryCreate`, `Validate` methods                                                                                                                |
+| `ConstructorAccessModifier`   | `AccessModifier`          | `Private`     | Access modifier for generated constructor                                                                                                                                |
+| `CreateFactoryMethodName`     | `string`                  | `"Create"`    | Name for the Create factory method (whitespace resets to default)                                                                                                        |
+| `TryCreateFactoryMethodName`  | `string`                  | `"TryCreate"` | Name for the TryCreate factory method (whitespace resets to default)                                                                                                     |
+| `SkipToString`                | `bool`                    | `false`       | Skip `ToString()` generation                                                                                                                                             |
+| `AllowDefaultStructs`         | `bool`                    | `false`       | Allow `default(struct)` instances (structs only)                                                                                                                         |
+| `DefaultInstancePropertyName` | `string`                  | `"Empty"`     | Name of default instance property (structs only, when AllowDefaultStructs = true)                                                                                        |
+| `SerializationFrameworks`     | `SerializationFrameworks` | `All`         | Which serialization frameworks to generate integration code for                                                                                                          |
+| `SkipEqualityComparison`      | `bool`                    | `false`       | Skip generation of equality members (`Equals`, `GetHashCode`, `==`, `!=`, `IEquatable<T>`) - also sets `ComparisonOperators` and `EqualityComparisonOperators` to `None` |
 
 ### UnionAttributeBase
 
@@ -33,18 +34,18 @@ Base class for `AdHocUnionAttribute` and generic `UnionAttribute<T1, T2, ...>`.
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `DefaultStringComparison` | `StringComparison` | `OrdinalIgnoreCase` | Default string comparison for union operations |
-| `SkipToString` | `bool` | `false` | Skip `ToString()` generation |
-| `ConstructorAccessModifier` | `UnionConstructorAccessModifier` | `Public` | Access modifier for generated constructor |
-| `ConversionFromValue` | `ConversionOperatorsGeneration` | `Implicit` | Generate implicit conversion operators from member types to union |
-| `ConversionToValue` | `ConversionOperatorsGeneration` | `Explicit` | Generate explicit conversion operators from union to member types |
-| `SwitchMethods` | `SwitchMapMethodsGeneration` | (varies) | Configure Switch method generation |
-| `MapMethods` | `SwitchMapMethodsGeneration` | (varies) | Configure Map method generation |
-| `SwitchMapStateParameterName` | `string?` | `"state"` | Name of state parameter in Switch/Map methods |
-| `UseSingleBackingField` | `bool` | `false` | Use single backing field for all union values (reduces memory, increases type checks) |
-| `SkipEqualityComparison` | `bool` | `false` | Skip generation of equality members (ad-hoc unions only) |
+| Property                      | Type                             | Default             | Description                                                                           |
+|-------------------------------|----------------------------------|---------------------|---------------------------------------------------------------------------------------|
+| `DefaultStringComparison`     | `StringComparison`               | `OrdinalIgnoreCase` | Default string comparison for union operations                                        |
+| `SkipToString`                | `bool`                           | `false`             | Skip `ToString()` generation                                                          |
+| `ConstructorAccessModifier`   | `UnionConstructorAccessModifier` | `Public`            | Access modifier for generated constructor                                             |
+| `ConversionFromValue`         | `ConversionOperatorsGeneration`  | `Implicit`          | Generate implicit conversion operators from member types to union                     |
+| `ConversionToValue`           | `ConversionOperatorsGeneration`  | `Explicit`          | Generate explicit conversion operators from union to member types                     |
+| `SwitchMethods`               | `SwitchMapMethodsGeneration`     | (varies)            | Configure Switch method generation                                                    |
+| `MapMethods`                  | `SwitchMapMethodsGeneration`     | (varies)            | Configure Map method generation                                                       |
+| `SwitchMapStateParameterName` | `string?`                        | `"state"`           | Name of state parameter in Switch/Map methods                                         |
+| `UseSingleBackingField`       | `bool`                           | `false`             | Use single backing field for all union values (reduces memory, increases type checks) |
+| `SkipEqualityComparison`      | `bool`                           | `false`             | Skip generation of equality members (ad-hoc unions only)                              |
 
 ## Smart Enum Attributes
 
@@ -55,18 +56,19 @@ For type-safe enums without underlying values.
 **Targets**: `class`
 
 **Constructor**:
+
 ```csharp
 SmartEnumAttribute()
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `EqualityComparisonOperators` | `OperatorsGeneration` | `Default` | Generation of equality operators (`==`, `!=`) |
-| `SwitchMethods` | `SwitchMapMethodsGeneration` | `Default` | Switch method generation configuration |
-| `MapMethods` | `SwitchMapMethodsGeneration` | `Default` | Map method generation configuration |
-| `SwitchMapStateParameterName` | `string?` | `"state"` | Name of state parameter in Switch/Map methods |
+| Property                      | Type                         | Default   | Description                                   |
+|-------------------------------|------------------------------|-----------|-----------------------------------------------|
+| `EqualityComparisonOperators` | `OperatorsGeneration`        | `Default` | Generation of equality operators (`==`, `!=`) |
+| `SwitchMethods`               | `SwitchMapMethodsGeneration` | `Default` | Switch method generation configuration        |
+| `MapMethods`                  | `SwitchMapMethodsGeneration` | `Default` | Map method generation configuration           |
+| `SwitchMapStateParameterName` | `string?`                    | `"state"` | Name of state parameter in Switch/Map methods |
 
 ### SmartEnumAttribute&lt;TKey&gt;
 
@@ -75,31 +77,32 @@ For type-safe enums with underlying key values (where `TKey : notnull`).
 **Targets**: `class`
 
 **Constructor**:
+
 ```csharp
 SmartEnumAttribute()
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `KeyMemberType` | `Type` | `typeof(TKey)` | Type of the key member (readonly) |
-| `KeyMemberAccessModifier` | `AccessModifier` | `Public` | Access modifier for key member |
-| `KeyMemberKind` | `MemberKind` | `Property` | Whether key member is property or field |
-| `KeyMemberName` | `string` | `"_key"` (private field) or `"Key"` (otherwise) | Name of the key member |
-| `SkipIComparable` | `bool` | `false` | Skip `IComparable<T>` implementation (when key not comparable) |
-| `SkipIParsable` | `bool` | `false` | Skip `IParsable<T>` implementation (independent from SkipISpanParsable) |
-| `SkipISpanParsable` | `bool` | `false` | Skip `ISpanParsable<T>` implementation (independent from SkipIParsable; NET9+) |
-| `ComparisonOperators` | `OperatorsGeneration` | `Default` | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators |
-| `EqualityComparisonOperators` | `OperatorsGeneration` | `Default` | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators |
-| `SkipIFormattable` | `bool` | `false` | Skip `IFormattable` implementation (when key not IFormattable) |
-| `SkipToString` | `bool` | `false` | Skip `ToString()` generation |
-| `SwitchMethods` | `SwitchMapMethodsGeneration` | `Default` | Switch method generation configuration |
-| `MapMethods` | `SwitchMapMethodsGeneration` | `Default` | Map method generation configuration |
-| `ConversionToKeyMemberType` | `ConversionOperatorsGeneration` | `Implicit` | Generate conversion operator from enum to key type |
-| `ConversionFromKeyMemberType` | `ConversionOperatorsGeneration` | `Explicit` | Generate conversion operator from key type to enum |
-| `SerializationFrameworks` | `SerializationFrameworks` | `All` | Which serialization frameworks to generate integration code for |
-| `SwitchMapStateParameterName` | `string?` | `"state"` | Name of state parameter in Switch/Map methods |
+| Property                      | Type                            | Default                                         | Description                                                                          |
+|-------------------------------|---------------------------------|-------------------------------------------------|--------------------------------------------------------------------------------------|
+| `KeyMemberType`               | `Type`                          | `typeof(TKey)`                                  | Type of the key member (readonly)                                                    |
+| `KeyMemberAccessModifier`     | `AccessModifier`                | `Public`                                        | Access modifier for key member                                                       |
+| `KeyMemberKind`               | `MemberKind`                    | `Property`                                      | Whether key member is property or field                                              |
+| `KeyMemberName`               | `string`                        | `"_key"` (private field) or `"Key"` (otherwise) | Name of the key member                                                               |
+| `SkipIComparable`             | `bool`                          | `false`                                         | Skip `IComparable<T>` implementation (when key not comparable)                       |
+| `SkipIParsable`               | `bool`                          | `false`                                         | Skip `IParsable<T>` implementation (independent from SkipISpanParsable)              |
+| `SkipISpanParsable`           | `bool`                          | `false`                                         | Skip `ISpanParsable<T>` implementation (independent from SkipIParsable; NET9+)       |
+| `ComparisonOperators`         | `OperatorsGeneration`           | `Default`                                       | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators |
+| `EqualityComparisonOperators` | `OperatorsGeneration`           | `Default`                                       | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators            |
+| `SkipIFormattable`            | `bool`                          | `false`                                         | Skip `IFormattable` implementation (when key not IFormattable)                       |
+| `SkipToString`                | `bool`                          | `false`                                         | Skip `ToString()` generation                                                         |
+| `SwitchMethods`               | `SwitchMapMethodsGeneration`    | `Default`                                       | Switch method generation configuration                                               |
+| `MapMethods`                  | `SwitchMapMethodsGeneration`    | `Default`                                       | Map method generation configuration                                                  |
+| `ConversionToKeyMemberType`   | `ConversionOperatorsGeneration` | `Implicit`                                      | Generate conversion operator from enum to key type                                   |
+| `ConversionFromKeyMemberType` | `ConversionOperatorsGeneration` | `Explicit`                                      | Generate conversion operator from key type to enum                                   |
+| `SerializationFrameworks`     | `SerializationFrameworks`       | `All`                                           | Which serialization frameworks to generate integration code for                      |
+| `SwitchMapStateParameterName` | `string?`                       | `"state"`                                       | Name of state parameter in Switch/Map methods                                        |
 
 **Note**: `ISpanParsable<T>` inherits from `IParsable<T>`, so setting `SkipISpanParsable = false` will automatically set `SkipIParsable = false` if needed.
 
@@ -114,34 +117,35 @@ For single-value immutable types (where `TKey : notnull`).
 **Inherits**: `ValueObjectAttributeBase`
 
 **Constructor**:
+
 ```csharp
 ValueObjectAttribute()
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `KeyMemberType` | `Type` | `typeof(TKey)` | Type of the key member (readonly) |
-| `KeyMemberAccessModifier` | `AccessModifier` | `Private` | Access modifier for key member |
-| `KeyMemberKind` | `MemberKind` | `Field` | Whether key member is property or field |
-| `KeyMemberName` | `string` | `"_value"` (private field) or `"Value"` (otherwise) | Name of the key member |
-| `SkipKeyMember` | `bool` | `false` | Do not generate key member; implement manually (use KeyMemberName to specify name) |
-| `NullInFactoryMethodsYieldsNull` | `bool` | `false` | `Create`/`TryCreate`/`Validate` return null on null input (class + factories only) |
-| `EmptyStringInFactoryMethodsYieldsNull` | `bool` | `false` | String-key empty/whitespace yields null (class + factories only; implies NullInFactoryMethodsYieldsNull = true) |
-| `SkipIComparable` | `bool` | `false` | Skip `IComparable<T>` implementation (if key not comparable and no custom comparer) |
-| `SkipIParsable` | `bool` | `false` | Skip `IParsable<T>` implementation (if factories skipped or key not string/IParsable; independent from SkipISpanParsable) |
-| `SkipISpanParsable` | `bool` | `false` | Skip `ISpanParsable<T>` implementation (if factories skipped or key not string/ISpanParsable; independent from SkipIParsable; NET9+) |
-| `AdditionOperators` | `OperatorsGeneration` | `None` | Generate addition operators (`+`) - requires key supports these ops |
-| `SubtractionOperators` | `OperatorsGeneration` | `None` | Generate subtraction operators (`-`) - requires key supports these ops |
-| `MultiplyOperators` | `OperatorsGeneration` | `None` | Generate multiplication operators (`*`) - requires key supports these ops |
-| `DivisionOperators` | `OperatorsGeneration` | `None` | Generate division operators (`/`) - requires key supports these ops |
-| `ComparisonOperators` | `OperatorsGeneration` | `Default` | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators |
-| `EqualityComparisonOperators` | `OperatorsGeneration` | `Default` | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators |
-| `SkipIFormattable` | `bool` | `false` | Skip `IFormattable` implementation (if key not IFormattable) |
-| `ConversionToKeyMemberType` | `ConversionOperatorsGeneration` | `Implicit` | Generate implicit conversion operator from value object to key type |
-| `UnsafeConversionToKeyMemberType` | `ConversionOperatorsGeneration` | `Explicit` | Generate explicit conversion operator from value object to key type (may throw if validation fails) |
-| `ConversionFromKeyMemberType` | `ConversionOperatorsGeneration` | `Explicit` | Generate explicit conversion operator from key type to value object |
+| Property                                | Type                            | Default                                             | Description                                                                                                                          |
+|-----------------------------------------|---------------------------------|-----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `KeyMemberType`                         | `Type`                          | `typeof(TKey)`                                      | Type of the key member (readonly)                                                                                                    |
+| `KeyMemberAccessModifier`               | `AccessModifier`                | `Private`                                           | Access modifier for key member                                                                                                       |
+| `KeyMemberKind`                         | `MemberKind`                    | `Field`                                             | Whether key member is property or field                                                                                              |
+| `KeyMemberName`                         | `string`                        | `"_value"` (private field) or `"Value"` (otherwise) | Name of the key member                                                                                                               |
+| `SkipKeyMember`                         | `bool`                          | `false`                                             | Do not generate key member; implement manually (use KeyMemberName to specify name)                                                   |
+| `NullInFactoryMethodsYieldsNull`        | `bool`                          | `false`                                             | `Create`/`TryCreate`/`Validate` return null on null input (class + factories only)                                                   |
+| `EmptyStringInFactoryMethodsYieldsNull` | `bool`                          | `false`                                             | String-key empty/whitespace yields null (class + factories only; implies NullInFactoryMethodsYieldsNull = true)                      |
+| `SkipIComparable`                       | `bool`                          | `false`                                             | Skip `IComparable<T>` implementation (if key not comparable and no custom comparer)                                                  |
+| `SkipIParsable`                         | `bool`                          | `false`                                             | Skip `IParsable<T>` implementation (if factories skipped or key not string/IParsable; independent from SkipISpanParsable)            |
+| `SkipISpanParsable`                     | `bool`                          | `false`                                             | Skip `ISpanParsable<T>` implementation (if factories skipped or key not string/ISpanParsable; independent from SkipIParsable; NET9+) |
+| `AdditionOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate addition operators (`+`) - requires key supports these ops                                                                  |
+| `SubtractionOperators`                  | `OperatorsGeneration`           | `None`                                              | Generate subtraction operators (`-`) - requires key supports these ops                                                               |
+| `MultiplyOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate multiplication operators (`*`) - requires key supports these ops                                                            |
+| `DivisionOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate division operators (`/`) - requires key supports these ops                                                                  |
+| `ComparisonOperators`                   | `OperatorsGeneration`           | `Default`                                           | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators                                                 |
+| `EqualityComparisonOperators`           | `OperatorsGeneration`           | `Default`                                           | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators                                                            |
+| `SkipIFormattable`                      | `bool`                          | `false`                                             | Skip `IFormattable` implementation (if key not IFormattable)                                                                         |
+| `ConversionToKeyMemberType`             | `ConversionOperatorsGeneration` | `Implicit`                                          | Generate implicit conversion operator from value object to key type                                                                  |
+| `UnsafeConversionToKeyMemberType`       | `ConversionOperatorsGeneration` | `Explicit`                                          | Generate explicit conversion operator from value object to key type (may throw if validation fails)                                  |
+| `ConversionFromKeyMemberType`           | `ConversionOperatorsGeneration` | `Explicit`                                          | Generate explicit conversion operator from key type to value object                                                                  |
 
 **Note**: `ISpanParsable<T>` inherits from `IParsable<T>`, so setting `SkipISpanParsable = false` will automatically set `SkipIParsable = false` if needed.
 
@@ -157,8 +161,8 @@ For multi-property immutable types.
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
+| Property                  | Type               | Default             | Description                                                            |
+|---------------------------|--------------------|---------------------|------------------------------------------------------------------------|
 | `DefaultStringComparison` | `StringComparison` | `OrdinalIgnoreCase` | Default string comparison for string members without explicit comparer |
 
 **Inherits all properties from `ValueObjectAttributeBase`** (see above).
@@ -175,10 +179,10 @@ Ad-hoc unions for 2-5 types (generic syntax).
 
 **Properties** (per generic parameter):
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `T1Name`, `T2Name`, ... | `string?` | Type name | Override member name for T1, T2, etc. |
-| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ... | `bool` | `false` | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
+| Property                                                      | Type      | Default   | Description                                                              |
+|---------------------------------------------------------------|-----------|-----------|--------------------------------------------------------------------------|
+| `T1Name`, `T2Name`, ...                                       | `string?` | Type name | Override member name for T1, T2, etc.                                    |
+| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ... | `bool`    | `false`   | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
 
 **Inherits all properties from `UnionAttributeBase`** (see above).
 
@@ -191,18 +195,19 @@ Ad-hoc unions for 2-5 types (non-generic syntax, alternative to `UnionAttribute<
 **Inherits**: `UnionAttributeBase`
 
 **Constructor**:
+
 ```csharp
 AdHocUnionAttribute(Type t1, Type t2, Type? t3 = null, Type? t4 = null, Type? t5 = null)
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `T1`, `T2` | `Type` | (required) | Required member types |
-| `T3`, `T4`, `T5` | `Type?` | `null` | Optional member types |
-| `T1Name`, `T2Name`, ..., `T5Name` | `string?` | Type name | Override member name for T1, T2, etc. |
-| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ..., `T5IsNullableReferenceType` | `bool` | `false` | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
+| Property                                                                                   | Type      | Default    | Description                                                              |
+|--------------------------------------------------------------------------------------------|-----------|------------|--------------------------------------------------------------------------|
+| `T1`, `T2`                                                                                 | `Type`    | (required) | Required member types                                                    |
+| `T3`, `T4`, `T5`                                                                           | `Type?`   | `null`     | Optional member types                                                    |
+| `T1Name`, `T2Name`, ..., `T5Name`                                                          | `string?` | Type name  | Override member name for T1, T2, etc.                                    |
+| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ..., `T5IsNullableReferenceType` | `bool`    | `false`    | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
 
 **Inherits all properties from `UnionAttributeBase`** (see above).
 
@@ -213,18 +218,59 @@ For inheritance-based unions with derived types.
 **Targets**: `class`
 
 **Constructor**:
+
 ```csharp
 UnionAttribute()
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `SwitchMethods` | `SwitchMapMethodsGeneration` | `Default` | Switch method generation configuration |
-| `MapMethods` | `SwitchMapMethodsGeneration` | `Default` | Map method generation configuration |
-| `ConversionFromValue` | `ConversionOperatorsGeneration` | `Implicit` | Generate implicit conversion operators from derived types to union |
-| `SwitchMapStateParameterName` | `string?` | `"state"` | Name of state parameter in Switch/Map methods |
+| Property                      | Type                                 | Default    | Description                                                                                |
+|-------------------------------|--------------------------------------|------------|--------------------------------------------------------------------------------------------|
+| `SwitchMethods`               | `SwitchMapMethodsGeneration`         | `Default`  | Switch method generation configuration                                                     |
+| `MapMethods`                  | `SwitchMapMethodsGeneration`         | `Default`  | Map method generation configuration                                                        |
+| `ConversionFromValue`         | `ConversionOperatorsGeneration`      | `Implicit` | Generate implicit conversion operators from derived types to union                         |
+| `SwitchMapStateParameterName` | `string?`                            | `"state"`  | Name of state parameter in Switch/Map methods                                              |
+| `NestedUnionParameterNames`   | `NestedUnionParameterNameGeneration` | `Default`  | Controls how parameter names are generated for nested Regular Unions in Switch/Map methods |
+
+**NestedUnionParameterNames Values**:
+
+- **`Default` (0)**: Includes intermediate type names in parameter names (e.g., `failureNotFound` for `Failure.NotFound`). Ensures uniqueness but results in longer names. **This is backward compatible and the current behavior.**
+- **`Simple` (1)**: Uses only the final type name (e.g., `notFound` for `Failure.NotFound`). Shorter and more readable, but **can cause compilation errors if multiple nested unions have types with the same name**.
+
+**Example**:
+
+```csharp
+// Default mode (backward compatible)
+[Union]
+public partial class ApiResponse
+{
+   public sealed class Success : ApiResponse;
+
+   public abstract partial class Failure : ApiResponse
+   {
+      private Failure() { }
+      public sealed class NotFound : Failure;
+   }
+}
+// Generated parameter names: success, failureNotFound
+
+// Simple mode (shorter names)
+[Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+public partial class ApiResponse
+{
+   public sealed class Success : ApiResponse;
+
+   public abstract partial class Failure : ApiResponse
+   {
+      private Failure() { }
+      public sealed class NotFound : Failure;
+   }
+}
+// Generated parameter names: success, notFound
+```
+
+**⚠️ Warning**: Using `Simple` mode can cause compilation errors if multiple nested unions contain types with the same name. The C# compiler will report duplicate parameter errors. In such cases, use `Default` mode or rename the conflicting types.
 
 ## Object Factory Attribute
 
@@ -237,19 +283,20 @@ For types with custom factories for parsing/serialization.
 **AllowMultiple**: `true` (can apply multiple times with different types)
 
 **Constructor**:
+
 ```csharp
 ObjectFactoryAttribute()
 ```
 
 **Properties**:
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `Type` | `Type` | `typeof(T)` | Value type the factory accepts (readonly) |
-| `UseForSerialization` | `SerializationFrameworks` | `All` | Which serialization frameworks should use this factory/type |
-| `UseWithEntityFramework` | `bool` | `false` | Enable EF Core integration for this factory |
-| `UseForModelBinding` | `bool` (init-only) | `false` | Enable ASP.NET Core model binding |
-| `HasCorrespondingConstructor` | `bool` (init-only) | `false` | Indicates presence of a single-parameter constructor of type `Type` |
+| Property                      | Type                      | Default     | Description                                                         |
+|-------------------------------|---------------------------|-------------|---------------------------------------------------------------------|
+| `Type`                        | `Type`                    | `typeof(T)` | Value type the factory accepts (readonly)                           |
+| `UseForSerialization`         | `SerializationFrameworks` | `All`       | Which serialization frameworks should use this factory/type         |
+| `UseWithEntityFramework`      | `bool`                    | `false`     | Enable EF Core integration for this factory                         |
+| `UseForModelBinding`          | `bool` (init-only)        | `false`     | Enable ASP.NET Core model binding                                   |
+| `HasCorrespondingConstructor` | `bool` (init-only)        | `false`     | Indicates presence of a single-parameter constructor of type `Type` |
 
 ## Additional Attributes
 
@@ -258,6 +305,7 @@ ObjectFactoryAttribute()
 Specify custom equality comparer for key member.
 
 **Usage**:
+
 ```csharp
 [ValueObject<string>]
 [KeyMemberEqualityComparer<ProductId, string, StringComparer>(typeof(StringComparer), nameof(StringComparer.Ordinal))]
@@ -273,6 +321,7 @@ Specify custom comparer for key member (for ordering).
 Specify custom equality comparer for a specific member in complex value objects.
 
 **Usage**:
+
 ```csharp
 [ComplexValueObject]
 public partial class Person
@@ -287,6 +336,7 @@ public partial class Person
 Exclude member from equality/comparison in complex value objects.
 
 **Usage**:
+
 ```csharp
 [ComplexValueObject]
 public partial class DateRange
@@ -308,6 +358,7 @@ Mark a type as a validation error (implements `IValidationError`).
 Inject delegate parameters into constructor from partial methods.
 
 **Usage**:
+
 ```csharp
 [SmartEnum<int>]
 public partial class Status
@@ -360,6 +411,7 @@ Customize generated Switch/Map overloads for regular unions.
 ### SerializationFrameworks
 
 Flags enum:
+
 - `None`
 - `SystemTextJson`
 - `NewtonsoftJson`
@@ -372,6 +424,13 @@ Flags enum:
 - `Public`
 - `Internal`
 - `Private`
+
+### NestedUnionParameterNameGeneration
+
+Controls how parameter names are generated in Switch/Map methods for nested Regular Union types.
+
+- `Default` (0): Includes intermediate type names in parameter names (e.g., `failureNotFound` for `Failure.NotFound`). Ensures uniqueness, backward compatible.
+- `Simple` (1): Uses only the final type name (e.g., `notFound` for `Failure.NotFound`). Shorter names but can cause conflicts if multiple nested unions have same-named types.
 
 ## ISpanParsable Implementation Details (NET9+)
 
@@ -413,8 +472,8 @@ public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out
 ### Known Limitations
 
 1. **String-keyed value objects**: Missing optimized `Validate(ReadOnlySpan<char>, ...)` overload
-   - Impact: String-keyed value objects allocate string during ISpanParsable parsing
-   - Smart enums have the optimized overload
+    - Impact: String-keyed value objects allocate string during ISpanParsable parsing
+    - Smart enums have the optimized overload
 
 2. **Error messages for generic types**: Show base type name only, not full generic signature
-   - Example: `"Unable to parse MyType"` instead of `"Unable to parse MyType<T>"`
+    - Example: `"Unable to parse MyType"` instead of `"Unable to parse MyType<T>"`

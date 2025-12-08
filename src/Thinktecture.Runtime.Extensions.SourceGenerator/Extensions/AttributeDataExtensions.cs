@@ -235,6 +235,13 @@ public static class AttributeDataExtensions
       return GetStringParameterValue(attributeData, Constants.Attributes.Properties.SWITCH_MAP_STATE_PARAMETER_NAME) ?? "state";
    }
 
+   public static NestedUnionParameterNameGeneration FindNestedUnionParameterNameGeneration(
+      this AttributeData attribute)
+   {
+      return GetEnumParameterValue<NestedUnionParameterNameGeneration>(attribute, Constants.Attributes.Properties.NESTED_UNION_PARAMETER_NAMES)
+             ?? NestedUnionParameterNameGeneration.Default;
+   }
+
    public static UnionConstructorAccessModifier FindUnionConstructorAccessModifier(this AttributeData attributeData)
    {
       return GetEnumParameterValue<UnionConstructorAccessModifier>(attributeData, Constants.Attributes.Properties.CONSTRUCTOR_ACCESS_MODIFIER)

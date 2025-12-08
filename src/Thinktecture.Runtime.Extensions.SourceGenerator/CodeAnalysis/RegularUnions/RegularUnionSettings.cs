@@ -7,6 +7,7 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
    public ConversionOperatorsGeneration ConversionFromValue { get; }
    public string SwitchMapStateParameterName { get; }
    public ImmutableArray<RegularUnionSwitchMapOverload> SwitchMapOverloads { get; }
+   public NestedUnionParameterNameGeneration NestedUnionParameterNames { get; }
 
    public RegularUnionSettings(
       AttributeData attribute,
@@ -17,6 +18,7 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
       ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
       SwitchMapOverloads = switchMapOverloads;
+      NestedUnionParameterNames = attribute.FindNestedUnionParameterNameGeneration();
    }
 
    public override bool Equals(object? obj)
@@ -36,6 +38,7 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
              && MapMethods == other.MapMethods
              && ConversionFromValue == other.ConversionFromValue
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName
+             && NestedUnionParameterNames == other.NestedUnionParameterNames
              && SwitchMapOverloads.SequenceEqual(other.SwitchMapOverloads);
    }
 
@@ -47,6 +50,7 @@ public sealed class RegularUnionSettings : IEquatable<RegularUnionSettings>, IHa
          hashCode = (hashCode * 397) ^ (int)MapMethods;
          hashCode = (hashCode * 397) ^ (int)ConversionFromValue;
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)NestedUnionParameterNames;
          hashCode = (hashCode * 397) ^ SwitchMapOverloads.ComputeHashCode();
 
          return hashCode;

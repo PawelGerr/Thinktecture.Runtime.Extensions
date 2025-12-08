@@ -29,6 +29,30 @@ public sealed class UnionAttribute : Attribute
    public string? SwitchMapStateParameterName { get; set; }
 
    /// <summary>
+   /// Controls how parameter names are generated in Switch/Map methods for nested Regular Union types.
+   /// Default is <see cref="NestedUnionParameterNameGeneration.Default"/>, which includes intermediate type names.
+   /// </summary>
+   /// <example>
+   /// <code>
+   /// [Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]
+   /// public partial class ApiResponse
+   /// {
+   ///    public sealed class Success : ApiResponse;
+   ///
+   ///    public abstract partial class Failure : ApiResponse
+   ///    {
+   ///       private Failure() {}
+   ///
+   ///       public sealed class NotFound : Failure;      // Parameter: notFound (Simple)
+   ///       public sealed class Unauthorized : Failure;  // Parameter: unauthorized (Simple)
+   ///       // With Default: failureNotFound, failureUnauthorized
+   ///    }
+   /// }
+   /// </code>
+   /// </example>
+   public NestedUnionParameterNameGeneration NestedUnionParameterNames { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttribute"/>.
    /// </summary>
    public UnionAttribute()

@@ -114,6 +114,7 @@ public static class Constants
          public const string SWITCH_MAP_STATE_PARAMETER_NAME = "SwitchMapStateParameterName";
          public const string SWITCH_METHODS = "SwitchMethods";
          public const string TRY_CREATE_FACTORY_METHOD_NAME = "TryCreateFactoryMethodName";
+         public const string NESTED_UNION_PARAMETER_NAMES = "NestedUnionParameterNames";
          public const string UNSAFE_CONVERSION_TO_KEY_MEMBER_TYPE = "UnsafeConversionToKeyMemberType";
          public const string USE_FOR_MODEL_BINDING = "UseForModelBinding";
          public const string USE_FOR_SERIALIZATION = "UseForSerialization";

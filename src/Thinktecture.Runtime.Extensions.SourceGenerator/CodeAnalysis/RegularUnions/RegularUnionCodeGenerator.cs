@@ -82,10 +82,9 @@ public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
       TypeMember? baseType,
       StringBuilder sb)
    {
-      // Skip all containing types of the union itself + the union's own type
-      // This ensures parameter names are just the member name (e.g., "success")
-      // unless the member is nested in another union within this union
-      var skipLevels = _state.ContainingTypes.Length + 1;
+      var skipLevels = _state.Settings.NestedUnionParameterNames == NestedUnionParameterNameGeneration.Simple
+                          ? typeMember.ContainingTypes.Length
+                          : _state.ContainingTypes.Length + 1;
 
       var argName = typeMember.ContainingTypes
                               .MakeFullyQualifiedArgumentName(typeMember.Name, skipLevels, sb);

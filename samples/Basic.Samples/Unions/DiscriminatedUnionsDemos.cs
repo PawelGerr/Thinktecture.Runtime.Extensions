@@ -305,13 +305,47 @@ public class DiscriminatedUnionsDemos
 
                          """);
 
+      logger.Information("--- Default Parameter Names ---");
+
       var apiResponse = new ApiResponse.Failure.Unauthorized();
 
+      // With default parameter naming, nested types include their parent union name
+      apiResponse.Switch(
+         success: success => logger.Information("[Switch] Success"),
+         failureNotFound: notFound => logger.Information("[Switch] Not Found"),
+         failureUnauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
+      );
+
+      // Non-exhaustive overload (stopped at Failure level)
       apiResponse.Switch(
          success: success => logger.Information("[Switch] Success"),
          failure: HandleFailure);
 
       void HandleFailure(ApiResponse.Failure failure)
+      {
+         failure.Switch(
+            notFound: notFound => logger.Information("[Switch] Not Found"),
+            unauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
+         );
+      }
+
+      logger.Information("--- Simple Parameter Names ---");
+
+      var apiResponseSimple = new ApiResponseWithSimpleParameterNames.Failure.NotFound();
+
+      // With simple parameter naming, nested types use only their own name
+      apiResponseSimple.Switch(
+         success: success => logger.Information("[Switch] Success"),
+         notFound: notFound => logger.Information("[Switch] Not Found"),        // Simple name
+         unauthorized: unauthorized => logger.Information("[Switch] Unauthorized")  // Simple name
+      );
+
+      // Non-exhaustive overload (stopped at Failure level)
+      apiResponseSimple.Switch(
+         success: success => logger.Information("[Switch] Success"),
+         failure: HandleFailureSimple);
+
+      void HandleFailureSimple(ApiResponseWithSimpleParameterNames.Failure failure)
       {
          failure.Switch(
             notFound: notFound => logger.Information("[Switch] Not Found"),
