@@ -9,8 +9,7 @@ namespace Thinktecture;
 public static class TypeSymbolExtensions
 {
    private static readonly SymbolDisplayFormat _fullyQualifiedDisplayFormat = SymbolDisplayFormat.FullyQualifiedFormat
-                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier)
-                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.ExpandValueTuple);
+                                                                                                 .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
 
    public static string ToFullyQualifiedDisplayString(this ITypeSymbol type)
    {

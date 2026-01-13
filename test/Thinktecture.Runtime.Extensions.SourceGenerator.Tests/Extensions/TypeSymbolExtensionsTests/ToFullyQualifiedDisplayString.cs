@@ -537,7 +537,7 @@ public class MyClass
 
       var result = type.ToFullyQualifiedDisplayString();
 
-      result.Should().Be("global::System.ValueTuple<int, string>");
+      result.Should().Be("(int, string)");
    }
 
    [Fact]
@@ -558,7 +558,7 @@ public class MyClass
 
       var result = type.ToFullyQualifiedDisplayString();
 
-      result.Should().Be("global::System.ValueTuple<int, string>");
+      result.Should().Be("(int Id, string Name)");
    }
 
    [Fact]

@@ -541,7 +541,7 @@ public static class StringBuilderExtensions
          return sb;
       }
 
-      var hasProblematicCharsForXmlDocs = qualifiedTypeName.IndexOfAny(['<', '[', '?']) > -1;
+      var hasProblematicCharsForXmlDocs = qualifiedTypeName.IndexOfAny(['<', '[', '?', '(']) > -1;
 
       if (hasProblematicCharsForXmlDocs)
       {

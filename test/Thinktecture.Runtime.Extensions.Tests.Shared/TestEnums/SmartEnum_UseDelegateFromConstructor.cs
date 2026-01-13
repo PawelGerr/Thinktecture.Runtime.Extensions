@@ -4,9 +4,23 @@ namespace Thinktecture.Runtime.Tests.TestEnums;
 [SmartEnum<int>]
 public partial class SmartEnum_UseDelegateFromConstructor
 {
-   public static readonly SmartEnum_UseDelegateFromConstructor Item1 = new(1, i => $"{i} + 1", i => {}, s => {}, b => {}, Mixed1);
+   public static readonly SmartEnum_UseDelegateFromConstructor Item1 = new(
+      1,
+      i => $"{i} + 1",
+      i => { },
+      s => { },
+      b => { },
+      Mixed1,
+      tuple => default);
 
-   public static readonly SmartEnum_UseDelegateFromConstructor Item2 = new(2, i => $"{i} + 2", i => {}, s => {}, b => {}, Mixed2);
+   public static readonly SmartEnum_UseDelegateFromConstructor Item2 = new(
+      2,
+      i => $"{i} + 2",
+      i => { },
+      s => { },
+      b => { },
+      Mixed2,
+      tuple => default);
 
    [UseDelegateFromConstructor]
    public partial string FooFunc(int bar);
@@ -22,6 +36,9 @@ public partial class SmartEnum_UseDelegateFromConstructor
 
    [UseDelegateFromConstructor]
    public partial string FooMixed(string normal, ref int refValue, in double inValue, out bool outValue, ref readonly decimal readonlyValue);
+
+   [UseDelegateFromConstructor]
+   public partial (string Prop1, int Prop2) Method((bool Prop3, char Prop4) arg);
 
    private static string Mixed1(string normal, ref int value, in double inValue, out bool outValue, ref readonly decimal readonlyValue)
    {

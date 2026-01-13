@@ -3192,6 +3192,38 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 
+   [Fact]
+   public async Task Should_generate_delegates_with_named_tuples()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<int>]
+            [ObjectFactory<string>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+
+               [UseDelegateFromConstructor]
+               public partial (string Prop1, int Prop2) Method((bool Prop3, char Prop4) arg);
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
 #if NET9_0_OR_GREATER
    [Fact]
    public async Task Should_generate_for_string_based_enum_with_reaonlyspan_of_char_based_object_factory()

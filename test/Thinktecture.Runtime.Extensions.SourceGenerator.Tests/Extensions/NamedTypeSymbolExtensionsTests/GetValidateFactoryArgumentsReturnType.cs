@@ -238,7 +238,7 @@ public class MyClass
       var result = type.GetValidateFactoryArgumentsReturnType();
 
       result.Should().NotBeNull();
-      result.Should().Be("global::System.ValueTuple<string, int>");
+      result.Should().Be("(string, int)");
    }
 
    [Fact]
