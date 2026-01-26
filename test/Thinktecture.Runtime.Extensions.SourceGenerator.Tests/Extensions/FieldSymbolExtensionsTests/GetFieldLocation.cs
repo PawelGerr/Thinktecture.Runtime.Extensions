@@ -408,7 +408,7 @@ public enum MyEnum
    Second = 2
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, [typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location]);
       var type = GetTypeSymbol(compilation, "Test.MyEnum");
       var firstMember = type.GetMembers("First").OfType<IFieldSymbol>().Single();
 
@@ -775,7 +775,7 @@ public class MyClass
    private int _attributedField;
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, [typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location]);
       var type = GetTypeSymbol(compilation, "Test.MyClass");
       var field = type.GetMembers("_attributedField").OfType<IFieldSymbol>().Single();
 

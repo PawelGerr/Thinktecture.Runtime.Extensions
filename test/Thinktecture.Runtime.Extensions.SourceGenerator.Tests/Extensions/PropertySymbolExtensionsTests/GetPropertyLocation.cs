@@ -1137,7 +1137,7 @@ public class MyClass
    public int AttributedProperty { get; set; }
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, [typeof(System.ComponentModel.DescriptionAttribute).Assembly.Location]);
       var type = GetTypeSymbol(compilation, "Test.MyClass");
       var property = type.GetMembers("AttributedProperty").OfType<IPropertySymbol>().Single();
 
