@@ -174,7 +174,9 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), $"The member type '{memberType.Name}' could not be resolved"]);
 
             var memberTypeSettings = settings.MemberTypeSettings[i];
-            memberType = memberType.IsReferenceType && memberTypeSettings.IsNullableReferenceType ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated) : memberType;
+            memberType = memberType.IsReferenceType && (memberTypeSettings.IsNullableReferenceType || memberTypeSettings.IsStateless)
+                            ? memberType.WithNullableAnnotation(NullableAnnotation.Annotated)
+                            : memberType;
             var typeState = factory.Create(memberType);
 
             var typeDuplicateCounter = 0;

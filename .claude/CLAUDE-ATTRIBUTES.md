@@ -179,10 +179,11 @@ Ad-hoc unions for 2-5 types (generic syntax).
 
 **Properties** (per generic parameter):
 
-| Property                                                      | Type      | Default   | Description                                                              |
-|---------------------------------------------------------------|-----------|-----------|--------------------------------------------------------------------------|
-| `T1Name`, `T2Name`, ...                                       | `string?` | Type name | Override member name for T1, T2, etc.                                    |
-| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ... | `bool`    | `false`   | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
+| Property                                                      | Type      | Default   | Description                                                                                                                                                                                                                       |
+|---------------------------------------------------------------|-----------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `T1Name`, `T2Name`, ...                                       | `string?` | Type name | Override member name for T1, T2, etc.                                                                                                                                                                                             |
+| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ... | `bool`    | `false`   | Mark T1, T2, etc. as nullable reference type (no effect for value types). Automatically set to `true` for reference types when `TXIsStateless = true`                                                                            |
+| `T1IsStateless`, `T2IsStateless`, ...                       | `bool`    | `false`   | Mark T1, T2, etc. as a stateless type that carries no instance data. Reduces memory by storing only discriminator index. Accessors return `default(T)`. Automatically sets `TXIsNullableReferenceType = true` for reference types. **Recommended: Use struct types for stateless members to avoid null-handling complexity.** |
 
 **Inherits all properties from `UnionAttributeBase`** (see above).
 
@@ -202,12 +203,13 @@ AdHocUnionAttribute(Type t1, Type t2, Type? t3 = null, Type? t4 = null, Type? t5
 
 **Properties**:
 
-| Property                                                                                   | Type      | Default    | Description                                                              |
-|--------------------------------------------------------------------------------------------|-----------|------------|--------------------------------------------------------------------------|
-| `T1`, `T2`                                                                                 | `Type`    | (required) | Required member types                                                    |
-| `T3`, `T4`, `T5`                                                                           | `Type?`   | `null`     | Optional member types                                                    |
-| `T1Name`, `T2Name`, ..., `T5Name`                                                          | `string?` | Type name  | Override member name for T1, T2, etc.                                    |
-| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ..., `T5IsNullableReferenceType` | `bool`    | `false`    | Mark T1, T2, etc. as nullable reference type (no effect for value types) |
+| Property                                                                                   | Type      | Default    | Description                                                                                                                                                                                                                       |
+|--------------------------------------------------------------------------------------------|-----------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `T1`, `T2`                                                                                 | `Type`    | (required) | Required member types                                                                                                                                                                                                             |
+| `T3`, `T4`, `T5`                                                                           | `Type?`   | `null`     | Optional member types                                                                                                                                                                                                             |
+| `T1Name`, `T2Name`, ..., `T5Name`                                                          | `string?` | Type name  | Override member name for T1, T2, etc.                                                                                                                                                                                             |
+| `T1IsNullableReferenceType`, `T2IsNullableReferenceType`, ..., `T5IsNullableReferenceType` | `bool`    | `false`    | Mark T1, T2, etc. as nullable reference type (no effect for value types). Automatically set to `true` for reference types when `TXIsStateless = true`                                                                            |
+| `T1IsStateless`, `T2IsStateless`, ..., `T5IsStateless`                                  | `bool`    | `false`    | Mark T1, T2, etc. as a stateless type that carries no instance data. Reduces memory by storing only discriminator index. Accessors return `default(T)`. Automatically sets `TXIsNullableReferenceType = true` for reference types. **Recommended: Use struct types for stateless members to avoid null-handling complexity.** |
 
 **Inherits all properties from `UnionAttributeBase`** (see above).
 

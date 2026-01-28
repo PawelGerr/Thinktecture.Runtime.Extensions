@@ -49,7 +49,7 @@ public class EqualityOperator
    {
       Compare(TestUnion_class_with_same_types.CreateText,
               n => new TestUnion_class_with_same_types(n),
-              TestUnion_class_with_same_types_case_sensitive.CreateText);
+              TestAdHocUnions.NonGeneric.TestUnion_class_with_same_types_case_sensitive.CreateText);
    }
 
    private static void Compare<T, T2>(
@@ -68,5 +68,81 @@ public class EqualityOperator
       (caseSensitiveFactory("text") == caseSensitiveFactory("TEXT")).Should().BeFalse();
       (obj == stringFactory("other text")).Should().BeFalse();
       (stringFactory("42") == intFactory(42)).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_use_equality_operator_with_duplicate_value_struct_stateless()
+   {
+      var union1a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+      var union1b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+
+      // Same marker index should be equal
+      (union1a == union1b).Should().BeTrue();
+
+      var union2a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+      var union2b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+
+      // Same marker index should be equal
+      (union2a == union2b).Should().BeTrue();
+
+      // Different marker indices should NOT be equal
+      (union1a == union2a).Should().BeFalse();
+      (union1a != union2a).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_use_equality_operator_with_duplicate_value_struct_stateless_T2_and_T3()
+   {
+      var union1a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
+      var union1b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
+
+      (union1a == union1b).Should().BeTrue();
+
+      var union2a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
+      var union2b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
+
+      (union2a == union2b).Should().BeTrue();
+
+      // Different marker indices should NOT be equal
+      (union1a == union2a).Should().BeFalse();
+      (union1a != union2a).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_use_equality_operator_with_duplicate_reference_type_stateless()
+   {
+      var union1a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+      var union1b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+
+      // Same marker index should be equal
+      (union1a == union1b).Should().BeTrue();
+
+      var union2a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+      var union2b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+
+      // Same marker index should be equal
+      (union2a == union2b).Should().BeTrue();
+
+      // Different marker indices should NOT be equal
+      (union1a == union2a).Should().BeFalse();
+      (union1a != union2a).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_use_equality_operator_with_duplicate_markers_in_struct_union()
+   {
+      var union1a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+      var union1b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+
+      (union1a == union1b).Should().BeTrue();
+
+      var union2a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+      var union2b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+
+      (union2a == union2b).Should().BeTrue();
+
+      // Different marker indices should NOT be equal
+      (union1a == union2a).Should().BeFalse();
+      (union1a != union2a).Should().BeTrue();
    }
 }

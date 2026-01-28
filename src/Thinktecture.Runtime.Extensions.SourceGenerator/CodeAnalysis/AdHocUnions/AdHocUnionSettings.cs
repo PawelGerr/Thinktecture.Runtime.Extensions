@@ -13,7 +13,6 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public string SwitchMapStateParameterName { get; }
    public bool UseSingleBackingField { get; }
    public bool SkipEqualityComparison { get; }
-   
 
    public AdHocUnionSettings(
       AttributeData attribute,
@@ -35,6 +34,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       for (var i = 0; i < numberOfMemberTypes; i++)
       {
          memberTypeSettings.Add(new AdHocUnionMemberTypeSetting(attribute.FindTxIsNullableReferenceType(i + 1),
+                                                                attribute.FindTxIsStateless(i + 1),
                                                                 attribute.FindTxName(i + 1)));
       }
 

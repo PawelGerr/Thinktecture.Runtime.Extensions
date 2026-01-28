@@ -81,4 +81,82 @@ public class ImplicitCasts
       TestUnion_class_with_same_types nullableIntUnion = (int?)42;
       nullableIntUnion.Value.Should().Be(42);
    }
+
+   [Fact]
+   public void Should_support_implicit_conversion_from_stateless_type()
+   {
+      TestUnion_class_stateless_nullvaluestruct_string union = new NullValueStruct();
+      union.IsNullValueStruct.Should().BeTrue();
+      union.AsNullValueStruct.Should().Be(default(NullValueStruct));
+   }
+
+   [Fact]
+   public void Should_support_implicit_conversion_from_regular_type_with_marker()
+   {
+      TestUnion_class_stateless_nullvaluestruct_string union = "text";
+      union.IsString.Should().BeTrue();
+      union.AsString.Should().Be("text");
+   }
+
+   [Fact]
+   public void Should_support_conversion_with_stateless_type_T2()
+   {
+      TestUnion_class_string_stateless_emptystatestruct union1 = "text";
+      union1.IsString.Should().BeTrue();
+
+      TestUnion_class_string_stateless_emptystatestruct union2 = new EmptyStateStruct();
+      union2.IsEmptyStateStruct.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_support_conversion_with_multiple_stateless_types()
+   {
+      TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string union1 = new NullValueStruct();
+      union1.IsNullValueStruct.Should().BeTrue();
+
+      TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string union2 = new EmptyStateStruct();
+      union2.IsEmptyStateStruct.Should().BeTrue();
+
+      TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string union3 = "text";
+      union3.IsString.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_support_conversion_in_struct_union()
+   {
+      TestUnion_struct_stateless_nullvaluestruct_int union1 = new NullValueStruct();
+      union1.IsNullValueStruct.Should().BeTrue();
+
+      TestUnion_struct_stateless_nullvaluestruct_int union2 = 42;
+      union2.IsInt32.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_support_conversion_from_nullable_struct_marker()
+   {
+      TestUnion_class_string_stateless_emptystatestruct_nullable union1 = (EmptyStateStruct?)null;
+      union1.IsNullableOfEmptyStateStruct.Should().BeTrue();
+
+      TestUnion_class_string_stateless_emptystatestruct_nullable union2 = (EmptyStateStruct?)new EmptyStateStruct();
+      union2.IsNullableOfEmptyStateStruct.Should().BeTrue();
+
+      TestUnion_class_string_stateless_emptystatestruct_nullable union3 = "text";
+      union3.IsString.Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_support_conversion_from_reference_type_marker()
+   {
+      TestUnion_class_stateless_nullvalueclass_string union = new NullValueClass();
+      union.IsNullValueClass.Should().BeTrue();
+      union.AsNullValueClass.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_support_conversion_from_regular_type_with_reference_marker()
+   {
+      TestUnion_class_stateless_nullvalueclass_string union = "text";
+      union.IsString.Should().BeTrue();
+      union.AsString.Should().Be("text");
+   }
 }

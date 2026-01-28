@@ -49,7 +49,7 @@ public class InequalityOperator
    {
       Compare(TestUnion_class_with_same_types.CreateText,
               n => new TestUnion_class_with_same_types(n),
-              TestUnion_class_with_same_types_case_sensitive.CreateText);
+              TestAdHocUnions.NonGeneric.TestUnion_class_with_same_types_case_sensitive.CreateText);
    }
 
    private static void Compare<T, T2>(

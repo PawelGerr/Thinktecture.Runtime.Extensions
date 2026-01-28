@@ -187,13 +187,27 @@ public static class AttributeDataExtensions
    {
       var name = index switch
       {
-         0 => "T0IsNullableReferenceType",
          1 => "T1IsNullableReferenceType",
          2 => "T2IsNullableReferenceType",
          3 => "T3IsNullableReferenceType",
          4 => "T4IsNullableReferenceType",
          5 => "T5IsNullableReferenceType",
-         _ => $"T{index}IsNullableReferenceType",
+         _ => throw new ArgumentOutOfRangeException(nameof(index)),
+      };
+
+      return GetBooleanParameterValue(attributeData, name) ?? false;
+   }
+
+   public static bool FindTxIsStateless(this AttributeData attributeData, int index)
+   {
+      var name = index switch
+      {
+         1 => "T1IsStateless",
+         2 => "T2IsStateless",
+         3 => "T3IsStateless",
+         4 => "T4IsStateless",
+         5 => "T5IsStateless",
+         _ => throw new ArgumentOutOfRangeException(nameof(index)),
       };
 
       return GetBooleanParameterValue(attributeData, name) ?? false;
@@ -218,13 +232,12 @@ public static class AttributeDataExtensions
    {
       var name = index switch
       {
-         0 => "T0Name",
          1 => "T1Name",
          2 => "T2Name",
          3 => "T3Name",
          4 => "T4Name",
          5 => "T5Name",
-         _ => $"T{index}Name",
+         _ => throw new ArgumentOutOfRangeException(nameof(index)),
       };
 
       return GetStringParameterValue(attributeData, name);

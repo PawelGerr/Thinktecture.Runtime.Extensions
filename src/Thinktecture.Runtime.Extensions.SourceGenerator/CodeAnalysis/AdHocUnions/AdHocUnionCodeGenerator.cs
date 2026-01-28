@@ -18,7 +18,7 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
       _state = state;
       _sb = sb;
       _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
-                                    || _state.MemberTypes.Where(t => t.IsReferenceType && t.TypeDuplicateCounter <= 1).Select(t => t.TypeFullyQualified).Count() >= 2;
+                                    || _state.MemberTypes.Where(t => t.IsReferenceType && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -126,12 +126,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
       GenerateConversionsFromValue();
       GenerateConversionsToValue();
-      
+
       if (!_state.Settings.SkipEqualityComparison)
       {
-          GenerateEqualityOperators();
-          GenerateEquals();
-          GenerateGetHashCode();
+         GenerateEqualityOperators();
+         GenerateEquals();
+         GenerateGetHashCode();
       }
 
       if (!_state.Settings.SkipToString)
@@ -252,7 +252,16 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+            ").Append(i + 1).Append(" => ");
+
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         }
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
@@ -294,7 +303,14 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType);
+         }
 
          if (memberType.IsReferenceType)
             _sb.Append("?");
@@ -376,22 +392,31 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
             ").Append(i + 1).Append(" => ");
 
-         if (memberType.IsReferenceType)
+         if (memberType.Setting.IsStateless)
          {
-            _sb.Append("this.").AppendBackingFieldName(useSharedObjectBackingField, memberType).Append(" is null ? other.").AppendBackingFieldName(_state, _useSharedObjectForRefTypes, memberType).Append(" is null : ");
+            _sb.Append("true");
+         }
+         else
+         {
+            if (memberType.IsReferenceType)
+            {
+               _sb.Append("this.").AppendBackingFieldName(useSharedObjectBackingField, memberType).Append(" is null ? other.").AppendBackingFieldName(_state, _useSharedObjectForRefTypes, memberType).Append(" is null : ");
+            }
+
+            if (useSharedObjectBackingField)
+            {
+               _sb.Append("this._valueIndex == other._valueIndex && ");
+            }
+
+            _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
+
+            if (memberType.SpecialType == SpecialType.System_String)
+               _sb.Append(", global::System.StringComparison.").Append(_state.Settings.DefaultStringComparison);
+
+            _sb.Append(")");
          }
 
-         if (useSharedObjectBackingField)
-         {
-            _sb.Append("this._valueIndex == other._valueIndex && ");
-         }
-
-         _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
-
-         if (memberType.SpecialType == SpecialType.System_String)
-            _sb.Append(", global::System.StringComparison.").Append(_state.Settings.DefaultStringComparison);
-
-         _sb.Append("),");
+         _sb.Append(",");
       }
 
       _sb.Append(@"
@@ -538,7 +563,16 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null).Append(@");
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
+         }
+
+         _sb.Append(@");
                return;");
       }
 
@@ -701,7 +735,16 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
 
-         _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null).Append(");");
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null);
+         }
+
+         _sb.Append(");");
       }
 
       _sb.Append(@"
@@ -884,8 +927,15 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@")
-      {
-         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(@";
+      {");
+
+         if (!memberType.Setting.IsStateless)
+         {
+            _sb.Append(@"
+         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(";");
+         }
+
+         _sb.Append(@"
          this._valueIndex = ");
 
          if (hasDuplicates)
@@ -935,6 +985,9 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
 
+         if (memberType.Setting.IsStateless)
+            continue;
+
          if (memberType.TypeDuplicateCounter > 1)
             continue;
 
@@ -978,8 +1031,18 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
-            .Append(" ? ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null)
-            .Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
+            .Append(" ? ");
+
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
+         }
+
+         _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
       }
    }
 
@@ -1022,7 +1085,18 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, withCast: false, nullAnnotated: false, suppressed: false).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null).Append(",");
+         ").Append(i + 1).Append(" => ");
+
+         if (memberType.Setting.IsStateless)
+         {
+            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else
+         {
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, withCast: false, nullAnnotated: false, suppressed: false).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null);
+         }
+
+         _sb.Append(",");
       }
 
       _sb.Append(@"

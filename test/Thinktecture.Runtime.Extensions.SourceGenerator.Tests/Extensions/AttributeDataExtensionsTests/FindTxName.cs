@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Thinktecture.Runtime.Tests.AttributeDataExtensionsTests;
@@ -169,7 +170,7 @@ public class FindTxName : CompilationTestBase
    }
 
    [Fact]
-   public void Should_return_null_for_invalid_index()
+   public void Should_throw_for_invalid_index()
    {
       // Arrange
       var source = """
@@ -187,11 +188,10 @@ public class FindTxName : CompilationTestBase
       var typeSymbol = GetTypeSymbol(compilation, "Test.TestUnion");
       var attributeData = typeSymbol.GetAttributes().Single();
 
-      // Act
-      var result = attributeData.FindTxName(10);
-
-      // Assert
-      result.Should().BeNull();
+      // Act + Assert
+      attributeData.Invoking(ad => ad.FindTxName(10))
+                   .Should().Throw<ArgumentOutOfRangeException>()
+                   .WithMessage("Specified argument was out of the range of valid values. (Parameter 'index')");
    }
 
    [Fact]

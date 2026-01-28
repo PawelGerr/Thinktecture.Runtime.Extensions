@@ -162,6 +162,176 @@ public class Map
 
          calledActionOn.Should().Be(expected);
       }
+
+      [Fact]
+      public void Should_map_correctly_with_stateless_type_T1()
+      {
+         var union1 = new TestUnion_class_stateless_nullvaluestruct_string(new NullValueStruct());
+         var result1 = union1.Map(
+            nullValueStruct: "marker",
+            @string: "text");
+         result1.Should().Be("marker");
+
+         var union2 = new TestUnion_class_stateless_nullvaluestruct_string("actual_text");
+         var result2 = union2.Map(
+            nullValueStruct: "marker",
+            @string: "text");
+         result2.Should().Be("text");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_stateless_type_T2()
+      {
+         var union1 = new TestUnion_class_string_stateless_emptystatestruct("actual_text");
+         var result1 = union1.Map(
+            @string: "text",
+            emptyStateStruct: "marker");
+         result1.Should().Be("text");
+
+         var union2 = new TestUnion_class_string_stateless_emptystatestruct(new EmptyStateStruct());
+         var result2 = union2.Map(
+            @string: "text",
+            emptyStateStruct: "marker");
+         result2.Should().Be("marker");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_multiple_stateless_types()
+      {
+         var union1 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string(new NullValueStruct());
+         var result1 = union1.Map(
+            nullValueStruct: "null",
+            emptyStateStruct: "empty",
+            @string: "text");
+         result1.Should().Be("null");
+
+         var union2 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string(new EmptyStateStruct());
+         var result2 = union2.Map(
+            nullValueStruct: "null",
+            emptyStateStruct: "empty",
+            @string: "text");
+         result2.Should().Be("empty");
+
+         var union3 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string("actual_text");
+         var result3 = union3.Map(
+            nullValueStruct: "null",
+            emptyStateStruct: "empty",
+            @string: "text");
+         result3.Should().Be("text");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_nullable_struct_marker()
+      {
+         var union1 = new TestUnion_class_string_stateless_emptystatestruct_nullable("actual");
+         var result1 = union1.Map(
+            @string: "text",
+            nullableOfEmptyStateStruct: "marker");
+         result1.Should().Be("text");
+
+         var union2 = new TestUnion_class_string_stateless_emptystatestruct_nullable((EmptyStateStruct?)null);
+         var result2 = union2.Map(
+            @string: "text",
+            nullableOfEmptyStateStruct: "marker");
+         result2.Should().Be("marker");
+
+         var union3 = new TestUnion_class_string_stateless_emptystatestruct_nullable((EmptyStateStruct?)new EmptyStateStruct());
+         var result3 = union3.Map(
+            @string: "text",
+            nullableOfEmptyStateStruct: "marker");
+         result3.Should().Be("marker");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_reference_type_marker()
+      {
+         var union1 = new TestUnion_class_stateless_nullvalueclass_string(new NullValueClass());
+         var result1 = union1.Map(
+            nullValueClass: "marker",
+            @string: "text");
+         result1.Should().Be("marker");
+
+         var union2 = new TestUnion_class_stateless_nullvalueclass_string("actual");
+         var result2 = union2.Map(
+            nullValueClass: "marker",
+            @string: "text");
+         result2.Should().Be("text");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_multiple_reference_type_stateless()
+      {
+         var union1 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string(new NullValueClass());
+         var result1 = union1.Map(
+            nullValueClass: "null",
+            emptyStateClass: "empty",
+            @string: "text");
+         result1.Should().Be("null");
+
+         var union2 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string(new EmptyStateClass());
+         var result2 = union2.Map(
+            nullValueClass: "null",
+            emptyStateClass: "empty",
+            @string: "text");
+         result2.Should().Be("empty");
+
+         var union3 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string("text");
+         var result3 = union3.Map(
+            nullValueClass: "null",
+            emptyStateClass: "empty",
+            @string: "text");
+         result3.Should().Be("text");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_duplicate_value_struct_stateless()
+      {
+         var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+         var result1 = union1.Map(
+            nullValue1: "marker1",
+            nullValue2: "marker2",
+            @string: "text");
+         result1.Should().Be("marker1");
+
+         var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+         var result2 = union2.Map(
+            nullValue1: "marker1",
+            nullValue2: "marker2",
+            @string: "text");
+         result2.Should().Be("marker2");
+
+         var union3 = new TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string("actual");
+         var result3 = union3.Map(
+            nullValue1: "marker1",
+            nullValue2: "marker2",
+            @string: "text");
+         result3.Should().Be("text");
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_duplicate_reference_type_stateless()
+      {
+         var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+         var result1 = union1.Map<object>(
+            nullValueClass1: "marker1",
+            nullValueClass2: "marker2",
+            int32: 100);
+         result1.Should().Be("marker1");
+
+         var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+         var result2 = union2.Map<object>(
+            nullValueClass1: "marker1",
+            nullValueClass2: "marker2",
+            int32: 100);
+         result2.Should().Be("marker2");
+
+         var union3 = new TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int(42);
+         var result3 = union3.Map<object>(
+            nullValueClass1: "marker1",
+            nullValueClass2: "marker2",
+            int32: 100);
+         result3.Should().Be(100);
+      }
    }
 
    public class HavingStruct
@@ -182,6 +352,47 @@ public class Map
                                         int32: 42);
 
          calledActionOn.Should().Be(expected);
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_stateless_type_in_struct_union()
+      {
+         var union1 = new TestUnion_struct_stateless_nullvaluestruct_int(new NullValueStruct());
+         var result1 = union1.Map(
+            nullValueStruct: 0,
+            int32: 100);
+         result1.Should().Be(0);
+
+         var union2 = new TestUnion_struct_stateless_nullvaluestruct_int(42);
+         var result2 = union2.Map(
+            nullValueStruct: 0,
+            int32: 100);
+         result2.Should().Be(100);
+      }
+
+      [Fact]
+      public void Should_map_correctly_with_duplicate_markers_in_struct_union()
+      {
+         var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+         var result1 = union1.Map(
+            nullValue1: 0,
+            nullValue2: -1,
+            int32: 100);
+         result1.Should().Be(0);
+
+         var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+         var result2 = union2.Map(
+            nullValue1: 0,
+            nullValue2: -1,
+            int32: 100);
+         result2.Should().Be(-1);
+
+         var union3 = new TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int(42);
+         var result3 = union3.Map(
+            nullValue1: 0,
+            nullValue2: -1,
+            int32: 100);
+         result3.Should().Be(100);
       }
    }
 }

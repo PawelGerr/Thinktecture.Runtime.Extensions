@@ -503,6 +503,176 @@ public class Switch
 
             calledActionOn.Should().Be(index == 4 ? new Guid((string)expected) : expected);
          }
+
+         [Fact]
+         public void Should_call_correct_arg_with_stateless_type_T1()
+         {
+            var union1 = new TestUnion_class_stateless_nullvaluestruct_string(new NullValueStruct());
+            var result1 = union1.Switch(
+               nullValueStruct: _ => "marker",
+               @string: v => v);
+            result1.Should().Be("marker");
+
+            var union2 = new TestUnion_class_stateless_nullvaluestruct_string("text");
+            var result2 = union2.Switch(
+               nullValueStruct: _ => "marker",
+               @string: v => v);
+            result2.Should().Be("text");
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_stateless_type_T2()
+         {
+            var union1 = new TestUnion_class_string_stateless_emptystatestruct("text");
+            var result1 = union1.Switch(
+               @string: v => v,
+               emptyStateStruct: _ => "marker");
+            result1.Should().Be("text");
+
+            var union2 = new TestUnion_class_string_stateless_emptystatestruct(new EmptyStateStruct());
+            var result2 = union2.Switch(
+               @string: v => v,
+               emptyStateStruct: _ => "marker");
+            result2.Should().Be("marker");
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_multiple_stateless_types()
+         {
+            var union1 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string(new NullValueStruct());
+            var result1 = union1.Switch(
+               nullValueStruct: _ => "null",
+               emptyStateStruct: _ => "empty",
+               @string: v => v);
+            result1.Should().Be("null");
+
+            var union2 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string(new EmptyStateStruct());
+            var result2 = union2.Switch(
+               nullValueStruct: _ => "null",
+               emptyStateStruct: _ => "empty",
+               @string: v => v);
+            result2.Should().Be("empty");
+
+            var union3 = new TestUnion_class_stateless_nullvaluestruct_stateless_emptystatestruct_string("text");
+            var result3 = union3.Switch(
+               nullValueStruct: _ => "null",
+               emptyStateStruct: _ => "empty",
+               @string: v => v);
+            result3.Should().Be("text");
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_nullable_struct_stateless()
+         {
+            var union1 = new TestUnion_class_string_stateless_emptystatestruct_nullable("text");
+            var result1 = union1.Switch(
+               @string: v => v,
+               nullableOfEmptyStateStruct: _ => "marker");
+            result1.Should().Be("text");
+
+            var union2 = new TestUnion_class_string_stateless_emptystatestruct_nullable((EmptyStateStruct?)null);
+            var result2 = union2.Switch(
+               @string: v => v,
+               nullableOfEmptyStateStruct: _ => "marker");
+            result2.Should().Be("marker");
+
+            var union3 = new TestUnion_class_string_stateless_emptystatestruct_nullable((EmptyStateStruct?)new EmptyStateStruct());
+            var result3 = union3.Switch(
+               @string: v => v,
+               nullableOfEmptyStateStruct: _ => "marker");
+            result3.Should().Be("marker");
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_reference_type_stateless()
+         {
+            var union1 = new TestUnion_class_stateless_nullvalueclass_string(new NullValueClass());
+            var result1 = union1.Switch(
+               nullValueClass: _ => "marker",
+               @string: v => v);
+            result1.Should().Be("marker");
+
+            var union2 = new TestUnion_class_stateless_nullvalueclass_string("text");
+            var result2 = union2.Switch(
+               nullValueClass: _ => "marker",
+               @string: v => v);
+            result2.Should().Be("text");
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_multiple_reference_type_stateless()
+         {
+            var union1 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string(new NullValueClass());
+            var result1 = union1.Switch(
+               nullValueClass: _ => "null",
+               emptyStateClass: _ => "empty",
+               @string: v => v);
+            result1.Should().Be("null");
+
+            var union2 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string(new EmptyStateClass());
+            var result2 = union2.Switch(
+               nullValueClass: _ => "null",
+               emptyStateClass: _ => "empty",
+               @string: v => v);
+            result2.Should().Be("empty");
+
+            var union3 = new TestUnion_class_stateless_nullvalueclass_stateless_emptystateclass_string("text");
+            var result3 = union3.Switch(
+               nullValueClass: _ => "null",
+               emptyStateClass: _ => "empty",
+               @string: v => v);
+            result3.Should().Be("text");
+         }
+
+         [Fact]
+         public void Should_switch_correctly_with_duplicate_value_struct_stateless()
+         {
+            var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+            var result1 = union1.Switch(
+               nullValue1: _ => "marker1",
+               nullValue2: _ => "marker2",
+               @string: _ => "text");
+            result1.Should().Be("marker1");
+
+            var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+            var result2 = union2.Switch(
+               nullValue1: _ => "marker1",
+               nullValue2: _ => "marker2",
+               @string: _ => "text");
+            result2.Should().Be("marker2");
+
+            var union3 = new TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string("actual");
+            var result3 = union3.Switch(
+               nullValue1: _ => "marker1",
+               nullValue2: _ => "marker2",
+               @string: _ => "text");
+            result3.Should().Be("text");
+         }
+
+         [Fact]
+         public void Should_switch_correctly_with_duplicate_reference_type_stateless()
+         {
+            var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+            var result1 = union1.Switch(
+               nullValueClass1: _ => "marker1",
+               nullValueClass2: _ => "marker2",
+               int32: v => v.ToString());
+            result1.Should().Be("marker1");
+
+            var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+            var result2 = union2.Switch(
+               nullValueClass1: _ => "marker1",
+               nullValueClass2: _ => "marker2",
+               int32: v => v.ToString());
+            result2.Should().Be("marker2");
+
+            var union3 = new TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int(42);
+            var result3 = union3.Switch(
+               nullValueClass1: _ => "marker1",
+               nullValueClass2: _ => "marker2",
+               int32: v => v.ToString());
+            result3.Should().Be("42");
+         }
       }
 
       public class WithFuncAndContext
@@ -776,6 +946,47 @@ public class Switch
                                               int32: v => v);
 
             calledActionOn.Should().Be(expected);
+         }
+
+         [Fact]
+         public void Should_call_correct_arg_with_stateless_type_in_struct_union()
+         {
+            var union1 = new TestUnion_struct_stateless_nullvaluestruct_int(new NullValueStruct());
+            var result1 = union1.Switch(
+               nullValueStruct: _ => 0,
+               int32: v => v);
+            result1.Should().Be(0);
+
+            var union2 = new TestUnion_struct_stateless_nullvaluestruct_int(42);
+            var result2 = union2.Switch(
+               nullValueStruct: _ => 0,
+               int32: v => v);
+            result2.Should().Be(42);
+         }
+
+         [Fact]
+         public void Should_switch_correctly_with_duplicate_markers_in_struct_union()
+         {
+            var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+            var result1 = union1.Switch(
+               nullValue1: _ => 0,
+               nullValue2: _ => -1,
+               int32: v => v);
+            result1.Should().Be(0);
+
+            var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+            var result2 = union2.Switch(
+               nullValue1: _ => 0,
+               nullValue2: _ => -1,
+               int32: v => v);
+            result2.Should().Be(-1);
+
+            var union3 = new TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int(42);
+            var result3 = union3.Switch(
+               nullValue1: _ => 0,
+               nullValue2: _ => -1,
+               int32: v => v);
+            result3.Should().Be(42);
          }
       }
 

@@ -15,6 +15,7 @@ public class DiscriminatedUnionsDemos
       DemoForJurisdiction(logger);
       DemoForPartiallyKnownDate(logger);
       DemoForNestedUnionsAndSwitchMapOverloads(logger);
+      DemoForStatelessTypes(logger);
    }
 
    private static void DemoForAdHocUnions(ILogger logger)
@@ -336,8 +337,8 @@ public class DiscriminatedUnionsDemos
       // With simple parameter naming, nested types use only their own name
       apiResponseSimple.Switch(
          success: success => logger.Information("[Switch] Success"),
-         notFound: notFound => logger.Information("[Switch] Not Found"),        // Simple name
-         unauthorized: unauthorized => logger.Information("[Switch] Unauthorized")  // Simple name
+         notFound: notFound => logger.Information("[Switch] Not Found"),           // Simple name
+         unauthorized: unauthorized => logger.Information("[Switch] Unauthorized") // Simple name
       );
 
       // Non-exhaustive overload (stopped at Failure level)
@@ -352,5 +353,90 @@ public class DiscriminatedUnionsDemos
             unauthorized: unauthorized => logger.Information("[Switch] Unauthorized")
          );
       }
+   }
+
+   private static void DemoForStatelessTypes(ILogger logger)
+   {
+      logger.Information("""
+
+
+                         ==== Demo for Stateless Types (Memory Optimization) ====
+
+                         """);
+
+      // Creating different API responses
+      ApiResponseWithStateless successResponse = new SuccessResponse { Data = "Hello, World!" };
+      ApiResponseWithStateless notFoundResponse = new NotFound();
+      ApiResponseWithStateless unauthorizedResponse = new Unauthorized();
+
+      logger.Information("--- Type Checking ---");
+      logger.Information("Success response - IsSuccess: {IsSuccess}, IsNotFound: {IsNotFound}, IsUnauthorized: {IsUnauthorized}",
+                         successResponse.IsSuccess, successResponse.IsNotFound, successResponse.IsUnauthorized);
+      logger.Information("NotFound response - IsSuccess: {IsSuccess}, IsNotFound: {IsNotFound}, IsUnauthorized: {IsUnauthorized}",
+                         notFoundResponse.IsSuccess, notFoundResponse.IsNotFound, notFoundResponse.IsUnauthorized);
+      logger.Information("Unauthorized response - IsSuccess: {IsSuccess}, IsNotFound: {IsNotFound}, IsUnauthorized: {IsUnauthorized}",
+                         unauthorizedResponse.IsSuccess, unauthorizedResponse.IsNotFound, unauthorizedResponse.IsUnauthorized);
+
+      logger.Information("--- Accessing Values ---");
+      // For stateless types, accessors return default(T)
+      var notFoundValue = notFoundResponse.AsNotFound;
+      logger.Information("NotFound accessor returns: {Value} (default struct)", notFoundValue);
+
+      var unauthorizedValue = unauthorizedResponse.AsUnauthorized;
+      logger.Information("Unauthorized accessor returns: {Value} (default struct)", unauthorizedValue);
+
+      // Regular member still returns the actual instance
+      var successValue = successResponse.AsSuccess;
+      logger.Information("Success accessor returns: {Data}", successValue.Data);
+
+      logger.Information("--- Switch Pattern Matching ---");
+      successResponse.Switch(
+         success: s => logger.Information("[Switch] Success with data: {Data}", s.Data),
+         notFound: _ => logger.Information("[Switch] Not Found"),
+         unauthorized: _ => logger.Information("[Switch] Unauthorized")
+      );
+
+      notFoundResponse.Switch(
+         success: s => logger.Information("[Switch] Success with data: {Data}", s.Data),
+         notFound: _ => logger.Information("[Switch] Not Found"),
+         unauthorized: _ => logger.Information("[Switch] Unauthorized")
+      );
+
+      unauthorizedResponse.Switch(
+         success: s => logger.Information("[Switch] Success with data: {Data}", s.Data),
+         notFound: _ => logger.Information("[Switch] Not Found"),
+         unauthorized: _ => logger.Information("[Switch] Unauthorized")
+      );
+
+      logger.Information("--- Map Pattern Matching ---");
+      var statusCode = successResponse.Map(
+         success: 200,
+         notFound: 404,
+         unauthorized: 401
+      );
+      logger.Information("Success response maps to status code: {StatusCode}", statusCode);
+
+      statusCode = notFoundResponse.Map(
+         success: 200,
+         notFound: 404,
+         unauthorized: 401
+      );
+      logger.Information("NotFound response maps to status code: {StatusCode}", statusCode);
+
+      statusCode = unauthorizedResponse.Map(
+         success: 200,
+         notFound: 404,
+         unauthorized: 401
+      );
+      logger.Information("Unauthorized response maps to status code: {StatusCode}", statusCode);
+
+      logger.Information("--- Equality Comparison ---");
+      var anotherNotFound = new NotFound();
+      logger.Information("notFoundResponse == anotherNotFound: {IsEqual}", notFoundResponse == anotherNotFound);
+
+      var anotherUnauthorized = new Unauthorized();
+      logger.Information("unauthorizedResponse == anotherUnauthorized: {IsEqual}", unauthorizedResponse == anotherUnauthorized);
+
+      logger.Information("notFoundResponse == unauthorizedResponse: {IsEqual}", notFoundResponse == unauthorizedResponse);
    }
 }

@@ -923,4 +923,286 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_union_with_T1_as_stateless_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, string>(T1IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_T2_as_stateless_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct EmptyState { }
+
+         	[Union<string, EmptyState>(T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_multiple_stateless_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+         	public readonly struct EmptyState { }
+
+         	[Union<NullValue, EmptyState, string>(T1IsStateless = true, T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_stateless_type_using_AdHocUnionAttribute()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[AdHocUnion(typeof(NullValue), typeof(string), T1IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_stateless_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, int>(T1IsStateless = true)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_all_three_types_as_stateless()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+         	public readonly struct EmptyState { }
+         	public readonly struct UndefinedValue { }
+
+         	[Union<NullValue, EmptyState, UndefinedValue>(T1IsStateless = true, T2IsStateless = true, T3IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_stateless_type_and_conversion_operators_disabled()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, string>(T1IsStateless = true, ConversionFromValue = ConversionOperatorsGeneration.None)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_stateless_type_and_explicit_conversion_operators()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, string>(T1IsStateless = true, ConversionFromValue = ConversionOperatorsGeneration.Explicit)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_duplicate_value_struct_stateless_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, NullValue, string>(T1IsStateless = true, T2IsStateless = true, T1Name = "NullValue1", T2Name = "NullValue2")]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_duplicate_stateless_types_T2_and_T3()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct EmptyState { }
+
+         	[Union<string, EmptyState, EmptyState>(T2IsStateless = true, T3IsStateless = true, T2Name = "EmptyState1", T3Name = "EmptyState2")]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_duplicate_reference_type_stateless_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class NullValueClass { }
+
+         	[Union<NullValueClass, NullValueClass, int>(T1IsStateless = true, T2IsStateless = true, T1Name = "NullValueClass1", T2Name = "NullValueClass2")]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_duplicate_stateless_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<NullValue, NullValue, int>(T1IsStateless = true, T2IsStateless = true, T1Name = "NullValue1", T2Name = "NullValue2")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_duplicate_regular_string_types()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int, string, string, int?>(T1Name = "Text", T4IsNullableReferenceType = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_duplicate_regular_types_requiring_factory_methods()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string, int, string>(T1Name = "Value1", T3Name = "Value2")]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_union_with_nullable_and_non_nullable_of_same_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, int?, string>]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

@@ -151,6 +151,7 @@ This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discr
 
 - **Ad-hoc `[Union<T1, T2>]` or `[AdHocUnion(typeof(T1), typeof(T2))]`**: Simple 2-5 type combinations
     - Implicit conversion operators, IsT1/AsT1 properties, Switch/Map
+    - Stateless types (`TXIsStateless = true`): Memory-efficient members that store only discriminator, not instance data (prefer structs to avoid null-handling)
 - **Regular `[Union]`**: Inheritance-based unions with derived types
     - Static factory methods, Switch/Map over all derived types
 
