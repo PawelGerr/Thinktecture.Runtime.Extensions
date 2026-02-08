@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.TestValueObjects;
 // ReSharper disable once InconsistentNaming
 [ValueObject<string>]
 [ObjectFactory<string>]
-[ObjectFactory<ReadOnlySpan<char>>]
+[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
 [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 [KeyMemberComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
 public partial class StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory
@@ -14,6 +14,11 @@ public partial class StringBasedReferenceValueObject_With_StringAndReadOnlyBased
    public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory? item)
    {
       return Validate(value.ToString(), provider, out item);
+   }
+
+   public ReadOnlySpan<char> ToValue()
+   {
+      return _value;
    }
 }
 #endif

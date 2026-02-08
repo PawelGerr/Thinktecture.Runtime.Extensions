@@ -12,6 +12,7 @@ partial class OuterClass
       global::Thinktecture.ISmartEnum<string, global::Thinktecture.Tests.OuterClass.TestEnum, global::Thinktecture.ValidationError>,
 #if NET9_0_OR_GREATER
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.OuterClass.TestEnum, global::System.ReadOnlySpan<char>, global::Thinktecture.ValidationError>,
+      global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>,
 #endif
       global::System.IEquatable<global::Thinktecture.Tests.OuterClass.TestEnum?>
    {
@@ -20,6 +21,7 @@ partial class OuterClass
          {
             KeyType = typeof(string),
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            DisableSpanBasedJsonConversion = false,
             Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
                      () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
                         global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.OuterClass.TestEnum.Items, (item, index) =>
@@ -95,6 +97,17 @@ partial class OuterClass
       {
          return this.Key;
       }
+
+#if NET9_0_OR_GREATER
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::System.ReadOnlySpan<char> global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>.ToValue()
+      {
+         return this.Key;
+      }
+#endif
 
       /// <summary>
       /// Gets an enumeration item for provided <paramref name="key"/>.

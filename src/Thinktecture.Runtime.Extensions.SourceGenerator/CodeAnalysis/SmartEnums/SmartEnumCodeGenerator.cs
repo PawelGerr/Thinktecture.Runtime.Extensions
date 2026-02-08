@@ -76,6 +76,7 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(@"
 #if NET9_0_OR_GREATER
       global::Thinktecture.IObjectFactory<").AppendTypeFullyQualified(_state).Append(", global::System.ReadOnlySpan<char>, ").AppendTypeFullyQualified(_state.ValidationError).Append(@">,
+      global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>,
 #endif");
          }
       }
@@ -94,6 +95,7 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
             ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
+            DisableSpanBasedJsonConversion = ").Append(_state.Settings.DisableSpanBasedJsonConversion ? "true" : "false").Append(@",
             Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
                      () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
                         global::System.Linq.Enumerable.Select(").AppendTypeFullyQualified(_state).Append(@".Items, (item, index) =>
@@ -211,6 +213,10 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          GenerateToValue(_state.KeyMember);
+
+         if (_state.KeyMember.IsString())
+            GenerateToValueForReadOnlySpanOfChar(_state.KeyMember);
+
          GenerateGet(_state.KeyMember);
 
          if (_state.KeyMember.IsString())
@@ -1128,6 +1134,22 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          return this.").Append(keyProperty.Name).Append(@";
       }");
+   }
+
+   private void GenerateToValueForReadOnlySpanOfChar(KeyMemberState keyProperty)
+   {
+      _sb.Append(@"
+
+#if NET9_0_OR_GREATER
+      /// <summary>
+      /// Gets the identifier of the item.
+      /// </summary>
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      global::System.ReadOnlySpan<char> global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>.ToValue()
+      {
+         return this.").Append(keyProperty.Name).Append(@";
+      }
+#endif");
    }
 
    private void GenerateGet(KeyMemberState keyProperty)

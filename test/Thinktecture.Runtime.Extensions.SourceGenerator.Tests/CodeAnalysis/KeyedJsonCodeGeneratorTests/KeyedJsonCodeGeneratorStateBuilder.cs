@@ -19,6 +19,8 @@ public class KeyedJsonCodeGeneratorStateBuilder
    private global::Thinktecture.CodeAnalysis.SerializationFrameworks _serializationFrameworks = global::Thinktecture.CodeAnalysis.SerializationFrameworks.All;
    private bool _isReferenceType = true; // Default to class
    private bool _isRecord;
+   private bool _useSpanJsonConverter;
+   private ImmutableArray<GenericTypeParameterState> _genericParameters = ImmutableArray<GenericTypeParameterState>.Empty;
 
    public KeyedJsonCodeGeneratorStateBuilder WithType(
       string typeFullyQualified,
@@ -126,6 +128,18 @@ public class KeyedJsonCodeGeneratorStateBuilder
       return this;
    }
 
+   public KeyedJsonCodeGeneratorStateBuilder WithSpanJsonConverter(bool useSpanJsonConverter = true)
+   {
+      _useSpanJsonConverter = useSpanJsonConverter;
+      return this;
+   }
+
+   public KeyedJsonCodeGeneratorStateBuilder WithGenericParameters(params GenericTypeParameterState[] parameters)
+   {
+      _genericParameters = parameters.ToImmutableArray();
+      return this;
+   }
+
    public KeyedSerializerGeneratorState Build()
    {
       _type ??= CreateType("global::Thinktecture.Tests.TestType", "TestType", "Thinktecture.Tests", ImmutableArray<ContainingTypeState>.Empty, _isReferenceType, _isRecord);
@@ -137,7 +151,8 @@ public class KeyedJsonCodeGeneratorStateBuilder
          _keyMember,
          attributeInfo,
          _serializationFrameworks,
-         []);
+         _genericParameters,
+         _useSpanJsonConverter);
    }
 
    private static IKeyedSerializerGeneratorTypeInformation CreateType(

@@ -573,6 +573,32 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(output);
    }
 
+   [Fact]
+   public async Task Should_generate_json_converter_without_span_when_DisableSpanBasedJsonConversion_is_true()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<string>(DisableSpanBasedJsonConversion = true)]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".Json",
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,,>).Assembly, typeof(System.Text.Json.JsonDocument).Assembly);
+
+      await VerifyAsync(output);
+   }
+
    // NICE-TO-HAVE TESTS - Multiple Items Edge Cases
 
    [Fact]

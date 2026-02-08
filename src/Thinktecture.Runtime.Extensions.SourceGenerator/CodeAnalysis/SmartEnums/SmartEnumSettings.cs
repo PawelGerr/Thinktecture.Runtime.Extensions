@@ -5,6 +5,7 @@ public sealed class SmartEnumSettings(
    AttributeInfo attributeInfo) : IEquatable<SmartEnumSettings>
 {
    public bool SkipToString => settings.SkipToString;
+   public bool DisableSpanBasedJsonConversion => settings.DisableSpanBasedJsonConversion;
    public SwitchMapMethodsGeneration SwitchMethods => settings.SwitchMethods;
    public SwitchMapMethodsGeneration MapMethods => settings.MapMethods;
    public string SwitchMapStateParameterName => settings.SwitchMapStateParameterName;
@@ -23,6 +24,7 @@ public sealed class SmartEnumSettings(
          return false;
 
       return SkipToString == other.SkipToString
+             && DisableSpanBasedJsonConversion == other.DisableSpanBasedJsonConversion
              && SwitchMethods == other.SwitchMethods
              && MapMethods == other.MapMethods
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
@@ -36,6 +38,7 @@ public sealed class SmartEnumSettings(
       unchecked
       {
          var hashCode = SkipToString.GetHashCode();
+         hashCode = (hashCode * 397) ^ DisableSpanBasedJsonConversion.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SwitchMethods;
          hashCode = (hashCode * 397) ^ (int)MapMethods;
          hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;

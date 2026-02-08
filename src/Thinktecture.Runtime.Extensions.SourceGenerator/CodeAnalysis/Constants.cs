@@ -101,6 +101,7 @@ public static class Constants
          public const string MULTIPLY_OPERATORS = "MultiplyOperators";
          public const string NULL_IN_FACTORY_METHODS_YIELDS_NULL = "NullInFactoryMethodsYieldsNull";
          public const string SERIALIZATION_FRAMEWORKS = "SerializationFrameworks";
+         public const string DISABLE_SPAN_BASED_JSON_CONVERSION = "DisableSpanBasedJsonConversion";
          public const string SKIP_FACTORY_METHODS = "SkipFactoryMethods";
          public const string SKIP_ICOMPARABLE = "SkipIComparable";
          public const string SKIP_EQUALITY_COMPARISON = "SkipEqualityComparison";

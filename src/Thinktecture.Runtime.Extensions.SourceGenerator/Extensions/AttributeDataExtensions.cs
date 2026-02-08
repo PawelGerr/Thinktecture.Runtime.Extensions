@@ -172,6 +172,11 @@ public static class AttributeDataExtensions
              ?? SerializationFrameworks.All;
    }
 
+   public static bool FindDisableSpanBasedJsonConversion(this AttributeData attributeData)
+   {
+      return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.DISABLE_SPAN_BASED_JSON_CONVERSION) ?? false;
+   }
+
    public static StringComparison FindDefaultStringComparison(this AttributeData attributeData)
    {
       return GetEnumParameterValue<StringComparison>(attributeData, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON)

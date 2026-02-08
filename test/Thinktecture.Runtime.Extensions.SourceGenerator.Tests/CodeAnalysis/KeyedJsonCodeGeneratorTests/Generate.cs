@@ -520,6 +520,118 @@ public class Generate
    }
 
    [Fact]
+   public async Task Snapshot_StringKeyWithSpanJsonConverter()
+   {
+      // Arrange
+      var state = new KeyedJsonCodeGeneratorStateBuilder()
+                  .WithType("global::Thinktecture.Tests.ProductName", "ProductName")
+                  .WithStringKeyMember("Value")
+                  .WithSpanJsonConverter()
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = new KeyedJsonCodeGenerator(state, sb);
+
+      // Act
+      generator.Generate(CancellationToken.None);
+
+      // Assert
+      var result = sb.ToString();
+      await Verifier.Verify(result).UseMethodName("Snapshot_StringKeyWithSpanJsonConverter");
+   }
+
+   [Fact]
+   public void Should_generate_span_converter_with_ifdef_for_string_key()
+   {
+      // Arrange
+      var state = new KeyedJsonCodeGeneratorStateBuilder()
+                  .WithStringKeyMember()
+                  .WithSpanJsonConverter()
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = new KeyedJsonCodeGenerator(state, sb);
+
+      // Act
+      generator.Generate(CancellationToken.None);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("#if NET9_0_OR_GREATER");
+      result.Should().Contain("ThinktectureSpanParsableJsonConverterFactory");
+      result.Should().Contain("#else");
+      result.Should().Contain("ThinktectureJsonConverterFactory");
+      result.Should().Contain("#endif");
+   }
+
+   [Fact]
+   public void Should_generate_span_converter_in_generic_factory_for_string_key()
+   {
+      // Arrange
+      var state = new KeyedJsonCodeGeneratorStateBuilder()
+                  .WithStringKeyMember()
+                  .WithSpanJsonConverter()
+                  .WithGenericParameters(new GenericTypeParameterState("T", []))
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = new KeyedJsonCodeGenerator(state, sb);
+
+      // Act
+      generator.Generate(CancellationToken.None);
+
+      // Assert
+      var result = sb.ToString();
+      // The ValueObjectJsonConverterFactory.CreateConverter should use span converter on NET9+
+      result.Should().Contain("ThinktectureSpanParsableJsonConverter<,>").And.Contain("#if NET9_0_OR_GREATER");
+      result.Should().Contain("ThinktectureJsonConverter<,>").And.Contain("#else");
+   }
+
+   [Fact]
+   public void Should_not_generate_span_converter_in_generic_factory_when_UseSpanJsonConverter_is_false()
+   {
+      // Arrange
+      var state = new KeyedJsonCodeGeneratorStateBuilder()
+                  .WithStringKeyMember()
+                  .WithSpanJsonConverter(false)
+                  .WithGenericParameters(new GenericTypeParameterState("T", []))
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = new KeyedJsonCodeGenerator(state, sb);
+
+      // Act
+      generator.Generate(CancellationToken.None);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().NotContain("ThinktectureSpanParsableJsonConverter");
+      result.Should().Contain("ThinktectureJsonConverter<,>");
+   }
+
+   [Fact]
+   public void Should_not_generate_span_converter_when_UseSpanJsonConverter_is_false()
+   {
+      // Arrange
+      var state = new KeyedJsonCodeGeneratorStateBuilder()
+                  .WithStringKeyMember()
+                  .WithSpanJsonConverter(false)
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = new KeyedJsonCodeGenerator(state, sb);
+
+      // Act
+      generator.Generate(CancellationToken.None);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().NotContain("#if NET9_0_OR_GREATER");
+      result.Should().NotContain("ThinktectureSpanParsableJsonConverterFactory");
+      result.Should().Contain("ThinktectureJsonConverterFactory");
+   }
+
+   [Fact]
    public async Task Snapshot_CustomValidationErrorType()
    {
       // Arrange

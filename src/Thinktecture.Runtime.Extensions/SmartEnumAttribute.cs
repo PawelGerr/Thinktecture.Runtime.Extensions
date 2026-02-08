@@ -168,6 +168,16 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    public SerializationFrameworks SerializationFrameworks { get; set; }
 
    /// <summary>
+   /// Indicates whether the Smart Enum should disable ReadOnlySpan&lt;char&gt;-based JSON conversion and fall back to string-based JSON conversion.
+   /// Default is <c>false</c>.
+   ///
+   /// <para>
+   /// This setting has no effect if the key is not a <see cref="string"/>.
+   /// </para>
+   /// </summary>
+   public bool DisableSpanBasedJsonConversion { get; set; }
+
+   /// <summary>
    /// The name of the "state" parameter used in <c>Switch</c> and <c>Map</c> methods.
    /// Default is <c>state</c>.
    /// </summary>

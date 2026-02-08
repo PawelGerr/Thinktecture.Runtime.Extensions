@@ -17,6 +17,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
    public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; }
    public ConversionOperatorsGeneration ConversionToKeyMemberType { get; }
    public SerializationFrameworks SerializationFrameworks { get; }
+   public bool DisableSpanBasedJsonConversion { get; }
    public string SwitchMapStateParameterName { get; }
 
    public AllEnumSettings(AttributeData attribute)
@@ -36,6 +37,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
       ConversionToKeyMemberType = attribute.FindConversionToKeyMemberType() ?? ConversionOperatorsGeneration.Implicit;
       ConversionFromKeyMemberType = attribute.FindConversionFromKeyMemberType() ?? ConversionOperatorsGeneration.Explicit;
       SerializationFrameworks = attribute.FindSerializationFrameworks();
+      DisableSpanBasedJsonConversion = attribute.FindDisableSpanBasedJsonConversion();
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
 
       // Comparison operators depend on the equality comparison operators
@@ -76,6 +78,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
              && ConversionToKeyMemberType == other.ConversionToKeyMemberType
              && ConversionFromKeyMemberType == other.ConversionFromKeyMemberType
              && SerializationFrameworks == other.SerializationFrameworks
+             && DisableSpanBasedJsonConversion == other.DisableSpanBasedJsonConversion
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName;
    }
 
@@ -98,6 +101,7 @@ public sealed class AllEnumSettings : IEquatable<AllEnumSettings>, IKeyMemberSet
          hashCode = (hashCode * 397) ^ (int)ConversionToKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)ConversionFromKeyMemberType;
          hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
+         hashCode = (hashCode * 397) ^ DisableSpanBasedJsonConversion.GetHashCode();
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
 
          return hashCode;

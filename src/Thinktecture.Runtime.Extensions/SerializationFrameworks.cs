@@ -7,7 +7,7 @@ namespace Thinktecture;
 public enum SerializationFrameworks
 {
    /// <summary>
-   /// No serialization frameworks
+   /// No serialization frameworks.
    /// </summary>
    None = 0,
 

@@ -138,6 +138,10 @@ The test suite is organized into multiple projects, each with a specific purpose
 public partial struct IntBasedStructValueObject;
 ```
 
+**Notable test types for span-based JSON deserialization**:
+- `TestEnums/SmartEnum_StringBased_WithDisabledSpanBasedJsonConversion.cs`: Compilation test verifying that `DisableSpanBasedJsonConversion = true` on a string-based Smart Enum produces compilable generated code that falls back to string-based JSON deserialization
+- `TestValueObjects/ComplexValueObjectWithReadOnlySpanBasedObjectFactoryForJson.cs`: Compilation test verifying that a complex value object with `[ObjectFactory<ReadOnlySpan<char>>]` produces compilable generated code supporting span-based JSON deserialization
+
 **Best practices**:
 - Create separate types for each meaningful feature variation or configuration
 - Name types descriptively to indicate what feature/configuration they test
@@ -306,6 +310,20 @@ public void Should_serialize_and_deserialize_smart_enum()
     deserialized.Should().Be(value);
 }
 ```
+
+#### Zero-Allocation Span-Based JSON Deserialization
+
+String-based Smart Enums and Value Objects support zero-allocation JSON deserialization via `ThinktectureSpanParsableJsonConverter`. This converter avoids allocating a `string` during deserialization by reading the UTF-8 JSON payload directly into a `ReadOnlySpan<char>` and calling `ISpanParsable<T>.Parse`.
+
+**Key test areas**:
+
+- **`ThinktectureSpanParsableJsonConverter` tests** (`SpanParsableJsonConverterTests.cs`): Verify that types implementing `ISpanParsable<T>` are deserialized through the span-based path. Test both `ThinktectureSpanParsableJsonConverterFactory` (standalone) and the integration through `ThinktectureJsonConverterFactory`.
+- **`Utf8JsonReaderHelper` tests** (`Utf8JsonReaderHelperTests.cs`): Verify correct UTF-8 byte to `ReadOnlySpan<char>` conversion, including multi-byte characters, empty strings, and edge cases. This helper is the core of the zero-allocation path.
+- **Opt-out via `DisableSpanBasedJsonConversion`**: Smart Enums can disable span-based JSON conversion by setting `DisableSpanBasedJsonConversion = true` on the `[SmartEnum<T>]` attribute. Test that the generated JSON converter falls back to string-based deserialization. The compilation test type `SmartEnum_StringBased_WithDisabledSpanBasedJsonConversion` verifies the generated code compiles correctly.
+- **Value objects with `[ObjectFactory<ReadOnlySpan<char>>]`**: Value objects that declare a `ReadOnlySpan<char>`-based object factory also get span-based JSON deserialization. The compilation test type `ComplexValueObjectWithReadOnlySpanBasedObjectFactoryForJson` verifies this path. Snapshot tests in `JsonObjectFactoryCodeGeneratorFactoryTests` verify the generated converter code.
+- **Source generator snapshot tests**: `Generate.Snapshot_StringKeyWithSpanJsonConverter.verified.txt` verifies the generated JSON converter includes the span-based deserialization code path.
+
+**Benchmarks**: `SmartEnumJsonDeserializationBenchmarks` and `ValueObjectJsonDeserializationBenchmarks` (in the `Benchmarking` sample project) measure the allocation reduction. These are not unit tests but are useful for validating performance characteristics.
 
 ### MessagePack Serialization
 

@@ -7,6 +7,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
    public AttributeInfo AttributeInfo { get; }
    public SerializationFrameworks SerializationFrameworks { get; }
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
+   public bool UseSpanBasedJsonConverter { get; }
    public int NumberOfGenerics => GenericParameters.Length;
 
    public string? Namespace => Type.Namespace;
@@ -18,13 +19,15 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
       IMemberInformation? keyMember,
       AttributeInfo attributeInfo,
       SerializationFrameworks serializationFrameworks,
-      ImmutableArray<GenericTypeParameterState> genericParameters)
+      ImmutableArray<GenericTypeParameterState> genericParameters,
+      bool useSpanBasedJsonConverter)
    {
       Type = type;
       KeyMember = keyMember;
       AttributeInfo = attributeInfo;
       SerializationFrameworks = serializationFrameworks;
       GenericParameters = genericParameters;
+      UseSpanBasedJsonConverter = useSpanBasedJsonConverter;
    }
 
    public bool Equals(KeyedSerializerGeneratorState other)
@@ -32,6 +35,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
       return Type.Equals(other.Type)
              && MemberInformationComparer.Instance.Equals(KeyMember, other.KeyMember)
              && SerializationFrameworks == other.SerializationFrameworks
+             && UseSpanBasedJsonConverter == other.UseSpanBasedJsonConverter
              && ContainingTypes.SequenceEqual(other.ContainingTypes)
              && AttributeInfo.Equals(other.AttributeInfo)
              && GenericParameters.SequenceEqual(other.GenericParameters);
@@ -49,6 +53,7 @@ public readonly struct KeyedSerializerGeneratorState : IEquatable<KeyedSerialize
          var hashCode = Type.GetHashCode();
          hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ (int)SerializationFrameworks;
+         hashCode = (hashCode * 397) ^ UseSpanBasedJsonConverter.GetHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();

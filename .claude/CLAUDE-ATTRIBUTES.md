@@ -102,6 +102,7 @@ SmartEnumAttribute()
 | `ConversionToKeyMemberType`   | `ConversionOperatorsGeneration` | `Implicit`                                      | Generate conversion operator from enum to key type                                   |
 | `ConversionFromKeyMemberType` | `ConversionOperatorsGeneration` | `Explicit`                                      | Generate conversion operator from key type to enum                                   |
 | `SerializationFrameworks`     | `SerializationFrameworks`       | `All`                                           | Which serialization frameworks to generate integration code for                      |
+| `DisableSpanBasedJsonConversion` | `bool`                       | `false`                                         | Disables ReadOnlySpan-based zero-allocation JSON conversion, falling back to string-based conversion (string keys only; NET9+) |
 | `SwitchMapStateParameterName` | `string?`                       | `"state"`                                       | Name of state parameter in Switch/Map methods                                        |
 
 **Note**: `ISpanParsable<T>` inherits from `IParsable<T>`, so setting `SkipISpanParsable = false` will automatically set `SkipIParsable = false` if needed.
@@ -278,7 +279,7 @@ public partial class ApiResponse
 
 ### ObjectFactoryAttribute&lt;T&gt;
 
-For types with custom factories for parsing/serialization.
+For types with custom factories for parsing/serialization. When `T` is `ReadOnlySpan<char>` and `UseForSerialization = SerializationFrameworks.SystemTextJson`, enables zero-allocation JSON deserialization on NET9+ by transcoding UTF-8 JSON bytes directly to `ReadOnlySpan<char>` instead of allocating a `string`.
 
 **Targets**: `class` or `struct`
 

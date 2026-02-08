@@ -595,6 +595,71 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
       await VerifyAsync(output);
    }
 
+#if NET9_0_OR_GREATER
+   [Fact]
+   public async Task Should_generate_Json_converter_for_value_object_with_ReadOnlySpan_ObjectFactory()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+            [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+         	public partial class TestValueObject;
+         }
+
+         """;
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".Json",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                                    typeof(JsonConverterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+#endif
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public async Task Should_generate_Json_converter_for_complex_value_object_with_ReadOnlySpan_ObjectFactory()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject(DefaultStringComparison = StringComparison.OrdinalIgnoreCase)]
+            [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+         	public partial class TestValueObject
+         	{
+               [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+               public readonly string _stringValue;
+
+               public int IntValue { get; }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".Json",
+                                                                    typeof(ComplexValueObjectAttribute).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                                    typeof(JsonConverterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+#endif
+
    [Fact]
    public async Task Should_generate_Json_converter_for_regular_union_with_ObjectFactory()
    {

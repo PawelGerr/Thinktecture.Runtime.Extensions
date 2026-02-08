@@ -5,7 +5,6 @@
 **/packages/**
 **/test-results/**
 .local-memory/**
-.serena/cache/**
 
 *\.sln\.DotSettings\.user
 *\.csproj\.user
@@ -14,3 +13,6 @@
 # Verify
 test/**/*.received.*
 test/**/*.received/
+
+# Benchmarking
+**/BenchmarkDotNet.Artifacts/**

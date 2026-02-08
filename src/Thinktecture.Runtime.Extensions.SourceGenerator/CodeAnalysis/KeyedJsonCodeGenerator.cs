@@ -45,27 +45,33 @@ namespace ").Append(_state.Namespace).Append(@";
 
       var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty;
 
-      _sb.Append(@"
-[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(");
-
       if (hasGenerics)
       {
-         _sb.Append("ValueObjectJsonConverterFactory");
+         _sb.Append(@"
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(ValueObjectJsonConverterFactory))]");
+      }
+      else if (_state.UseSpanBasedJsonConverter)
+      {
+         _sb.Append(@"
+#if NET9_0_OR_GREATER
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureSpanParsableJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
+#else
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]
+#endif");
       }
       else
       {
-         _sb.Append("global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ");
+         _sb.Append(@"
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<").AppendTypeFullyQualified(_state.Type).Append(", ");
 
          if (!isString)
             _sb.Append(keyType).Append(", ");
 
-         _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(">");
+         _sb.AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">))]");
       }
 
-      _sb.Append(@"))]
-");
-
-      _sb.Append("partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@"
+      _sb.Append(@"
+partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@"
 {
 }");
 
@@ -93,7 +99,7 @@ file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serializat
       if (!typeToConvert.IsGenericType || typeToConvert.IsGenericTypeDefinition)
          return false;
 
-      return typeof(").AppendTypeFullyQualifiedWithoutGenerics(_state, _state.ContainingTypes).AppendGenericTypeParameters(_state, constructOpenGeneric: true).Append(@") == typeToConvert.GetGenericTypeDefinition();");
+      return typeof(").AppendTypeFullyQualifiedWithoutGenerics(_state, _state.ContainingTypes).AppendGenericTypeParameters(_state, constructOpenGeneric: true).Append(") == typeToConvert.GetGenericTypeDefinition();");
       }
 
       _sb.Append(@"
@@ -110,19 +116,33 @@ file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serializat
 
       if (!_state.GenericParameters.IsDefaultOrEmpty)
       {
-         _sb.Append(@"
-      var converterType = typeof(global::Thinktecture.Text.Json.Serialization.");
-
-         if (isString)
+         if (_state.UseSpanBasedJsonConverter)
          {
-            _sb.Append("ThinktectureJsonConverter<,>).MakeGenericType(typeToConvert, typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
+            _sb.Append(@"
+#if NET9_0_OR_GREATER
+      var converterType = typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureSpanParsableJsonConverter<,>).MakeGenericType(typeToConvert, typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"));
+#else
+      var converterType = typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverter<,>).MakeGenericType(typeToConvert, typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"));
+#endif");
          }
          else
          {
-            _sb.Append("ThinktectureJsonConverter<,,>).MakeGenericType(typeToConvert, typeof(").Append(keyType).Append("), typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
+            _sb.Append(@"
+      var converterType = typeof(global::Thinktecture.Text.Json.Serialization.");
+
+            if (isString)
+            {
+               _sb.Append("ThinktectureJsonConverter<,>).MakeGenericType(typeToConvert, typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
+            }
+            else
+            {
+               _sb.Append("ThinktectureJsonConverter<,,>).MakeGenericType(typeToConvert, typeof(").Append(keyType).Append("), typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
+            }
+
+            _sb.Append(";");
          }
 
-         _sb.Append(@";
+         _sb.Append(@"
 
       return (global::System.Text.Json.Serialization.JsonConverter?)global::System.Activator.CreateInstance(converterType, options)
          ?? throw new global::System.Exception($""Could not create an instance of json converter of type \""{converterType.FullName}\""."");");

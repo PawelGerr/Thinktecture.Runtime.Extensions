@@ -213,24 +213,31 @@ public sealed class SmartEnumSourceGenerator()
                                                                           : states.Distinct())
                                          .WithComparer(SetComparer<IKeyedSerializerCodeGeneratorFactory>.Instance);
 
-      var serializerGeneratorStates = validStates.Select((state, _) => new KeyedSerializerGeneratorState(
-                                                            state.State,
-                                                            state.KeyMember,
-                                                            state.AttributeInfo,
-                                                            state.Settings.SerializationFrameworks,
-                                                            state.State.GenericParameters))
-                                                 .Combine(serializerGeneratorFactories)
-                                                 .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
-                                                 .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));
+      var serializerGeneratorStates = validStates
+                                      .Select((state, _) => new KeyedSerializerGeneratorState(
+                                                 state.State,
+                                                 state.KeyMember,
+                                                 state.AttributeInfo,
+                                                 state.Settings.SerializationFrameworks,
+                                                 state.State.GenericParameters,
+                                                 useSpanBasedJsonConverter: !state.Settings.DisableSpanBasedJsonConversion && state.KeyMember?.SpecialType == SpecialType.System_String))
+                                      .Combine(serializerGeneratorFactories)
+                                      .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
+                                      .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));
 
-      context.RegisterImplementationSourceOutput(serializerGeneratorStates.Combine(options), (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
-      context.RegisterImplementationSourceOutput(factoriesOrError.Where(f => f.Exception is not null), (ctx, factoryOrError) =>
-      {
-         var exception = factoryOrError.Exception!;
-         ctx.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringModulesAnalysis,
-                                                Location.None,
-                                                exception.ToString()));
-      });
+      context.RegisterImplementationSourceOutput(
+         serializerGeneratorStates.Combine(options),
+         (ctx, tuple) => GenerateCode(ctx, tuple.Left.State, tuple.Right, tuple.Left.Factory));
+
+      context.RegisterImplementationSourceOutput(
+         factoriesOrError.Where(f => f.Exception is not null),
+         (ctx, factoryOrError) =>
+         {
+            var exception = factoryOrError.Exception!;
+            ctx.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringModulesAnalysis,
+                                                   Location.None,
+                                                   exception.ToString()));
+         });
    }
 
    private void InitializeExceptionReporting(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<SourceGenContext> enumTypeOrException)

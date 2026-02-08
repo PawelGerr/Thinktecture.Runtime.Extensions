@@ -139,7 +139,8 @@ public sealed class ValueObjectSourceGenerator()
                                                             state.State.KeyMember,
                                                             state.AttributeInfo,
                                                             state.Settings.SerializationFrameworks,
-                                                            state.State.GenericParameters);
+                                                            state.State.GenericParameters,
+                                                            false); // value objects require ObjectFactory<ReadOnlySpan<char>>, so it is the responsibility of the ObjectFactorySourceGenerator
 
                                                          return ImmutableArray.Create(serializerState);
                                                       })
@@ -168,7 +169,8 @@ public sealed class ValueObjectSourceGenerator()
                                                             null,
                                                             state.AttributeInfo,
                                                             state.Settings.SerializationFrameworks,
-                                                            state.State.GenericParameters);
+                                                            state.State.GenericParameters,
+                                                            false); // value objects require ObjectFactory<ReadOnlySpan<char>>, so it is the responsibility of the ObjectFactorySourceGenerator
 
                                                          return [serializerState];
                                                       })

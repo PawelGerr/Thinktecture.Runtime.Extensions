@@ -15,6 +15,11 @@ public abstract partial class Metadata
       public sealed class SmartEnum : Keyed
       {
          /// <summary>
+         /// Indicates whether span-based JSON conversion is disabled for this Smart Enum.
+         /// </summary>
+         public bool DisableSpanBasedJsonConversion { get; init; }
+
+         /// <summary>
          /// A collection of items available in the current Smart Enum.
          /// </summary>
          public required Lazy<IReadOnlyList<SmartEnumItemMetadata>> Items { get; init; }

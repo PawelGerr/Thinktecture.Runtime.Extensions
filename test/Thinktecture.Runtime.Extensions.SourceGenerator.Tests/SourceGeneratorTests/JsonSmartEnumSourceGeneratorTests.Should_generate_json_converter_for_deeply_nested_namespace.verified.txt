@@ -3,7 +3,11 @@
 
 namespace A.B.C.D.E.F;
 
+#if NET9_0_OR_GREATER
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureSpanParsableJsonConverterFactory<global::A.B.C.D.E.F.TestEnum, global::Thinktecture.ValidationError>))]
+#else
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<global::A.B.C.D.E.F.TestEnum, global::Thinktecture.ValidationError>))]
+#endif
 partial class TestEnum
 {
 }

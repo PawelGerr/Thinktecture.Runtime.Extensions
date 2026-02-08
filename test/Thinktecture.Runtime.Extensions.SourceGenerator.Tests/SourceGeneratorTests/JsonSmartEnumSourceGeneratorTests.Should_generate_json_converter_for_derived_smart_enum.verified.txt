@@ -3,7 +3,11 @@
 
 namespace Thinktecture.Tests;
 
+#if NET9_0_OR_GREATER
+[global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureSpanParsableJsonConverterFactory<global::Thinktecture.Tests.DerivedEnum, global::Thinktecture.ValidationError>))]
+#else
 [global::System.Text.Json.Serialization.JsonConverterAttribute(typeof(global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<global::Thinktecture.Tests.DerivedEnum, global::Thinktecture.ValidationError>))]
+#endif
 partial class DerivedEnum
 {
 }

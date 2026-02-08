@@ -9,6 +9,9 @@ namespace Thinktecture;
 /// </remarks>
 public interface IConvertible<out T>
    where T : notnull
+#if NET9_0_OR_GREATER
+   , allows ref struct
+#endif
 {
    /// <summary>
    /// Converts the value object to type <typeparamref name="T"/>.

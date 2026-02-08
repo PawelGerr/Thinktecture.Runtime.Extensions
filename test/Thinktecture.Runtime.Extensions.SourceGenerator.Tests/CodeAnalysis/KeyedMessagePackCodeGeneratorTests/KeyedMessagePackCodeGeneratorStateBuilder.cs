@@ -143,7 +143,8 @@ public class KeyedMessagePackCodeGeneratorStateBuilder
          _keyMember,
          attributeInfo,
          _serializationFrameworks,
-         []);
+         [],
+         false);
    }
 
    private static IKeyedSerializerGeneratorTypeInformation CreateType(

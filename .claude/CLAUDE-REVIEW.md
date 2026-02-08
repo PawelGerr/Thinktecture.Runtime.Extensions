@@ -123,6 +123,8 @@ static partial void ValidateFactoryArguments(ref string value, ref ValidationErr
 - [ ] Manual registration code correct if not using automatic integration
 - [ ] Serialization tested with roundtrip tests
 - [ ] Null handling correct for nullable types
+- [ ] Span-based JSON converter attribute generated correctly with `#if NET9_0_OR_GREATER` blocks (for string-keyed Smart Enums)
+- [ ] `DisableSpanBasedJsonConversion` setting respected when set to `true`
 
 ### Framework Integration
 
@@ -159,6 +161,7 @@ static partial void ValidateFactoryArguments(ref string value, ref ValidationErr
 - [ ] Generated code follows expected patterns
 - [ ] No duplicate members generated
 - [ ] Conditional compilation (`#if NET9_0_OR_GREATER`) used correctly
+- [ ] `#if NET9_0_OR_GREATER` blocks present for span-based JSON converter on string-keyed Smart Enums
 - [ ] Generated XML documentation present
 
 ### Test Coverage
@@ -175,6 +178,8 @@ static partial void ValidateFactoryArguments(ref string value, ref ValidationErr
 
 - [ ] No unnecessary allocations in hot paths
 - [ ] Span-based APIs used when available (NET9+)
+- [ ] Zero-allocation span-based JSON deserialization used for string-keyed Smart Enums (NET9+)
+- [ ] `[ObjectFactory<ReadOnlySpan<char>>]` with `UseForSerialization` used for value objects needing span-based JSON deserialization
 - [ ] StringBuilder used for string concatenation in loops
 - [ ] No LINQ in performance-critical code (if avoidable)
 

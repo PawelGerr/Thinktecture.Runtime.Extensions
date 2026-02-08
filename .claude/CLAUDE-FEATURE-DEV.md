@@ -106,6 +106,8 @@ Separate code generator factories for each serialization framework:
 
 **Pattern**: Each factory checks if the corresponding serialization package is referenced, then generates appropriate converter/formatter registration code.
 
+- **`KeyedJsonCodeGenerator`**: Generates JSON converter attributes on the type. On NET9+, when `UseSpanBasedJsonConverter` is true, it emits `#if NET9_0_OR_GREATER` blocks that register `ThinktectureSpanParsableJsonConverterFactory<T, TValidationError>` for zero-allocation deserialization, with a fallback to the regular `ThinktectureJsonConverterFactory<T, TValidationError>` on older target frameworks.
+
 ## Type Information System
 
 Rich type metadata is captured and passed through the generation pipeline:
@@ -275,6 +277,103 @@ The generator creates:
 - Integration with serializers (JSON, MessagePack, etc.)
 - Model binding for ASP.NET Core
 
+### Zero-Allocation JSON via ObjectFactory (NET9+)
+
+When `[ObjectFactory<ReadOnlySpan<char>>]` is present with `UseForSerialization = SerializationFrameworks.SystemTextJson`, the source generator sets `UseSpanBasedJsonConverter = true` for the type. This causes the generated JSON converter attribute to use `ThinktectureSpanParsableJsonConverterFactory` on NET9+, enabling zero-allocation deserialization by transcoding UTF-8 JSON bytes directly to `ReadOnlySpan<char>` without allocating a `string`. This is the opt-in mechanism for Value Objects (unlike Smart Enums with string keys, where it is automatic).
+
+## Span-Based Zero-Allocation JSON Deserialization (NET9+)
+
+This feature enables zero-allocation JSON deserialization for string-keyed Smart Enums and Value Objects with `ReadOnlySpan<char>` object factories, by converting UTF-8 JSON bytes directly to `ReadOnlySpan<char>` instead of allocating an intermediate `string`.
+
+### Architecture
+
+The feature spans three layers:
+
+1. **`Utf8JsonReaderHelper`** (internal, `Thinktecture.Internal` namespace, NET9+ only): The low-level engine that converts UTF-8 JSON bytes to `ReadOnlySpan<char>` without string allocation.
+   - **Fast path**: When the JSON value is contiguous in the buffer and unescaped, it transcodes the raw UTF-8 bytes directly via `Encoding.UTF8.GetChars(ReadOnlySpan<byte>, Span<char>)`.
+   - **Slow path**: When the value is escaped or fragmented across buffer segments, it uses `Utf8JsonReader.CopyString(Span<byte>)` to get unescaped UTF-8 bytes, then transcodes.
+   - **Memory strategy**: Uses `stackalloc` for values up to 128 chars; rents from `ArrayPool<char>.Shared` for larger values and returns the buffer after use.
+
+2. **`ThinktectureSpanParsableJsonConverter<T, TValidationError>`** (NET9+ only): A `System.Text.Json` converter that uses `Utf8JsonReaderHelper` to obtain a `ReadOnlySpan<char>` from the JSON reader, then calls `IConvertible<ReadOnlySpan<char>>.ToValue()` on the target type to perform zero-allocation conversion.
+   - **Type constraints**: `T : IObjectFactory<T, ReadOnlySpan<char>, TValidationError>, IConvertible<ReadOnlySpan<char>>`
+   - Paired with `ThinktectureSpanParsableJsonConverterFactory<T, TValidationError>` for registration.
+
+3. **`ThinktectureJsonConverterFactory`** (runtime detection): Updated with a NET9+-only constructor accepting `Func<Type, bool>? skipSpanBasedDeserialization`. At runtime, it inspects metadata via its internal `CanUseSpanParsableConverter()` method to decide whether to return the span-based converter or the regular converter for a given type.
+
+### Runtime Converter Selection (`CanUseSpanParsableConverter`)
+
+The `ThinktectureJsonConverterFactory` checks two paths to determine if a type supports span-based deserialization:
+
+- **String-keyed Smart Enums**: Checks `Metadata.Keyed.SmartEnum.DisableSpanBasedJsonConversion`. If `false` (the default), the span-based converter is used.
+- **Other types (Value Objects, etc.)**: Checks the type's `ObjectFactories` metadata for an entry whose `ValueType` is `ReadOnlySpan<char>` and whose `SerializationFrameworks` includes `SystemTextJson`.
+
+The optional `skipSpanBasedDeserialization` delegate (passed via the constructor) provides an additional external override for consumers who need to disable span-based deserialization for specific types at the application level.
+
+### How It Works for Smart Enums
+
+**Automatic for string-keyed enums**: When a Smart Enum has a `string` key type, the source generator automatically enables span-based JSON deserialization (no user action needed).
+
+**Opt-out**: Set `DisableSpanBasedJsonConversion = true` on the `[SmartEnum<string>]` attribute:
+
+```csharp
+[SmartEnum<string>(DisableSpanBasedJsonConversion = true)]
+public partial class MyEnum
+{
+    public static readonly MyEnum Item1 = new("value1");
+}
+```
+
+**Non-string keys**: Not applicable. The feature is only effective for `string`-keyed Smart Enums because `IConvertible<ReadOnlySpan<char>>` maps naturally to string-based key lookup.
+
+### How It Works for Value Objects
+
+**Opt-in via ObjectFactory**: Value Objects must explicitly declare `[ObjectFactory<ReadOnlySpan<char>>]` with `UseForSerialization = SerializationFrameworks.SystemTextJson`:
+
+```csharp
+[ValueObject<string>]
+[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+public partial class ProductName
+{
+    // The generated IObjectFactory<ProductName, ReadOnlySpan<char>, ValidationError>
+    // implementation enables zero-allocation JSON deserialization
+}
+```
+
+The `ObjectFactorySourceGenerator` detects the `ReadOnlySpan<char>` object factory and sets `UseSpanBasedJsonConverter = true` in the serializer generator state.
+
+### Source Generator Behavior
+
+**State tracking**: `KeyedSerializerGeneratorState` has a `UseSpanBasedJsonConverter` boolean property that is included in equality comparison and hash code computation (ensuring incremental generation correctness).
+
+**Per-generator logic for setting `UseSpanBasedJsonConverter`**:
+
+- **`SmartEnumSourceGenerator`**: Sets to `true` when `!state.Settings.DisableSpanBasedJsonConversion && state.KeyMember?.SpecialType == SpecialType.System_String`
+- **`ValueObjectSourceGenerator`**: Always passes `false` (Value Objects require an explicit `[ObjectFactory<ReadOnlySpan<char>>]`)
+- **`ObjectFactorySourceGenerator`**: Sets to `true` when `state.AttributeInfo.ObjectFactories.Any(f => f.IsReadOnlySpanOfChar)`
+
+**Generated code pattern** (`KeyedJsonCodeGenerator`):
+
+```csharp
+// When UseSpanBasedJsonConverter = true
+#if NET9_0_OR_GREATER
+[System.Text.Json.Serialization.JsonConverter(typeof(
+    global::Thinktecture.Text.Json.Serialization.ThinktectureSpanParsableJsonConverterFactory<MyType, ValidationError>))]
+#else
+[System.Text.Json.Serialization.JsonConverter(typeof(
+    global::Thinktecture.Text.Json.Serialization.ThinktectureJsonConverterFactory<MyType, string, ValidationError>))]
+#endif
+partial class MyType { }
+```
+
+**Settings and constants**:
+
+- `SmartEnumAttribute<TKey>.DisableSpanBasedJsonConversion`: New attribute property (default `false`)
+- `AllEnumSettings` and `SmartEnumSettings`: Track the `DisableSpanBasedJsonConversion` value
+- `Constants.DISABLE_SPAN_BASED_JSON_CONVERSION`: String constant for attribute property lookup
+- `AttributeDataExtensions.FindDisableSpanBasedJsonConversion()`: Extension method to extract the setting from attribute data
+
+**`IConvertible<T>` update**: On NET9+, the interface uses `allows ref struct` constraint to support `ReadOnlySpan<char>` as the type parameter.
+
 ## Runtime Metadata System
 
 The runtime metadata system provides the bridge between compile-time source generation and runtime framework integration. This system is critical for serialization, model binding, type conversion, and other runtime operations.
@@ -338,6 +437,7 @@ public partial class MyEnum
 
 **Concrete implementations**:
 - `SmartEnumMetadata`: For Smart Enums
+  - Includes `Metadata.Keyed.SmartEnum.DisableSpanBasedJsonConversion` (`bool`, `init`): When `true`, prevents the runtime `ThinktectureJsonConverterFactory` from selecting the span-based JSON converter for this Smart Enum. Default `false`. Only meaningful for string-keyed enums. Set via `SmartEnumAttribute<TKey>.DisableSpanBasedJsonConversion` and emitted by `SmartEnumCodeGenerator` in metadata initialization.
 - `KeyedValueObjectMetadata`: For simple Value Objects with single key
 - `ComplexValueObjectMetadata`: For complex Value Objects with multiple members
 

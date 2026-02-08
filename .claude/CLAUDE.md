@@ -135,6 +135,7 @@ This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discr
     - Can be generic types
     - Supports `IParsable<T>`, `ISpanParsable<T>` (NET9+, zero-allocation), `IComparable<T>`, `IFormattable`
     - Configurable operators, conversion, Switch/Map generation
+    - **Span-based JSON deserialization** (NET9+, string keys only): Zero-allocation JSON deserialization enabled by default; transcodes UTF-8 JSON bytes directly to `ReadOnlySpan<char>` instead of allocating a `string`. Opt out per enum via `DisableSpanBasedJsonConversion = true`
 
 #### Value Objects
 
@@ -196,7 +197,7 @@ The `MetadataLookup` class provides cached metadata discovery via reflection. Ob
 
 ### Framework Integration Quick Reference
 
-**Serialization**: System.Text.Json, MessagePack, Newtonsoft.Json, ProtoBuf - reference package for auto-generation or manually register converters
+**Serialization**: System.Text.Json, MessagePack, Newtonsoft.Json, ProtoBuf - reference package for auto-generation or manually register converters. On NET9+, string-based Smart Enums and types with `[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]` automatically use zero-allocation span-based JSON deserialization (via `Utf8JsonReaderHelper` and `ThinktectureSpanParsableJsonConverter`)
 
 **Entity Framework Core**: Version-specific packages (8/9/10) - call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
 
@@ -214,6 +215,7 @@ The `MetadataLookup` class provides cached metadata discovery via reflection. Ob
 4. **Serialization not working**: Ensure integration package is referenced, or manually register converters/formatters
 5. **EF Core not converting**: Call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
 6. **ISpanParsable not available**: Requires NET9+; ensure project targets `net9.0` or later and key type implements `ISpanParsable<TKey>`
+7. **Span-based JSON deserialization causing issues**: Disable per Smart Enum with `[SmartEnum<string>(DisableSpanBasedJsonConversion = true)]`. For `ThinktectureJsonConverterFactory`, pass `skipSpanBasedDeserialization` callback to the constructor (NET9+ overload) to opt out at runtime
 
 ### Best Practices
 
@@ -225,6 +227,7 @@ The `MetadataLookup` class provides cached metadata discovery via reflection. Ob
 6. **Partial keyword**: Types must be marked `partial` for source generators to work
 7. **Culture-specific parsing**: Always pass appropriate `IFormatProvider` when parsing/formatting culture-sensitive types
 8. **Arithmetic operators**: Use unchecked arithmetic context - overflow/underflow wraps around
+9. **Span-based JSON for value objects**: To enable zero-allocation JSON deserialization for value objects on NET9+, add `[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]` to the type. Without this attribute, value objects use regular key-based JSON conversion
 
 ## Project Structure
 

@@ -137,7 +137,8 @@ public class KeyedNewtonsoftJsonCodeGeneratorStateBuilder
          _keyMember,
          attributeInfo,
          _serializationFrameworks,
-         []);
+         [],
+         false);
    }
 
    private static IKeyedSerializerGeneratorTypeInformation CreateType(

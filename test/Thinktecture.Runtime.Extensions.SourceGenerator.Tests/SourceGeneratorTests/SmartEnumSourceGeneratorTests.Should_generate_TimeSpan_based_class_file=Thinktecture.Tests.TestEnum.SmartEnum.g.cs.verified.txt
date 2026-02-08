@@ -15,6 +15,7 @@ namespace Thinktecture.Tests
          {
             KeyType = typeof(global::System.TimeSpan),
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
+            DisableSpanBasedJsonConversion = false,
             Items = new global::System.Lazy<global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.SmartEnumItemMetadata>>(
                      () => new global::System.Collections.Generic.List<global::Thinktecture.Internal.SmartEnumItemMetadata>(
                         global::System.Linq.Enumerable.Select(global::Thinktecture.Tests.TestEnum.Items, (item, index) =>
