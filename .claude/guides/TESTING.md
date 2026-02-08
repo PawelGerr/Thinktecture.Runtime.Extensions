@@ -9,6 +9,7 @@ This guide provides comprehensive testing strategy and organization rules for Th
 Primary testing framework for all unit and integration tests.
 
 **Key attributes**:
+
 - `[Fact]`: Single test case
 - `[Theory]`: Parameterized test with `[InlineData]` or `[MemberData]`
 - `[Collection]`: Group tests that share fixtures
@@ -18,6 +19,7 @@ Primary testing framework for all unit and integration tests.
 Fluent assertion library (uses same API as FluentAssertions).
 
 **Common assertions**:
+
 ```csharp
 result.Should().Be(expected);
 result.Should().NotBeNull();
@@ -31,6 +33,7 @@ action.Should().Throw<ArgumentException>().WithMessage("*invalid*");
 Snapshot testing framework for verifying complex outputs (especially generated code).
 
 **Usage**:
+
 ```csharp
 [Fact]
 public async Task Should_generate_expected_code()
@@ -41,6 +44,7 @@ public async Task Should_generate_expected_code()
 ```
 
 **Verified files**:
+
 - Created as `*.verified.txt` files next to test files
 - Committed to source control
 - Automatically compared on test runs
@@ -70,6 +74,7 @@ public void Should_return_correct_value_when_valid_input()
 ### Theory vs. Individual Tests
 
 **Analyze before creating separate tests**. Use `[Theory]` when:
+
 - Multiple inputs produce different outputs using same logic
 - Testing boundary conditions (null, empty, max values)
 - Testing combinations of parameters
@@ -87,6 +92,7 @@ public void Should_add_numbers_correctly(int a, int b, int expected)
 ```
 
 **Use separate `[Fact]` tests when**:
+
 - Tests have significantly different arrange or assert logic
 - Test names need to be descriptive of specific scenarios
 - Each test case requires different setup or teardown
@@ -94,6 +100,7 @@ public void Should_add_numbers_correctly(int a, int b, int expected)
 ### Edge Cases
 
 **Always test edge cases**:
+
 - Null values (for reference types)
 - Empty strings/collections
 - Boundary values (`int.MaxValue`, `int.MinValue`, `DateTime.MinValue`, etc.)
@@ -118,6 +125,7 @@ The test suite is organized into multiple projects, each with a specific purpose
 **CRITICAL FOR NEW FEATURES**: When adding a new feature, **always create new test types in this project** that exercise the new feature configuration.
 
 **Key characteristics**:
+
 - These are **partial type declarations** with attributes
 - Minimal implementation (often just the attribute decoration)
 - If the project builds successfully, the source generator produces valid C# code
@@ -125,12 +133,14 @@ The test suite is organized into multiple projects, each with a specific purpose
 - Other test projects reference and test these types
 
 **Organization**:
+
 - **`TestEnums/`**: Smart enum test types (e.g., `SmartEnum_ClassBased.cs`, `SmartEnum_CaseSensitive.cs`)
 - **`TestValueObjects/`**: Value object test types (e.g., `IntBasedStructValueObject.cs`, `StringBasedReferenceValueObject.cs`)
 - **`TestAdHocUnions/`**: Ad-hoc union test types
 - **`TestRegularUnions/`**: Regular union test types
 
 **Pattern**:
+
 ```csharp
 [ValueObject<int>(KeyMemberKind = MemberKind.Property,
                   KeyMemberName = "Property",
@@ -139,10 +149,12 @@ public partial struct IntBasedStructValueObject;
 ```
 
 **Notable test types for span-based JSON deserialization**:
+
 - `TestEnums/SmartEnum_StringBased_WithDisabledSpanBasedJsonConversion.cs`: Compilation test verifying that `DisableSpanBasedJsonConversion = true` on a string-based Smart Enum produces compilable generated code that falls back to string-based JSON deserialization
 - `TestValueObjects/ComplexValueObjectWithReadOnlySpanBasedObjectFactoryForJson.cs`: Compilation test verifying that a complex value object with `[ObjectFactory<ReadOnlySpan<char>>]` produces compilable generated code supporting span-based JSON deserialization
 
 **Best practices**:
+
 - Create separate types for each meaningful feature variation or configuration
 - Name types descriptively to indicate what feature/configuration they test
 - Keep implementations minimal - focus on compilation verification
@@ -163,6 +175,7 @@ Tests:  test/Thinktecture.Runtime.Extensions.Tests/Ns1/Ns2/MyClassTests/
 **1. Check for Existing Test Classes FIRST**
 
 Before creating a new test file, search for existing test classes that test:
+
 - The same class/method
 - Related functionality
 - The same feature area
@@ -170,6 +183,7 @@ Before creating a new test file, search for existing test classes that test:
 **2. Add to Existing Test Classes When Appropriate**
 
 Add new tests to existing test classes when:
+
 - Testing the same method with different scenarios
 - Testing closely related functionality
 - The test logically belongs with existing tests
@@ -177,6 +191,7 @@ Add new tests to existing test classes when:
 **3. Create New Test Classes Only When Necessary**
 
 Create a new test class/file when:
+
 - No fitting existing test class exists
 - Testing a different public member of a class
 - Testing a completely separate feature
@@ -228,6 +243,7 @@ public class MyGeneratorTests : CompilationTestBase
 ### Compilation Creation
 
 `CompilationTestBase` provides:
+
 - **`GetGeneratedOutputAsync`**: Compiles source, runs generator, returns output
 - **`CreateCompilation`**: Creates `CSharpCompilation` with references
 - Access to common references (System.Runtime, System.Linq, etc.)
@@ -235,6 +251,7 @@ public class MyGeneratorTests : CompilationTestBase
 ### Testing Attributes
 
 **Use real attributes** from the library:
+
 - `SmartEnumAttribute<T>`
 - `ValueObjectAttribute<T>`
 - `ComplexValueObjectAttribute`
@@ -518,29 +535,6 @@ public void Should_wrap_around_on_underflow()
 }
 ```
 
-## Performance Testing
-
-For performance-critical code, consider benchmarking:
-
-```csharp
-[Fact]
-public void Should_parse_quickly_from_span()
-{
-    var input = "42".AsSpan();
-    var iterations = 1_000_000;
-
-    var sw = Stopwatch.StartNew();
-    for (int i = 0; i < iterations; i++)
-    {
-        var _ = TestEnum.Parse(input, null);
-    }
-    sw.Stop();
-
-    // Assert reasonable performance (adjust threshold as needed)
-    sw.ElapsedMilliseconds.Should().BeLessThan(1000);
-}
-```
-
 ## Test Naming Conventions
 
 Use descriptive names following the pattern:
@@ -551,6 +545,7 @@ Should_[ExpectedBehavior]
 ```
 
 Examples:
+
 - `Should_return_null_when_input_is_null`
 - `Should_throw_ArgumentException_when_key_is_invalid`
 - `Should_generate_IParsable_implementation`
@@ -569,6 +564,7 @@ Examples:
 ## Continuous Integration
 
 Tests are run automatically on:
+
 - Every commit to any branch
 - Pull requests
 - Release builds

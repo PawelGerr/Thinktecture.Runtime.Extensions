@@ -1,14 +1,33 @@
 # Thinktecture.Runtime.Extensions - AI Assistant Guide
 
-This file provides core guidance for working with this repository. For specialized tasks, consult the referenced documentation files.
+This file is organized in tiers:
+
+- **Tier 1** (this file): Architecture essentials and mandatory policies. Always in context -- no need to load anything else for these.
+- **Tier 2** (guides): Task-specific workflows. Load the one guide matching your current task.
+- **Tier 3** (reference): Detailed lookup tables. Load only when you need exact specifications.
+
+## Mandatory Pre-Flight Protocol
+
+**Execute these checks BEFORE any codebase exploration or tool calls.** This is not advisory -- these are decision gates.
+
+**Step 1 -- Task routing.** Classify the user's intent against the Tier 2 routing table below. Load the matched guide. You MUST NOT make exploratory tool calls (find_symbol, search_for_pattern, get_symbols_overview) until the guide is loaded. Codebase exploration before guide loading is a protocol violation.
+
+**Step 2 -- Delegation check.** If the user's request involves 3 or more of: design, implementation, testing, review, documentation -- you MUST delegate to subagents via the Task tool. Do not produce an inline plan. Creating a comprehensive inline plan is NOT delegation.
+
+> **WRONG**: User says "I want to add feature X." Agent immediately calls find_symbol to explore.
+> **RIGHT**: Agent loads `../.claude/guides/DESIGN-DISCUSSION.md` first, then explores the codebase following the guide's workflow.
+
+> **WRONG**: User asks for feature + tests + docs. Agent produces a 200-line inline plan.
+> **RIGHT**: Agent says "This is a multi-phase task requiring subagents" and spawns the first agent.
+
+---
 
 ## Common Commands
 
-### Build and Test
-
-- **Build solution**: `dotnet build`
-- **Restore packages**: `dotnet restore`
-- **Run all tests**: `dotnet test`
+- **Build**: `dotnet build`
+- **Restore**: `dotnet restore`
+- **Test**: `dotnet test`
+- **Test (filtered)**: `dotnet test --filter "FullyQualifiedName~MyTestClass"`
 
 ### Development Requirements
 
@@ -16,238 +35,272 @@ This file provides core guidance for working with this repository. For specializ
 - C# 11+ for generated code
 - Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
 
-## AI Assistant Guidelines
+---
 
-### Task Delegation to Subagents
+## Tier 1: Architecture Essentials
 
-For larger tasks with multiple distinct steps, **always use specialized subagents** to keep the main context clean and manageable:
+A .NET library providing Smart Enums, Value Objects, and Discriminated Unions via Roslyn Source Generators.
 
-**ALWAYS delegate to subagents when:**
+### Type Categories
 
-- Implementing a new feature (use `feature-implementation-planner` → `feature-implementer`)
-- Writing comprehensive tests (use `feature-test-writer`)
-- Updating documentation after changes (use `documentation-updater`)
-- Reviewing completed implementations (use `feature-reviewer`)
-- Any task requiring multiple distinct sequential steps
+| Type                 | Attribute                                     | Description                                                                                                      |
+|----------------------|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| Keyed Smart Enum     | `[SmartEnum<TKey>]`                           | Type-safe enum with underlying key value (int, string, Guid, custom). Items are `public static readonly` fields. |
+| Keyless Smart Enum   | `[SmartEnum]`                                 | Type-safe enum without underlying value. Identified by field reference only.                                     |
+| Simple Value Object  | `[ValueObject<TKey>]`                         | Single-value immutable type wrapping one underlying value.                                                       |
+| Complex Value Object | `[ComplexValueObject]`                        | Multi-property immutable type.                                                                                   |
+| Ad-hoc Union         | `[Union<T1, T2, ...>]` or `[AdHocUnion(...)]` | "One of" several types. Up to 5 type parameters. Cannot be generic.                                              |
+| Regular Union        | `[Union]`                                     | Inheritance-based union. Abstract base with sealed derived types.                                                |
 
-**Why this matters:**
+All types must be declared as `partial`. Source generators produce: factory methods (`Create`, `TryCreate`, `Validate`), equality members, conversion operators, `Switch`/`Map` pattern matching, `IParsable<T>`/`ISpanParsable<T>` (NET9+), and serialization integration.
 
-- Prevents main context from growing too large with implementation details
-- Keeps conversation focused on high-level coordination
-- Allows specialized agents to maintain their own focused context
-- Enables better parallel execution of independent tasks
+### Type Details
 
-**Example workflow for "Add feature X":**
+**Keyed Smart Enums** (`[SmartEnum<TKey>]`):
 
-1. User requests feature → Use `feature-implementation-planner` to create plan
-2. Plan approved → Use `feature-implementer` to write code
-3. Implementation complete → Use `feature-test-writer` to add tests
-4. Tests passing → Use `documentation-updater` to update docs
-5. All done → Use `feature-reviewer` for final review
+- Items are `public static readonly` fields. No on-demand creation.
+- Interface implementations depend on key type capabilities: `IParsable<T>`, `ISpanParsable<T>` (NET9+), `IComparable<T>`, `IFormattable`
+- Span-based JSON deserialization (NET9+, string keys): automatic, opt out via `DisableSpanBasedJsonConversion = true`
 
-**Do NOT delegate simple tasks:**
+**Keyless Smart Enums** (`[SmartEnum]`):
 
-- Single-file edits
-- Quick bug fixes
-- Simple refactoring
-- Answering questions about code
+- No key, no lookup by value. Identified solely by field reference.
 
-### Zero-Tolerance for Hallucination
+**Simple Value Objects** (`[ValueObject<TKey>]`):
 
-When working with external libraries, frameworks, or any APIs (including .NET BCL, ASP.NET Core, Entity Framework Core, serialization frameworks, etc.), you MUST adhere to strict verification guidelines:
+- String keys MUST specify `[KeyMemberEqualityComparer<...>]`
+- Validation: prefer `ValidateFactoryArguments` over `ValidateConstructorArguments`
+- Zero-allocation JSON (NET9+): opt-in via `[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]`
 
-### 1. Never Guess or Assume API Behavior
+**Complex Value Objects** (`[ComplexValueObject]`):
 
-- **DO NOT** make assumptions about API signatures, method names, parameter types, return types, or behavior
-- **DO NOT** rely on memory or general knowledge about libraries
-- **DO NOT** proceed with implementation if you are not 100% certain about API details
+- Use `[IgnoreMember]` to exclude properties. Use `[MemberEqualityComparer<...>]` for custom equality.
 
-### 2. Verify Using Context7 MCP
+**Ad-hoc Unions** (`[Union<T1, T2>]` or `[AdHocUnion(...)]`):
 
-When you need information about any external library or framework:
+- Stateless types (`TXIsStateless = true`): store only discriminator, not instance. Prefer structs.
 
-1. **Use `mcp__context7__resolve-library-id`** to find the correct library ID
-2. **Use `mcp__context7__get-library-docs`** to retrieve up-to-date, accurate documentation
-3. **Base all implementation decisions on verified documentation**, not assumptions
+**Regular Unions** (`[Union]`):
 
-Examples of when to use Context7:
+- Base type abstract, derived types sealed. Conversion operators + Switch/Map.
 
-- Working with .NET BCL types (System.Text.Json, System.Linq, System.Collections, etc.)
-- Integration with frameworks (ASP.NET Core, Entity Framework Core, xUnit, etc.)
-- Third-party libraries (MessagePack, Newtonsoft.Json, ProtoBuf, etc.)
-- Roslyn APIs for source generators
-- Any API where you are not 100% certain of the exact behavior
+### What Gets Generated
 
-### 3. Verification Over Speed
+All types: equality members (`Equals`, `GetHashCode`, `==`, `!=`), `Switch`/`Map` pattern matching.
 
-- **It is better to take extra time to verify than to introduce bugs based on incorrect assumptions**
-- If documentation is unclear or incomplete, ask the user for clarification
-- If Context7 doesn't have the information, explicitly tell the user you need to verify before proceeding
+Additionally per type:
 
-### 4. Explicit Uncertainty Communication
-
-When you encounter uncertainty:
-
-- **State clearly**: "I need to verify the API behavior using Context7"
-- **Never proceed silently** with guessed implementations
-- **Document verification steps** so the user understands your process
-
-### 5. This Project's Code is Authoritative
-
-- For Thinktecture.Runtime.Extensions library code itself (not external dependencies), use the codebase as the source of truth
-- Read actual source code using Serena tools to understand internal behavior
-- Only for external dependencies must you use Context7 for verification
-
-### Summary
-
-**Zero hallucination policy**: If you don't know it with 100% certainty, verify it. Use Context7 MCP for external APIs, use Serena tools for internal codebase exploration, and ask the user when neither provides sufficient clarity.
-
-## Architecture Overview
-
-This is a .NET library providing **Smart Enums**, **Value Objects**, and **Discriminated Unions** through Roslyn Source Generators.
-
-### Core Components
-
-- **`src/Thinktecture.Runtime.Extensions`**: Core library with base interfaces, attributes, and runtime helpers
-- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`**: Roslyn Source Generators (6) and Analyzers (2) that create boilerplate code and validate usage
-- **Framework Integration Projects**: Separate projects for JSON, MessagePack, Newtonsoft.Json, ProtoBuf, EF Core (8/9/10), ASP.NET Core, and Swashbuckle
-
-### Source Generators
-
-1. **`SmartEnumSourceGenerator`**: For `[SmartEnum<T>]` or `[SmartEnum]` - factory methods, operators, interfaces, Switch/Map
-2. **`ValueObjectSourceGenerator`**: For `[ValueObject<T>]` or `[ComplexValueObject]` - factory methods, equality, operators, interfaces
-3. **`AdHocUnionSourceGenerator`**: For `[Union<T1, T2, ...>]` or `[AdHocUnion(...)]` - conversion operators, Switch/Map
-4. **`RegularUnionSourceGenerator`**: For `[Union]` inheritance-based unions - factory methods, Switch/Map
-5. **`ObjectFactorySourceGenerator`**: For `[ObjectFactory<T>]` - custom serialization/parsing logic
-6. **`AnnotationsSourceGenerator`**: JetBrains annotations if not already present
-
-### Analyzers
-
-1. **`ThinktectureRuntimeExtensionsAnalyzer`**: 40+ diagnostic rules validating correct usage (partial types, constructors, members, comparers, etc.)
-2. **`ThinktectureRuntimeExtensionsInternalUsageAnalyzer`**: Prevents usage of internal library APIs outside Thinktecture modules
-
-### Key Concepts
-
-#### Smart Enums
-
-- **Keyless `[SmartEnum]`**: Type-safe enums without underlying values (items as public static readonly fields)
-- **Keyed `[SmartEnum<TKey>]`**: Type-safe enums with underlying key values (int, string, Guid, custom types)
-    - Can be generic types
-    - Supports `IParsable<T>`, `ISpanParsable<T>` (NET9+, zero-allocation), `IComparable<T>`, `IFormattable`
-    - Configurable operators, conversion, Switch/Map generation
-
-#### Value Objects
-
-- **Simple `[ValueObject<TKey>]`**: Single-value immutable types (e.g., Amount, ProductId)
-    - String keys MUST specify `[KeyMemberEqualityComparer<...>]`
-    - Supports arithmetic operators, `IParsable<T>`, `ISpanParsable<T>` (NET9+)
-    - Can be generic types
-- **Complex `[ComplexValueObject]`**: Multi-property immutable types (e.g., DateRange)
-    - Use `[IgnoreMember]` to exclude properties
-    - Use `[MemberEqualityComparer<...>]` for custom per-member equality
-    - Can be generic types
-
-#### Discriminated Unions
-
-- **Ad-hoc `[Union<T1, T2>]` or `[AdHocUnion(typeof(T1), typeof(T2))]`**: Simple 2-5 type combinations
-    - Implicit conversion operators, IsT1/AsT1 properties, Switch/Map
-- **Regular `[Union]`**: Inheritance-based unions with derived types
-    - Static factory methods, Switch/Map over all derived types
-
-### Source Generation Pattern
-
-Types must be `partial` classes/structs. Generator creates:
-
-- Constructors and factory methods (`Create`, `TryCreate`, `Validate`)
-- Equality members (`Equals`, `GetHashCode`, operators)
-- Conversion operators and `IParsable<T>` implementations
-- Pattern matching methods (`Switch`, `Map`)
-- Integration with serializers and frameworks
-
-### Runtime Metadata System
-
-Generated types implement `IMetadataOwner` interface with runtime metadata that enables:
-
-- Serialization framework integration (JSON, MessagePack, Protobuf, etc.)
-- Type conversion and model binding
-- Discovery of key types and validation error types
-- Custom object factory resolution
-
-The `MetadataLookup` class provides cached metadata discovery via reflection. Object factories have priority over key-based metadata for conversion scenarios.
-
-**For detailed information**: See "Runtime Metadata System" section in [CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md) - essential reading when implementing serialization integrations or custom conversion logic.
-
-## Development Guidelines
-
-### Code Style
-
-- Follow `.editorconfig` settings (especially in `src/.editorconfig`)
-- **XML documentation required** for all publicly visible types and members (except source generator, analyzer, test, and sample projects)
-- Multi-target framework support (net8.0 base, with EF Core version-specific projects)
-- Don't use `#region`/`#endregion`
-
-### Validation Implementation
-
-- **Always prefer `ValidateFactoryArguments`** over `ValidateConstructorArguments`
-    - `ValidateFactoryArguments` returns `ValidationError` for better framework integration
-    - `ValidateConstructorArguments` can only throw exceptions, integrates poorly with frameworks
-- Use `ref` parameters to normalize values during validation
+- **Keyed Smart Enums / Value Objects**: factory methods (`Create`, `TryCreate`, `Validate`), conversion operators, `IParsable<T>`/`ISpanParsable<T>`, serializer integration
+- **Complex Value Objects**: factory methods, validation
+- **Ad-hoc Unions**: constructors, implicit/explicit conversion operators, `IsT1`/`AsT1` properties
+- **Regular Unions**: implicit/explicit conversion operators from derived types
 
 ### Framework Integration Quick Reference
 
-**Serialization**: System.Text.Json, MessagePack, Newtonsoft.Json, ProtoBuf - reference package for auto-generation or manually register converters
+- **Serialization** (System.Text.Json, MessagePack, Newtonsoft.Json): Reference integration package for auto-generation. NET9+ string-based Smart Enums use zero-allocation span-based JSON by default.
+- **Entity Framework Core**: Version-specific packages (8/9/10). Call `.UseThinktectureValueConverters()`.
+- **ASP.NET Core**: Model binding via auto-generated `IParsable<T>`. Custom parsing via `[ObjectFactory<string>]`.
+- **Swashbuckle/OpenAPI**: Schema and operation filters for proper documentation.
 
-**Entity Framework Core**: Version-specific packages (8/9/10) - call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
+### Source Generator Pipeline
 
-**ASP.NET Core**: Model binding via `IParsable<T>` interface (auto-generated) - use `[ObjectFactory<string>]` for custom parsing
+```
+SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
+  → Transform (extract semantic info from ISymbol into state object)
+  → State Object (lightweight, IEquatable<T>, no ISymbol references)
+  → Code Generator Factory (selects appropriate generator)
+  → Code Generator (produces C# via StringBuilder)
+```
 
-**Swashbuckle/OpenAPI**: Schema and operation filters for proper OpenAPI documentation
+### Generator Quick Reference
 
-## Quick Troubleshooting
+| Generator                      | State Object                                                                     | Key Code Generators                                |
+|--------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------|
+| `SmartEnumSourceGenerator`     | `SmartEnumSourceGeneratorState`                                                  | `SmartEnumCodeGenerator`, `KeyedJsonCodeGenerator` |
+| `ValueObjectSourceGenerator`   | `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState` | `ValueObjectCodeGenerator`                         |
+| `AdHocUnionSourceGenerator`    | `AdHocUnionSourceGeneratorState`                                                 | `AdHocUnionCodeGenerator`                          |
+| `RegularUnionSourceGenerator`  | `RegularUnionSourceGeneratorState`                                               | `RegularUnionCodeGenerator`                        |
+| `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                       |
+| `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                              |
 
-### Common Issues
+### Analyzers
 
-1. **"Type must be partial"**: Add `partial` keyword to your class/struct declaration
-2. **"String-based value object needs equality comparer"**: Add `[KeyMemberEqualityComparer<MyType, string, StringComparer>]` attribute
-3. **"Smart enum has no items"**: Ensure items are public static readonly fields of the enum type
-4. **Serialization not working**: Ensure integration package is referenced, or manually register converters/formatters
-5. **EF Core not converting**: Call `.UseThinktectureValueConverters()` on DbContextOptionsBuilder
-6. **ISpanParsable not available**: Requires NET9+; ensure project targets `net9.0` or later and key type implements `ISpanParsable<TKey>`
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 40+ diagnostic rules (`TTRESG` prefix) for correct usage
+2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 
-### Best Practices
+### Runtime Metadata
 
-1. **String-based keys/members**: Always explicitly specify equality comparer to avoid culture-sensitive comparisons
-2. **Validation**: Prefer `ValidateFactoryArguments` over `ValidateConstructorArguments`
-3. **Immutability**: All members should be readonly (fields) or have no setter/private init (properties)
-4. **Constructors**: Keep constructors private to enforce use of factory methods
-5. **Smart Enum items**: Must be public static readonly fields
-6. **Partial keyword**: Types must be marked `partial` for source generators to work
-7. **Culture-specific parsing**: Always pass appropriate `IFormatProvider` when parsing/formatting culture-sensitive types
-8. **Arithmetic operators**: Use unchecked arithmetic context - overflow/underflow wraps around
+Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Thinktecture.Internal`) discovers and caches metadata for serialization, model binding, and type conversion. **Object factories (`[ObjectFactory<T>]`) have priority over key-based metadata** when both exist.
 
-## Project Structure
+### Common Bug Patterns
+
+| Pattern                                                                               | Where to Look                               |
+|---------------------------------------------------------------------------------------|---------------------------------------------|
+| State equality staleness -- `Equals`/`GetHashCode` not updated after adding new field | State object classes                        |
+| Missing `#if` block -- NET9+ feature generated without conditional compilation        | Code generators                             |
+| Attribute property not extracted -- new property added but not read                   | `AttributeDataExtensions`, settings classes |
+| Object factory priority -- factory overrides key-based metadata unexpectedly          | `MetadataLookup.FindMetadataForConversion`  |
+
+### Key Directories
+
+- **`src/Thinktecture.Runtime.Extensions`** -- Core library (interfaces, attributes, runtime helpers)
+- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`** -- Source Generators and Analyzers
+- **Framework Integration** -- `.Json`, `.MessagePack`, `.Newtonsoft`, `.EntityFrameworkCore8/9/10`, `.AspNetCore`, `.Swashbuckle`
 
 ### Key Files
 
-- `Thinktecture.Runtime.Extensions.slnx`: Main solution file (.slnx format)
-- `Directory.Build.props`: Global MSBuild properties (version, framework targets)
-- `Directory.Packages.props`: Centralized NuGet package version management - **manage all package versions here**
-- `global.json`: .NET SDK version specification (currently 9.0.0)
-- `.editorconfig`: Code style configuration (especially in `src/`)
+- `Thinktecture.Runtime.Extensions.slnx` -- Main solution file (.slnx format)
+- `Directory.Build.props` -- Global MSBuild properties (version, framework targets)
+- `Directory.Packages.props` -- Centralized NuGet package version management (all versions here)
+- `global.json` -- .NET SDK version specification
+- `.editorconfig` -- Code style configuration (especially `src/.editorconfig`)
 
-## Specialized Documentation
+---
 
-For specific tasks, consult these specialized documentation files:
+## Tier 1: Cross-Cutting Policies
 
-- **[CLAUDE-FEATURE-DEV.md](CLAUDE-FEATURE-DEV.md)**: Source generator architecture, runtime metadata system (MetadataLookup), implementing new features, state objects, code generator patterns
-- **[CLAUDE-TESTING.md](CLAUDE-TESTING.md)**: Testing strategy, test organization, frameworks (xUnit, Verify, AwesomeAssertions)
-- **[CLAUDE-REVIEW.md](CLAUDE-REVIEW.md)**: Code review checklists, best practices verification, common pitfalls
-- **[CLAUDE-ATTRIBUTES.md](CLAUDE-ATTRIBUTES.md)**: Complete attribute reference with all properties and configuration options
+These rules apply to ALL tasks. They are mandatory and non-negotiable.
 
-**When to consult specialized docs:**
+### Zero-Hallucination Policy
 
-- Implementing a new feature → Read CLAUDE-FEATURE-DEV.md
-- Working with serialization/framework integration → Read CLAUDE-FEATURE-DEV.md (Runtime Metadata System section)
-- Writing or updating tests → Read CLAUDE-TESTING.md
-- Reviewing code changes → Read CLAUDE-REVIEW.md
-- Working with attributes or need configuration details → Read CLAUDE-ATTRIBUTES.md
+**NEVER write, plan, or design code that calls an external API without first verifying its signature via Context7.** This includes .NET BCL methods you think you know. Training data may be outdated or wrong -- always verify.
+
+**Early trigger**: If the user's prompt names a specific external API by name (e.g., `JsonSerializer.Deserialize`, `ISpanFormattable.TryFormat`), verify that API as your first action -- before any codebase exploration. See Pre-Flight Protocol Step 1.
+
+**What Requires Verification**: All external APIs -- .NET BCL (`System.*`, `Microsoft.*`), Roslyn APIs (`Microsoft.CodeAnalysis.*`), serialization frameworks (System.Text.Json, MessagePack, Newtonsoft.Json), testing frameworks (xUnit, AwesomeAssertions, Verify.Xunit), framework integrations (EF Core, ASP.NET Core, Swashbuckle), and any third-party NuGet package.
+
+**Verification Workflow** (mandatory, not optional):
+
+1. **Recognize**: The task involves an external API (named in the prompt or needed for implementation).
+2. **Stop**: Do not write the code yet. Do not defer verification until later.
+3. **Verify via Context7 MCP**: Call `mcp__context7__resolve-library-id` then `mcp__context7__query-docs` to confirm the exact method signature, parameters, and return type.
+4. **Implement**: Base all implementation decisions on verified documentation only.
+
+Skipping step 3 is a policy violation, even if you are confident you know the API. "I'll verify later" is also a violation -- verify now.
+
+> **Common violation**: User says "Add a method using JsonSerializer.Deserialize with JsonTypeInfo." Agent explores the codebase for 20+ tool calls, then writes code using the API from memory. **This is wrong.** The agent's first tool call should have been `resolve-library-id` for System.Text.Json.
+
+**Internal Code is Authoritative**: For this repository, use Serena tools (`find_symbol`, `get_symbols_overview`, `search_for_pattern`) to read actual source code. Do not use Context7 for internal APIs.
+
+**When Context7 Lacks the Information**: Use web search as fallback. If that also fails, tell the user: "I could not verify [API]. I need clarification before proceeding." Never guess.
+
+### Code Style Policy
+
+**General**:
+
+- Follow `.editorconfig` settings (especially `src/.editorconfig`)
+- XML documentation required for all publicly visible types and members in `src/Thinktecture.Runtime.Extensions` and framework integration projects
+- XML documentation NOT required in source generator, analyzer, test, and sample projects
+- Do not use `#region`/`#endregion`
+
+**Source Generator Code** (treat as a checklist -- verify all items before presenting code):
+
+- All generators implement `IIncrementalGenerator` with the incremental pipeline pattern
+- State objects must implement `IEquatable<T>` with proper `Equals` and `GetHashCode` -- this is critical for incremental generation caching
+- State objects must be lightweight: extract data from `ISymbol` into plain properties, never carry `ISymbol` references
+- Use `ImmutableArray<T>` for collections in state objects
+- Use `unchecked` blocks in `GetHashCode` implementations with the `(hashCode * 397) ^ ...` pattern
+- Code generators use `StringBuilder` for output construction
+- Use Fully Qualified Names: Use `global::` prefix for type references (e.g., `global::System.ArgumentException`) -- do not generate using directives. Exception: C# language keywords (`string`, `int`, `bool`, etc.) are used as-is
+- Use `#if NET9_0_OR_GREATER` conditional compilation in generated code for NET9+-only features
+- Generated files use file-scoped namespaces
+
+**Runtime Library Code**:
+
+- Public API surface must have XML documentation
+- Internal implementation classes go in `Thinktecture.Internal` namespace
+- Use `[MethodImpl(MethodImplOptions.AggressiveInlining)]` for performance-critical small methods
+- Thread `CancellationToken` through long-running operations
+
+**Analyzer Code**:
+
+- Diagnostic IDs use `TTRESG` prefix (e.g., `TTRESG001`)
+- Category is always `"Thinktecture.Runtime.Extensions"`
+- Enable concurrent execution: `context.EnableConcurrentExecution()`
+- Configure generated code analysis: `context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None)`
+- Report diagnostics with precise locations
+
+**Test Code**:
+
+- Use xUnit as the test framework
+- Use AwesomeAssertions for fluent assertions
+- Use Verify.Xunit for snapshot testing generated code
+- Test naming: `Should_[ExpectedBehavior]_when_[Condition]`
+
+**Multi-Target Framework**:
+
+- Core library targets net8.0 as base
+- Use `#if NET9_0_OR_GREATER` for span-based features, `allows ref struct`, `ISpanParsable<T>`
+- Always test on all target frameworks
+
+**Generated Code Patterns** (rules for what source generators emit):
+
+- Generated arithmetic operators: implement both checked and unchecked versions
+- Thread `IFormatProvider` through all generated parsing/formatting methods
+- Use `StaticAbstractInvoker.ParseValue<TKey>` for zero-allocation span-based parsing on NET9+
+
+These policies are the single source of truth. There are no separate policy files.
+
+---
+
+## Tier 2: Task Guides
+
+When starting a task, identify the user's intent and load **one** guide for detailed workflow instructions. See Pre-Flight Protocol Step 2.
+
+**Your next tool call after reading this file must be loading the matched guide.** Do not call `find_symbol`, `search_for_pattern`, `get_symbols_overview`, or any codebase exploration tool before loading the guide. The guide contains project-specific patterns and constraints that override general knowledge.
+
+> **Common violation**: User says "I want to add feature X." Agent immediately calls find_symbol or search_for_pattern to explore the codebase. **This is wrong.** The agent should load `../.claude/guides/DESIGN-DISCUSSION.md` first, then follow the workflow inside it.
+
+| User Intent                              | Load Guide                               | Agent (if complex)                                     |
+|------------------------------------------|------------------------------------------|--------------------------------------------------------|
+| Bug report / "X doesn't work"            | `../.claude/guides/INVESTIGATION.md`     | `bug-investigator`                                     |
+| Feature request / "I want to add X"      | `../.claude/guides/DESIGN-DISCUSSION.md` | `design-advisor` then `feature-implementation-planner` |
+| "Implement the plan"                     | `../.claude/guides/IMPLEMENTATION.md`    | `feature-implementer`                                  |
+| Write/update tests                       | `../.claude/guides/TESTING.md`           | `test-writer`                                          |
+| Troubleshooting / quick fix              | `../.claude/guides/INVESTIGATION.md`     | (inline response)                                      |
+| Review code changes                      | `../.claude/guides/INVESTIGATION.md`     | `feature-reviewer`                                     |
+| Write user documentation                 | (no guide needed -- embedded in agent)   | `documentation-updater`                                |
+| "How do I add a new analyzer/attribute?" | `../.claude/guides/IMPLEMENTATION.md`    | (inline response)                                      |
+
+**Before ANY code changes, follow the Cross-Cutting Policies above** (they are already in this file).
+
+**Serena memories** -- read when working in related areas (check `list_memories` for available topics).
+
+### Task Delegation to Subagents
+
+**Delegation means spawning a subagent via the Task tool.** Creating an inline plan is NOT delegation. If you find yourself writing an implementation plan longer than 10 lines, stop and delegate instead.
+
+**ALWAYS delegate when the user's request involves 3 or more of:** design, implementation, testing, review, documentation. This is a hard trigger -- do not override it. See Pre-Flight Protocol Step 3.
+
+**Also delegate when:**
+
+- Implementing a new feature (multi-step)
+- Writing comprehensive tests
+- Updating documentation after changes
+- Reviewing completed implementations
+
+**Do NOT delegate:**
+
+- Single-file edits, quick bug fixes, simple refactoring, answering questions
+- Note: if the user's request explicitly includes "tests and documentation" alongside implementation, that is 3+ phases and ALWAYS triggers delegation, even if it looks like a simple feature
+
+**Typical workflow for a feature request:**
+
+1. `design-advisor` -- discuss design and tradeoffs
+2. `feature-implementation-planner` -- create detailed implementation plan
+3. `feature-implementer` -- write code
+4. `test-writer` -- add tests
+5. `feature-reviewer` -- review changes
+6. `documentation-updater` -- update docs
+
+> **Common violation**: User asks for "feature X including tests and documentation." Agent produces a 200-line inline implementation plan. **This is wrong.** The agent should say "This requires multiple specialized phases. I'll coordinate subagents." and spawn the first agent.
+
+---
+
+## Tier 3: Detailed Reference
+
+Load these only when you need exact specifications during a task. Do not load preemptively.
+
+| Resource                  | When to Load                                                                   |
+|---------------------------|--------------------------------------------------------------------------------|
+| `reference/ATTRIBUTES.md` | Need exact attribute property names, types, defaults, or configuration options |
