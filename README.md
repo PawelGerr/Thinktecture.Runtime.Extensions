@@ -3,7 +3,6 @@
 ![NuGet Downloads](https://img.shields.io/nuget/dt/Thinktecture.Runtime.Extensions)
 
 [![Thinktecture.Runtime.Extensions](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.svg?maxAge=60&label=Thinktecture.Runtime.Extensions)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions/)  
-[![Thinktecture.Runtime.Extensions.EntityFrameworkCore7](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore7.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore7)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore7/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore8](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore8.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore8)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore8/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore9](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore9.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore9)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore9/)  
 [![Thinktecture.Runtime.Extensions.EntityFrameworkCore10](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore10.svg?maxAge=60&label=Thinktecture.Runtime.Extensions.EntityFrameworkCore10)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore10/)  
@@ -55,7 +54,7 @@ See [wiki](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki) fo
 
 # Migrations
 
-* [Migration from v9 to v10 (preview)](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v9-to-v10)
+* [Migration from v9 to v10](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v9-to-v10)
 * [Migration from v8 to v9](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Migration-from-v8-to-v9)
 
 # Ideas and real-world use cases
