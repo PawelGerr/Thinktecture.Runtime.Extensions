@@ -400,7 +400,11 @@ public class TestClass
    private readonly int _field;
 }
 ";
-      var compilation = CreateCompilation(src, additionalReferences: [typeof(MessagePack.MessagePackFormatterAttribute).Assembly.Location]);
+      var compilation = CreateCompilation(src, additionalReferences:
+      [
+         typeof(System.Text.Json.Serialization.JsonConverterAttribute).Assembly.Location,
+         typeof(MessagePack.MessagePackFormatterAttribute).Assembly.Location
+      ]);
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
       var field = (IFieldSymbol)type.GetMembers("_field").First();
