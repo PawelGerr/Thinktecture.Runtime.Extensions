@@ -53,8 +53,8 @@ Each generator has corresponding state classes that capture all information need
 
 ### Union State
 
-- **`AdHocUnionSourceGeneratorState`**: State for ad-hoc unions (Union<T1, T2, ...>)
-- **`RegularUnionSourceGeneratorState`**: State for inheritance-based unions
+- **`AdHocUnionSourceGenState`**: State for ad-hoc unions (Union<T1, T2, ...>)
+- **`RegularUnionSourceGenState`**: State for inheritance-based unions
 
 ### Common State Interfaces
 
@@ -181,7 +181,7 @@ Switch/Map methods are generated for Smart Enums, Regular Unions, and Ad-hoc Uni
 
 1. **Item/variant discovery**: The generator collects items (Smart Enum fields), derived types (Regular Unions), or member types (Ad-hoc Unions) from the state object.
 2. **Parameter name derivation**: Each item/variant name is converted to a camelCase parameter name. For Regular Unions with nested types, the `NestedUnionParameterNames` setting controls whether intermediate type names are included (e.g., `failureNotFound` vs `notFound`).
-3. **Overload generation**: The generator emits multiple overloads per method -- `Switch` has void (`Action`) and returning (`Func<TResult>`) variants, plus state variants with a `TState` parameter. `Map` takes direct `TResult` values instead of lambdas. When `DefaultWithPartialNameMatching` is configured, `SwitchPartially`/`MapPartially` overloads are also generated with a `@default` fallback parameter.
+3. **Overload generation**: The generator emits multiple overloads per method -- `Switch` has void (`Action`) and returning (`Func<TResult>`) variants, plus state variants with a `TState` parameter. `Map` takes direct `TResult` values instead of lambdas. When `DefaultWithPartialOverloads` is configured, `SwitchPartially`/`MapPartially` overloads are also generated with a `@default` fallback parameter.
 4. **Dispatch logic**: The generated method body differs by type category:
     - **Smart Enums**: Identity comparison (`ReferenceEquals`) against the static item fields
     - **Regular Unions**: Type checks against derived types
@@ -189,7 +189,7 @@ Switch/Map methods are generated for Smart Enums, Regular Unions, and Ad-hoc Uni
 
 ### Configuration settings
 
-- **`SwitchMapMethodsGeneration`**: Controls which overloads to generate (`Default`, `DefaultWithPartialNameMatching`, `None`)
+- **`SwitchMapMethodsGeneration`**: Controls which overloads to generate (`Default`, `DefaultWithPartialOverloads`, `None`)
 - **`SwitchMapStateParameterName`**: Name of the state parameter in state overloads (default: `"state"`)
 
 ## StaticAbstractInvoker Pattern (NET9+)
@@ -422,12 +422,15 @@ public partial class MyEnum
 - `ValidationErrorType`: Type returned by validation methods
 - `ConvertFromKeyExpression`: Lambda expression for converting from key to type
 
-**Concrete implementations**:
+**Concrete implementations** (these are nested classes within `Metadata`):
 
-- `SmartEnumMetadata`: For Smart Enums
-    - Includes `Metadata.Keyed.SmartEnum.DisableSpanBasedJsonConversion` (`bool`, `init`): When `true`, prevents the runtime `ThinktectureJsonConverterFactory` from selecting the span-based JSON converter for this Smart Enum. Default `false`. Only meaningful for string-keyed enums. Set via `SmartEnumAttribute<TKey>.DisableSpanBasedJsonConversion` and emitted by `SmartEnumCodeGenerator` in metadata initialization.
-- `KeyedValueObjectMetadata`: For simple Value Objects with single key
-- `ComplexValueObjectMetadata`: For complex Value Objects with multiple members
+- `Metadata.Keyed.SmartEnum`: For Smart Enums
+    - Includes `DisableSpanBasedJsonConversion` (`bool`, `init`): When `true`, prevents the runtime `ThinktectureJsonConverterFactory` from selecting the span-based JSON converter for this Smart Enum. Default `false`. Only meaningful for string-keyed enums. Set via `SmartEnumAttribute<TKey>.DisableSpanBasedJsonConversion` and emitted by `SmartEnumCodeGenerator` in metadata initialization.
+- `Metadata.Keyed.ValueObject`: For simple Value Objects with single key
+- `Metadata.ComplexValueObject`: For complex Value Objects with multiple members
+- `Metadata.AdHocUnion`: For Ad-hoc Unions
+- `Metadata.RegularUnion`: For Regular Unions
+- `Metadata.KeylessSmartEnum`: For Keyless Smart Enums
 
 **`ObjectFactoryMetadata`**: Metadata for `[ObjectFactory<T>]` attributes
 
@@ -660,7 +663,7 @@ File: `test/Thinktecture.Runtime.Extensions.SourceGenerator.Tests/SourceGenerato
 **Step 1 -- Define the DiagnosticDescriptor**
 File: `src/Thinktecture.Runtime.Extensions.SourceGenerator/CodeAnalysis/DiagnosticsDescriptors.cs`
 
-- Choose next available ID (e.g. `TTRESG042`). IDs below 100 are errors; 100+ are warnings/info.
+- Choose next available ID (e.g. `TTRESG042`). IDs below 100 are primarily errors (with rare exceptions); 100+ are warnings/info.
 - Define `static readonly DiagnosticDescriptor` with title, message format, category `"Thinktecture.Runtime.Extensions"`, and severity.
 
 **Step 2 -- Register and implement**

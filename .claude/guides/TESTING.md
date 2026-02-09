@@ -28,7 +28,7 @@ collection.Should().Contain(item);
 action.Should().Throw<ArgumentException>().WithMessage("*invalid*");
 ```
 
-### Verify.Xunit
+### Verify.XunitV3
 
 Snapshot testing framework for verifying complex outputs (especially generated code).
 
@@ -36,10 +36,10 @@ Snapshot testing framework for verifying complex outputs (especially generated c
 
 ```csharp
 [Fact]
-public async Task Should_generate_expected_code()
+public Task Should_generate_expected_code()
 {
-    var output = await GetGeneratedOutputAsync(source);
-    await Verify(output);
+    var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source);
+    return Verify(output);
 }
 ```
 
@@ -116,7 +116,7 @@ The test suite is organized into multiple projects, each with a specific purpose
 1. **`Thinktecture.Runtime.Extensions.SourceGenerator.Tests`**: Tests for source generators and analyzers themselves
 2. **`Thinktecture.Runtime.Extensions.Tests.Shared`**: Compilation smoke tests
 3. **`Thinktecture.Runtime.Extensions.Tests`**: Core runtime functionality tests
-4. **Framework integration test projects**: Tests for specific framework integrations (JSON, EF Core, etc.)
+4. **Framework integration test projects**: Tests for specific framework integrations (JSON, MessagePack, Newtonsoft.Json, EF Core 8/9/10, ASP.NET Core, Swashbuckle including 3.0 and 3.1 variants)
 
 ### Thinktecture.Runtime.Extensions.Tests.Shared
 
@@ -212,13 +212,13 @@ test/Project.Tests/
 
 ### CompilationTestBase
 
-Use `CompilationTestBase` for testing source generators and analyzers:
+Use `SourceGeneratorTestsBase` for testing source generators:
 
 ```csharp
-public class MyGeneratorTests : CompilationTestBase
+public class MyGeneratorTests : SourceGeneratorTestsBase
 {
     [Fact]
-    public async Task Should_generate_smart_enum()
+    public Task Should_generate_smart_enum()
     {
         var source = @"
             namespace Thinktecture.Tests
@@ -231,11 +231,9 @@ public class MyGeneratorTests : CompilationTestBase
             }
         ";
 
-        var output = await GetGeneratedOutputAsync(
-            source,
-            typeof(SmartEnumSourceGenerator));
+        var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source);
 
-        await Verify(output);
+        return Verify(output);
     }
 }
 ```
@@ -244,7 +242,7 @@ public class MyGeneratorTests : CompilationTestBase
 
 `CompilationTestBase` provides:
 
-- **`GetGeneratedOutputAsync`**: Compiles source, runs generator, returns output
+- **`GetGeneratedOutput<T>`** (in `SourceGeneratorTestsBase`): Compiles source, runs generator, returns output (synchronous, not async)
 - **`CreateCompilation`**: Creates `CSharpCompilation` with references
 - Access to common references (System.Runtime, System.Linq, etc.)
 

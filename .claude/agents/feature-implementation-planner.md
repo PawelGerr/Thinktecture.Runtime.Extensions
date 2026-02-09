@@ -23,6 +23,7 @@ Before creating any plan, read the guides relevant to the feature:
 ## Essential Rules
 
 **New attribute property checklist** (most common feature type):
+
 1. Add property to attribute class in `src/Thinktecture.Runtime.Extensions/`
 2. Add string constant to `Constants.Attributes.Properties`
 3. Add `FindXxx()` method to `AttributeDataExtensions`
@@ -39,6 +40,7 @@ Before creating any plan, read the guides relevant to the feature:
 ### Common State Interfaces
 
 When planning state object changes, reference these interfaces:
+
 - **`ITypeInformation`**: Common type metadata (name, namespace, accessibility, containing types, generic parameters)
 - **`ITypedMemberState`**: Member information with type details
 - **`IMemberState`**: Basic member information
@@ -47,6 +49,7 @@ When planning state object changes, reference these interfaces:
 ### Object Factory Pattern Summary
 
 When planning features involving `[ObjectFactory<T>]`:
+
 - **User implements**: `Validate(T value, IFormatProvider? provider, out MyType? item)` and optionally `ToValue()` when `UseForSerialization` is set
 - **Generator produces**: `IObjectFactory<MyType, T, TValidationError>` interface, `IParsable<T>` (when T is `string`), serializer integration, `IConvertible<T>` interface
 - **Zero-allocation JSON**: `[ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]` sets `UseSpanBasedJsonConverter = true`
@@ -100,7 +103,7 @@ List every external API the implementation will use and flag those needing verif
 - Compilation tests in Tests.Shared (generated code compiles correctly)
 - Behavior tests (runtime correctness)
 - Integration tests (framework interactions)
-- Snapshot tests with Verify.Xunit (generated code output)
+- Snapshot tests with Verify.XunitV3 (generated code output)
 - Edge cases and error scenarios
 
 ### 7. Documentation Requirements

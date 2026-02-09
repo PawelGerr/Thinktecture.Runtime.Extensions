@@ -303,25 +303,25 @@ ObjectFactoryAttribute()
 
 ## Additional Attributes
 
-### KeyMemberEqualityComparerAttribute&lt;TType, TMember, TEqualityComparer&gt;
+### KeyMemberEqualityComparerAttribute&lt;TAccessor, TKey&gt;
 
-Specify custom equality comparer for key member.
+Specify custom equality comparer for key member. `TAccessor` must implement `IEqualityComparerAccessor<TKey>`.
 
 **Usage**:
 
 ```csharp
 [ValueObject<string>]
-[KeyMemberEqualityComparer<ProductId, string, StringComparer>(typeof(StringComparer), nameof(StringComparer.Ordinal))]
+[KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
 public partial class ProductId { }
 ```
 
-### KeyMemberComparerAttribute&lt;TType, TMember, TComparer&gt;
+### KeyMemberComparerAttribute&lt;TAccessor, TKey&gt;
 
-Specify custom comparer for key member (for ordering).
+Specify custom comparer for key member (for ordering). `TAccessor` must implement `IComparerAccessor<TKey>`.
 
-### MemberEqualityComparerAttribute&lt;TType, TMember, TEqualityComparer&gt;
+### MemberEqualityComparerAttribute&lt;T, TMember&gt;
 
-Specify custom equality comparer for a specific member in complex value objects.
+Specify custom equality comparer for a specific member in complex value objects. `T` must implement `IEqualityComparerAccessor<TMember>`.
 
 **Usage**:
 
@@ -329,7 +329,7 @@ Specify custom equality comparer for a specific member in complex value objects.
 [ComplexValueObject]
 public partial class Person
 {
-    [MemberEqualityComparer<Person, string, StringComparer>(typeof(StringComparer), nameof(StringComparer.OrdinalIgnoreCase))]
+    [MemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
     public string Name { get; }
 }
 ```
@@ -360,6 +360,12 @@ Mark a type as a validation error (implements `IValidationError`).
 
 Inject delegate parameters into constructor from partial methods.
 
+**Properties**:
+
+| Property       | Type      | Default | Description                               |
+|----------------|-----------|---------|-------------------------------------------|
+| `DelegateName` | `string?` | `null`  | Override the name of the delegate parameter |
+
 **Usage**:
 
 ```csharp
@@ -375,7 +381,13 @@ public partial class Status
 
 ### UnionSwitchMapOverloadAttribute
 
-Customize generated Switch/Map overloads for regular unions.
+Customize generated Switch/Map overloads for regular unions. `AllowMultiple = true`.
+
+**Properties**:
+
+| Property | Type     | Default | Description                                              |
+|----------|----------|---------|----------------------------------------------------------|
+| `StopAt` | `Type[]` | `[]`    | Types at which to stop generating Switch/Map overloads   |
 
 ## Enums
 
@@ -408,7 +420,7 @@ Customize generated Switch/Map overloads for regular unions.
 ### SwitchMapMethodsGeneration
 
 - `Default`: Generate default Switch/Map methods
-- `DefaultWithPartialNameMatching`: Generate default + partial name matching overloads
+- `DefaultWithPartialOverloads`: Generate default + partial overloads (`SwitchPartially`/`MapPartially`)
 - `None`: Skip Switch/Map generation
 
 ### SerializationFrameworks

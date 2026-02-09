@@ -32,7 +32,7 @@ This file is organized in tiers:
 ### Development Requirements
 
 - .NET 10.0 SDK (as specified in global.json)
-- C# 11+ for generated code
+- C# 14.0 (as specified in Directory.Build.props)
 - Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
 
 ---
@@ -114,18 +114,18 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Generator Quick Reference
 
-| Generator                      | State Object                                                                     | Key Code Generators                                |
-|--------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------|
-| `SmartEnumSourceGenerator`     | `SmartEnumSourceGeneratorState`                                                  | `SmartEnumCodeGenerator`, `KeyedJsonCodeGenerator` |
-| `ValueObjectSourceGenerator`   | `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState` | `ValueObjectCodeGenerator`                         |
-| `AdHocUnionSourceGenerator`    | `AdHocUnionSourceGeneratorState`                                                 | `AdHocUnionCodeGenerator`                          |
-| `RegularUnionSourceGenerator`  | `RegularUnionSourceGeneratorState`                                               | `RegularUnionCodeGenerator`                        |
-| `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                       |
-| `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                              |
+| Generator                      | State Object                                                                     | Key Code Generators                                                |
+|--------------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| `SmartEnumSourceGenerator`     | `SmartEnumSourceGeneratorState`                                                  | `SmartEnumCodeGenerator`, `KeyedJsonCodeGenerator`                 |
+| `ValueObjectSourceGenerator`   | `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState` | `KeyedValueObjectCodeGenerator`, `ComplexValueObjectCodeGenerator` |
+| `AdHocUnionSourceGenerator`    | `AdHocUnionSourceGenState`                                                       | `AdHocUnionCodeGenerator`                                          |
+| `RegularUnionSourceGenerator`  | `RegularUnionSourceGenState`                                                     | `RegularUnionCodeGenerator`                                        |
+| `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                                       |
+| `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                                              |
 
 ### Analyzers
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 40+ diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 54 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 
 ### Runtime Metadata
@@ -165,9 +165,9 @@ These rules apply to ALL tasks. They are mandatory and non-negotiable.
 
 **NEVER write, plan, or design code that calls an external API without first verifying its signature via Context7.** This includes .NET BCL methods you think you know. Training data may be outdated or wrong -- always verify.
 
-**Early trigger**: If the user's prompt names a specific external API by name (e.g., `JsonSerializer.Deserialize`, `ISpanFormattable.TryFormat`), verify that API as your first action -- before any codebase exploration. See Pre-Flight Protocol Step 1.
+**Early trigger**: If the user's prompt names a specific external API by name (e.g., `JsonSerializer.Deserialize`, `ISpanParsable<T>.Parse`), verify that API as your first action -- before any codebase exploration. See Pre-Flight Protocol Step 1.
 
-**What Requires Verification**: All external APIs -- .NET BCL (`System.*`, `Microsoft.*`), Roslyn APIs (`Microsoft.CodeAnalysis.*`), serialization frameworks (System.Text.Json, MessagePack, Newtonsoft.Json), testing frameworks (xUnit, AwesomeAssertions, Verify.Xunit), framework integrations (EF Core, ASP.NET Core, Swashbuckle), and any third-party NuGet package.
+**What Requires Verification**: All external APIs -- .NET BCL (`System.*`, `Microsoft.*`), Roslyn APIs (`Microsoft.CodeAnalysis.*`), serialization frameworks (System.Text.Json, MessagePack, Newtonsoft.Json), testing frameworks (xunit.v3, AwesomeAssertions, Verify.XunitV3), framework integrations (EF Core, ASP.NET Core, Swashbuckle), and any third-party NuGet package.
 
 **Verification Workflow** (mandatory, not optional):
 
@@ -222,14 +222,14 @@ Skipping step 3 is a policy violation, even if you are confident you know the AP
 
 **Test Code**:
 
-- Use xUnit as the test framework
+- Use xunit.v3 as the test framework (xUnit v3 -- different API surface from v2)
 - Use AwesomeAssertions for fluent assertions
-- Use Verify.Xunit for snapshot testing generated code
+- Use Verify.XunitV3 for snapshot testing generated code
 - Test naming: `Should_[ExpectedBehavior]_when_[Condition]`
 
 **Multi-Target Framework**:
 
-- Core library targets net8.0 as base
+- Core library targets net8.0 as base; integration packages are multi-targeted (net8.0, net9.0, net10.0)
 - Use `#if NET9_0_OR_GREATER` for span-based features, `allows ref struct`, `ISpanParsable<T>`
 - Always test on all target frameworks
 

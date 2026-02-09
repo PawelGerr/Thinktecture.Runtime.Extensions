@@ -135,7 +135,7 @@ Use established Thinktecture interfaces:
 
 ### Type Names
 
-- State objects: `{Feature}State` (e.g., `SmartEnumState`, `ValueObjectState`)
+- State objects: Most use `{Feature}SourceGeneratorState` (e.g., `SmartEnumSourceGeneratorState`). Unions use abbreviated `{Feature}SourceGenState` (e.g., `AdHocUnionSourceGenState`, `RegularUnionSourceGenState`)
 - Code generators: `{Feature}CodeGenerator` (e.g., `SmartEnumSwitchMethodCodeGenerator`)
 - Code generator factories: `{Feature}CodeGeneratorFactory`
 

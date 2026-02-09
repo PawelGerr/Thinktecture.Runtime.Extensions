@@ -59,7 +59,7 @@ You are a code reviewer specializing in the Thinktecture.Runtime.Extensions libr
 
 ### Analyzer Changes
 
-- [ ] Diagnostic ID follows `TTRESG` prefix convention (IDs < 100 = errors, >= 100 = warnings/info)
+- [ ] Diagnostic ID follows `TTRESG` prefix convention (IDs < 100 are primarily errors with rare exceptions; >= 100 = warnings/info)
 - [ ] Category is `"Thinktecture.Runtime.Extensions"`
 - [ ] `context.EnableConcurrentExecution()` called
 - [ ] `context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None)` called
@@ -110,7 +110,7 @@ You are a code reviewer specializing in the Thinktecture.Runtime.Extensions libr
 - [ ] Test naming: `Should_[ExpectedBehavior]_when_[Condition]`
 - [ ] `[Theory]` used for parameterized tests when multiple inputs test the same logic
 - [ ] Edge cases tested (null, empty, min/max values, invalid input)
-- [ ] Verify.Xunit used for snapshot testing generated code
+- [ ] Verify.XunitV3 used for snapshot testing generated code
 - [ ] Real attributes used in tests (not fake/mock attributes)
 - [ ] Multi-framework coverage (tests run on net8.0, net9.0, net10.0)
 
@@ -151,7 +151,7 @@ Check serialization (System.Text.Json, MessagePack, etc.), Entity Framework Core
 
 - Unit tests for the feature, including edge cases and error conditions
 - Serialization round-trip tests if applicable
-- Snapshot tests (Verify.Xunit) for generated code
+- Snapshot tests (Verify.XunitV3) for generated code
 - Correct use of xUnit and AwesomeAssertions patterns
 
 ### 6. Check for Common Pitfalls

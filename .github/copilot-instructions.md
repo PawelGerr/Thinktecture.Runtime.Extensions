@@ -15,7 +15,7 @@ This file is organized in tiers:
 **Step 2 -- Delegation check.** If the user's request involves 3 or more of: design, implementation, testing, review, documentation -- you MUST delegate to subagents via the Task tool. Do not produce an inline plan. Creating a comprehensive inline plan is NOT delegation.
 
 > **WRONG**: User says "I want to add feature X." Agent immediately calls find_symbol to explore.
-> **RIGHT**: Agent loads `../.claude/guides/DESIGN-DISCUSSION.md` first, then explores the codebase following the guide's workflow.
+> **RIGHT**: Agent loads `guides/DESIGN-DISCUSSION.md` first, then explores the codebase following the guide's workflow.
 
 > **WRONG**: User asks for feature + tests + docs. Agent produces a 200-line inline plan.
 > **RIGHT**: Agent says "This is a multi-phase task requiring subagents" and spawns the first agent.
@@ -32,7 +32,7 @@ This file is organized in tiers:
 ### Development Requirements
 
 - .NET 10.0 SDK (as specified in global.json)
-- C# 11+ for generated code
+- C# 14.0 (as specified in Directory.Build.props)
 - Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
 
 ---
@@ -114,18 +114,18 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Generator Quick Reference
 
-| Generator                      | State Object                                                                     | Key Code Generators                                |
-|--------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------|
-| `SmartEnumSourceGenerator`     | `SmartEnumSourceGeneratorState`                                                  | `SmartEnumCodeGenerator`, `KeyedJsonCodeGenerator` |
-| `ValueObjectSourceGenerator`   | `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState` | `ValueObjectCodeGenerator`                         |
-| `AdHocUnionSourceGenerator`    | `AdHocUnionSourceGeneratorState`                                                 | `AdHocUnionCodeGenerator`                          |
-| `RegularUnionSourceGenerator`  | `RegularUnionSourceGeneratorState`                                               | `RegularUnionCodeGenerator`                        |
-| `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                       |
-| `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                              |
+| Generator                      | State Object                                                                     | Key Code Generators                                                |
+|--------------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| `SmartEnumSourceGenerator`     | `SmartEnumSourceGeneratorState`                                                  | `SmartEnumCodeGenerator`, `KeyedJsonCodeGenerator`                 |
+| `ValueObjectSourceGenerator`   | `KeyedValueObjectSourceGeneratorState`, `ComplexValueObjectSourceGeneratorState` | `KeyedValueObjectCodeGenerator`, `ComplexValueObjectCodeGenerator` |
+| `AdHocUnionSourceGenerator`    | `AdHocUnionSourceGenState`                                                       | `AdHocUnionCodeGenerator`                                          |
+| `RegularUnionSourceGenerator`  | `RegularUnionSourceGenState`                                                     | `RegularUnionCodeGenerator`                                        |
+| `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                                       |
+| `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                                              |
 
 ### Analyzers
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 40+ diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 54 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 
 ### Runtime Metadata
@@ -165,9 +165,9 @@ These rules apply to ALL tasks. They are mandatory and non-negotiable.
 
 **NEVER write, plan, or design code that calls an external API without first verifying its signature via Context7.** This includes .NET BCL methods you think you know. Training data may be outdated or wrong -- always verify.
 
-**Early trigger**: If the user's prompt names a specific external API by name (e.g., `JsonSerializer.Deserialize`, `ISpanFormattable.TryFormat`), verify that API as your first action -- before any codebase exploration. See Pre-Flight Protocol Step 1.
+**Early trigger**: If the user's prompt names a specific external API by name (e.g., `JsonSerializer.Deserialize`, `ISpanParsable<T>.Parse`), verify that API as your first action -- before any codebase exploration. See Pre-Flight Protocol Step 1.
 
-**What Requires Verification**: All external APIs -- .NET BCL (`System.*`, `Microsoft.*`), Roslyn APIs (`Microsoft.CodeAnalysis.*`), serialization frameworks (System.Text.Json, MessagePack, Newtonsoft.Json), testing frameworks (xUnit, AwesomeAssertions, Verify.Xunit), framework integrations (EF Core, ASP.NET Core, Swashbuckle), and any third-party NuGet package.
+**What Requires Verification**: All external APIs -- .NET BCL (`System.*`, `Microsoft.*`), Roslyn APIs (`Microsoft.CodeAnalysis.*`), serialization frameworks (System.Text.Json, MessagePack, Newtonsoft.Json), testing frameworks (xunit.v3, AwesomeAssertions, Verify.XunitV3), framework integrations (EF Core, ASP.NET Core, Swashbuckle), and any third-party NuGet package.
 
 **Verification Workflow** (mandatory, not optional):
 
@@ -222,14 +222,14 @@ Skipping step 3 is a policy violation, even if you are confident you know the AP
 
 **Test Code**:
 
-- Use xUnit as the test framework
+- Use xunit.v3 as the test framework (xUnit v3 -- different API surface from v2)
 - Use AwesomeAssertions for fluent assertions
-- Use Verify.Xunit for snapshot testing generated code
+- Use Verify.XunitV3 for snapshot testing generated code
 - Test naming: `Should_[ExpectedBehavior]_when_[Condition]`
 
 **Multi-Target Framework**:
 
-- Core library targets net8.0 as base
+- Core library targets net8.0 as base; integration packages are multi-targeted (net8.0, net9.0, net10.0)
 - Use `#if NET9_0_OR_GREATER` for span-based features, `allows ref struct`, `ISpanParsable<T>`
 - Always test on all target frameworks
 
@@ -249,18 +249,18 @@ When starting a task, identify the user's intent and load **one** guide for deta
 
 **Your next tool call after reading this file must be loading the matched guide.** Do not call `find_symbol`, `search_for_pattern`, `get_symbols_overview`, or any codebase exploration tool before loading the guide. The guide contains project-specific patterns and constraints that override general knowledge.
 
-> **Common violation**: User says "I want to add feature X." Agent immediately calls find_symbol or search_for_pattern to explore the codebase. **This is wrong.** The agent should load `../.claude/guides/DESIGN-DISCUSSION.md` first, then follow the workflow inside it.
+> **Common violation**: User says "I want to add feature X." Agent immediately calls find_symbol or search_for_pattern to explore the codebase. **This is wrong.** The agent should load `guides/DESIGN-DISCUSSION.md` first, then follow the workflow inside it.
 
-| User Intent                              | Load Guide                               | Agent (if complex)                                     |
-|------------------------------------------|------------------------------------------|--------------------------------------------------------|
-| Bug report / "X doesn't work"            | `../.claude/guides/INVESTIGATION.md`     | `bug-investigator`                                     |
-| Feature request / "I want to add X"      | `../.claude/guides/DESIGN-DISCUSSION.md` | `design-advisor` then `feature-implementation-planner` |
-| "Implement the plan"                     | `../.claude/guides/IMPLEMENTATION.md`    | `feature-implementer`                                  |
-| Write/update tests                       | `../.claude/guides/TESTING.md`           | `test-writer`                                          |
-| Troubleshooting / quick fix              | `../.claude/guides/INVESTIGATION.md`     | (inline response)                                      |
-| Review code changes                      | `../.claude/guides/INVESTIGATION.md`     | `feature-reviewer`                                     |
-| Write user documentation                 | (no guide needed -- embedded in agent)   | `documentation-updater`                                |
-| "How do I add a new analyzer/attribute?" | `../.claude/guides/IMPLEMENTATION.md`    | (inline response)                                      |
+| User Intent                              | Load Guide                             | Agent (if complex)                                     |
+|------------------------------------------|----------------------------------------|--------------------------------------------------------|
+| Bug report / "X doesn't work"            | `guides/INVESTIGATION.md`              | `bug-investigator`                                     |
+| Feature request / "I want to add X"      | `guides/DESIGN-DISCUSSION.md`          | `design-advisor` then `feature-implementation-planner` |
+| "Implement the plan"                     | `guides/IMPLEMENTATION.md`             | `feature-implementer`                                  |
+| Write/update tests                       | `guides/TESTING.md`                    | `test-writer`                                          |
+| Troubleshooting / quick fix              | `guides/INVESTIGATION.md`              | (inline response)                                      |
+| Review code changes                      | `guides/INVESTIGATION.md`              | `feature-reviewer`                                     |
+| Write user documentation                 | (no guide needed -- embedded in agent) | `documentation-updater`                                |
+| "How do I add a new analyzer/attribute?" | `guides/IMPLEMENTATION.md`             | (inline response)                                      |
 
 **Before ANY code changes, follow the Cross-Cutting Policies above** (they are already in this file).
 

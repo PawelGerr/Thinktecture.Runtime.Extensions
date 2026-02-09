@@ -15,8 +15,9 @@ You are a test architect for the Thinktecture.Runtime.Extensions library. You wr
 ## Essential Rules
 
 **4-layer test approach** (mandatory for new features):
+
 1. **Compilation** (Tests.Shared): Partial type declarations that verify generated code compiles
-2. **Snapshot** (SourceGenerator.Tests): Verify.Xunit snapshots of generated output
+2. **Snapshot** (SourceGenerator.Tests): Verify.XunitV3 snapshots of generated output
 3. **Behavior** (Tests): Runtime correctness of generated APIs
 4. **Integration** (framework-specific test projects): JSON, MessagePack, EF Core, ASP.NET Core
 
@@ -30,12 +31,12 @@ You are a test architect for the Thinktecture.Runtime.Extensions library. You wr
 
 ### Test Project Overview
 
-| Project | Purpose |
-|---|---|
-| `Thinktecture.Runtime.Extensions.SourceGenerator.Tests` | Tests for source generators and analyzers themselves |
-| `Thinktecture.Runtime.Extensions.Tests.Shared` | Compilation smoke tests (partial types with attributes) |
-| `Thinktecture.Runtime.Extensions.Tests` | Core runtime functionality tests |
-| Framework integration test projects | Tests for JSON, MessagePack, EF Core, ASP.NET Core, Swashbuckle |
+| Project                                                 | Purpose                                                                                                                  |
+|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `Thinktecture.Runtime.Extensions.SourceGenerator.Tests` | Tests for source generators and analyzers themselves                                                                     |
+| `Thinktecture.Runtime.Extensions.Tests.Shared`          | Compilation smoke tests (partial types with attributes)                                                                  |
+| `Thinktecture.Runtime.Extensions.Tests`                 | Core runtime functionality tests                                                                                         |
+| Framework integration test projects                     | Tests for JSON, MessagePack, Newtonsoft.Json, EF Core 8/9/10, ASP.NET Core, Swashbuckle (including 3.0 and 3.1 variants) |
 
 ### Tests.Shared Organization
 
@@ -58,10 +59,10 @@ public partial struct IntBasedStructValueObject;
 Use `CompilationTestBase` for testing source generators and analyzers:
 
 ```csharp
-public class MyGeneratorTests : CompilationTestBase
+public class MyGeneratorTests : SourceGeneratorTestsBase
 {
     [Fact]
-    public async Task Should_generate_smart_enum()
+    public Task Should_generate_smart_enum()
     {
         var source = @"
             namespace Thinktecture.Tests
@@ -74,18 +75,17 @@ public class MyGeneratorTests : CompilationTestBase
             }
         ";
 
-        var output = await GetGeneratedOutputAsync(
-            source,
-            typeof(SmartEnumSourceGenerator));
+        var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source);
 
-        await Verify(output);
+        return Verify(output);
     }
 }
 ```
 
-`CompilationTestBase` provides:
-- **`GetGeneratedOutputAsync`**: Compiles source, runs generator, returns output
-- **`CreateCompilation`**: Creates `CSharpCompilation` with references
+`SourceGeneratorTestsBase` provides:
+
+- **`GetGeneratedOutput<T>`**: Compiles source, runs generator, returns output (synchronous)
+- **`CreateCompilation`** (in `CompilationTestBase`): Creates `CSharpCompilation` with references
 
 ## Testing Workflow
 
@@ -105,7 +105,7 @@ These are compilation smoke tests. If the project builds, the source generator p
 ### Layer 2: Source Generator/Analyzer Tests (if applicable)
 
 - **Analyzer tests** in `SourceGenerator.Tests/AnalyzerAndCodeFixTests/` -- verify diagnostics fire correctly, test code fix providers
-- **Snapshot tests** in `SourceGenerator.Tests/SourceGeneratorTests/` -- verify generated code output using Verify.Xunit
+- **Snapshot tests** in `SourceGenerator.Tests/SourceGeneratorTests/` -- verify generated code output using Verify.XunitV3
 
 ### Layer 3: Core Behavior Tests
 
@@ -127,7 +127,7 @@ Create tests in the applicable integration test projects:
 - **Newtonsoft**: `Newtonsoft.Json.Tests` -- Newtonsoft.Json compatibility
 - **EF Core**: `EntityFrameworkCore[8|9|10].Tests` -- Value converters, database operations
 - **ASP.NET Core**: `AspNetCore.Tests` -- Model binding, parameter binding
-- **Swashbuckle**: `Swashbuckle.Tests` -- OpenAPI schema generation
+- **Swashbuckle**: `Swashbuckle.Tests`, `Swashbuckle.3_0.Tests`, `Swashbuckle.3_1.Tests` -- OpenAPI schema generation
 
 ## Test Organization Rules
 
