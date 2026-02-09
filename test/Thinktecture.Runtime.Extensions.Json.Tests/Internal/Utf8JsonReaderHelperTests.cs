@@ -129,7 +129,7 @@ public class Utf8JsonReaderHelperTests
    /// This ensures the fast path is taken (ValueIsEscaped = false).
    /// WARNING: The value must not contain characters that require JSON escaping (", \, control chars).
    /// </summary>
-   private static Utf8JsonReader CreateUnescapedReader(string value)
+   private static byte[] CreateUnescapedJsonBytes(string value)
    {
       // Build JSON bytes manually: quote + UTF-8(value) + quote
       var valueBytes = Encoding.UTF8.GetBytes(value);
@@ -137,7 +137,18 @@ public class Utf8JsonReaderHelperTests
       jsonBytes[0] = (byte)'"';
       valueBytes.CopyTo(jsonBytes, 1);
       jsonBytes[^1] = (byte)'"';
-      return CreateReader(jsonBytes);
+      return jsonBytes;
+   }
+
+   /// <summary>
+   /// Creates a Utf8JsonReader for a string value without JSON escaping non-ASCII characters.
+   /// The value is wrapped in quotes and the raw UTF-8 bytes are used.
+   /// This ensures the fast path is taken (ValueIsEscaped = false).
+   /// WARNING: The value must not contain characters that require JSON escaping (", \, control chars).
+   /// </summary>
+   private static Utf8JsonReader CreateUnescapedReader(string value)
+   {
+      return CreateReader(CreateUnescapedJsonBytes(value));
    }
 
    /// <summary>
@@ -897,6 +908,43 @@ public class Utf8JsonReaderHelperTests
       result!.CapturedValue.Should().BeEmpty();
    }
 
+   [Theory]
+   [InlineData(128)]  // Exactly at _STACKALLOC_CHAR_THRESHOLD → stackalloc branch in ValidateFragmentedUnescaped
+   [InlineData(129)]  // Just over threshold → ArrayPool branch in ValidateFragmentedUnescaped
+   public void Should_handle_fragmented_unescaped_at_stackalloc_boundary(int length)
+   {
+      var value = new string('F', length);
+      var jsonBytes = CreateUnescapedJsonBytes(value);
+
+      var reader = CreateFragmentedReader(jsonBytes, 65);
+
+      var error = Utf8JsonReaderHelper.ValidateFromUtf8<SpanCapture, ValidationError>(
+         ref reader, null, out var result);
+
+      error.Should().BeNull();
+      result!.CapturedValue.Should().Be(value);
+   }
+
+   [Fact]
+   public void Should_handle_fragmented_unescaped_multibyte_at_128_byte_boundary()
+   {
+      // 64 × é (2 bytes each) = 128 bytes UTF-8, 64 chars UTF-16
+      // Fragmented: hits stackalloc branch in ValidateFragmentedUnescaped
+      var value = new string('é', 64);
+      Encoding.UTF8.GetByteCount(value).Should().Be(128);
+
+      var jsonBytes = CreateUnescapedJsonBytes(value);
+
+      // Split in the middle of a 2-byte character
+      var reader = CreateFragmentedReader(jsonBytes, 65);
+
+      var error = Utf8JsonReaderHelper.ValidateFromUtf8<SpanCapture, ValidationError>(
+         ref reader, null, out var result);
+
+      error.Should().BeNull();
+      result!.CapturedValue.Should().Be(value);
+   }
+
    // ==========================================================================
    // CONSISTENCY TESTS: Compare with reader.GetString()
    // Verify that ValidateFromUtf8 produces the same result as GetString()
@@ -1564,19 +1612,21 @@ public class Utf8JsonReaderHelperTests
       result.Should().BeNull();
    }
 
-   [Fact]
-   public void Should_propagate_validation_error_in_fragmented_path()
+   [Theory]
+   [InlineData(15)]   // Small value (≤ 128 bytes) → stackalloc branch in ValidateFragmentedUnescaped
+   [InlineData(300)]  // Large value (> 128 bytes) → ArrayPool branch in ValidateFragmentedUnescaped
+   public void Should_propagate_validation_error_in_fragmented_path(int length)
    {
-      var json = "\"fragmented-test\"";
-      var jsonBytes = Encoding.UTF8.GetBytes(json);
-      var reader = CreateFragmentedReader(jsonBytes, 5);
+      var value = new string('D', length);
+      var reader = CreateFragmentedReader(CreateUnescapedJsonBytes(value), length / 2 + 1);
 
       var error = Utf8JsonReaderHelper.ValidateFromUtf8<AlwaysFailsValidation, ValidationError>(
          ref reader, null, out var result);
 
       error.Should().NotBeNull();
-      error!.Message.Should().Contain("fragmented-test");
+      error!.Message.Should().Contain(value);
       result.Should().BeNull();
    }
+
 }
 #endif
