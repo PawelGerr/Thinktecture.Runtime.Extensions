@@ -1,41 +1,4 @@
 {
-  "$schema": "https://context7.com/schema/context7.json",
   "url": "https://context7.com/pawelgerr/thinktecture.runtime.extensions",
-  "public_key": "pk_KIRsgtHSEYsBov6fVvytc",
-  "projectTitle": "Thinktecture Runtime Extensions",
-  "description": "Provides an easy way to implement Smart Enums, Value Objects and Discriminated Unions in .NET",
-  "folders": [],
-  "excludeFolders": [
-    "src",
-    "test",
-    ".github",
-    "version-7",
-    "version-8",
-    "docs/version-7",
-    "docs/version-8",
-    "__wiki__/version-7",
-    "__wiki__/version-8",
-    ".git",
-    ".vs",
-    ".idea",
-    "test-results"
-  ],
-  "excludeFiles": [
-    "LICENSE.md",
-    "version-7*",
-    "Version-7*",
-    "version-8*",
-    "Version-8*",
-    "Directory.Packages.props",
-    "Directory.Build.props",
-    "global.json",
-    "NuGet.config",
-    ".gitignore",
-    ".gitattributes",
-    ".editorconfig",
-    "Thinktecture.Runtime.Extensions.sln.DotSettings",
-    "Thinktecture.Runtime.Extensions.AspNetCore.Samples_demo.json"
-  ],
-  "previousVersions": [],
-  "rules": []
+  "public_key": "pk_KIRsgtHSEYsBov6fVvytc"
 }
