@@ -18,7 +18,7 @@ Base class for `ValueObjectAttribute<TKey>` and `ComplexValueObjectAttribute`.
 
 | Property                      | Type                      | Default       | Description                                                                                                                                                              |
 |-------------------------------|---------------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SkipFactoryMethods`          | `bool`                    | `false`       | Do not generate `Create`, `TryCreate`, `Validate` methods                                                                                                                |
+| `SkipFactoryMethods`          | `bool`                    | `false`       | Do not generate `Create`, `TryCreate`, `Validate` methods. Also suppresses: `TypeConverter` attribute, `IObjectFactory<T>` implementation, conversion operator from key type, `IParsable<T>` and `ISpanParsable<T>` implementations, all arithmetic operators, and serialization converters (JSON, Newtonsoft, MessagePack) — unless an `[ObjectFactory<T>(UseForSerialization = ...)]` is present |
 | `ConstructorAccessModifier`   | `AccessModifier`          | `Private`     | Access modifier for generated constructor                                                                                                                                |
 | `CreateFactoryMethodName`     | `string`                  | `"Create"`    | Name for the Create factory method (whitespace resets to default)                                                                                                        |
 | `TryCreateFactoryMethodName`  | `string`                  | `"TryCreate"` | Name for the TryCreate factory method (whitespace resets to default)                                                                                                     |
@@ -38,7 +38,7 @@ Base class for `AdHocUnionAttribute` and generic `UnionAttribute<T1, T2, ...>`.
 |-------------------------------|----------------------------------|---------------------|---------------------------------------------------------------------------------------|
 | `DefaultStringComparison`     | `StringComparison`               | `OrdinalIgnoreCase` | Default string comparison for union operations                                        |
 | `SkipToString`                | `bool`                           | `false`             | Skip `ToString()` generation                                                          |
-| `ConstructorAccessModifier`   | `UnionConstructorAccessModifier` | `Public`            | Access modifier for generated constructor                                             |
+| `ConstructorAccessModifier`   | `UnionConstructorAccessModifier` | `Public`            | Access modifier for generated constructor; also affects accessibility of implicit conversion operators |
 | `ConversionFromValue`         | `ConversionOperatorsGeneration`  | `Implicit`          | Generate implicit conversion operators from member types to union                     |
 | `ConversionToValue`           | `ConversionOperatorsGeneration`  | `Explicit`          | Generate explicit conversion operators from union to member types                     |
 | `SwitchMethods`               | `SwitchMapMethodsGeneration`     | (varies)            | Configure Switch method generation                                                    |
@@ -65,7 +65,7 @@ SmartEnumAttribute()
 
 | Property                      | Type                         | Default   | Description                                   |
 |-------------------------------|------------------------------|-----------|-----------------------------------------------|
-| `EqualityComparisonOperators` | `OperatorsGeneration`        | `Default` | Generation of equality operators (`==`, `!=`) |
+| `EqualityComparisonOperators` | `OperatorsGeneration`        | `Default` | Generation of equality operators (`==`, `!=`). Note: `DefaultWithKeyTypeOverloads` produces the same code as `Default` for keyless enums (no key member to overload with) |
 | `SwitchMethods`               | `SwitchMapMethodsGeneration` | `Default` | Switch method generation configuration        |
 | `MapMethods`                  | `SwitchMapMethodsGeneration` | `Default` | Map method generation configuration           |
 | `SwitchMapStateParameterName` | `string?`                    | `"state"` | Name of state parameter in Switch/Map methods |
@@ -91,10 +91,10 @@ SmartEnumAttribute()
 | `KeyMemberKind`                  | `MemberKind`                    | `Property`                                      | Whether key member is property or field                                                                                        |
 | `KeyMemberName`                  | `string`                        | `"_key"` (private field) or `"Key"` (otherwise) | Name of the key member                                                                                                         |
 | `SkipIComparable`                | `bool`                          | `false`                                         | Skip `IComparable<T>` implementation (when key not comparable)                                                                 |
-| `SkipIParsable`                  | `bool`                          | `false`                                         | Skip `IParsable<T>` implementation (independent from SkipISpanParsable)                                                        |
-| `SkipISpanParsable`              | `bool`                          | `false`                                         | Skip `ISpanParsable<T>` implementation (independent from SkipIParsable; NET9+)                                                 |
-| `ComparisonOperators`            | `OperatorsGeneration`           | `Default`                                       | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators                                           |
-| `EqualityComparisonOperators`    | `OperatorsGeneration`           | `Default`                                       | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators                                                      |
+| `SkipIParsable`                  | `bool`                          | `false`                                         | Skip `IParsable<T>` implementation; setting to `true` also forces `SkipISpanParsable` to `true`                                |
+| `SkipISpanParsable`              | `bool`                          | `false`                                         | Skip `ISpanParsable<T>` implementation; forced to `true` when `SkipIParsable` is `true` (`ISpanParsable<T>` inherits from `IParsable<T>`); NET9+ |
+| `ComparisonOperators`            | `OperatorsGeneration`           | `Default`                                       | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators; forced to `None` when `EqualityComparisonOperators` is `None` |
+| `EqualityComparisonOperators`    | `OperatorsGeneration`           | `Default`                                       | Equality operators (`==`, `!=`) - coerced upward to at least `ComparisonOperators`                                             |
 | `SkipIFormattable`               | `bool`                          | `false`                                         | Skip `IFormattable` implementation (when key not IFormattable)                                                                 |
 | `SkipToString`                   | `bool`                          | `false`                                         | Skip `ToString()` generation                                                                                                   |
 | `SwitchMethods`                  | `SwitchMapMethodsGeneration`    | `Default`                                       | Switch method generation configuration                                                                                         |
@@ -105,7 +105,7 @@ SmartEnumAttribute()
 | `DisableSpanBasedJsonConversion` | `bool`                          | `false`                                         | Disables ReadOnlySpan-based zero-allocation JSON conversion, falling back to string-based conversion (string keys only; NET9+) |
 | `SwitchMapStateParameterName`    | `string?`                       | `"state"`                                       | Name of state parameter in Switch/Map methods                                                                                  |
 
-**Note**: `ISpanParsable<T>` inherits from `IParsable<T>`, so setting `SkipISpanParsable = false` will automatically set `SkipIParsable = false` if needed.
+**Note**: `SkipIParsable = true` automatically forces `SkipISpanParsable = true` because `ISpanParsable<T>` inherits from `IParsable<T>`.
 
 ## Value Object Attributes
 
@@ -135,20 +135,20 @@ ValueObjectAttribute()
 | `NullInFactoryMethodsYieldsNull`        | `bool`                          | `false`                                             | `Create`/`TryCreate`/`Validate` return null on null input (class + factories only)                                                   |
 | `EmptyStringInFactoryMethodsYieldsNull` | `bool`                          | `false`                                             | String-key empty/whitespace yields null (class + factories only; implies NullInFactoryMethodsYieldsNull = true)                      |
 | `SkipIComparable`                       | `bool`                          | `false`                                             | Skip `IComparable<T>` implementation (if key not comparable and no custom comparer)                                                  |
-| `SkipIParsable`                         | `bool`                          | `false`                                             | Skip `IParsable<T>` implementation (if factories skipped or key not string/IParsable; independent from SkipISpanParsable)            |
-| `SkipISpanParsable`                     | `bool`                          | `false`                                             | Skip `ISpanParsable<T>` implementation (if factories skipped or key not string/ISpanParsable; independent from SkipIParsable; NET9+) |
+| `SkipIParsable`                         | `bool`                          | `false`                                             | Skip `IParsable<T>` implementation (if factories skipped or key not string/IParsable); setting to `true` also forces `SkipISpanParsable` to `true` |
+| `SkipISpanParsable`                     | `bool`                          | `false`                                             | Skip `ISpanParsable<T>` implementation; forced to `true` when `SkipIParsable` or `SkipFactoryMethods` is `true`; NET9+              |
 | `AdditionOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate addition operators (`+`) - requires key supports these ops                                                                  |
 | `SubtractionOperators`                  | `OperatorsGeneration`           | `None`                                              | Generate subtraction operators (`-`) - requires key supports these ops                                                               |
 | `MultiplyOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate multiplication operators (`*`) - requires key supports these ops                                                            |
 | `DivisionOperators`                     | `OperatorsGeneration`           | `None`                                              | Generate division operators (`/`) - requires key supports these ops                                                                  |
-| `ComparisonOperators`                   | `OperatorsGeneration`           | `Default`                                           | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators                                                 |
-| `EqualityComparisonOperators`           | `OperatorsGeneration`           | `Default`                                           | Equality operators (`==`, `!=`) - coerced to at least ComparisonOperators                                                            |
+| `ComparisonOperators`                   | `OperatorsGeneration`           | `Default`                                           | Comparison operators (`<`, `<=`, `>`, `>=`) - depends on EqualityComparisonOperators; forced to `None` when `EqualityComparisonOperators` is `None` |
+| `EqualityComparisonOperators`           | `OperatorsGeneration`           | `Default`                                           | Equality operators (`==`, `!=`) - coerced upward to at least `ComparisonOperators`                                                   |
 | `SkipIFormattable`                      | `bool`                          | `false`                                             | Skip `IFormattable` implementation (if key not IFormattable)                                                                         |
 | `ConversionToKeyMemberType`             | `ConversionOperatorsGeneration` | `Implicit`                                          | Generate implicit conversion operator from value object to key type                                                                  |
 | `UnsafeConversionToKeyMemberType`       | `ConversionOperatorsGeneration` | `Explicit`                                          | Generate explicit conversion operator from value object to key type (may throw if validation fails)                                  |
 | `ConversionFromKeyMemberType`           | `ConversionOperatorsGeneration` | `Explicit`                                          | Generate explicit conversion operator from key type to value object                                                                  |
 
-**Note**: `ISpanParsable<T>` inherits from `IParsable<T>`, so setting `SkipISpanParsable = false` will automatically set `SkipIParsable = false` if needed.
+**Note**: `SkipIParsable = true` automatically forces `SkipISpanParsable = true` because `ISpanParsable<T>` inherits from `IParsable<T>`.
 
 **Inherits all properties from `ValueObjectAttributeBase`** (see above).
 

@@ -84,6 +84,19 @@ All types must be declared as `partial`. Source generators produce: factory meth
 
 - Base type abstract, derived types sealed. Conversion operators + Switch/Map.
 
+### Setting Interdependencies
+
+Several attribute settings cascade to other settings. The AI assistant must account for these when discussing or generating configuration:
+
+- **`SkipFactoryMethods = true`** (Value Objects): Forces `SkipIParsable`, `SkipISpanParsable` to `true`; arithmetic operators to `None`; suppresses `TypeConverter`, `IObjectFactory<T>`, conversion operator from key type, and serialization converters (unless `[ObjectFactory<T>]` with `UseForSerialization` is present)
+- **`SkipIParsable = true`**: Forces `SkipISpanParsable = true` (`ISpanParsable<T>` inherits from `IParsable<T>`)
+- **`SkipEqualityComparison = true`**: Forces `ComparisonOperators` and `EqualityComparisonOperators` to `None`
+- **`EqualityComparisonOperators = None`**: Forces `ComparisonOperators` to `None` in generated code (enforced by the generator settings, not the attribute getter — circular dependency prevents getter enforcement)
+- **`ComparisonOperators` > `EqualityComparisonOperators`**: `EqualityComparisonOperators` is coerced upward to match
+- **`EmptyStringInFactoryMethodsYieldsNull = true`**: Forces `NullInFactoryMethodsYieldsNull = true`
+- **`TXIsStateless = true`** (Unions): Automatically sets `TXIsNullableReferenceType = true` for reference types
+- **`ConstructorAccessModifier`** (Unions): Also controls accessibility of implicit conversion operators
+
 ### What Gets Generated
 
 All types: equality members (`Equals`, `GetHashCode`, `==`, `!=`), `Switch`/`Map` pattern matching.
@@ -125,7 +138,7 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Analyzers
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 54 diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 55 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 
 ### Runtime Metadata

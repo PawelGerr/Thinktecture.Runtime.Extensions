@@ -80,6 +80,10 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// This setting has no effect if:
    /// - the key is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.
    /// </summary>
+   /// <remarks>
+   /// Setting this to <c>true</c> also forces <see cref="SkipISpanParsable"/> to <c>true</c>,
+   /// because <see cref="ISpanParsable{T}"/> inherits from <see cref="IParsable{T}"/>.
+   /// </remarks>
    public bool SkipIParsable { get; set; }
 
    /// <summary>
@@ -112,6 +116,10 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// This setting has no effect:
    /// - if key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_GreaterThan</c>, <c>op_GreaterThanOrEqual</c>, <c>op_LessThan</c>, <c>op_LessThanOrEqual</c>).
    /// </summary>
+   /// <remarks>
+   /// In generated code, this is also forced to <see cref="OperatorsGeneration.None"/> when <see cref="EqualityComparisonOperators"/> is <see cref="OperatorsGeneration.None"/>,
+   /// because comparison operators require equality operators.
+   /// </remarks>
    public OperatorsGeneration ComparisonOperators { get; set; }
 
    /// <summary>
@@ -120,6 +128,10 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// This setting has no effect:
    /// - if key-member is not an <see cref="IEqualityOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Equality</c>, <c>op_Inequality</c>).
    /// </summary>
+   /// <remarks>
+   /// This value is coerced upward to match <see cref="ComparisonOperators"/> when <see cref="ComparisonOperators"/> is greater,
+   /// because comparison operators require equality operators.
+   /// </remarks>
    public OperatorsGeneration EqualityComparisonOperators
    {
       get => ComparisonOperators > field ? ComparisonOperators : field;

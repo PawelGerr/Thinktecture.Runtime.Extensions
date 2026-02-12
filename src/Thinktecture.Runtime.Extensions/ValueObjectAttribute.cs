@@ -86,26 +86,27 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// Indication whether the generator should skip the implementation of <see cref="IParsable{T}"/> or not.
    /// </summary>
    /// <remarks>
-   /// <para>This setting has no effect:</para>
-   /// <para>If <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
-   /// <para>If key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.</para>
+   /// <para>Forced to <c>true</c> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
+   /// <para>Setting this to <c>true</c> also forces <see cref="SkipISpanParsable"/> to <c>true</c>,
+   /// because <see cref="ISpanParsable{T}"/> inherits from <see cref="IParsable{T}"/>.</para>
+   /// <para>This setting has no effect if key-member is neither a <see cref="string"/> nor an <see cref="IParsable{T}"/> itself.</para>
    /// </remarks>
-   public bool SkipIParsable { get; set; }
+   public bool SkipIParsable
+   {
+      get => field || SkipFactoryMethods;
+      set;
+   }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of <see cref="ISpanParsable{T}"/> or not.
    /// </summary>
    /// <remarks>
+   /// <para>Forced to <c>true</c> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
    /// <para>
    /// Note that this property is dependent on <see cref="SkipIParsable"/>.
    /// If <see cref="SkipIParsable"/> is set to <c>true</c> then <see cref="SkipISpanParsable"/> is set to <c>true</c> as well.
    /// </para>
-   /// <para>
-   /// This setting has no effect if:
-   /// </para>
-   /// <para>
-   /// the key is neither a <see cref="string"/> nor an <see cref="ISpanParsable{T}"/> itself.
-   /// </para>
+   /// <para>This setting has no effect if the key is neither a <see cref="string"/> nor an <see cref="ISpanParsable{T}"/> itself.</para>
    /// </remarks>
    public bool SkipISpanParsable
    {
@@ -117,41 +118,53 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// Indication whether and how the generator should generate the implementation of <see cref="IAdditionOperators{TSelf,TOther,TResult}"/>.
    /// </summary>
    /// <remarks>
-   /// <para>This setting has no effect:</para>
-   /// <para>If <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
-   /// <para>If key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Addition</c>, <c>op_CheckedAddition</c>).</para>
+   /// <para>Forced to <see cref="OperatorsGeneration.None"/> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
+   /// <para>This setting has no effect if key-member is not an <see cref="IAdditionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Addition</c>, <c>op_CheckedAddition</c>).</para>
    /// </remarks>
-   public OperatorsGeneration AdditionOperators { get; set; }
+   public OperatorsGeneration AdditionOperators
+   {
+      get => SkipFactoryMethods ? OperatorsGeneration.None : field;
+      set;
+   }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/>.
    /// </summary>
    /// <remarks>
-   /// <para>This setting has no effect:</para>
-   /// <para>If <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
-   /// <para>If key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Subtraction</c>, <c>op_CheckedSubtraction</c>).</para>
+   /// <para>Forced to <see cref="OperatorsGeneration.None"/> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
+   /// <para>This setting has no effect if key-member is not an <see cref="ISubtractionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Subtraction</c>, <c>op_CheckedSubtraction</c>).</para>
    /// </remarks>
-   public OperatorsGeneration SubtractionOperators { get; set; }
+   public OperatorsGeneration SubtractionOperators
+   {
+      get => SkipFactoryMethods ? OperatorsGeneration.None : field;
+      set;
+   }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/>.
    /// </summary>
    /// <remarks>
-   /// <para>This setting has no effect:</para>
-   /// <para>If <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
-   /// <para>If key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Multiply</c>, <c>op_CheckedMultiply</c>).</para>
+   /// <para>Forced to <see cref="OperatorsGeneration.None"/> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
+   /// <para>This setting has no effect if key-member is not an <see cref="IMultiplyOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Multiply</c>, <c>op_CheckedMultiply</c>).</para>
    /// </remarks>
-   public OperatorsGeneration MultiplyOperators { get; set; }
+   public OperatorsGeneration MultiplyOperators
+   {
+      get => SkipFactoryMethods ? OperatorsGeneration.None : field;
+      set;
+   }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IDivisionOperators{TSelf,TOther,TResult}"/>.
    /// </summary>
    /// <remarks>
-   /// <para>This setting has no effect:</para>
-   /// <para>If <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
-   /// <para>If key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Division</c>, <c>op_CheckedDivision</c>).</para>
+   /// <para>Forced to <see cref="OperatorsGeneration.None"/> when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>.</para>
+   /// <para>This setting has no effect if key-member is not an <see cref="IDivisionOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_Division</c>, <c>op_CheckedDivision</c>).</para>
    /// </remarks>
-   public OperatorsGeneration DivisionOperators { get; set; }
+   public OperatorsGeneration DivisionOperators
+   {
+      get => SkipFactoryMethods ? OperatorsGeneration.None : field;
+      set;
+   }
 
    /// <summary>
    /// Indication whether and how the generator should generate the implementation of <see cref="IComparisonOperators{TSelf,TOther,TResult}"/>.
@@ -163,6 +176,8 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// <para>This setting has no effect:</para>
    /// <para>If key-member is not an <see cref="IComparisonOperators{TSelf,TOther,TResult}"/> itself and has no corresponding operators (<c>op_GreaterThan</c>, <c>op_GreaterThanOrEqual</c>, <c>op_LessThan</c>, <c>op_LessThanOrEqual</c>).</para>
    /// <para>If <see cref="ValueObjectAttributeBase.SkipEqualityComparison"/> is set to <c>true</c>.</para>
+   /// <para>In generated code, this is also forced to <see cref="OperatorsGeneration.None"/> when <see cref="EqualityComparisonOperators"/> is <see cref="OperatorsGeneration.None"/>,
+   /// because comparison operators require equality operators.</para>
    /// </remarks>
    public OperatorsGeneration ComparisonOperators
    {
@@ -218,7 +233,14 @@ public sealed class ValueObjectAttribute<TKey> : ValueObjectAttributeBase
    /// Indication whether and how the generator should generate the conversion operators from <see cref="KeyMemberType"/> to enum type.
    /// Default is <see cref="ConversionOperatorsGeneration.Explicit"/>.
    /// </summary>
-   public ConversionOperatorsGeneration ConversionFromKeyMemberType { get; set; }
+   /// <remarks>
+   /// <para>Not generated when <see cref="ValueObjectAttributeBase.SkipFactoryMethods"/> is set <c>true</c>, because the conversion operator relies on the factory method internally.</para>
+   /// </remarks>
+   public ConversionOperatorsGeneration ConversionFromKeyMemberType
+   {
+      get => SkipFactoryMethods ? ConversionOperatorsGeneration.None : field;
+      set;
+   }
 
    /// <summary>
    /// Initializes new instance of <see cref="ValueObjectAttribute{TKey}"/>.
