@@ -67,8 +67,6 @@ public sealed class Configuration : IEquatable<Configuration>
    /// <inheritdoc />
    public override int GetHashCode()
    {
-#pragma warning disable CS0618 // Type or member is obsolete
       return HashCode.Combine(SmartEnums, KeyedValueObjects, UseConstructorForRead);
-#pragma warning restore CS0618 // Type or member is obsolete
    }
 }

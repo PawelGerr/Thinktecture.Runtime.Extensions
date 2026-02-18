@@ -66,12 +66,6 @@ public partial struct OpenEndDate
                 : Create(Date.Year, Date.Month, days);
    }
 
-   /// <summary>
-   /// Converts a nullable DateOnly to an open-ended date.
-   /// </summary>
-   public static explicit operator OpenEndDate(DateOnly? date) =>
-      date is null ? Infinite : Create(date.Value);
-
    public override string ToString() =>
       this == Infinite ? "Infinite" : Date.ToString("O", CultureInfo.InvariantCulture);
 }

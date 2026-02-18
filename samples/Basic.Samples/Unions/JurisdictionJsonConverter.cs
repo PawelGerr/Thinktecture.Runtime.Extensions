@@ -11,11 +11,11 @@ public partial class JurisdictionJsonConverter : JsonConverter<Jurisdiction>
       Type typeToConvert,
       JsonSerializerOptions options)
    {
-      if (!reader.Read()    // read StartObject
-          || !reader.Read() // read PropertyName
-          || !Discriminator.TryGet(reader.GetString(), out var discriminator))
+      if (!reader.Read()     // read StartObject
+          || !reader.Read()) // read PropertyName
          throw new JsonException();
 
+      var discriminator = JsonSerializer.Deserialize<Discriminator>(ref reader, options) ?? throw new JsonException();
       var jurisdiction = discriminator.ReadJurisdiction(ref reader, options);
 
       if (!reader.Read()) // read EndObject

@@ -26,26 +26,22 @@ public readonly partial struct DayMonth
 
    public static DayMonth Create(int month, int day)
    {
-      var date = CreateDate(month, day);
-      return new DayMonth(date);
-   }
-
-   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref DateOnly value)
-   {
-      if (value.Year != _REFERENCE_YEAR)
-         value = new DateOnly(_REFERENCE_YEAR, value.Month, value.Day);
-   }
-
-   private static DateOnly CreateDate(int month, int day)
-   {
       try
       {
-         return new DateOnly(_REFERENCE_YEAR, month, day);
+         var date = new DateOnly(_REFERENCE_YEAR, month, day);
+         return new DayMonth(date);
       }
       catch (Exception ex)
       {
          throw new ValidationException($"Invalid day '{day}' or month '{month}'.", ex);
       }
+   }
+
+   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref DateOnly value)
+   {
+      // Normalize: strip the year, keeping only month and day
+      if (value.Year != _REFERENCE_YEAR)
+         value = new DateOnly(_REFERENCE_YEAR, value.Month, value.Day);
    }
 
    public override string ToString()

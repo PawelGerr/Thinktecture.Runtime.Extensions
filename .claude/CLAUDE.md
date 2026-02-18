@@ -61,10 +61,25 @@ All types must be declared as `partial`. Source generators produce: factory meth
 - Items are `public static readonly` fields. No on-demand creation.
 - Interface implementations depend on key type capabilities: `IParsable<T>`, `ISpanParsable<T>` (NET9+), `IComparable<T>`, `IFormattable`
 - Span-based JSON deserialization (NET9+, string keys): automatic, opt out via `DisableSpanBasedJsonConversion = true`
+- Inheritance: derived classes must be nested inner classes; first-level must be `private` (TTRESG014), deeper-level must be `public` (TTRESG015); prefer `sealed` unless further derived. The source generator automatically seals Smart Enums that have no derived types (TTRESG037 warns if the user's declaration conflicts).
 
 **Keyless Smart Enums** (`[SmartEnum]`):
 
 - No key, no lookup by value. Identified solely by field reference.
+
+### Smart Enum Design Patterns
+
+**Core principle**: Store per-item data in instance fields/properties, not in conditional logic (`if`/`switch` on `this`). Each item should carry its own data — this is the primary advantage over plain enums.
+
+**Anti-patterns** (never generate these):
+
+- `if (this == X) ... else if (this == Y)` or `switch` on `this` in instance methods — defeats the purpose of Smart Enums
+- Directly referencing other Smart Enum items in constructors without `Lazy<T>` — fails due to static field initialization order
+
+**Recommended patterns**:
+
+- Per-item data: pass values as constructor parameters, store in fields (see `ShippingMethod` example in docs)
+- Inter-item references (e.g., state transitions): use `Lazy<T>` to defer resolution (see `OrderStatus` example in docs)
 
 **Simple Value Objects** (`[ValueObject<TKey>]`):
 
@@ -111,7 +126,7 @@ Additionally per type:
 ### Framework Integration Quick Reference
 
 - **Serialization** (System.Text.Json, MessagePack, Newtonsoft.Json): Reference integration package for auto-generation. NET9+ string-based Smart Enums use zero-allocation span-based JSON by default.
-- **Entity Framework Core**: Version-specific packages (8/9/10). Call `.UseThinktectureValueConverters()`.
+- **Entity Framework Core**: Version-specific packages (8/9/10). Registration levels: `DbContextOptionsBuilder.UseThinktectureValueConverters()` (recommended), `ModelBuilder.AddThinktectureValueConverters()`, `EntityTypeBuilder.AddThinktectureValueConverters()`, `PropertyBuilder.HasThinktectureValueConverter()`.
 - **ASP.NET Core**: Model binding via auto-generated `IParsable<T>`. Custom parsing via `[ObjectFactory<string>]`.
 - **Swashbuckle/OpenAPI**: Schema and operation filters for proper documentation.
 
@@ -167,6 +182,16 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 - `Directory.Packages.props` -- Centralized NuGet package version management (all versions here)
 - `global.json` -- .NET SDK version specification
 - `.editorconfig` -- Code style configuration (especially `src/.editorconfig`)
+
+### Documentation (Dual-Audience)
+
+The following documentation files in `docs/` are read by both humans and AI agents. When writing or updating these files, use clear, structured language that serves both audiences:
+
+- `Smart-Enums*.md` -- Smart Enum documentation (overview, customization, performance, framework integration)
+- `Value-Objects*.md` -- Value Object documentation
+- `Discriminated-Unions*.md` -- Discriminated Union documentation
+
+**Legacy documentation is frozen.** The `docs/version-7/`, `docs/version-8/` directories and `docs/Version-7.x.x.md`, `docs/Version-8.x.x.md` files are archived and must NEVER be read, updated, or modified. Ignore them completely -- they do not exist for the purposes of any task.
 
 ---
 
