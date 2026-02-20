@@ -1,5 +1,4 @@
 using System.Text.Json.Nodes;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -13,7 +12,6 @@ namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 /// </summary>
 public class VarNamesFromDotnetIdentifiersSchemaExtension : ISmartEnumSchemaExtension
 {
-   private readonly ILogger<VarNamesFromStringRepresentationSchemaExtension> _logger;
    private readonly string _extensionName;
 
    /// <summary>
@@ -23,10 +21,8 @@ public class VarNamesFromDotnetIdentifiersSchemaExtension : ISmartEnumSchemaExte
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
    public VarNamesFromDotnetIdentifiersSchemaExtension(
-      ILogger<VarNamesFromStringRepresentationSchemaExtension> logger,
       string extensionName = "x-enum-varnames")
    {
-      _logger = logger;
       _extensionName = extensionName;
    }
 

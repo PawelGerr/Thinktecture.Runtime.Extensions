@@ -11,7 +11,7 @@ namespace Thinktecture.Swashbuckle.Internal.SmartEnums;
 /// any release. You should only use it directly in your code with extreme caution and knowing that
 /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
 /// </summary>
-public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaExtension
+public partial class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaExtension
 {
    private readonly ILogger<VarNamesFromStringRepresentationSchemaExtension> _logger;
    private readonly string _extensionName;
@@ -41,9 +41,7 @@ public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaE
 
       if (duplicates.Count > 0)
       {
-         _logger.LogWarning("The string representation of enum items of '{Type}' contains duplicates. The 'x-enum-varnames' extension will not be set. Duplicates: {Duplicates}.",
-                            context.Type.FullName,
-                            String.Join(", ", duplicates.Select(d => d)));
+         LogDuplicateStringRepresentations(context.Type.FullName, String.Join(", ", duplicates.Select(d => d)));
 
          return;
       }
@@ -58,4 +56,7 @@ public class VarNamesFromStringRepresentationSchemaExtension : ISmartEnumSchemaE
       schema.Extensions ??= new Dictionary<string, IOpenApiExtension>();
       schema.Extensions[_extensionName] = new JsonNodeExtension(names);
    }
+
+   [LoggerMessage(Level = LogLevel.Warning, Message = "The string representation of enum items of '{Type}' contains duplicates. The 'x-enum-varnames' extension will not be set. Duplicates: {Duplicates}.")]
+   private partial void LogDuplicateStringRepresentations(string? type, string duplicates);
 }
