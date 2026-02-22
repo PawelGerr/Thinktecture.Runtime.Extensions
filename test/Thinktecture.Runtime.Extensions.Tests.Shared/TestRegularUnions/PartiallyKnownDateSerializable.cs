@@ -52,7 +52,7 @@ public abstract partial record PartiallyKnownDateSerializable
    public string ToValue()
    {
       return Switch(
-         yearOnly: yearOnly => yearOnly.Year.ToString("D2"),
+         yearOnly: yearOnly => yearOnly.Year.ToString("D4"),
          yearMonth: yearMonth => $"{yearMonth.Year:D4}-{yearMonth.Month:D2}",
          date: date => $"{date.Year:D4}-{date.Month:D2}-{date.Day:D2}"
       );

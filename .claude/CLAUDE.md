@@ -94,6 +94,7 @@ All types must be declared as `partial`. Source generators produce: factory meth
 **Ad-hoc Unions** (`[Union<T1, T2>]` or `[AdHocUnion(...)]`):
 
 - Stateless types (`TXIsStateless = true`): store only discriminator, not instance. Prefer structs.
+- Backing fields: with 2+ distinct non-stateless reference types, reference types auto-share a single `object? _obj` field (value types keep typed fields). `UseSingleBackingField = true` forces all types (including value types, with boxing) into `_obj`.
 
 **Regular Unions** (`[Union]`):
 
@@ -110,6 +111,7 @@ Several attribute settings cascade to other settings. The AI assistant must acco
 - **`ComparisonOperators` > `EqualityComparisonOperators`**: `EqualityComparisonOperators` is coerced upward to match
 - **`EmptyStringInFactoryMethodsYieldsNull = true`**: Forces `NullInFactoryMethodsYieldsNull = true`
 - **`TXIsStateless = true`** (Unions): Automatically sets `TXIsNullableReferenceType = true` for reference types
+- **`UseSingleBackingField = true`** (Ad-hoc Unions): Forces all member types into a single `object? _obj` backing field. Without this setting, the generator already auto-merges reference types into `_obj` when there are 2+ distinct non-stateless reference types; this setting additionally forces value types into `_obj` (causing boxing)
 - **`ConstructorAccessModifier`** (Unions): Also controls accessibility of implicit conversion operators
 
 ### What Gets Generated
