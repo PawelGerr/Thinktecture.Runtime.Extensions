@@ -201,6 +201,52 @@ The following documentation files in `docs/` are read by both humans and AI agen
 
 These rules apply to ALL tasks. They are mandatory and non-negotiable.
 
+### Workflow
+
+**Alignment Before Action**
+
+Before making any changes, confirm you understand the user's intent. If a request is ambiguous, ask a clarifying question rather than guessing. Restate the goal in your own words when the task is non-trivial. A wrong assumption caught early costs nothing; one caught after 50 tool calls wastes the entire context window.
+
+**Context Management**
+
+- Before starting follow-up tasks in the same conversation, assess whether accumulated context is becoming large. If so, recommend the user start a fresh conversation to avoid degraded performance.
+- When resuming work from a previous session, re-read the relevant source files rather than relying on stale context -- code may have changed.
+
+**Self-Review Before Completion**
+
+Before declaring any implementation task done, verify:
+
+- Re-read the final state of all changed files (not from memory — actually re-read them)
+- The code compiles: `dotnet build --no-incremental` (or targeted project build)
+- Affected tests pass: `dotnet test --filter "FullyQualifiedName~RelevantTest"`
+- For source generator changes: state object `Equals`/`GetHashCode` includes all new fields
+- No unintended files were modified (check `git diff --stat`)
+- Generated code follows the Code Style Policy (fully qualified names, `#if` guards, no `using` directives)
+- Check for inconsistent naming and unhandled edge cases that the compiler won't catch
+- Final gut-check: "Would a staff engineer approve this?" — if anything feels over-engineered,
+  unnecessarily clever, or under-justified, simplify before presenting.
+
+Do not skip self-review to save time. Catching an issue before the user sees it is always faster than a correction round-trip.
+
+**Planning**
+
+- If you hit a wall during implementation (e.g., an approach turns out to be infeasible, or you discover an unexpected dependency), stop and re-plan rather than forcing the original approach. Communicate the obstacle and revised plan to the user.
+- This reinforces the existing delegation rule: tasks touching 3+ concerns (design, implementation, testing, review, documentation) require subagent delegation, not inline plans.
+
+**After Corrections**
+
+When the user corrects you:
+
+1. Acknowledge the correction explicitly.
+2. Identify the root cause of the mistake (wrong assumption, missed policy, outdated knowledge).
+3. Check whether the same mistake could apply elsewhere in your current work.
+4. If the correction reveals a gap in CLAUDE.md or the task guides, suggest an update.
+5. If the correction reveals a recurring pattern or project-specific knowledge not covered by CLAUDE.md, persist it as a Serena memory under `lessons/[topic]` (e.g., `lessons/source-generators`, `lessons/testing`). Keep entries concise: one paragraph per lesson, prefixed with the date.
+
+At session start, check `list_memories` for `lessons/` entries relevant to your current task. These are supplementary -- CLAUDE.md and guide files remain the authoritative source.
+
+Do not repeat the same mistake twice. If a correction contradicts your training data, the correction wins -- this project's CLAUDE.md and guide files are the authoritative source.
+
 ### Zero-Hallucination Policy
 
 **NEVER write, plan, or design code that calls an external API without first verifying its signature via Context7.** This includes .NET BCL methods you think you know. Training data may be outdated or wrong -- always verify.
