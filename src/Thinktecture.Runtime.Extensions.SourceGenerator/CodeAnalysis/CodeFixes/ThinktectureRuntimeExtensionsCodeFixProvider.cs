@@ -23,6 +23,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _ALIGN_COMPARISON_EQUALITY_OPERATORS = "Align comparison/equality operators";
    private const string _GENERATE_VALIDATE_METHOD = "Generate Validate method";
    private const string _GENERATE_TO_VALUE_METHOD = "Generate ToValue method";
+   private const string _MAKE_LAMBDA_STATIC = "Make lambdas static";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -45,6 +46,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch.Id,
       DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod.Id,
       DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod.Id,
+      DiagnosticsDescriptors.UseSwitchMapWithStaticLambda.Id,
    ];
 
    /// <inheritdoc />
@@ -137,6 +139,29 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          else if (diagnostic.Id == DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod.Id)
          {
             context.RegisterCodeFix(CodeAction.Create(_GENERATE_TO_VALUE_METHOD, t => GenerateToValueMethodAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, t), _GENERATE_TO_VALUE_METHOD), diagnostic);
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.UseSwitchMapWithStaticLambda.Id)
+         {
+            var invocation = GetCodeFixesContext().InvocationExpressionSyntax;
+
+            if (invocation is null)
+               continue;
+
+            var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+
+            if (semanticModel is not null
+                // Don't offer "state" overload if it already has a state (first parameter is a type parameter TState in the original definition)
+                && (semanticModel.GetSymbolInfo(invocation).Symbol is not IMethodSymbol { Parameters.Length: > 0 } methodSymbol
+                    || methodSymbol.OriginalDefinition.Parameters[0].Type.TypeKind != TypeKind.TypeParameter)
+                && TryGetCapturedVariables(semanticModel, invocation, out var captures)
+                && captures.Count > 0)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, t => UseStateOverloadAsync(context.Document, invocation, captures, t), _MAKE_LAMBDA_STATIC), diagnostic);
+            }
+            else
+            {
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, _ => MakeAllLambdasStaticAsync(context.Document, root, invocation), _MAKE_LAMBDA_STATIC), diagnostic);
+            }
          }
       }
    }
@@ -686,6 +711,265 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return null;
    }
 
+   private static Task<Document> MakeAllLambdasStaticAsync(
+      Document document,
+      SyntaxNode root,
+      InvocationExpressionSyntax invocation)
+   {
+      var lambdas = invocation.ArgumentList.Arguments
+                              .Select(a => a.Expression)
+                              .OfType<LambdaExpressionSyntax>()
+                              .Where(l => !l.Modifiers.Any(SyntaxKind.StaticKeyword))
+                              .ToList();
+
+      var newRoot = root.ReplaceNodes(lambdas, (original, _) =>
+      {
+         var staticToken = SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space);
+         return original.WithModifiers(original.Modifiers.Insert(0, staticToken));
+      });
+
+      return Task.FromResult(document.WithSyntaxRoot(newRoot));
+   }
+
+   private static bool TryGetCapturedVariables(
+      SemanticModel semanticModel,
+      InvocationExpressionSyntax invocation,
+      out List<ISymbol> captures)
+   {
+      captures = [];
+      var seenSymbols = new HashSet<ISymbol>(SymbolEqualityComparer.Default);
+
+      foreach (var argument in invocation.ArgumentList.Arguments)
+      {
+         if (argument.Expression is not LambdaExpressionSyntax lambda)
+            continue;
+
+         if (lambda.Modifiers.Any(SyntaxKind.StaticKeyword))
+            continue;
+
+         var lambdaBody = (SyntaxNode?)lambda.ExpressionBody ?? lambda.Block;
+
+         if (lambdaBody is null)
+            continue;
+
+         var dataFlow = semanticModel.AnalyzeDataFlow(lambdaBody);
+
+         if (!dataFlow.Succeeded)
+            return false;
+
+         var lambdaParams = GetLambdaParameterSymbols(semanticModel, lambda);
+
+         foreach (var symbol in dataFlow.DataFlowsIn)
+         {
+            if (lambdaParams.Contains(symbol, SymbolEqualityComparer.Default))
+               continue;
+
+            switch (symbol)
+            {
+               // "this" capture: the lambda references instance members implicitly (e.g., Foo() instead of this.Foo()).
+               // The identifier-replacement logic below can't reliably rewrite implicit "this" references to "state",
+               // so we bail out of the state-overload refactoring for now.
+               case IParameterSymbol { IsThis: true }:
+               // Ref locals/parameters can't be packaged into a state tuple — copying would lose reference semantics.
+               case IParameterSymbol { RefKind: not RefKind.None }:
+               case ILocalSymbol { RefKind: not RefKind.None }:
+                  return false;
+            }
+
+            if (seenSymbols.Add(symbol))
+               captures.Add(symbol);
+         }
+      }
+
+      return true;
+   }
+
+   private static ImmutableArray<ISymbol> GetLambdaParameterSymbols(
+      SemanticModel semanticModel,
+      LambdaExpressionSyntax lambda)
+   {
+      if (lambda is SimpleLambdaExpressionSyntax simple)
+      {
+         return semanticModel.GetDeclaredSymbol(simple.Parameter) is { } symbol
+                   ? [symbol]
+                   : [];
+      }
+
+      if (lambda is ParenthesizedLambdaExpressionSyntax paren)
+      {
+         var builder = ImmutableArray.CreateBuilder<ISymbol>();
+
+         foreach (var param in paren.ParameterList.Parameters)
+         {
+            if (semanticModel.GetDeclaredSymbol(param) is { } symbol)
+               builder.Add(symbol);
+         }
+
+         return builder.ToImmutable();
+      }
+
+      return [];
+   }
+
+   private static async Task<Document> UseStateOverloadAsync(
+      Document document,
+      InvocationExpressionSyntax invocation,
+      List<ISymbol> captures,
+      CancellationToken cancellationToken)
+   {
+      var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
+      if (root is null)
+         return document;
+
+      var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+      if (semanticModel is null)
+         return document;
+
+      // Build state expression
+      ExpressionSyntax stateExpression;
+
+      if (captures.Count == 1)
+      {
+         stateExpression = SyntaxFactory.IdentifierName(captures[0].Name);
+      }
+      else
+      {
+         var tupleElements = captures.Select(c =>
+                                                SyntaxFactory.Argument(SyntaxFactory.IdentifierName(c.Name)));
+
+         stateExpression = SyntaxFactory.TupleExpression(
+            SyntaxFactory.SeparatedList(tupleElements));
+      }
+
+      // Build new arguments
+      var newArguments = new List<ArgumentSyntax>();
+
+      // State argument (first)
+      var stateArg = SyntaxFactory.Argument(
+         SyntaxFactory.NameColon("state"),
+         default,
+         stateExpression);
+      newArguments.Add(stateArg);
+
+      var captureSet = new HashSet<ISymbol>(captures, SymbolEqualityComparer.Default);
+
+      // Transform each existing argument
+      foreach (var argument in invocation.ArgumentList.Arguments)
+      {
+         if (argument.Expression is LambdaExpressionSyntax lambda
+             && !lambda.Modifiers.Any(SyntaxKind.StaticKeyword))
+         {
+            var newLambda = TransformLambdaForStateOverload(semanticModel, lambda, captures, captureSet);
+            newArguments.Add(argument.WithExpression(newLambda));
+         }
+         else
+         {
+            newArguments.Add(argument);
+         }
+      }
+
+      var newArgumentList = invocation.ArgumentList.WithArguments(
+         SyntaxFactory.SeparatedList(newArguments));
+
+      var newInvocation = invocation.WithArgumentList(newArgumentList);
+      var newRoot = root.ReplaceNode(invocation, newInvocation);
+
+      return document.WithSyntaxRoot(newRoot);
+   }
+
+   private static LambdaExpressionSyntax TransformLambdaForStateOverload(
+      SemanticModel semanticModel,
+      LambdaExpressionSyntax lambda,
+      List<ISymbol> captures,
+      HashSet<ISymbol> captureSet)
+   {
+      // Step 1: Replace capture references in the body
+      var body = (SyntaxNode?)lambda.ExpressionBody ?? lambda.Block;
+
+      if (body is null)
+         return lambda;
+
+      var identifiersToReplace = new Dictionary<IdentifierNameSyntax, ExpressionSyntax>();
+
+      foreach (var identifier in body.DescendantNodes().OfType<IdentifierNameSyntax>())
+      {
+         var symbolInfo = semanticModel.GetSymbolInfo(identifier);
+
+         if (symbolInfo.Symbol is null || !captureSet.Contains(symbolInfo.Symbol))
+            continue;
+
+         ExpressionSyntax replacement;
+
+         if (captures.Count == 1)
+         {
+            replacement = SyntaxFactory.IdentifierName("state").WithTriviaFrom(identifier);
+         }
+         else
+         {
+            replacement = SyntaxFactory.MemberAccessExpression(
+               SyntaxKind.SimpleMemberAccessExpression,
+               SyntaxFactory.IdentifierName("state"),
+               SyntaxFactory.IdentifierName(identifier.Identifier.Text)).WithTriviaFrom(identifier);
+         }
+
+         identifiersToReplace[identifier] = replacement;
+      }
+
+      // Apply body replacements
+      var transformedLambda = identifiersToReplace.Count > 0
+                                 ? lambda.ReplaceNodes(identifiersToReplace.Keys, (original, _) => identifiersToReplace[original])
+                                 : lambda;
+
+      // Step 2: Add static modifier
+      var newModifiers = transformedLambda.Modifiers;
+
+      if (!newModifiers.Any(SyntaxKind.StaticKeyword))
+      {
+         var staticToken = SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space);
+         newModifiers = newModifiers.Insert(0, staticToken);
+      }
+
+      // Step 3: Add state parameter
+      var stateParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier("state"));
+
+      if (transformedLambda is SimpleLambdaExpressionSyntax simple)
+      {
+         var paramList = SyntaxFactory.ParameterList(
+            SyntaxFactory.SeparatedList([stateParam, simple.Parameter]));
+
+         return SyntaxFactory.ParenthesizedLambdaExpression()
+                             .WithModifiers(newModifiers)
+                             .WithParameterList(paramList)
+                             .WithArrowToken(simple.ArrowToken)
+                             .WithExpressionBody(simple.ExpressionBody)
+                             .WithBlock(simple.Block)
+                             .WithTriviaFrom(transformedLambda);
+      }
+
+      if (transformedLambda is ParenthesizedLambdaExpressionSyntax paren)
+      {
+         var allParams = paren.ParameterList.Parameters.Insert(0, stateParam);
+
+         if (allParams.Count == 1)
+         {
+            // Single parameter — use SimpleLambdaExpressionSyntax: state => ...
+            return SyntaxFactory.SimpleLambdaExpression(stateParam)
+                                .WithModifiers(newModifiers)
+                                .WithArrowToken(paren.ArrowToken)
+                                .WithExpressionBody(paren.ExpressionBody)
+                                .WithBlock(paren.Block)
+                                .WithTriviaFrom(transformedLambda);
+         }
+
+         var newParamList = paren.ParameterList.WithParameters(allParams);
+         return paren.WithModifiers(newModifiers).WithParameterList(newParamList);
+      }
+
+      return transformedLambda;
+   }
+
    private sealed class CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)
    {
       public TypeDeclarationSyntax? TypeDeclaration => field ??= GetDeclaration<TypeDeclarationSyntax>();
@@ -693,9 +977,10 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       public MemberDeclarationSyntax? MemberDeclaration => field ??= GetDeclaration<MemberDeclarationSyntax>();
       public PropertyDeclarationSyntax? PropertyDeclaration => field ??= GetDeclaration<PropertyDeclarationSyntax>();
       public MethodDeclarationSyntax? MethodDeclaration => field ??= GetDeclaration<MethodDeclarationSyntax>();
+      public InvocationExpressionSyntax? InvocationExpressionSyntax => field ??= GetDeclaration<InvocationExpressionSyntax>();
 
       private T? GetDeclaration<T>()
-         where T : MemberDeclarationSyntax
+         where T : CSharpSyntaxNode
       {
          var diagnosticSpan = diagnostic.Location.SourceSpan;
          return root.FindToken(diagnosticSpan.Start).Parent?.AncestorsAndSelf().OfType<T>().FirstOrDefault();

@@ -32,8 +32,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased.Item1;
 
-                        {|#0:testEnum.Switch(item1: () => {},
-                                           () => {})|};
+                        {|#0:testEnum.Switch(item1: static () => {},
+                                           static () => {})|};
                      }
                   }
                }
@@ -60,8 +60,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased.Item1;
 
-                        {|#0:testEnum.Switch(item1: () => {},
-                                           item2: () => {})|};
+                        {|#0:testEnum.Switch(item1: static () => {},
+                                           item2: static () => {})|};
                      }
                   }
                }
@@ -90,9 +90,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        {|#0:testEnum.SwitchPartially(@default: item => {},
-                                           item1: () => {},
-                                           () => {})|};
+                        {|#0:testEnum.SwitchPartially(@default: static item => {},
+                                           item1: static () => {},
+                                           static () => {})|};
                      }
                   }
                }
@@ -119,9 +119,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        {|#0:testEnum.SwitchPartially(value => {}, // default
-                                           item1: () => {},
-                                           item2: () => {})|};
+                        {|#0:testEnum.SwitchPartially(static value => {}, // default
+                                           item1: static () => {},
+                                           item2: static () => {})|};
                      }
                   }
                }
@@ -148,9 +148,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        {|#0:testEnum.SwitchPartially(@default: value => {},
-                                           item1: () => {},
-                                           item2: () => {})|};
+                        {|#0:testEnum.SwitchPartially(@default: static value => {},
+                                           item1: static () => {},
+                                           item2: static () => {})|};
                      }
                   }
                }
@@ -180,8 +180,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(42,
-                                           item1: value => {},
-                                           value => {})|};
+                                           item1: static value => {},
+                                           static value => {})|};
                      }
                   }
                }
@@ -209,8 +209,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased.Item1;
 
                         {|#0:testEnum.Switch(42,
-                                           item1: i => {},
-                                           item2: i => {})|};
+                                           item1: static i => {},
+                                           item2: static i => {})|};
                      }
                   }
                }
@@ -240,9 +240,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
-                                           @default: (state, value) => {},
-                                           item1: value => {},
-                                           value => {})|};
+                                           @default: static (state, value) => {},
+                                           item1: static value => {},
+                                           static value => {})|};
                      }
                   }
                }
@@ -270,9 +270,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
-                                           (state, value) => {}, // default
-                                           item1: value => {},
-                                           item2: value => {})|};
+                                           static (state, value) => {}, // default
+                                           item1: static value => {},
+                                           item2: static value => {})|};
                      }
                   }
                }
@@ -300,9 +300,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => {},
-                                           item1: i => {},
-                                           item2: i => {})|};
+                                           @default: static (value, item) => {},
+                                           item1: static i => {},
+                                           item2: static i => {})|};
                      }
                   }
                }
@@ -331,8 +331,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased.Item1;
 
-                        var returnValue = {|#0:testEnum.Switch(item1: () => 1,
-                                           () => 2)|};
+                        var returnValue = {|#0:testEnum.Switch(item1: static () => 1,
+                                           static () => 2)|};
                      }
                   }
                }
@@ -359,8 +359,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased.Item1;
 
-                        var returnValue = {|#0:testEnum.Switch(item1: () => 1,
-                                           item2: () => 2)|};
+                        var returnValue = {|#0:testEnum.Switch(item1: static () => 1,
+                                           item2: static () => 2)|};
                      }
                   }
                }
@@ -389,9 +389,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        var returnValue = {|#0:testEnum.SwitchPartially(@default: value => 0,
-                                           item1: () => 1,
-                                           () => 2)|};
+                        var returnValue = {|#0:testEnum.SwitchPartially(@default: static value => 0,
+                                           item1: static () => 1,
+                                           static () => 2)|};
                      }
                   }
                }
@@ -418,9 +418,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        var returnValue = {|#0:testEnum.SwitchPartially(value => 0, // default
-                                           item1: () => 1,
-                                           item2: () => 2)|};
+                        var returnValue = {|#0:testEnum.SwitchPartially(static value => 0, // default
+                                           item1: static () => 1,
+                                           item2: static () => 2)|};
                      }
                   }
                }
@@ -447,9 +447,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                        var returnValue = {|#0:testEnum.SwitchPartially(@default: item => 0,
-                                           item1: () => 1,
-                                           item2: () => 2)|};
+                        var returnValue = {|#0:testEnum.SwitchPartially(@default: static item => 0,
+                                           item1: static () => 1,
+                                           item2: static () => 2)|};
                      }
                   }
                }
@@ -479,8 +479,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(42,
-                                           item1: i => 1,
-                                           i => 2)|};
+                                           item1: static i => 1,
+                                           static i => 2)|};
                      }
                   }
                }
@@ -508,8 +508,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased.Item1;
 
                         var returnValue = {|#0:testEnum.Switch(42,
-                                           item1: i => 1,
-                                           item2: i => 2)|};
+                                           item1: static i => 1,
+                                           item2: static i => 2)|};
                      }
                   }
                }
@@ -539,9 +539,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => 0,
-                                           item1: i => 1,
-                                           i => 2)|};
+                                           @default: static (value, item) => 0,
+                                           item1: static i => 1,
+                                           static i => 2)|};
                      }
                   }
                }
@@ -569,9 +569,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           (value, item) => 0, // default
-                                           item1: i => 1,
-                                           item2: i => 2)|};
+                                           static (value, item) => 0, // default
+                                           item1: static i => 1,
+                                           item2: static i => 2)|};
                      }
                   }
                }
@@ -599,9 +599,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                         var returnValue = {|#0:testEnum.SwitchPartially(42,
-                                           @default: (value, item) => 0,
-                                           item1: i => 1,
-                                           item2: i => 2)|};
+                                           @default: static (value, item) => 0,
+                                           item1: static i => 1,
+                                           item2: static i => 2)|};
                      }
                   }
                }
@@ -781,8 +781,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        {|#0:testUnion.Switch(@string: s => {},
-                                           i => {})|};
+                        {|#0:testUnion.Switch(@string: static s => {},
+                                           static i => {})|};
                      }
                   }
                }
@@ -809,8 +809,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                                              {|#0:testUnion.Switch(@string: s => {},
-                                                                 int32: i => {})|};
+                                              {|#0:testUnion.Switch(@string: static s => {},
+                                                                 int32: static i => {})|};
                      }
                   }
                }
@@ -839,9 +839,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                          var testUnion = new TestUnion_class_string_int("text");
 
-                        {|#0:testUnion.SwitchPartially(@default: item => {},
-                                           @string: s => {},
-                                           i => {})|};
+                        {|#0:testUnion.SwitchPartially(@default: static item => {},
+                                           @string: static s => {},
+                                           static i => {})|};
                      }
                   }
                }
@@ -868,9 +868,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                          var testUnion = new TestUnion_class_string_int("text");
 
-                        {|#0:testUnion.SwitchPartially(item => {},
-                                           @string: s => {},
-                                           int32: i => {})|};
+                        {|#0:testUnion.SwitchPartially(static item => {},
+                                           @string: static s => {},
+                                           int32: static i => {})|};
                      }
                   }
                }
@@ -897,9 +897,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        {|#0:testUnion.SwitchPartially(@default: item => {},
-                                           @string: s => {},
-                                           int32: i => {})|};
+                        {|#0:testUnion.SwitchPartially(@default: static item => {},
+                                           @string: static s => {},
+                                           int32: static i => {})|};
                      }
                   }
                }
@@ -929,8 +929,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         {|#0:testUnion.Switch(42,
-                                           @string: (state, s) => {},
-                                           (state, i) => {})|};
+                                           @string: static (state, s) => {},
+                                           static (state, i) => {})|};
                      }
                   }
                }
@@ -958,8 +958,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         {|#0:testUnion.Switch(42,
-                                           @string: (ctx, s) => {},
-                                           int32: (ctx, i) => {})|};
+                                           @string: static (ctx, s) => {},
+                                           int32: static (ctx, i) => {})|};
                      }
                   }
                }
@@ -989,9 +989,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => {},
-                                           @string: (ctx, s) => {},
-                                           (ctx, i) => {})|};
+                                           @default: static (ctx, value) => {},
+                                           @string: static (ctx, s) => {},
+                                           static (ctx, i) => {})|};
                      }
                   }
                }
@@ -1019,9 +1019,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           (ctx, value) => {}, // default
-                                           @string: (ctx, s) => {},
-                                           int32: (ctx, i) => {})|};
+                                           static (ctx, value) => {}, // default
+                                           @string: static (ctx, s) => {},
+                                           int32: static (ctx, i) => {})|};
                      }
                   }
                }
@@ -1049,9 +1049,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => {},
-                                           @string: (ctx, s) => {},
-                                           int32: (ctx, i) => {})|};
+                                           @default: static (ctx, value) => {},
+                                           @string: static (ctx, s) => {},
+                                           int32: static (ctx, i) => {})|};
                      }
                   }
                }
@@ -1080,8 +1080,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        var returnValue = {|#0:testUnion.Switch(@string: s => 1,
-                                           i => 2)|};
+                        var returnValue = {|#0:testUnion.Switch(@string: static s => 1,
+                                           static i => 2)|};
                      }
                   }
                }
@@ -1108,8 +1108,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        var returnValue = {|#0:testUnion.Switch(@string: s => 1,
-                                           int32: i => 2)|};
+                        var returnValue = {|#0:testUnion.Switch(@string: static s => 1,
+                                           int32: static i => 2)|};
                      }
                   }
                }
@@ -1138,9 +1138,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(@default: value => 0,
-                                           @string: s => 1,
-                                           i => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(@default: static value => 0,
+                                           @string: static s => 1,
+                                           static i => 2)|};
                      }
                   }
                }
@@ -1167,9 +1167,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(value => 0, // default
-                                           @string: s => 1,
-                                           int32: i => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(static value => 0, // default
+                                           @string: static s => 1,
+                                           int32: static i => 2)|};
                      }
                   }
                }
@@ -1196,9 +1196,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion_class_string_int("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(@default: item => 0,
-                                           @string: s => 1,
-                                           int32: i => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(@default: static item => 0,
+                                           @string: static s => 1,
+                                           int32: static i => 2)|};
                      }
                   }
                }
@@ -1228,8 +1228,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         var returnValue = {|#0:testUnion.Switch(42,
-                                           @string: (ctx, s) => 1,
-                                           (ctx, i) => 2)|};
+                                           @string: static (ctx, s) => 1,
+                                           static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -1257,8 +1257,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         var returnValue = {|#0:testUnion.Switch(42,
-                                           @string: (ctx, s) => 1,
-                                           int32: (ctx, i) => 2)|};
+                                           @string: static (ctx, s) => 1,
+                                           int32: static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -1288,9 +1288,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => 0,
-                                           @string: (ctx, s) => 1,
-                                           (ctx, i) => 2)|};
+                                           @default: static (ctx, value) => 0,
+                                           @string: static (ctx, s) => 1,
+                                           static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -1318,9 +1318,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           (ctx, value) => 0, // default
-                                           @string: (ctx, s) => 1,
-                                           int32: (ctx, i) => 2)|};
+                                           static (ctx, value) => 0, // default
+                                           @string: static (ctx, s) => 1,
+                                           int32: static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -1348,9 +1348,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion_class_string_int("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => 0,
-                                           @string: (ctx, s) => 1,
-                                           int32: (ctx, i) => 2)|};
+                                           @default: static (ctx, value) => 0,
+                                           @string: static (ctx, s) => 1,
+                                           int32: static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -1530,8 +1530,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        {|#0:testUnion.Switch(child1: c => {},
-                                           c => {})|};
+                        {|#0:testUnion.Switch(child1: static c => {},
+                                           static c => {})|};
                      }
                   }
                }
@@ -1558,8 +1558,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                                              {|#0:testUnion.Switch(child1: c => {},
-                                                                 child2: c => {})|};
+                                              {|#0:testUnion.Switch(child1: static c => {},
+                                                                 child2: static c => {})|};
                      }
                   }
                }
@@ -1588,9 +1588,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                          var testUnion = new TestUnion.Child1("text");
 
-                        {|#0:testUnion.SwitchPartially(@default: item => {},
-                                           child1: c => {},
-                                           c => {})|};
+                        {|#0:testUnion.SwitchPartially(@default: static item => {},
+                                           child1: static c => {},
+                                           static c => {})|};
                      }
                   }
                }
@@ -1617,9 +1617,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                          var testUnion = new TestUnion.Child1("text");
 
-                        {|#0:testUnion.SwitchPartially(d => {},
-                                           child1: c => {},
-                                           child2: c => {})|};
+                        {|#0:testUnion.SwitchPartially(static d => {},
+                                           child1: static c => {},
+                                           child2: static c => {})|};
                      }
                   }
                }
@@ -1646,9 +1646,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        {|#0:testUnion.SwitchPartially(@default: d => {},
-                                           child1: c => {},
-                                           child2: c => {})|};
+                        {|#0:testUnion.SwitchPartially(@default: static d => {},
+                                           child1: static c => {},
+                                           child2: static c => {})|};
                      }
                   }
                }
@@ -1678,8 +1678,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         {|#0:testUnion.Switch(42,
-                                           child1: (state, c) => {},
-                                           (state, c) => {})|};
+                                           child1: static (state, c) => {},
+                                           static (state, c) => {})|};
                      }
                   }
                }
@@ -1707,8 +1707,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         {|#0:testUnion.Switch(42,
-                                           child1: (ctx, c) => {},
-                                           child2: (ctx, c) => {})|};
+                                           child1: static (ctx, c) => {},
+                                           child2: static (ctx, c) => {})|};
                      }
                   }
                }
@@ -1738,9 +1738,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => {},
-                                           child1: (ctx, c) => {},
-                                           (ctx, c) => {})|};
+                                           @default: static (ctx, value) => {},
+                                           child1: static (ctx, c) => {},
+                                           static (ctx, c) => {})|};
                      }
                   }
                }
@@ -1768,9 +1768,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           (ctx, value) => {}, // default
-                                           child1: (ctx, s) => {},
-                                           child2: (ctx, i) => {})|};
+                                           static (ctx, value) => {}, // default
+                                           child1: static (ctx, s) => {},
+                                           child2: static (ctx, i) => {})|};
                      }
                   }
                }
@@ -1798,9 +1798,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => {},
-                                           child1: (ctx, c) => {},
-                                           child2: (ctx, c) => {})|};
+                                           @default: static (ctx, value) => {},
+                                           child1: static (ctx, c) => {},
+                                           child2: static (ctx, c) => {})|};
                      }
                   }
                }
@@ -1829,8 +1829,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        var returnValue = {|#0:testUnion.Switch(child1: c => 1,
-                                           c => 2)|};
+                        var returnValue = {|#0:testUnion.Switch(child1: static c => 1,
+                                           static c => 2)|};
                      }
                   }
                }
@@ -1857,8 +1857,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        var returnValue = {|#0:testUnion.Switch(child1: c => 1,
-                                           child2: c => 2)|};
+                        var returnValue = {|#0:testUnion.Switch(child1: static c => 1,
+                                           child2: static c => 2)|};
                      }
                   }
                }
@@ -1887,9 +1887,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(@default: value => 0,
-                                           child1: c => 1,
-                                           c => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(@default: static value => 0,
+                                           child1: static c => 1,
+                                           static c => 2)|};
                      }
                   }
                }
@@ -1916,9 +1916,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(value => 0, // default
-                                           child1: c => 1,
-                                           child2: c => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(static value => 0, // default
+                                           child1: static c => 1,
+                                           child2: static c => 2)|};
                      }
                   }
                }
@@ -1945,9 +1945,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var testUnion = new TestUnion.Child1("text");
 
-                        var returnValue = {|#0:testUnion.SwitchPartially(@default: d => 0,
-                                           child1: c => 1,
-                                           child2: c => 2)|};
+                        var returnValue = {|#0:testUnion.SwitchPartially(@default: static d => 0,
+                                           child1: static c => 1,
+                                           child2: static c => 2)|};
                      }
                   }
                }
@@ -1974,9 +1974,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      {
                         var value = new PlaceId.RegionId.InnerRegionId();
                         var res = value.SwitchPartially(
-                           @default: _ => "default",
-                           regionId: _ => "RegionId" ,
-                           regionIdInnerRegionId: _ => "InnerRegionId");
+                           @default: static _ => "default",
+                           regionId: static _ => "RegionId" ,
+                           regionIdInnerRegionId: static _ => "InnerRegionId");
                      }
                   }
                }
@@ -2005,9 +2005,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         List<string> res = [];
 
                         res.Add(value.SwitchPartially(
-                           @default: _ => "default",
-                           regionId: _ => "RegionId" ,
-                           regionIdInnerRegionId: _ => "InnerRegionId"));
+                           @default: static _ => "default",
+                           regionId: static _ => "RegionId" ,
+                           regionIdInnerRegionId: static _ => "InnerRegionId"));
                      }
                   }
                }
@@ -2037,8 +2037,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         var returnValue = {|#0:testUnion.Switch(42,
-                                           child1: (ctx, c) => 1,
-                                           (ctx, c) => 2)|};
+                                           child1: static (ctx, c) => 1,
+                                           static (ctx, c) => 2)|};
                      }
                   }
                }
@@ -2066,8 +2066,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         var returnValue = {|#0:testUnion.Switch(42,
-                                           child1: (ctx, s) => 1,
-                                           child2: (ctx, i) => 2)|};
+                                           child1: static (ctx, s) => 1,
+                                           child2: static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -2097,9 +2097,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => 0,
-                                           child1: (ctx, c) => 1,
-                                           (ctx, c) => 2)|};
+                                           @default: static (ctx, value) => 0,
+                                           child1: static (ctx, c) => 1,
+                                           static (ctx, c) => 2)|};
                      }
                   }
                }
@@ -2127,9 +2127,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           (ctx, value) => 0, // default
-                                           child1: (ctx, s) => 1,
-                                           child2: (ctx, i) => 2)|};
+                                           static (ctx, value) => 0, // default
+                                           child1: static (ctx, s) => 1,
+                                           child2: static (ctx, i) => 2)|};
                      }
                   }
                }
@@ -2157,9 +2157,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                         var testUnion = new TestUnion.Child1("text");
 
                         var returnValue = {|#0:testUnion.SwitchPartially(42,
-                                           @default: (ctx, value) => 0,
-                                           child1: (ctx, c) => 1,
-                                           child2: (ctx, c) => 2)|};
+                                           @default: static (ctx, value) => 0,
+                                           child1: static (ctx, c) => 1,
+                                           child2: static (ctx, c) => 2)|};
                      }
                   }
                }
@@ -2338,11 +2338,11 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testEnum = SmartEnum_StringBased.Item1;
 
                      {|#0:testEnum.Switch(
-                        item1: () =>
+                        item1: static () =>
                         {
                            Console.WriteLine("Item1");
                         },
-                        () =>
+                        static () =>
                         {
                            Console.WriteLine("Other");
                         })|};
@@ -2374,9 +2374,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
 
                      testEnum.Switch(
                         // First item
-                        item1: () => {},
+                        item1: static () => {},
                         // Second item
-                        item2: () => {});
+                        item2: static () => {});
                   }
                }
             }
@@ -2403,8 +2403,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testEnum = SmartEnum_StringBased.Item1;
 
                      {|#0:testEnum.Switch(
-                        () => {},
-                        item2: () => {})|};
+                        static () => {},
+                        item2: static () => {})|};
                   }
                }
             }
@@ -2432,8 +2432,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testEnum = SmartEnum_StringBased.Item1;
 
                      {|#0:testEnum.Switch(
-                        item1: () => {},
-                        () => {})|};
+                        item1: static () => {},
+                        static () => {})|};
                   }
                }
             }
@@ -2462,14 +2462,13 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   public void Do()
                   {
                      var testEnum1 = SmartEnum_StringBased.Item1;
-                     var testEnum2 = SmartEnum_StringBased.Item2;
 
                      {|#0:testEnum1.Switch(
-                        item1: () =>
+                        item1: static () =>
                         {
-                           testEnum2.Switch(item1: () => {}, item2: () => {});
+                           SmartEnum_StringBased.Item2.Switch(item1: static () => {}, item2: static () => {});
                         },
-                        () => {})|};
+                        static () => {})|};
                   }
                }
             }
@@ -2495,14 +2494,13 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   public void Do()
                   {
                      var testEnum1 = SmartEnum_StringBased.Item1;
-                     var testEnum2 = SmartEnum_StringBased.Item2;
 
                      {|#0:testEnum1.Switch(
-                        item1: () =>
+                        item1: static () =>
                         {
-                           {|#1:testEnum2.Switch(item1: () => {}, () => {})|};
+                           {|#1:SmartEnum_StringBased.Item2.Switch(item1: static () => {}, static () => {})|};
                         },
-                        () => {})|};
+                        static () => {})|};
                   }
                }
             }
@@ -2529,14 +2527,13 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   public void Do()
                   {
                      var testEnum1 = SmartEnum_StringBased.Item1;
-                     var testEnum2 = SmartEnum_StringBased.Item2;
 
                      testEnum1.Switch(
-                        item1: () =>
+                        item1: static () =>
                         {
-                           testEnum2.Switch(item1: () => {}, item2: () => {});
+                           SmartEnum_StringBased.Item2.Switch(item1: static () => {}, item2: static () => {});
                         },
-                        item2: () => {});
+                        item2: static () => {});
                   }
                }
             }
@@ -2567,7 +2564,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     testEnum.Switch(item1: () => {}, item2: () => {});
+                     testEnum.Switch(item1: static () => {}, item2: static () => {});
                   }
                }
             }
@@ -2594,9 +2591,9 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
                      {|#0:testEnum.SwitchPartially(
-                        value => {}, // default
-                        item1: () => {},
-                        () => {})|};
+                        static value => {}, // default
+                        item1: static () => {},
+                        static () => {})|};
                   }
                }
             }
@@ -2723,8 +2720,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testUnion = new TestUnion_class_string_int("text");
 
                      {|#0:testUnion.Switch(
-                        @string: s => {},
-                        i => {})|};
+                        @string: static s => {},
+                        static i => {})|};
                   }
                }
             }
@@ -2752,8 +2749,8 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                      var testUnion = new TestUnion.Child1("text");
 
                      {|#0:testUnion.Switch(
-                        child1: c => {},
-                        c => {})|};
+                        child1: static c => {},
+                        static c => {})|};
                   }
                }
             }
@@ -2779,7 +2776,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   public int Do()
                   {
                      return SmartEnum_StringBased.Item1
-                        .Switch(item1: () => 1, item2: () => 2);
+                        .Switch(item1: static () => 1, item2: static () => 2);
                   }
                }
             }
@@ -2808,7 +2805,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     {|#0:testEnum.Switch(item1: () => {}, () => {})|};
+                     {|#0:testEnum.Switch(item1: static () => {}, static () => {})|};
                   }
                }
             }
@@ -2834,7 +2831,7 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
                   public void Do()
                   {
                      var numbers = new[] { 1, 2, 3 };
-                     var result = numbers.Select(x => x * 2).Where(x => x > 2);
+                     var result = numbers.Select(static x => x * 2).Where(static x => x > 2);
                   }
                }
             }

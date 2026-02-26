@@ -67,6 +67,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
       DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes,
       DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch,
+      DiagnosticsDescriptors.UseSwitchMapWithStaticLambda,
    ];
 
    /// <inheritdoc />
@@ -439,6 +440,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                   operation.Arguments,
                                   operation);
       }
+      else
+      {
+         return;
+      }
+
+      if (operation.TargetMethod.Name is "Switch" or _SWITCH_PARTIALLY)
+      {
+         AnalyzeSwitchMapLambdas(context, operation);
+      }
    }
 
    private static void AnalyzeEnumSwitchMap(
@@ -498,6 +508,39 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (hasNonNamedParameters)
          ReportDiagnostic(context, DiagnosticsDescriptors.IndexBasedSwitchAndMapMustUseNamedParameters, operation.Syntax.GetLocation(), operation.TargetMethod.ContainingType);
+   }
+
+   private static void AnalyzeSwitchMapLambdas(
+      OperationAnalysisContext context,
+      IInvocationOperation operation)
+   {
+      var args = operation.Arguments;
+
+      if (args.IsDefaultOrEmpty)
+         return;
+
+      var numberOfParameters = operation.TargetMethod.Parameters.IsDefaultOrEmpty ? 0 : operation.TargetMethod.Parameters.Length;
+      var argsStartIndex = numberOfParameters > 0 && operation.TargetMethod.OriginalDefinition.Parameters[0].Type.TypeKind == TypeKind.TypeParameter ? 1 : 0;
+
+      for (var argIndex = argsStartIndex; argIndex < args.Length; argIndex++)
+      {
+         var argument = args[argIndex];
+
+         if (argument.ArgumentKind == ArgumentKind.DefaultValue)
+            continue;
+
+         if (argument.Syntax is not ArgumentSyntax { Expression: LambdaExpressionSyntax lambda })
+            continue;
+
+         if (lambda.Modifiers.Any(SyntaxKind.StaticKeyword))
+            continue;
+
+         // Report once on the method name, not on individual lambdas
+         if (operation.Syntax is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccess })
+            ReportDiagnostic(context, DiagnosticsDescriptors.UseSwitchMapWithStaticLambda, memberAccess.Name.GetLocation(), operation.TargetMethod.Name);
+
+         return;
+      }
    }
 
    private static void ValidateAdHocUnion(

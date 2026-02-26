@@ -63,4 +63,6 @@ internal static class DiagnosticsDescriptors
    public static readonly DiagnosticDescriptor InnerTypeDoesNotDeriveFromUnion = new("TTRESG106", "Inner type should derive from union type", "The inner type '{0}' should derive from union type '{1}'", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Warning, true);
 
    public static readonly DiagnosticDescriptor InternalApiUsage = new("TTRESG1000", "Internal Thinktecture.Runtime.Extensions API usage", "'{0}' is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to the same compatibility standards as public APIs. It may be changed or removed without notice in any release.", nameof(ThinktectureRuntimeExtensionsInternalUsageAnalyzer), DiagnosticSeverity.Warning, true);
+
+   public static readonly DiagnosticDescriptor UseSwitchMapWithStaticLambda = new("TTRESG1001", "Consider using a static lambda", "Lambda passed to '{0}' should be static. Use a static lambda to avoid unnecessary allocations, or use the state overload to pass captured variables explicitly.", nameof(ThinktectureRuntimeExtensionsAnalyzer), DiagnosticSeverity.Info, true);
 }
