@@ -42,8 +42,8 @@ public sealed class AllValueObjectSettings : IEquatable<AllValueObjectSettings>,
       SkipKeyMember = valueObjectAttribute.FindSkipKeyMember() ?? false;
       SkipFactoryMethods = valueObjectAttribute.FindSkipFactoryMethods() ?? false;
       ConstructorAccessModifier = valueObjectAttribute.FindConstructorAccessModifier() ?? Constants.ValueObject.DEFAULT_CONSTRUCTOR_ACCESS_MODIFIER;
-      CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? "Create";
-      TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? "TryCreate";
+      CreateFactoryMethodName = valueObjectAttribute.FindCreateFactoryMethodName() ?? Constants.Methods.CREATE;
+      TryCreateFactoryMethodName = valueObjectAttribute.FindTryCreateFactoryMethodName() ?? Constants.Methods.TRY_CREATE;
       EmptyStringInFactoryMethodsYieldsNull = hasStringKey && (valueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() ?? false);
       NullInFactoryMethodsYieldsNull = EmptyStringInFactoryMethodsYieldsNull || (valueObjectAttribute.FindNullInFactoryMethodsYieldsNull() ?? false);
       SkipIComparable = valueObjectAttribute.FindSkipIComparable() ?? false;

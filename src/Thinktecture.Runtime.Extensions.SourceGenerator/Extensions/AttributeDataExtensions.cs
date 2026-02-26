@@ -250,7 +250,7 @@ public static class AttributeDataExtensions
 
    public static string FindSwitchMapStateParameterName(this AttributeData attributeData)
    {
-      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.SWITCH_MAP_STATE_PARAMETER_NAME) ?? "state";
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.SWITCH_MAP_STATE_PARAMETER_NAME) ?? Constants.Parameters.STATE;
    }
 
    public static NestedUnionParameterNameGeneration FindNestedUnionParameterNameGeneration(

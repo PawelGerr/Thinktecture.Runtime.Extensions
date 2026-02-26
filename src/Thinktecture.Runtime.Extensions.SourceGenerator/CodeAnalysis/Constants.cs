@@ -36,8 +36,28 @@ public static class Constants
 
    public static class Methods
    {
-      public const string VALIDATE_FACTORY_ARGUMENTS = "ValidateFactoryArguments";
+      public const string CREATE = "Create";
+      public const string FACTORY_POST_INIT = "FactoryPostInit";
       public const string GET = "Get";
+      public const string MAP = "Map";
+      public const string MAP_PARTIALLY = "MapPartially";
+      public const string SWITCH = "Switch";
+      public const string SWITCH_PARTIALLY = "SwitchPartially";
+      public const string TO_STRING = "ToString";
+      public const string TO_VALUE = "ToValue";
+      public const string TRY_CREATE = "TryCreate";
+      public const string VALIDATE = "Validate";
+      public const string VALIDATE_FACTORY_ARGUMENTS = "ValidateFactoryArguments";
+   }
+
+   public static class Parameters
+   {
+      public const string STATE = "state";
+   }
+
+   public static class Variables
+   {
+      public const string FACTORY_ARGUMENTS_VALIDATION_ERROR = "factoryArgumentsValidationError";
    }
 
    public static class Configuration

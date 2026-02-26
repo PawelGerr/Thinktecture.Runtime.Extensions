@@ -445,7 +445,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
-      public void ").Append(isPartially ? "SwitchPartially" : "Switch");
+      public void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
       if (withState)
       {
@@ -588,7 +588,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
-      public TResult ").Append(isPartially ? "SwitchPartially" : "Switch");
+      public TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
       if (withState)
       {
@@ -726,7 +726,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
-      public TResult ").Append(isPartially ? "MapPartially" : "Map").Append("<TResult>(");
+      public TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
 
       if (isPartially)
       {

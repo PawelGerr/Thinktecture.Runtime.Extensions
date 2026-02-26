@@ -4,9 +4,6 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class KeyedValueObjectCodeGenerator : SmartEnumAndValueObjectCodeGeneratorBase
 {
-   private const string _FACTORY_ARGUMENTS_VALIDATION_ERROR = "factoryArgumentsValidationError";
-   private const string _FACTORY_POST_INIT = "FactoryPostInit";
-
    private readonly KeyedValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
@@ -414,7 +411,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
+         _sb.Append("var ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
       _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationError, ").RenderArgument(_state.KeyMember, "ref ").Append(@");
 
@@ -425,10 +422,10 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateConstructCall();
 
       _sb.Append(@";
-            obj.").Append(_FACTORY_POST_INIT).Append("(");
+            obj.").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(@");
          }
@@ -457,10 +454,10 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
-      partial void ").Append(_FACTORY_POST_INIT).Append("(");
+      partial void ").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(");");
    }

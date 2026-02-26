@@ -4,9 +4,6 @@ namespace Thinktecture.CodeAnalysis.ValueObjects;
 
 public sealed class ComplexValueObjectCodeGenerator : SmartEnumAndValueObjectCodeGeneratorBase
 {
-   private const string _FACTORY_ARGUMENTS_VALIDATION_ERROR = "factoryArgumentsValidationError";
-   private const string _FACTORY_POST_INIT = "FactoryPostInit";
-
    private readonly ComplexValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
@@ -56,7 +53,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipEqualityComparison)
       {
-          _sb.Append(@"
+         _sb.Append(@"
       global::System.IEquatable<").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@">,
       global::System.Numerics.IEqualityOperators<").AppendTypeFullyQualified(_state).Append(", ").AppendTypeFullyQualified(_state).Append(", bool>,");
       }
@@ -114,9 +111,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipEqualityComparison)
       {
-          GenerateEqualityOperators();
-          GenerateEquals();
-          GenerateGetHashCode();
+         GenerateEqualityOperators();
+         GenerateEquals();
+         GenerateGetHashCode();
       }
 
       if (!_state.Settings.SkipToString)
@@ -319,7 +316,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append("var ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
+         _sb.Append("var ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
       _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
             ref validationError").RenderArguments(fieldsAndProperties, @"
@@ -332,10 +329,10 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateConstructCall();
 
       _sb.Append(@";
-            obj.").Append(_FACTORY_POST_INIT).Append("(");
+            obj.").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(@");
          }
@@ -372,10 +369,10 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
-      partial void ").Append(_FACTORY_POST_INIT).Append("(");
+      partial void ").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
 
       _sb.Append(");");
    }

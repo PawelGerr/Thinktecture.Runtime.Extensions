@@ -8,9 +8,6 @@ namespace Thinktecture.CodeAnalysis.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 {
-   private const string _SWITCH_PARTIALLY = "SwitchPartially";
-   private const string _MAP_PARTIALLY = "MapPartially";
-
    /// <inheritdoc />
    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
    [
@@ -414,10 +411,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (operation.Instance is null
           || operation.Arguments.IsDefaultOrEmpty
           || operation.TargetMethod.IsStatic
-          || (operation.TargetMethod.Name != "Switch"
-              && operation.TargetMethod.Name != _SWITCH_PARTIALLY
-              && operation.TargetMethod.Name != "Map"
-              && operation.TargetMethod.Name != _MAP_PARTIALLY))
+          || (operation.TargetMethod.Name != Constants.Methods.SWITCH
+              && operation.TargetMethod.Name != Constants.Methods.SWITCH_PARTIALLY
+              && operation.TargetMethod.Name != Constants.Methods.MAP
+              && operation.TargetMethod.Name != Constants.Methods.MAP_PARTIALLY))
       {
          return;
       }
@@ -445,7 +442,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
       }
 
-      if (operation.TargetMethod.Name is "Switch" or _SWITCH_PARTIALLY)
+      if (operation.TargetMethod.Name is Constants.Methods.SWITCH or Constants.Methods.SWITCH_PARTIALLY)
       {
          AnalyzeSwitchMapLambdas(context, operation);
       }
@@ -458,7 +455,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       IInvocationOperation operation)
    {
       var numberOfCallbacks = (items.IsDefaultOrEmpty ? 0 : items.Length)
-                              + (operation.TargetMethod.Name is _SWITCH_PARTIALLY or _MAP_PARTIALLY ? 1 : 0);
+                              + (operation.TargetMethod.Name is Constants.Methods.SWITCH_PARTIALLY or Constants.Methods.MAP_PARTIALLY ? 1 : 0);
 
       AnalyzeSwitchMap(context, args, operation, numberOfCallbacks);
    }
@@ -471,7 +468,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       var numberOfCallbacks = operation.TargetMethod.Parameters.IsDefaultOrEmpty ? 0 : operation.TargetMethod.Parameters.Length;
 
       if (numberOfCallbacks > 0
-          && operation.TargetMethod.Parameters[0].Name == "state")
+          && operation.TargetMethod.Parameters[0].Name == Constants.Parameters.STATE)
       {
          numberOfCallbacks--;
       }

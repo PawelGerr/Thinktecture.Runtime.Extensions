@@ -152,7 +152,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
 
    private static bool IsToStringNullable(ITypeSymbol type)
    {
-      var array = type.GetMembers("ToString");
+      var array = type.GetMembers(Constants.Methods.TO_STRING);
 
       for (var i = 0; i < array.Length; i++)
       {

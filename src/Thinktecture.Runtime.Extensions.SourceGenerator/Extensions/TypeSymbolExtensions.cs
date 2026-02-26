@@ -1120,7 +1120,7 @@ public static class TypeSymbolExtensions
             {
                var interfaceMember = method.ExplicitInterfaceImplementations[j];
 
-               if (interfaceMember.Name == "Validate"
+               if (interfaceMember.Name == Constants.Methods.VALIDATE
                    && interfaceMember.ContainingType.IsObjectFactoryInterface()
                    && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[0], objectType)
                    && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[1], valueType)
@@ -1137,7 +1137,7 @@ public static class TypeSymbolExtensions
             if (!foundInterface)
                continue;
          }
-         else if (method.MethodKind != MethodKind.Ordinary || method.Name != "Validate")
+         else if (method.MethodKind != MethodKind.Ordinary || method.Name != Constants.Methods.VALIDATE)
          {
             continue;
          }
@@ -1203,7 +1203,7 @@ public static class TypeSymbolExtensions
             {
                var interfaceMember = method.ExplicitInterfaceImplementations[j];
 
-               if (interfaceMember.Name == "ToValue"
+               if (interfaceMember.Name == Constants.Methods.TO_VALUE
                    && interfaceMember.ContainingType.IsConvertibleInterface()
                    && SymbolEqualityComparer.Default.Equals(interfaceMember.ContainingType.TypeArguments[0], valueType)
                    && objectType.FindImplementationForInterfaceMember(interfaceMember) is not null)
@@ -1216,7 +1216,7 @@ public static class TypeSymbolExtensions
             if (!foundInterface)
                continue;
          }
-         else if (method.MethodKind != MethodKind.Ordinary || method.Name != "ToValue")
+         else if (method.MethodKind != MethodKind.Ordinary || method.Name != Constants.Methods.TO_VALUE)
          {
             continue;
          }

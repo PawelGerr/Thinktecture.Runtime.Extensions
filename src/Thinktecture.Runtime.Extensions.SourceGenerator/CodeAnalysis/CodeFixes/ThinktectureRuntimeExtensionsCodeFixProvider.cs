@@ -497,7 +497,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
 
-         var validateMethod = SyntaxFactory.MethodDeclaration(returnType, "Validate")
+         var validateMethod = SyntaxFactory.MethodDeclaration(returnType, Constants.Methods.VALIDATE)
                                            .WithModifiers(SyntaxFactory.TokenList(
                                                              SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                                                              SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
@@ -553,7 +553,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
 
-         var toValueMethod = SyntaxFactory.MethodDeclaration(valueTypeName, "ToValue")
+         var toValueMethod = SyntaxFactory.MethodDeclaration(valueTypeName, Constants.Methods.TO_VALUE)
                                           .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
                                           .WithParameterList(SyntaxFactory.ParameterList())
                                           .WithBody(methodBody)
@@ -848,7 +848,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       // State argument (first)
       var stateArg = SyntaxFactory.Argument(
-         SyntaxFactory.NameColon("state"),
+         SyntaxFactory.NameColon(Constants.Parameters.STATE),
          default,
          stateExpression);
       newArguments.Add(stateArg);
@@ -904,13 +904,13 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          if (captures.Count == 1)
          {
-            replacement = SyntaxFactory.IdentifierName("state").WithTriviaFrom(identifier);
+            replacement = SyntaxFactory.IdentifierName(Constants.Parameters.STATE).WithTriviaFrom(identifier);
          }
          else
          {
             replacement = SyntaxFactory.MemberAccessExpression(
                SyntaxKind.SimpleMemberAccessExpression,
-               SyntaxFactory.IdentifierName("state"),
+               SyntaxFactory.IdentifierName(Constants.Parameters.STATE),
                SyntaxFactory.IdentifierName(identifier.Identifier.Text)).WithTriviaFrom(identifier);
          }
 
@@ -932,7 +932,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       }
 
       // Step 3: Add state parameter
-      var stateParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier("state"));
+      var stateParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier(Constants.Parameters.STATE));
 
       if (transformedLambda is SimpleLambdaExpressionSyntax simple)
       {
