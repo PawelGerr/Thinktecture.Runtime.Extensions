@@ -598,7 +598,7 @@ public class TestClass
    private readonly int _field;
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, additionalReferences: [typeof(MessagePack.KeyAttribute).Assembly.Location]);
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
 

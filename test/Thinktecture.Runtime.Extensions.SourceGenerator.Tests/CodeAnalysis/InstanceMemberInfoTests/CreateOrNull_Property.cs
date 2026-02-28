@@ -672,7 +672,7 @@ public class TestClass
    public int Property { get; }
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, additionalReferences: [typeof(MessagePack.KeyAttribute).Assembly.Location]);
       var factory = TypedMemberStateFactory.Create(compilation);
       var type = GetTypeSymbol(compilation, "Test.TestClass");
       var property = (IPropertySymbol)type.GetMembers("Property").First();
