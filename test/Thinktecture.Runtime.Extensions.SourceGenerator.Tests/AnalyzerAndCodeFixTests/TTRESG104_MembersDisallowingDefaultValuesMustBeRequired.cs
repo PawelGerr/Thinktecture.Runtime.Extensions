@@ -188,6 +188,27 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
       }
 
       [Fact]
+      public async Task Should_not_trigger_on_interface_property()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public interface IMyInterface
+               {
+                  IntBasedStructValueObjectDoesNotAllowDefaultStructs DisallowingProperty { get; set; }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly]);
+      }
+
+      [Fact]
       public async Task Should_not_trigger_on_special_type_property()
       {
          var code = """

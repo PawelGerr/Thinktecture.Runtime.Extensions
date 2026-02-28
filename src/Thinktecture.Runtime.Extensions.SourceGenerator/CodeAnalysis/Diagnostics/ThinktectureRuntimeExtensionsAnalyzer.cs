@@ -251,6 +251,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || context.ContainingSymbol is not IPropertySymbol propertySymbol
           || propertySymbol.SetMethod is null // public MyStruct Member { get; }
           || propertySymbol.IsStatic
+          || propertySymbol.ContainingType.TypeKind == TypeKind.Interface                                          // interfaces cannot have required members
           || propertySymbol.DeclaredAccessibility < propertySymbol.ContainingType.DeclaredAccessibility            // required members must not be less visible than the containing type
           || propertySymbol.SetMethod.DeclaredAccessibility < propertySymbol.ContainingType.DeclaredAccessibility) // setter of required members must not be less visible than the containing type
          return;
