@@ -780,14 +780,13 @@ public class MyClass
    {
       var src = @"
 using System;
-using System.ComponentModel;
 
 namespace Test;
 
 public class MyClass
 {
-   [Browsable(false)]
-   [Description(""This is a test event"")]
+   [Obsolete(""test"")]
+   [CLSCompliant(false)]
    public event EventHandler AttributedEvent;
 }
 ";

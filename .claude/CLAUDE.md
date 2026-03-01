@@ -34,6 +34,7 @@ This file is organized in tiers:
 - .NET 10.0 SDK (as specified in global.json)
 - C# 14.0 (as specified in Directory.Build.props)
 - Multiple .NET versions (8.0, 9.0, 10.0) for framework compatibility testing
+- IDE: The user primarily works in JetBrains Rider, but all IDE features (refactorings, code fixes) must work in both Rider and Visual Studio
 
 ---
 
@@ -205,6 +206,11 @@ The following documentation files in `docs/` are read by both humans and AI agen
 - `Empty-....md`, `SingleItem.md`, `ToReadOnlyCollection.md`, `TrimOrNullify.md` -- Utility/helper documentation
 - `articles/` -- In-depth articles on Smart Enums, Value Objects, and Discriminated Unions
 
+**Documentation conventions:**
+
+- Use `Console.WriteLine` in doc examples, not logger injection -- unless the example specifically demonstrates closure/capture patterns
+- Keep example items consistent across documentation pages -- reuse the same enum items (e.g., Electronics, Clothing, Food) rather than switching between different items within or across pages
+
 **Legacy documentation is frozen.** The `docs/version-7/`, `docs/version-8/` directories and `docs/Version-7.x.x.md`, `docs/Version-8.x.x.md` files are archived and must NEVER be read, updated, or modified. Ignore them completely -- they do not exist for the purposes of any task.
 
 ---
@@ -290,6 +296,7 @@ Skipping step 3 is a policy violation, even if you are confident you know the AP
 - XML documentation required for all publicly visible types and members in `src/Thinktecture.Runtime.Extensions` and framework integration projects
 - XML documentation NOT required in source generator, analyzer, test, and sample projects
 - Do not use `#region`/`#endregion`
+- In XML documentation, wrap code tokens like `true`, `false`, `null`, `default(T)` in `<c>` tags
 
 **Source Generator Code** (treat as a checklist -- verify all items before presenting code):
 
@@ -302,6 +309,7 @@ Skipping step 3 is a policy violation, even if you are confident you know the AP
 - Use Fully Qualified Names: Use `global::` prefix for type references (e.g., `global::System.ArgumentException`) -- do not generate using directives. Exception: C# language keywords (`string`, `int`, `bool`, etc.) are used as-is
 - Use `#if NET9_0_OR_GREATER` conditional compilation in generated code for NET9+-only features
 - Generated files use file-scoped namespaces
+- Use constants from `Thinktecture.CodeAnalysis.Constants` for well-known names (method names, type names, etc.) -- do not use hardcoded strings or local constants for values already defined there
 
 **Runtime Library Code**:
 
