@@ -89,7 +89,8 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
          invocation.ArgumentList.Arguments.Concat(newArguments));
 
       var baseIndentation = GetIndentation(invocation);
-      var newArgumentList = BuildFormattedArgumentList(allArguments, baseIndentation);
+      var eol = DetectEndOfLine(root);
+      var newArgumentList = BuildFormattedArgumentList(allArguments, baseIndentation, eol);
       var newInvocation = invocation.WithArgumentList(newArgumentList);
       var newRoot = root.ReplaceNode(invocation, newInvocation);
 
@@ -141,6 +142,17 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       }
 
       return SyntaxFactory.TriviaList();
+   }
+
+   private static string DetectEndOfLine(SyntaxNode root)
+   {
+      foreach (var trivia in root.DescendantTrivia())
+      {
+         if (trivia.IsKind(SyntaxKind.EndOfLineTrivia))
+            return trivia.ToFullString();
+      }
+
+      return "\n";
    }
 
    private static bool IsSwitchOrMapMethodName(string methodName)
@@ -245,7 +257,8 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
 
    private static ArgumentListSyntax BuildFormattedArgumentList(
       SeparatedSyntaxList<ArgumentSyntax> arguments,
-      SyntaxTriviaList baseIndentation)
+      SyntaxTriviaList baseIndentation,
+      string eol)
    {
       if (arguments.Count <= 1)
          return SyntaxFactory.ArgumentList(arguments);
@@ -253,7 +266,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       // Multi-line: place each argument on its own line
       var formattedArgs = new List<SyntaxNodeOrToken>();
       var lineBreakAndIndent = SyntaxFactory.TriviaList(
-         SyntaxFactory.ElasticCarriageReturnLineFeed,
+         SyntaxFactory.ElasticEndOfLine(eol),
          SyntaxFactory.Whitespace(baseIndentation.ToFullString() + "   "));
 
       for (var i = 0; i < arguments.Count; i++)
