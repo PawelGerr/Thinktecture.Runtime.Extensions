@@ -44,7 +44,7 @@ public class Utf8JsonReaderHelperTests
    /// </summary>
    private sealed class AlwaysFailsValidation : IObjectFactory<AlwaysFailsValidation, ReadOnlySpan<char>, ValidationError>
    {
-      public static ValidationError? Validate(
+      public static ValidationError Validate(
          ReadOnlySpan<char> value,
          IFormatProvider? provider,
          out AlwaysFailsValidation? item)

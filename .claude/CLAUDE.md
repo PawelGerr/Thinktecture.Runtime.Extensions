@@ -155,7 +155,7 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Analyzers
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 55 diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 56 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 
 ### Runtime Metadata
@@ -189,9 +189,16 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 
 The following documentation files in `docs/` are read by both humans and AI agents. When writing or updating these files, use clear, structured language that serves both audiences:
 
-- `Smart-Enums*.md` -- Smart Enum documentation (overview, customization, performance, framework integration)
-- `Value-Objects*.md` -- Value Object documentation
-- `Discriminated-Unions*.md` -- Discriminated Union documentation
+- `Smart-Enums.md`, `Smart-Enums-Customization.md`, `Smart-Enums-Performance.md`, `Smart-Enums-Framework-Integration.md` -- Smart Enum documentation
+- `Value-Objects.md`, `Value-Objects-Customization.md`, `Value-Objects-Framework-Integration.md` -- Value Object documentation
+- `Discriminated-Unions.md`, `Discriminated-Unions-Customization.md`, `Discriminated-Unions-Framework-Integration.md` -- Discriminated Union documentation
+- `Analyzer-Diagnostics.md` -- Analyzer diagnostic rules reference
+- `Object-Factories.md` -- Object factory documentation
+- `Source-Generator-Configuration.md` -- Source generator configuration options
+- `Migrations.md`, `Migration-from-v6-to-v7.md`, `Migration-from-v7-to-v8.md`, `Migration-from-v8-to-v9.md`, `Migration-from-v9-to-v10.md` -- Migration guides
+- `Home.md`, `_Sidebar.md` -- Wiki navigation
+- `Empty-....md`, `SingleItem.md`, `ToReadOnlyCollection.md`, `TrimOrNullify.md` -- Utility/helper documentation
+- `articles/` -- In-depth articles on Smart Enums, Value Objects, and Discriminated Unions
 
 **Legacy documentation is frozen.** The `docs/version-7/`, `docs/version-8/` directories and `docs/Version-7.x.x.md`, `docs/Version-8.x.x.md` files are archived and must NEVER be read, updated, or modified. Ignore them completely -- they do not exist for the purposes of any task.
 

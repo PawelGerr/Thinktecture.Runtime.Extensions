@@ -44,7 +44,7 @@ public static class NamedTypeSymbolExtensions
          if (ctor.DeclaredAccessibility is Accessibility.Protected or Accessibility.Public or Accessibility.ProtectedOrInternal // always accessible
              || (ctor.DeclaredAccessibility == Accessibility.Internal && (isSameAssembly || GetHasInternalsVisibleTo()))
              || (ctor.DeclaredAccessibility == Accessibility.ProtectedAndInternal && isSameAssembly) // private protected: only same assembly, IVT does NOT apply
-             || (ctor.DeclaredAccessibility == Accessibility.Private && GetIsNestedInside()) // private but derived type is nested inside
+             || (ctor.DeclaredAccessibility == Accessibility.Private && GetIsNestedInside())         // private but derived type is nested inside
             )
          {
             var parameters = ctor.Parameters.IsDefaultOrEmpty
