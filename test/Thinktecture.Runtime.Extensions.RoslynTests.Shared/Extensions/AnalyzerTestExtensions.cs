@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Testing;
 // ReSharper disable once CheckNamespace
 namespace Thinktecture.Extensions;
 
-public static class SolutionExtensions
+public static class AnalyzerTestExtensions
 {
    /// <summary>
    /// By default, the compiler reports diagnostics for nullable reference types at

@@ -37,6 +37,9 @@ jobs:
       - name: build source generator
         run: dotnet build --configuration Release --no-restore src/Thinktecture.Runtime.Extensions.SourceGenerator/Thinktecture.Runtime.Extensions.SourceGenerator.csproj
 
+      - name: build source refactorings
+        run: dotnet build --configuration Release --no-restore src/Thinktecture.Runtime.Extensions.Refactorings/Thinktecture.Runtime.Extensions.Refactorings.csproj
+
       - name: build
         run: dotnet build --configuration Release --no-restore
 

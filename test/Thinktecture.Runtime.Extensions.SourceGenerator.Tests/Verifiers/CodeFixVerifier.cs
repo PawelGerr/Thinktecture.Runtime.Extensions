@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -47,7 +46,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       int? numberOfFixes,
       params DiagnosticResult[] expected)
    {
-      var test = new CodeFixTest(source, null, additionalReferences, numberOfFixes, expected);
+      var test = new CodeFixTest(source, null, additionalReferences, numberOfFixes, expected: expected);
       await test.RunAsync(CancellationToken.None);
    }
 
@@ -67,16 +66,19 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       int? numberOfFixes,
       params DiagnosticResult[] expected)
    {
-      source = source.Replace("\r\n", "\n");
-      fixedSource = fixedSource.Replace("\r\n", "\n");
+      var test = new CodeFixTest(source, fixedSource, additionalReferences, numberOfFixes, expected: expected);
+      await test.RunAsync(CancellationToken.None);
+   }
 
-      if (Environment.NewLine == "\r\n")
-      {
-         source = source.Replace("\n", "\r\n");
-         fixedSource = fixedSource.Replace("\n", "\r\n");
-      }
-
-      var test = new CodeFixTest(source, fixedSource, additionalReferences, numberOfFixes, expected);
+   public static async Task VerifyCodeFixAsync(
+      string source,
+      string fixedSource,
+      IEnumerable<Assembly> additionalReferences,
+      CompilerDiagnostics? compilerDiagnostics = null,
+      int? codeActionIndex = null,
+      params DiagnosticResult[] expected)
+   {
+      var test = new CodeFixTest(source, fixedSource, additionalReferences, null, compilerDiagnostics, codeActionIndex, expected);
       await test.RunAsync(CancellationToken.None);
    }
 
@@ -87,13 +89,21 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
          string fixedSource,
          IEnumerable<Assembly> additionalReferences,
          int? numberOfFixes,
+         CompilerDiagnostics? compilerDiagnostics = null,
+         int? codeActionIndex = null,
          params DiagnosticResult[] expected)
       {
-         TestCode = source;
-         FixedCode = fixedSource;
+         TestCode = source.NormalizeLineEndings();
+         FixedCode = fixedSource.NormalizeLineEndings();
          ExpectedDiagnostics.AddRange(expected);
          NumberOfIncrementalIterations = numberOfFixes;
          NumberOfFixAllIterations = numberOfFixes;
+
+         if (compilerDiagnostics is not null)
+            CompilerDiagnostics = compilerDiagnostics.Value;
+
+         if (codeActionIndex is not null)
+            CodeActionIndex = codeActionIndex.Value;
 
 #if NET8_0
          ReferenceAssemblies = new ReferenceAssemblies("net8.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "8.0.0"), Path.Combine("ref", "8.0.0"));
@@ -115,7 +125,7 @@ public static class CodeFixVerifier<TAnalyzer, TCodeFix>
       protected override ParseOptions CreateParseOptions()
       {
          var options = (CSharpParseOptions)base.CreateParseOptions();
-         options = options.WithLanguageVersion(LanguageVersion.CSharp12);
+         options = options.WithLanguageVersion(LanguageVersion.CSharp14);
 
          return options;
       }

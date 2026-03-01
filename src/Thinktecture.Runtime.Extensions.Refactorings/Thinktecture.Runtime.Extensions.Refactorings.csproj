@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Source generators for Thinktecture.Runtime.Extensions.</Description>
+    <Description>Refactorings for Thinktecture.Runtime.Extensions.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTags>smart-enum;value-object;discriminated-union;sourcegenerator</PackageTags>
+    <PackageTags>smart-enum;value-object;discriminated-union;codefix;refactoring</PackageTags>
     <NoWarn>$(NoWarn);CS1591;NU5128</NoWarn>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

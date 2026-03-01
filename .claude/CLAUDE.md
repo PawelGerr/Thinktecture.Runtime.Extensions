@@ -153,10 +153,11 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 | `ObjectFactorySourceGenerator` | `ObjectFactorySourceGeneratorState`                                              | `ObjectFactoryCodeGenerator`                                       |
 | `AnnotationsSourceGenerator`   | —                                                                                | JetBrains annotations                                              |
 
-### Analyzers
+### Analyzers & Refactorings
 
 1. `ThinktectureRuntimeExtensionsAnalyzer` -- 56 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
+3. `SwitchMapCompletionRefactoringProvider` -- IDE refactoring (light bulb action) that auto-generates arguments for `Switch`/`Map`/`SwitchPartially`/`MapPartially` method calls on Smart Enums and Unions
 
 ### Runtime Metadata
 
@@ -175,7 +176,11 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 
 - **`src/Thinktecture.Runtime.Extensions`** -- Core library (interfaces, attributes, runtime helpers)
 - **`src/Thinktecture.Runtime.Extensions.SourceGenerator`** -- Source Generators and Analyzers
+- **`src/Thinktecture.Runtime.Extensions.Refactorings`** -- Roslyn code refactorings (IDE light-bulb actions)
+- **`src/Thinktecture.Runtime.Extensions.Roslyn.Sources`** -- Shared Roslyn source files compiled into both SourceGenerator and Refactorings (via `<Compile Include>`, not a project reference)
 - **Framework Integration** -- `.Json`, `.MessagePack`, `.Newtonsoft`, `.EntityFrameworkCore8/9/10`, `.AspNetCore`, `.Swashbuckle`
+- **`test/Thinktecture.Runtime.Extensions.Tests.Shared`** -- Shared test types (Smart Enums, Value Objects, Unions) and string utilities, referenced by all test projects
+- **`test/Thinktecture.Runtime.Extensions.RoslynTests.Shared`** -- Shared Roslyn test infrastructure (nullable warning handling), referenced by SourceGenerator.Tests and Refactorings.Tests
 
 ### Key Files
 

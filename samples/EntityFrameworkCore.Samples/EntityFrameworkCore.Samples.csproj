@@ -6,7 +6,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.EntityFrameworkCore8\Thinktecture.Runtime.Extensions.EntityFrameworkCore8.csproj" />
     <ProjectReference Include="..\Basic.Samples\Basic.Samples.csproj" />
-    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />

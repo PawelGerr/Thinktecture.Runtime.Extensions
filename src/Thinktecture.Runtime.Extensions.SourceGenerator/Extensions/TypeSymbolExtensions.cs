@@ -6,7 +6,7 @@ using Thinktecture.CodeAnalysis;
 
 namespace Thinktecture;
 
-public static class TypeSymbolExtensions
+public static partial class TypeSymbolExtensions
 {
    private static readonly SymbolDisplayFormat _fullyQualifiedDisplayFormat = SymbolDisplayFormat.FullyQualifiedFormat
                                                                                                  .AddMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
@@ -299,12 +299,6 @@ public static class TypeSymbolExtensions
          return false;
 
       return attributeType is { Name: Constants.Attributes.UseDelegateFromConstructor.NAME, ContainingNamespace: { Name: "Thinktecture", ContainingNamespace.IsGlobalNamespace: true } };
-   }
-
-   public static bool IsSmartEnum(
-      [NotNullWhen(true)] this ITypeSymbol? enumType)
-   {
-      return IsSmartEnum(enumType, out _);
    }
 
    public static bool IsSmartEnum(

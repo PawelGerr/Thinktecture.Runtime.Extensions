@@ -8,12 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'" Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj" PrivateAssets="contentfiles;build" />
+    <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
+                      Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
+                      PrivateAssets="contentfiles;build" />
+    <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
+                      Include="..\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
+                      PrivateAssets="all" />
 
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build/$(PackageId).props" />
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="buildTransitive/$(PackageId).props" />
 
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
                       SetTargetFramework="TargetFramework=netstandard2.0"
                       ReferenceOutputAssembly="false"
                       OutputItemType="Analyzer" />
