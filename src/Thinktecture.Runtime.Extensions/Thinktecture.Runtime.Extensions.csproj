@@ -13,7 +13,7 @@
                       PrivateAssets="contentfiles;build" />
     <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
                       Include="..\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
-                      PrivateAssets="all" />
+                      PrivateAssets="contentfiles;build" />
 
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build/$(PackageId).props" />
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="buildTransitive/$(PackageId).props" />
