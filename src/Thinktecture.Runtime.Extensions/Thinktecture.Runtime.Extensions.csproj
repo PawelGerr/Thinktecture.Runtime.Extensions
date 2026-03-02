@@ -10,10 +10,10 @@
   <ItemGroup>
     <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
                       Include="..\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
-                      PrivateAssets="contentfiles;build" />
+                      PrivateAssets="compile;runtime;contentfiles;build" />
     <ProjectReference Condition="'$(BuildingByReSharper)' != 'true' AND '$(BuildingInsideVisualStudio)' != 'true'"
                       Include="..\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
-                      PrivateAssets="contentfiles;build" />
+                      PrivateAssets="compile;runtime;contentfiles;build" />
 
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="build/$(PackageId).props" />
     <None Include="Thinktecture.Runtime.Extensions.props" Pack="true" PackagePath="buildTransitive/$(PackageId).props" />
