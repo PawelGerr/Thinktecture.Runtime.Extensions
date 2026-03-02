@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <Compile Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\**\*.cs" />
+    <AdditionalFiles Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
   <ItemGroup>

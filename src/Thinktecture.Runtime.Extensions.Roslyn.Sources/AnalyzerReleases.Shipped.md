@@ -63,3 +63,4 @@
  TTRESG105  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
  TTRESG106  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
  TTRESG1000 | ThinktectureRuntimeExtensionsInternalUsageAnalyzer | Warning  | Internal Thinktecture.Runtime.Extensions API usage                               
+ TTRESG1001 | ThinktectureRuntimeExtensionsAnalyzer              | Info     | UseSwitchMapWithStaticLambda                                                     

@@ -9,7 +9,7 @@
         "serena",
         "start-mcp-server",
         "--context",
-        "ide-assistant",
+        "claude-code",
         "--project-from-cwd"
       ]
     }

@@ -156,7 +156,7 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Analyzers & Refactorings
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 56 diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 57 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 3. `SwitchMapCompletionRefactoringProvider` -- IDE refactoring (light bulb action) that auto-generates arguments for `Switch`/`Map`/`SwitchPartially`/`MapPartially` method calls on Smart Enums and Unions
 
@@ -176,12 +176,13 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 ### Key Directories
 
 - **`src/Thinktecture.Runtime.Extensions`** -- Core library (interfaces, attributes, runtime helpers)
-- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`** -- Source Generators and Analyzers
+- **`src/Thinktecture.Runtime.Extensions.SourceGenerator`** -- Source Generators
+- **`src/Thinktecture.Runtime.Extensions.Analyzers`** -- Roslyn diagnostic analyzers and code fix provider
 - **`src/Thinktecture.Runtime.Extensions.Refactorings`** -- Roslyn code refactorings (IDE light-bulb actions)
-- **`src/Thinktecture.Runtime.Extensions.Roslyn.Sources`** -- Shared Roslyn source files compiled into both SourceGenerator and Refactorings (via `<Compile Include>`, not a project reference)
+- **`src/Thinktecture.Runtime.Extensions.Roslyn.Sources`** -- Shared Roslyn source files compiled into SourceGenerator, Analyzers, and Refactorings (via `<Compile Include>`, not a project reference)
 - **Framework Integration** -- `.Json`, `.MessagePack`, `.Newtonsoft`, `.EntityFrameworkCore8/9/10`, `.AspNetCore`, `.Swashbuckle`
 - **`test/Thinktecture.Runtime.Extensions.Tests.Shared`** -- Shared test types (Smart Enums, Value Objects, Unions) and string utilities, referenced by all test projects
-- **`test/Thinktecture.Runtime.Extensions.RoslynTests.Shared`** -- Shared Roslyn test infrastructure (nullable warning handling), referenced by SourceGenerator.Tests and Refactorings.Tests
+- **`test/Thinktecture.Runtime.Extensions.RoslynTests.Shared`** -- Shared Roslyn test infrastructure (nullable warning handling), referenced by SourceGenerator.Tests, Analyzers.Tests, and Refactorings.Tests
 
 ### Key Files
 
@@ -296,6 +297,7 @@ Skipping step 3 is a policy violation, even if you are confident you know the AP
 - XML documentation required for all publicly visible types and members in `src/Thinktecture.Runtime.Extensions` and framework integration projects
 - XML documentation NOT required in source generator, analyzer, test, and sample projects
 - Do not use `#region`/`#endregion`
+- Do not use `[InternalsVisibleTo]` -- this project does not expose internals across assemblies. If test or integration code needs access, expose it through public or internal (pubternal) API design instead
 - In XML documentation, wrap code tokens like `true`, `false`, `null`, `default(T)` in `<c>` tags
 
 **Source Generator Code** (treat as a checklist -- verify all items before presenting code):

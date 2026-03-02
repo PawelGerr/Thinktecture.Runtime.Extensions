@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Refactorings for Thinktecture.Runtime.Extensions.</Description>
+    <Description>Analyzers and code fixes for Thinktecture.Runtime.Extensions.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageTags>smart-enum;value-object;discriminated-union;codefix;refactoring</PackageTags>
+    <PackageTags>smart-enum;value-object;discriminated-union;analyzer;codefix</PackageTags>
     <NoWarn>$(NoWarn);CS1591;NU5128</NoWarn>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
@@ -11,11 +11,13 @@
     <IncludeSymbols>false</IncludeSymbols>
     <DevelopmentDependency>true</DevelopmentDependency>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
-    <NoWarn>$(NoWarn);CA1051;CA1707;CA1711;CA1716;CA1834;CA2201;RS1038;RS2008;</NoWarn>
+    <NoWarn>$(NoWarn);CA1051;CA1707;CA1711;CA1716;CA1834;CA2201;RS1038;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\**\*.cs" />
+    <AdditionalFiles Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="..\Thinktecture.Runtime.Extensions.Roslyn.Sources\AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
   <ItemGroup>

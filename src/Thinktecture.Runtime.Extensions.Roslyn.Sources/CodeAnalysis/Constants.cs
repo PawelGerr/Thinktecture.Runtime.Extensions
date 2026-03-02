@@ -2,6 +2,9 @@ namespace Thinktecture.CodeAnalysis;
 
 public static class Constants
 {
+   public const string ANALYZER_CATEGORY = "ThinktectureRuntimeExtensionsAnalyzer";
+   public const string INTERNAL_USAGE_ANALYZER_CATEGORY = "ThinktectureRuntimeExtensionsInternalUsageAnalyzer";
+
    public static class SmartEnum
    {
       public const AccessModifier DEFAULT_KEY_MEMBER_ACCESS_MODIFIER = AccessModifier.Public;
