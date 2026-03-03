@@ -588,7 +588,19 @@ public static class StringBuilderExtensions
 
       foreach (var containingType in containingTypes)
       {
-         sb.Append(containingType.Name).Append('.');
+         sb.Append(containingType.Name);
+
+         if (!containingType.GenericParameters.IsDefaultOrEmpty)
+         {
+            sb.Append('<');
+
+            for (var i = 1; i < containingType.GenericParameters.Length; i++)
+               sb.Append(',');
+
+            sb.Append('>');
+         }
+
+         sb.Append('.');
       }
 
       return sb.Append(type.Name);

@@ -42,7 +42,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ExplicitEqualityComparerWithoutComparer,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustBePartial,
       DiagnosticsDescriptors.MethodWithUseDelegateFromConstructorMustNotHaveGenerics,
-      DiagnosticsDescriptors.TypeMustNotBeInsideGenericType,
       DiagnosticsDescriptors.UnionDerivedTypesMustNotBeGeneric,
       DiagnosticsDescriptors.UnionMustBeSealedOrHavePrivateConstructorsOnly,
       DiagnosticsDescriptors.UnionRecordMustBeSealed,
@@ -798,7 +797,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      TypeMustNotBeInsideGenericType(context, type, tdsLocation);
 
       var assignableMembers = type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, false, true, context.CancellationToken, context)
                                   .Where(m => !m.IsStatic)
@@ -1052,7 +1050,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, enumType, mustBePrivate: true, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, enumType);
-      TypeMustNotBeInsideGenericType(context, enumType, tdsLocation);
 
       var items = enumType.GetEnumItems();
 
@@ -1112,12 +1109,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             tdsLocation,
             BuildTypeName(type));
       }
-   }
-
-   private static void TypeMustNotBeInsideGenericType(SymbolAnalysisContext context, INamedTypeSymbol type, Location tdsLocation)
-   {
-      if (type.IsNestedInGenericClass())
-         ReportDiagnostic(context, DiagnosticsDescriptors.TypeMustNotBeInsideGenericType, tdsLocation, BuildTypeName(type));
    }
 
    private static void Check_ItemLike_StaticProperties(

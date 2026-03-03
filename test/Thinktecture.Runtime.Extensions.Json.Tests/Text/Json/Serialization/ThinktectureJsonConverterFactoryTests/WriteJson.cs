@@ -336,4 +336,28 @@ public class WriteJson : JsonTestsBase
       intJson.Should().Be("\"item1\"");
       doubleJson.Should().Be("\"item1\"");
    }
+
+   [Fact]
+   public void Should_serialize_keyed_smart_enum_nested_in_generic_class()
+   {
+      var json = JsonSerializer.Serialize(SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum.Item);
+
+      json.Should().Be("1");
+   }
+
+   [Fact]
+   public void Should_serialize_keyed_value_object_nested_in_generic_class()
+   {
+      var json = JsonSerializer.Serialize(ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject.Create(42));
+
+      json.Should().Be("42");
+   }
+
+   [Fact]
+   public void Should_serialize_complex_value_object_nested_in_generic_class()
+   {
+      var json = JsonSerializer.Serialize(ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject.Create(42));
+
+      json.Should().Be("{\"Value\":42}");
+   }
 }

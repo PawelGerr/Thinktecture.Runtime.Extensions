@@ -38,7 +38,7 @@ namespace ").Append(_state.Namespace).Append(@";
 
       _sb.RenderContainingTypesStart(_state.ContainingTypes);
 
-      var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty;
+      var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty || _state.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       _sb.Append(@"
 [global::Newtonsoft.Json.JsonConverterAttribute(typeof(");
@@ -81,14 +81,11 @@ file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.J
       objectType = global::System.Nullable.GetUnderlyingType(objectType) ?? objectType;
 ");
 
-      if (!_state.GenericParameters.IsDefaultOrEmpty)
-      {
-         _sb.Append(@"
+      _sb.Append(@"
       if (!objectType.IsGenericType || objectType.IsGenericTypeDefinition)
          return false;
 
       return typeof(").AppendTypeFullyQualifiedWithoutGenerics(_state, _state.ContainingTypes).AppendGenericTypeParameters(_state, constructOpenGeneric: true).Append(@") == objectType.GetGenericTypeDefinition();");
-      }
 
       _sb.Append(@"
    }

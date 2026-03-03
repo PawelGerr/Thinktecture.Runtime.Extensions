@@ -351,4 +351,57 @@ public class MessagePackValueObjectSourceGeneratorTests : SourceGeneratorTestsBa
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_MessagePackFormatter_for_keyed_value_object_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [ValueObject<int>]
+               public partial class TestValueObject;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_MessagePackFormatter_for_complex_value_object_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [ComplexValueObject]
+               public partial class TestValueObject
+               {
+                  public int Value { get; }
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".MessagePack",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

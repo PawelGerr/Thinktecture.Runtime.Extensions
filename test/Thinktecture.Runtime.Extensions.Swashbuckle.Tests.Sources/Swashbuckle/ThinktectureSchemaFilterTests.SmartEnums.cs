@@ -215,6 +215,14 @@ public partial class ThinktectureSchemaFilterTests
          await Verify(openApi);
       }
 
+      [Fact]
+      public async Task Should_handle_keyed_SmartEnum_nested_in_generic_class_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_SmartEnumClass_StringBased_as_form_parameter(

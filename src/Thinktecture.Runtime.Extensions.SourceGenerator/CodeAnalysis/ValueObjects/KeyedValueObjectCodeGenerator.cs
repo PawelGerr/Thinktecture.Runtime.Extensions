@@ -48,7 +48,7 @@ namespace ").Append(_state.Namespace).Append(@"
    private void GenerateValueObject(CancellationToken cancellationToken)
    {
       var emptyStringYieldsNull = _state.Settings.EmptyStringInFactoryMethodsYieldsNull && _state is { IsReferenceType: true } && _state.KeyMember.IsString();
-      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty;
+      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty || _state.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       _sb.GenerateStructLayoutAttributeIfRequired(_state.IsReferenceType, _state.Settings.HasStructLayoutAttribute);
 

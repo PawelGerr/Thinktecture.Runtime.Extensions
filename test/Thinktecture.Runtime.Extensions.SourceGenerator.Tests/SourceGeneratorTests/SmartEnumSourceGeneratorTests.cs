@@ -1965,31 +1965,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public void Should_handle_nested_in_generic_class_error()
-   {
-      var source = """
-         using System;
-
-         namespace Thinktecture.Tests
-         {
-            public class OuterClass<T>
-            {
-               [SmartEnum<string>]
-               public partial class TestEnum
-               {
-                  public static readonly TestEnum Item1 = default!;
-               }
-            }
-         }
-         """;
-      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(
-         source,
-         [typeof(ISmartEnum<>).Assembly],
-         ["Type 'TestEnum' must not be inside a generic type"]);
-      outputs.Should().BeEmpty();
-   }
-
-   [Fact]
    public void Should_not_generate_struct_with_string_key()
    {
       var source = """
@@ -3222,6 +3197,158 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
                         "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_smart_enum_nested_in_generic_class()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [SmartEnum<int>]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Formattable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_keyless_smart_enum_nested_in_generic_class()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [SmartEnum]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_smart_enum_nested_in_generic_and_non_generic_class()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               public partial class Middle
+               {
+                  public partial class Inner
+                  {
+                     [SmartEnum<string>]
+                     public partial class TestEnum
+                     {
+                        public static readonly TestEnum Item1 = default!;
+                     }
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle.Inner.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_smart_enum_nested_in_multiple_generic_classes()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               public partial class Middle<U>
+               {
+                  [SmartEnum<string>]
+                  public partial class TestEnum
+                  {
+                     public static readonly TestEnum Item1 = default!;
+                  }
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.Middle`1.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_smart_enum_nested_in_generic_struct()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public partial struct Outer<T>
+            {
+               [SmartEnum<int>]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestEnum.Formattable.g.cs");
    }
 
 #if NET9_0_OR_GREATER

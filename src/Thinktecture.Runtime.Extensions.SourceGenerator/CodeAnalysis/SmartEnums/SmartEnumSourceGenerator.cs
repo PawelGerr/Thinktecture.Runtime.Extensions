@@ -312,9 +312,6 @@ public sealed class SmartEnumSourceGenerator()
          if (context.Attributes.Length > 1)
             return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute, [type.ToMinimallyQualifiedDisplayString()]);
 
-         if (type.IsNestedInGenericClass())
-            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
-
          ITypeSymbol? keyMemberType = null;
 
          if (isKeyed)

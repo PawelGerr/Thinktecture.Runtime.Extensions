@@ -844,4 +844,31 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
 
       output.Should().BeNull();
    }
+
+   [Fact]
+   public async Task Should_generate_Json_converter_for_keyed_value_object_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [ValueObject<int>]
+               public partial class TestValueObject;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ValueObjectAttribute<>).Assembly,
+                                                                  typeof(ThinktectureNewtonsoftJsonConverterFactory).Assembly,
+                                                                  typeof(JsonConverter).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

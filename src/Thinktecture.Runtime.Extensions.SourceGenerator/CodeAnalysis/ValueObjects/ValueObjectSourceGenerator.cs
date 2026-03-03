@@ -452,9 +452,6 @@ public sealed class ValueObjectSourceGenerator()
          if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated || keyMemberType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
             return null; // Analyzer emits DiagnosticsDescriptors.KeyMemberShouldNotBeNullable
 
-         if (type.IsNestedInGenericClass())
-            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
-
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 
          if (factory is null)
@@ -492,9 +489,6 @@ public sealed class ValueObjectSourceGenerator()
       {
          if (!TryGetType(context, out var type))
             return null;
-
-         if (type.IsNestedInGenericClass())
-            return null; // Analyzer emits DiagnosticsDescriptors.TypeMustNotBeInsideGenericType
 
          var factory = TypedMemberStateFactoryProvider.GetFactoryOrNull(context.SemanticModel.Compilation);
 

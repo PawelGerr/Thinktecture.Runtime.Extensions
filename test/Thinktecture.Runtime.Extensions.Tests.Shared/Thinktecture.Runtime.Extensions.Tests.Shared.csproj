@@ -12,14 +12,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.MessagePack\Thinktecture.Runtime.Extensions.MessagePack.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Newtonsoft.Json\Thinktecture.Runtime.Extensions.Newtonsoft.Json.csproj" />
-    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj" />
     <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.SourceGenerator\Thinktecture.Runtime.Extensions.SourceGenerator.csproj"
                       SetTargetFramework="TargetFramework=netstandard2.0"
                       ReferenceOutputAssembly="false"
                       OutputItemType="Analyzer" />
+  </ItemGroup>
+
+  <!-- Rider test running cannot resolve some projects because tests target .NET 8, 9 and 10 but the libs have only 8 and 9 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"
+                      SetTargetFramework="TargetFramework=net8.0" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj"
+                      SetTargetFramework="TargetFramework=net8.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net10.0'">
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions\Thinktecture.Runtime.Extensions.csproj"
+                      SetTargetFramework="TargetFramework=net9.0" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Json\Thinktecture.Runtime.Extensions.Json.csproj"
+                      SetTargetFramework="TargetFramework=net9.0" />
   </ItemGroup>
 
   <ItemGroup>

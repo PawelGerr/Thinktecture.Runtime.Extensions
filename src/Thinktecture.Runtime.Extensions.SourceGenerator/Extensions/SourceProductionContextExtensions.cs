@@ -16,7 +16,7 @@ public static class SourceProductionContextExtensions
       if (String.IsNullOrWhiteSpace(generatedCode))
          return;
 
-      var containingTypeNames = containingTypes.IsDefaultOrEmpty ? null : String.Join(".", containingTypes.Select(t => t.Name)) + ".";
+      var containingTypeNames = containingTypes.IsDefaultOrEmpty ? null : String.Join(".", containingTypes.Select(t => t.GenericParameters.Length > 0 ? $"{t.Name}`{t.GenericParameters.Length}" : t.Name)) + ".";
       var hintName = $"{(typeNamespace is null ? null : $"{typeNamespace}.")}{containingTypeNames}{typeName}{(numberOfGenerics > 0 ? $"`{numberOfGenerics}" : null)}{fileNameSuffix}.g.cs";
       context.AddSource(hintName, generatedCode!);
    }

@@ -169,6 +169,42 @@ public class RoundTrip : JsonTestsBase
       deserialized.Should().BeEquivalentTo(original);
    }
 
+   [Fact]
+   public void Should_roundtrip_keyed_smart_enum_nested_in_generic_class()
+   {
+      var original = SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum.Item;
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("1");
+
+      var deserialized = JsonConvert.DeserializeObject<SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum>(json);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_keyed_value_object_nested_in_generic_class()
+   {
+      var original = ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject.Create(42);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("42");
+
+      var deserialized = JsonConvert.DeserializeObject<ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_nested_in_generic_class()
+   {
+      var original = ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject.Create(42);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("{\"Value\":42}");
+
+      var deserialized = JsonConvert.DeserializeObject<ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
    private struct TestStruct<T>
    {
       public T Prop { get; set; }

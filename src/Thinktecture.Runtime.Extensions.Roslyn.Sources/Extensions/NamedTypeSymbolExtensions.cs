@@ -106,21 +106,6 @@ public static class NamedTypeSymbolExtensions
       return types.DrainToImmutable();
    }
 
-   public static bool IsNestedInGenericClass(this INamedTypeSymbol type)
-   {
-      var containingType = type.ContainingType;
-
-      while (containingType is not null)
-      {
-         if (containingType.Arity > 0)
-            return true;
-
-         containingType = containingType.ContainingType;
-      }
-
-      return false;
-   }
-
    public static bool HasLowerAccessibility(
       this INamedTypeSymbol type,
       Accessibility accessibility,

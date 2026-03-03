@@ -1505,7 +1505,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public void Should_not_generate_code_for_keyed_class_nested_in_generic_class()
+   public async Task Should_generate_keyed_value_object_nested_in_generic_class()
    {
       var source = """
 
@@ -1516,7 +1516,7 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            public class Container<T>
+            public partial class Outer<T>
             {
                [ValueObject<int>]
          	   public partial class TestValueObject
@@ -1527,16 +1527,24 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          """;
 
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
-         source,
-         [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Type 'TestValueObject' must not be inside a generic type"]);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
-      output.Should().BeNull();
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.DivisionOperators.g.cs");
    }
 
    [Fact]
-   public void Should_not_generate_code_for_complex_class_nested_in_generic_class()
+   public async Task Should_generate_complex_value_object_nested_in_generic_class()
    {
       var source = """
 
@@ -1547,9 +1555,37 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            public class Container<T>
+            public partial class Outer<T>
             {
                [ComplexValueObject]
+         	   public partial class TestValueObject
+         	   {
+                  public int Value { get; }
+               }
+            }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_keyed_value_object_nested_in_generic_record()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            public partial record Outer<T>
+            {
+               [ValueObject<int>]
          	   public partial class TestValueObject
          	   {
                }
@@ -1558,12 +1594,51 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          """;
 
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(
-         source,
-         [typeof(ComplexValueObjectAttribute).Assembly],
-         ["Type 'TestValueObject' must not be inside a generic type"]);
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
 
-      output.Should().BeNull();
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.Outer`1.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.Outer`1.TestValueObject.DivisionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_value_object_nested_in_multiple_generic_classes()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               public partial class Middle<U>
+               {
+                  [ComplexValueObject]
+         	      public partial class TestValueObject
+         	      {
+                     public int Value { get; }
+                  }
+               }
+            }
+         }
+
+         """;
+
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      await VerifyAsync(output);
    }
 
    [Fact]

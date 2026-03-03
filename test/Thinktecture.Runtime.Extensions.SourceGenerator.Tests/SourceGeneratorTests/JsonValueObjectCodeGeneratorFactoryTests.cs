@@ -649,4 +649,31 @@ public class JsonValueObjectCodeGeneratorFactoryTests : SourceGeneratorTestsBase
       // This should actually generate because ObjectFactory with None doesn't claim SystemTextJson
       output.Should().NotBeNull();
    }
+
+   [Fact]
+   public async Task Should_generate_Json_converter_for_keyed_value_object_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [ValueObject<int>]
+               public partial class TestValueObject;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".Json",
+                                                                  typeof(ValueObjectAttribute<>).Assembly,
+                                                                  typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                                  typeof(JsonConverterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

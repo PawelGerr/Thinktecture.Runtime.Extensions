@@ -229,6 +229,14 @@ public partial class ThinktectureSchemaFilterTests
             .UseParameters(endpointKind, nullable);
       }
 
+      [Fact]
+      public async Task Should_handle_ComplexValueObject_nested_in_generic_class_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Struct_as_route_parameter(

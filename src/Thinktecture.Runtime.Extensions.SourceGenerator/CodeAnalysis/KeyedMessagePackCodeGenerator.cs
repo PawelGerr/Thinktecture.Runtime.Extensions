@@ -38,7 +38,7 @@ namespace ").Append(_state.Namespace).Append(@";
 
       _sb.RenderContainingTypesStart(_state.ContainingTypes);
 
-      var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty;
+      var hasGenerics = !_state.GenericParameters.IsDefaultOrEmpty || _state.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       _sb.Append(@"
 [global::MessagePack.MessagePackFormatter(typeof(");

@@ -198,6 +198,14 @@ public partial class ThinktectureSchemaFilterTests
             .UseParameters(endpointKind, nullable, nonNullableReferenceTypesAsRequired);
       }
 
+      [Fact]
+      public async Task Should_handle_keyed_ValueObject_nested_in_generic_class_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Struct_StringBased_as_route_parameter(

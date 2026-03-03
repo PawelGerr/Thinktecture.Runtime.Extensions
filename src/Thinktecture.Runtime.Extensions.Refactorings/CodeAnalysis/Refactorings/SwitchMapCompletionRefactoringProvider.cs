@@ -397,7 +397,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
                                                      .WithTrailingTrivia(SyntaxFactory.Space);
          }
 
-         var name = i == 0 ? "state" : "x";
+         var name = i == 0 ? Constants.Parameters.STATE : "x";
          nodesAndTokens[i * 2] = SyntaxFactory.Parameter(SyntaxFactory.Identifier(name));
       }
 

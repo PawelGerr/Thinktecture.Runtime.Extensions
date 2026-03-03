@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public NewtonsoftJsonSmartEnumSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 1_000)
+      : base(output, 3_000)
    {
    }
 
@@ -509,6 +509,34 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
          {
             public static readonly TestEnum Item1 = default!;
             public static readonly TestEnum Item2 = default!;
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".NewtonsoftJson",
+                                                                typeof(ISmartEnum<>).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_converter_for_keyed_enum_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [SmartEnum<int>]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
          }
 
          """;

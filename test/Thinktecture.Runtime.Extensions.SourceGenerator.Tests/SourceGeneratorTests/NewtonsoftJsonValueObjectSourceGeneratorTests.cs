@@ -371,4 +371,32 @@ public class NewtonsoftJsonValueObjectSourceGeneratorTests : SourceGeneratorTest
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_JsonConverter_for_complex_value_object_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [ComplexValueObject]
+               public partial class TestValueObject
+               {
+                  public int Value { get; }
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  ".NewtonsoftJson",
+                                                                  typeof(ComplexValueObjectAttribute).Assembly, typeof(Json.ThinktectureNewtonsoftJsonConverterFactory).Assembly, typeof(Newtonsoft.Json.JsonToken).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

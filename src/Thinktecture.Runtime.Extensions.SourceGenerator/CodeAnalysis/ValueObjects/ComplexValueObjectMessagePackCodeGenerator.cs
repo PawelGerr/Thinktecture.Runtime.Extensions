@@ -53,7 +53,7 @@ public sealed class ComplexValueObjectMessagePackCodeGenerator<T> : CodeGenerato
       _sb.Append(GENERATED_CODE_PREFIX).Append(@"
 ");
 
-      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty;
+      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty || _type.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       if (_type.Namespace is not null)
       {

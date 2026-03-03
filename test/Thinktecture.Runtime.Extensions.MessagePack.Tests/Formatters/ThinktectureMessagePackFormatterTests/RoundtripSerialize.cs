@@ -622,6 +622,24 @@ public partial class RoundTripSerialize
       doubleDeserialized.Should().BeSameAs(doubleItem);
    }
 
+   [Fact]
+   public void Should_roundtrip_serialize_keyed_smart_enum_nested_in_generic_class()
+   {
+      RoundTrip(SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum.Item);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_keyed_value_object_nested_in_generic_class()
+   {
+      RoundTrip(ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject.Create(42));
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_complex_value_object_nested_in_generic_class()
+   {
+      RoundTrip(ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject.Create(42));
+   }
+
    private static void Roundtrip_serialize_types_with_struct_properties_using_resolver(
       bool skipValueObjectsWithMessagePackFormatter,
       object obj)

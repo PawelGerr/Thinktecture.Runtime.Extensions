@@ -333,7 +333,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
    private void GenerateFactory()
    {
-      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty;
+      var isGeneric = !_type.GenericParameters.IsDefaultOrEmpty || _type.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       _sb.Append(@"
 

@@ -614,4 +614,28 @@ public class ReadJson : JsonTestsBase
       intDeserialized.Should().BeSameAs(intItem);
       doubleDeserialized.Should().BeSameAs(doubleItem);
    }
+
+   [Fact]
+   public void Should_deserialize_keyed_smart_enum_nested_in_generic_class()
+   {
+      var item = Deserialize<SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum>("1");
+
+      item.Should().BeSameAs(SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum.Item);
+   }
+
+   [Fact]
+   public void Should_deserialize_keyed_value_object_nested_in_generic_class()
+   {
+      var value = Deserialize<ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject>("42");
+
+      value.Should().Be(ValueObjects_NestedInGenericClass.GenericOuter<int>.KeyedValueObject.Create(42));
+   }
+
+   [Fact]
+   public void Should_deserialize_complex_value_object_nested_in_generic_class()
+   {
+      var value = Deserialize<ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject>("{\"Value\":42}");
+
+      value.Should().Be(ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject.Create(42));
+   }
 }

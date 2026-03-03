@@ -521,4 +521,32 @@ public class MessagePackSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(output);
    }
+
+   [Fact]
+   public async Task Should_generate_formatter_for_keyed_enum_nested_in_generic_class()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public partial class Outer<T>
+            {
+               [SmartEnum<int>]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default!;
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source,
+                                                                ".MessagePack",
+                                                                typeof(ISmartEnum<>).Assembly, typeof(ThinktectureMessagePackFormatter<,,>).Assembly, typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
 }

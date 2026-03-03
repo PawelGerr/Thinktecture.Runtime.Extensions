@@ -48,7 +48,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateEnum(CancellationToken cancellationToken)
    {
-      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty;
+      var isGeneric = !_state.GenericParameters.IsDefaultOrEmpty || _state.ContainingTypes.Any(ct => !ct.GenericParameters.IsDefaultOrEmpty);
 
       if (_state.KeyMember is not null && !isGeneric)
       {
