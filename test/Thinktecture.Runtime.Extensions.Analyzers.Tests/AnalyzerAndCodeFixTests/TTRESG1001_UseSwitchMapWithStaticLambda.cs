@@ -1405,5 +1405,261 @@ public class TTRESG1001_UseSwitchMapWithStaticLambda
             await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly], expected);
          }
       }
+
+      public class CustomStateParameterName
+      {
+         public class SingleCapture
+         {
+            [Fact]
+            public async Task Should_use_custom_state_parameter_name_for_smart_enum()
+            {
+               var code = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+
+                           testEnum.{|#0:Switch|}(item1: () => { _ = x; }, item2: () => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expectedCode = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+
+                           testEnum.Switch(context: x, item1: static context => { _ = context; }, item2: static context => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
+               await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_CustomSwitchMapStateParameterName).Assembly], expected);
+            }
+
+            [Fact]
+            public async Task Should_use_custom_state_parameter_name_for_ad_hoc_union()
+            {
+               var code = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+                           var x = 42;
+
+                           testUnion.{|#0:Switch|}(@string: s => { _ = x; }, int32: i => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expectedCode = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+                           var x = 42;
+
+                           testUnion.Switch(context: x, @string: static (context, s) => { _ = context; }, int32: static (context, i) => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
+               await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute<,>).Assembly, typeof(Thinktecture.Runtime.Tests.TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly], expected);
+            }
+
+            [Fact]
+            public async Task Should_use_custom_state_parameter_name_for_smart_enum_switch_partially()
+            {
+               var code = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+
+                           testEnum.{|#0:SwitchPartially|}(@default: value => {}, item1: () => { _ = x; }, item2: () => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expectedCode = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+
+                           testEnum.SwitchPartially(context: x, @default: static (context, value) => {}, item1: static context => { _ = context; }, item2: static context => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SwitchPartially");
+               await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_CustomSwitchMapStateParameterName).Assembly], expected);
+            }
+
+            [Fact]
+            public async Task Should_use_custom_state_parameter_name_for_ad_hoc_union_switch_partially()
+            {
+               var code = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+                           var x = 42;
+
+                           testUnion.{|#0:SwitchPartially|}(@default: item => {}, @string: s => { _ = x; }, int32: i => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expectedCode = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+                           var x = 42;
+
+                           testUnion.SwitchPartially(context: x, @default: static (context, item) => {}, @string: static (context, s) => { _ = context; }, int32: static (context, i) => {});
+                        }
+                     }
+                  }
+                  """;
+
+               var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("SwitchPartially");
+               await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(UnionAttribute<,>).Assembly, typeof(Thinktecture.Runtime.Tests.TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly], expected);
+            }
+         }
+
+         public class MultipleCaptures
+         {
+            [Fact]
+            public async Task Should_use_custom_state_parameter_name_for_smart_enum()
+            {
+               var code = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+                           var y = 43;
+
+                           testEnum.{|#0:Switch|}(item1: () => { _ = x; }, item2: () => { _ = y; });
+                        }
+                     }
+                  }
+                  """;
+
+               var expectedCode = """
+
+                  using System;
+                  using Thinktecture;
+                  using Thinktecture.Runtime.Tests.TestEnums;
+
+                  namespace TestNamespace
+                  {
+                     public class Test
+                     {
+                        public void Do()
+                        {
+                           var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                           var x = 42;
+                           var y = 43;
+
+                           testEnum.Switch(context: (x, y), item1: static context => { _ = context.x; }, item2: static context => { _ = context.y; });
+                        }
+                     }
+                  }
+                  """;
+
+               var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
+               await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_CustomSwitchMapStateParameterName).Assembly], expected);
+            }
+         }
+      }
    }
 }

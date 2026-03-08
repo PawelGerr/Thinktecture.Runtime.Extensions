@@ -298,15 +298,17 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
          return SyntaxFactory.IdentifierName(CreateIdentifier(parameter.Name));
       }
 
+      var stateParameterName = IsStateOverload(method) ? method.Parameters[0].Name : Constants.Parameters.STATE;
+
       if (paramType is INamedTypeSymbol namedType)
       {
          // Check for System.Action
          if (namedType.IsSystemAction())
-            return BuildActionLambda(namedType);
+            return BuildActionLambda(namedType, stateParameterName);
 
          // Check for System.Func
          if (namedType.IsSystemFunc())
-            return BuildFuncLambda(namedType);
+            return BuildFuncLambda(namedType, stateParameterName);
 
          // Check for Thinktecture.Argument<T>
          if (namedType.IsThinktectureArgument())
@@ -319,7 +321,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       return SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
    }
 
-   private static ExpressionSyntax BuildActionLambda(INamedTypeSymbol actionType)
+   private static ExpressionSyntax BuildActionLambda(INamedTypeSymbol actionType, string stateParameterName)
    {
       var staticModifier = SyntaxFactory.TokenList(
          SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space));
@@ -343,12 +345,12 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
 
       // Action<T1, T2, ...> → static (x1, x2, ...) => { }
       return SyntaxFactory.ParenthesizedLambdaExpression(
-                             SyntaxFactory.ParameterList(BuildMultipleParameters(actionType.TypeArguments.Length)),
+                             SyntaxFactory.ParameterList(BuildMultipleParameters(actionType.TypeArguments.Length, stateParameterName)),
                              SyntaxFactory.Block())
                           .WithModifiers(staticModifier);
    }
 
-   private static ExpressionSyntax BuildFuncLambda(INamedTypeSymbol funcType)
+   private static ExpressionSyntax BuildFuncLambda(INamedTypeSymbol funcType, string stateParameterName)
    {
       var staticModifier = SyntaxFactory.TokenList(
          SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space));
@@ -380,12 +382,12 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       // Func<T1, T2, ..., TResult> → static (x1, x2, ...) => throw new System.NotImplementedException()
       // TypeArguments.Length - 1 because the last type argument is TResult
       return SyntaxFactory.ParenthesizedLambdaExpression(
-                             SyntaxFactory.ParameterList(BuildMultipleParameters(funcType.TypeArguments.Length - 1)),
+                             SyntaxFactory.ParameterList(BuildMultipleParameters(funcType.TypeArguments.Length - 1, stateParameterName)),
                              throwExpression)
                           .WithModifiers(staticModifier);
    }
 
-   private static SeparatedSyntaxList<ParameterSyntax> BuildMultipleParameters(int count)
+   private static SeparatedSyntaxList<ParameterSyntax> BuildMultipleParameters(int count, string stateParameterName)
    {
       var nodesAndTokens = new SyntaxNodeOrToken[count * 2 - 1];
 
@@ -397,7 +399,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
                                                      .WithTrailingTrivia(SyntaxFactory.Space);
          }
 
-         var name = i == 0 ? Constants.Parameters.STATE : "x";
+         var name = i == 0 ? stateParameterName : "x";
          nodesAndTokens[i * 2] = SyntaxFactory.Parameter(SyntaxFactory.Identifier(name));
       }
 

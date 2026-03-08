@@ -466,8 +466,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    {
       var numberOfCallbacks = operation.TargetMethod.Parameters.IsDefaultOrEmpty ? 0 : operation.TargetMethod.Parameters.Length;
 
+      var originalMethod = operation.TargetMethod.OriginalDefinition;
+
       if (numberOfCallbacks > 0
-          && operation.TargetMethod.Parameters[0].Name == Constants.Parameters.STATE)
+          && originalMethod.Parameters[0].Type is { TypeKind: TypeKind.TypeParameter } firstParamType
+          && !SymbolEqualityComparer.Default.Equals(firstParamType, originalMethod.ReturnType))
       {
          numberOfCallbacks--;
       }

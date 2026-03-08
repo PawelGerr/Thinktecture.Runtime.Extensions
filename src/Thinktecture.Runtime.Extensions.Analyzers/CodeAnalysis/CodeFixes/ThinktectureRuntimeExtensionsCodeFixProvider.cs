@@ -827,6 +827,26 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (semanticModel is null)
          return document;
 
+      // Resolve the actual state parameter name from the state overload sibling method
+      var stateParameterName = Constants.Parameters.STATE;
+
+      if (semanticModel.GetSymbolInfo(invocation, cancellationToken).Symbol is IMethodSymbol currentMethod)
+      {
+         var containingType = currentMethod.ContainingType;
+         var methodName = currentMethod.Name;
+
+         foreach (var member in containingType.GetMembers(methodName))
+         {
+            if (member is IMethodSymbol sibling
+                && sibling.OriginalDefinition.Parameters.Length > 0
+                && sibling.OriginalDefinition.Parameters[0].Type.TypeKind == TypeKind.TypeParameter)
+            {
+               stateParameterName = sibling.Parameters[0].Name;
+               break;
+            }
+         }
+      }
+
       // Build state expression
       ExpressionSyntax stateExpression;
 
@@ -848,7 +868,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       // State argument (first)
       var stateArg = SyntaxFactory.Argument(
-         SyntaxFactory.NameColon(Constants.Parameters.STATE),
+         SyntaxFactory.NameColon(stateParameterName),
          default,
          stateExpression);
       newArguments.Add(stateArg);
@@ -861,7 +881,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          if (argument.Expression is LambdaExpressionSyntax lambda
              && !lambda.Modifiers.Any(SyntaxKind.StaticKeyword))
          {
-            var newLambda = TransformLambdaForStateOverload(semanticModel, lambda, captures, captureSet);
+            var newLambda = TransformLambdaForStateOverload(semanticModel, lambda, captures, captureSet, stateParameterName);
             newArguments.Add(argument.WithExpression(newLambda));
          }
          else
@@ -883,7 +903,8 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       SemanticModel semanticModel,
       LambdaExpressionSyntax lambda,
       List<ISymbol> captures,
-      HashSet<ISymbol> captureSet)
+      HashSet<ISymbol> captureSet,
+      string stateParameterName)
    {
       // Step 1: Replace capture references in the body
       var body = (SyntaxNode?)lambda.ExpressionBody ?? lambda.Block;
@@ -904,13 +925,13 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          if (captures.Count == 1)
          {
-            replacement = SyntaxFactory.IdentifierName(Constants.Parameters.STATE).WithTriviaFrom(identifier);
+            replacement = SyntaxFactory.IdentifierName(stateParameterName).WithTriviaFrom(identifier);
          }
          else
          {
             replacement = SyntaxFactory.MemberAccessExpression(
                SyntaxKind.SimpleMemberAccessExpression,
-               SyntaxFactory.IdentifierName(Constants.Parameters.STATE),
+               SyntaxFactory.IdentifierName(stateParameterName),
                SyntaxFactory.IdentifierName(identifier.Identifier.Text)).WithTriviaFrom(identifier);
          }
 
@@ -932,7 +953,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       }
 
       // Step 3: Add state parameter
-      var stateParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier(Constants.Parameters.STATE));
+      var stateParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier(stateParameterName));
 
       if (transformedLambda is SimpleLambdaExpressionSyntax simple)
       {

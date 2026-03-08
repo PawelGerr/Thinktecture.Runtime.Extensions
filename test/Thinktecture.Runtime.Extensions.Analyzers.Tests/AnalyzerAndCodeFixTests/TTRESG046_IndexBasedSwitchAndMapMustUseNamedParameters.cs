@@ -2840,4 +2840,221 @@ public class TTRESG046_IndexBasedSwitchAndMapMustUseNamedParameters
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
    }
+
+   public class CustomSwitchMapStateParameterName
+   {
+      public class AdHocUnionSwitchWithActionAndState
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+
+                        {|#0:testUnion.Switch(42,
+                                           @string: static (ctx, s) => {},
+                                           static (ctx, i) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+
+                        {|#0:testUnion.Switch(42,
+                                           @string: static (ctx, s) => {},
+                                           int32: static (ctx, i) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly]);
+         }
+      }
+
+      public class RegularUnionSwitchWithActionAndState
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName.Child1("text");
+
+                        {|#0:testUnion.Switch(42,
+                                           child1: static (ctx, c) => {},
+                                           static (ctx, c) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestRegularUnions.TestUnionWithCustomSwitchMapStateParameterName));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestRegularUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName.Child1("text");
+
+                        {|#0:testUnion.Switch(42,
+                                           child1: static (ctx, c) => {},
+                                           child2: static (ctx, c) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute).Assembly, typeof(TestRegularUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly]);
+         }
+      }
+
+      public class AdHocUnionSwitchPartiallyWithActionAndState
+      {
+         [Fact]
+         public async Task Should_trigger_without_named_arg()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+
+                        {|#0:testUnion.SwitchPartially(42,
+                                           @default: static (ctx, value) => {},
+                                           @string: static (ctx, s) => {},
+                                           static (ctx, i) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(nameof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName));
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly], expected);
+         }
+
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+
+                        {|#0:testUnion.SwitchPartially(42,
+                                           @default: static (ctx, value) => {},
+                                           @string: static (ctx, s) => {},
+                                           int32: static (ctx, i) => {})|};
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly]);
+         }
+      }
+
+      public class AdHocUnionMapPartiallyWithFunc
+      {
+         [Fact]
+         public async Task Should_not_trigger_when_all_args_are_named()
+         {
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testUnion = new TestUnionWithCustomSwitchMapStateParameterName("text");
+
+                        var returnValue = {|#0:testUnion.MapPartially(
+                                           @default: 0,
+                                           @string: 1,
+                                           int32: 2)|};
+                     }
+                  }
+               }
+               """;
+
+            await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly, typeof(TestAdHocUnions.TestUnionWithCustomSwitchMapStateParameterName).Assembly]);
+         }
+      }
+   }
 }

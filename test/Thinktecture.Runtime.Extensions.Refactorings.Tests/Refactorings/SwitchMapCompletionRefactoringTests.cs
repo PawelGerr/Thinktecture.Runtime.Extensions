@@ -12,6 +12,7 @@ public class SwitchMapCompletionRefactoringTests
 {
    private static readonly Assembly[] _references = [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased_SwitchMapPartially).Assembly];
    private static readonly Assembly[] _smartEnumReferences = [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly];
+   private static readonly Assembly[] _smartEnumCustomStateReferences = [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_CustomSwitchMapStateParameterName).Assembly];
    private static readonly Assembly[] _unionReferences = [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestUnion_class_string_int).Assembly];
    private static readonly Assembly[] _regularUnionReferences = [typeof(ComplexValueObjectAttribute).Assembly, typeof(TestUnion).Assembly];
 
@@ -1524,6 +1525,278 @@ public class SwitchMapCompletionRefactoringTests
             """;
 
          await Verifier.VerifyRefactoringAsync(code, fixedCode, _smartEnumReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_Action_WithState_CustomStateParameterName
+   {
+      [Fact]
+      public async Task Should_generate_state_action_arguments_with_custom_state_parameter_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     testUnion.[||]Switch<string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     testUnion.Switch<string>(
+                        context: context,
+                        @string: static (context, x) => { },
+                        int32: static (context, x) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_Func_WithState_CustomStateParameterName
+   {
+      [Fact]
+      public async Task Should_generate_state_func_arguments_with_custom_state_parameter_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     var result = testUnion.[||]Switch<string, string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     var result = testUnion.Switch<string, string>(
+                        context: context,
+                        @string: static (context, x) => throw new System.NotImplementedException(),
+                        int32: static (context, x) => throw new System.NotImplementedException());
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences);
+      }
+   }
+
+   public class RegularUnion_Switch_Action_WithState_CustomStateParameterName
+   {
+      [Fact]
+      public async Task Should_generate_state_action_arguments_with_custom_state_parameter_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     TestUnionWithCustomSwitchMapStateParameterName testUnion = new TestUnionWithCustomSwitchMapStateParameterName.Child1("test");
+                     string context = "";
+
+                     testUnion.[||]Switch<string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestRegularUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     TestUnionWithCustomSwitchMapStateParameterName testUnion = new TestUnionWithCustomSwitchMapStateParameterName.Child1("test");
+                     string context = "";
+
+                     testUnion.Switch<string>(
+                        context: context,
+                        child1: static (context, x) => { },
+                        child2: static (context, x) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _regularUnionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_SwitchPartially_Action_WithState_CustomStateParameterName
+   {
+      [Fact]
+      public async Task Should_generate_state_action_arguments_with_custom_state_parameter_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     testUnion.[||]SwitchPartially<string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     testUnion.SwitchPartially<string>(
+                        context: context,
+                        @default: static (context, x) => { },
+                        @string: static (context, x) => { },
+                        int32: static (context, x) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_SwitchPartially_Func_WithState_CustomStateParameterName
+   {
+      [Fact]
+      public async Task Should_generate_state_func_arguments_with_custom_state_parameter_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     var result = testUnion.[||]SwitchPartially<string, string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
+                     string context = "";
+
+                     var result = testUnion.SwitchPartially<string, string>(
+                        context: context,
+                        @default: static (context, x) => throw new System.NotImplementedException(),
+                        @string: static (context, x) => throw new System.NotImplementedException(),
+                        int32: static (context, x) => throw new System.NotImplementedException());
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences);
       }
    }
 }
