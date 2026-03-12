@@ -40,13 +40,24 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="int"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type 'int'.");
+      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="global::Thinktecture.Tests._1Test"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests._1Test"/>.</exception>
-      public global::Thinktecture.Tests._1Test As_1Test => Is_1Test ? this._1test! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type '_1Test'.");
+      public global::Thinktecture.Tests._1Test As_1Test => Is_1Test ? this._1test! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests._1TestUnionWithSpecialChars)}' is not of type '_1Test' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "int",
+            2 => "_1Test",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

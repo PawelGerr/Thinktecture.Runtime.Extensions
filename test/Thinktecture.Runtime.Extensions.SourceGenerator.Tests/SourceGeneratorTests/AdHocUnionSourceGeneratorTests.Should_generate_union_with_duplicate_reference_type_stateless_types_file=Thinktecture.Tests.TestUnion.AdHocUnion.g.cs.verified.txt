@@ -45,19 +45,31 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>global::Thinktecture.Tests.NullValueClass?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::Thinktecture.Tests.NullValueClass?</c>.</exception>
-      public global::Thinktecture.Tests.NullValueClass? AsNullValueClass1 => IsNullValueClass1 ? default(global::Thinktecture.Tests.NullValueClass) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValueClass?'.");
+      public global::Thinktecture.Tests.NullValueClass? AsNullValueClass1 => IsNullValueClass1 ? default(global::Thinktecture.Tests.NullValueClass) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValueClass?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>global::Thinktecture.Tests.NullValueClass?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::Thinktecture.Tests.NullValueClass?</c>.</exception>
-      public global::Thinktecture.Tests.NullValueClass? AsNullValueClass2 => IsNullValueClass2 ? default(global::Thinktecture.Tests.NullValueClass) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValueClass?'.");
+      public global::Thinktecture.Tests.NullValueClass? AsNullValueClass2 => IsNullValueClass2 ? default(global::Thinktecture.Tests.NullValueClass) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValueClass?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="int"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "NullValueClass?",
+            2 => "NullValueClass?",
+            3 => "int",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

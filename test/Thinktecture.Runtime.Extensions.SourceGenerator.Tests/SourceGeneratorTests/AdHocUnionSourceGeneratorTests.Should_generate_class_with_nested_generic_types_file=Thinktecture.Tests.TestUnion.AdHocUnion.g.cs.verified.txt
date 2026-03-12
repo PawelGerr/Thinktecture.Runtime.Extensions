@@ -40,13 +40,24 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>global::System.Collections.Generic.Dictionary&lt;string, global::System.Collections.Generic.List&lt;int&gt;&gt;</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Collections.Generic.Dictionary&lt;string, global::System.Collections.Generic.List&lt;int&gt;&gt;</c>.</exception>
-      public global::System.Collections.Generic.Dictionary<string, global::System.Collections.Generic.List<int>> AsDictionaryOfStringListOfInt32 => IsDictionaryOfStringListOfInt32 ? this._dictionaryOfStringListOfInt32! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Dictionary<string, List<int>>'.");
+      public global::System.Collections.Generic.Dictionary<string, global::System.Collections.Generic.List<int>> AsDictionaryOfStringListOfInt32 => IsDictionaryOfStringListOfInt32 ? this._dictionaryOfStringListOfInt32! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Dictionary<string, List<int>>' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="int"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+      public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "Dictionary<string, List<int>>",
+            2 => "int",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

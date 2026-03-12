@@ -39,13 +39,24 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>global::System.Func&lt;int, string&gt;</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Func&lt;int, string&gt;</c>.</exception>
-      public global::System.Func<int, string> AsFuncOfInt32String => IsFuncOfInt32String ? ((global::System.Func<int, string>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Func<int, string>'.");
+      public global::System.Func<int, string> AsFuncOfInt32String => IsFuncOfInt32String ? ((global::System.Func<int, string>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Func<int, string>' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>global::System.Action&lt;int&gt;</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Action&lt;int&gt;</c>.</exception>
-      public global::System.Action<int> AsActionOfInt32 => IsActionOfInt32 ? ((global::System.Action<int>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Action<int>'.");
+      public global::System.Action<int> AsActionOfInt32 => IsActionOfInt32 ? ((global::System.Action<int>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'Action<int>' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "Func<int, string>",
+            2 => "Action<int>",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

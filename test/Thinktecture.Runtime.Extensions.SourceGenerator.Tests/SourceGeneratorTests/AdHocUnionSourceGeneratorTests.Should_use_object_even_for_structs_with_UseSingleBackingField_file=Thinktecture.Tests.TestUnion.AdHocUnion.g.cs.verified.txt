@@ -57,31 +57,45 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="int"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      public int AsInt32 => IsInt32 ? ((int)this._obj!) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int'.");
+      public int AsInt32 => IsInt32 ? ((int)this._obj!) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="string"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
-      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string'.");
+      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>global::System.Collections.Generic.List&lt;int&gt;</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Collections.Generic.List&lt;int&gt;</c>.</exception>
-      public global::System.Collections.Generic.List<int> AsListOfInt32 => IsListOfInt32 ? ((global::System.Collections.Generic.List<int>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'List<int>'.");
+      public global::System.Collections.Generic.List<int> AsListOfInt32 => IsListOfInt32 ? ((global::System.Collections.Generic.List<int>?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'List<int>' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="bool"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="bool"/>.</exception>
-      public bool AsBoolean => IsBoolean ? ((bool)this._obj!) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'bool'.");
+      public bool AsBoolean => IsBoolean ? ((bool)this._obj!) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'bool' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>int?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int?</c>.</exception>
-      public int? AsNullableOfInt32 => IsNullableOfInt32 ? ((int?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?'.");
+      public int? AsNullableOfInt32 => IsNullableOfInt32 ? ((int?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "int",
+            2 => "string",
+            3 => "List<int>",
+            4 => "bool",
+            5 => "int?",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

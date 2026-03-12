@@ -45,19 +45,31 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>string?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string?</c>.</exception>
-      public string? AsString => IsString ? ((string?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string?'.");
+      public string? AsString => IsString ? ((string?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>global::System.Collections.Generic.List&lt;int&gt;?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Collections.Generic.List&lt;int&gt;?</c>.</exception>
-      public global::System.Collections.Generic.List<int>? AsListOfInt32 => IsListOfInt32 ? ((global::System.Collections.Generic.List<int>?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'List<int>?'.");
+      public global::System.Collections.Generic.List<int>? AsListOfInt32 => IsListOfInt32 ? ((global::System.Collections.Generic.List<int>?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'List<int>?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>object?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>object?</c>.</exception>
-      public object? AsObject => IsObject ? ((object?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'object?'.");
+      public object? AsObject => IsObject ? ((object?)this._obj) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'object?' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "string?",
+            2 => "List<int>?",
+            3 => "object?",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

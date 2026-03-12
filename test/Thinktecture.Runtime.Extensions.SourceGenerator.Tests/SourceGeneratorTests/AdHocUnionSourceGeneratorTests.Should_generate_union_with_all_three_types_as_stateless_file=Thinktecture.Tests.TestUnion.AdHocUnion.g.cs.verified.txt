@@ -44,19 +44,31 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="global::Thinktecture.Tests.NullValue"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests.NullValue"/>.</exception>
-      public global::Thinktecture.Tests.NullValue AsNullValue => IsNullValue ? default(global::Thinktecture.Tests.NullValue) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValue'.");
+      public global::Thinktecture.Tests.NullValue AsNullValue => IsNullValue ? default(global::Thinktecture.Tests.NullValue) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'NullValue' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</exception>
-      public global::Thinktecture.Tests.EmptyState AsEmptyState => IsEmptyState ? default(global::Thinktecture.Tests.EmptyState) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'EmptyState'.");
+      public global::Thinktecture.Tests.EmptyState AsEmptyState => IsEmptyState ? default(global::Thinktecture.Tests.EmptyState) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'EmptyState' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="global::Thinktecture.Tests.UndefinedValue"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests.UndefinedValue"/>.</exception>
-      public global::Thinktecture.Tests.UndefinedValue AsUndefinedValue => IsUndefinedValue ? default(global::Thinktecture.Tests.UndefinedValue) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'UndefinedValue'.");
+      public global::Thinktecture.Tests.UndefinedValue AsUndefinedValue => IsUndefinedValue ? default(global::Thinktecture.Tests.UndefinedValue) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'UndefinedValue' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "NullValue",
+            2 => "EmptyState",
+            3 => "UndefinedValue",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.

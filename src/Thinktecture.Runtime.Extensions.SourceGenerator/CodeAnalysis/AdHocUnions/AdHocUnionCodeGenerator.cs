@@ -87,6 +87,7 @@ namespace ").Append(_state.Namespace).Append(@"
 "); // index is 1-based
 
       GenerateMemberTypeFieldsAndProps();
+      GenerateGetMemberTypeName();
       GenerateRawValueGetter();
       GenerateConstructors();
       GenerateFactoriesForTypeDuplicates();
@@ -1042,8 +1043,32 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
          }
 
-         _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("'.\");");
+         _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("' but of type '{GetMemberTypeName()}'.\");");
       }
+   }
+
+   private void GenerateGetMemberTypeName()
+   {
+      _sb.Append(@"
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => ""<uninitialized>"",");
+
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      {
+         var memberType = _state.MemberTypes[i];
+
+         _sb.Append(@"
+            ").Append(i + 1).Append(@" => """).AppendTypeMinimallyQualified(memberType).Append(@""",");
+      }
+
+      _sb.Append(@"
+            _ => throw new global::System.IndexOutOfRangeException($""Unexpected value index '{this._valueIndex}'."")
+         };
+      }");
    }
 
    private void GenerateRawValueGetter()

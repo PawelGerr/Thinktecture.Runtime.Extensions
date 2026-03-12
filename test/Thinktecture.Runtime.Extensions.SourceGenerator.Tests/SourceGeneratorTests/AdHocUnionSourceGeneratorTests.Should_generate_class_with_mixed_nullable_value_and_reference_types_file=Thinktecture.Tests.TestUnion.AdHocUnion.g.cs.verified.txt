@@ -47,19 +47,31 @@ namespace Thinktecture.Tests
       /// Gets the current value as <c>int?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>int?</c>.</exception>
-      public int? AsNullableOfInt32 => IsNullableOfInt32 ? this._nullableOfInt32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?'.");
+      public int? AsNullableOfInt32 => IsNullableOfInt32 ? this._nullableOfInt32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>string?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>string?</c>.</exception>
-      public string? AsString => IsString ? this._string : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string?'.");
+      public string? AsString => IsString ? this._string : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string?' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>bool?</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>bool?</c>.</exception>
-      public bool? AsNullableOfBoolean => IsNullableOfBoolean ? this._nullableOfBoolean : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'bool?'.");
+      public bool? AsNullableOfBoolean => IsNullableOfBoolean ? this._nullableOfBoolean : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'bool?' but of type '{GetMemberTypeName()}'.");
+
+      private string GetMemberTypeName()
+      {
+         return this._valueIndex switch
+         {
+            0 => "<uninitialized>",
+            1 => "int?",
+            2 => "string?",
+            3 => "bool?",
+            _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
+         };
+      }
 
       /// <summary>
       /// Gets the current value as <see cref="object"/>.
