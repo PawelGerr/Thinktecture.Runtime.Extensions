@@ -47,10 +47,13 @@ public class ThinktectureSpanParsableJsonConverter<T, TValidationError> : JsonCo
    }
 
    /// <inheritdoc />
-   public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+   public override void Write(Utf8JsonWriter writer, T? value, JsonSerializerOptions options)
    {
       if (value is null)
-         throw new ArgumentNullException(nameof(value));
+      {
+         writer.WriteNullValue();
+         return;
+      }
 
       writer.WriteStringValue(value.ToValue());
    }

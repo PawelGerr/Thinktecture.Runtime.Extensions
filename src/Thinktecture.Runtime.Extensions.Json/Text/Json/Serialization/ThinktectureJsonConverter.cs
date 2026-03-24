@@ -36,6 +36,14 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
    /// <inheritdoc />
    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
    {
+      if (reader.TokenType == JsonTokenType.Null && default(T) is null)
+      {
+         if (_disallowDefaultValues)
+            throw new JsonException($"Cannot convert null to type \"{typeof(T).Name}\" because it doesn't allow default values.");
+
+         return default;
+      }
+
       var key = _keyConverter is null
                    ? JsonSerializer.Deserialize<TKey>(ref reader, options)
                    : _keyConverter.Read(ref reader, typeof(TKey), options);
@@ -57,10 +65,13 @@ public class ThinktectureJsonConverter<T, TKey, TValidationError> : JsonConverte
    }
 
    /// <inheritdoc />
-   public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+   public override void Write(Utf8JsonWriter writer, T? value, JsonSerializerOptions options)
    {
       if (value is null)
-         throw new ArgumentNullException(nameof(value));
+      {
+         writer.WriteNullValue();
+         return;
+      }
 
       if (_keyConverter is null)
       {
@@ -116,10 +127,13 @@ public class ThinktectureJsonConverter<T, TValidationError> : JsonConverter<T>
    }
 
    /// <inheritdoc />
-   public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+   public override void Write(Utf8JsonWriter writer, T? value, JsonSerializerOptions options)
    {
       if (value is null)
-         throw new ArgumentNullException(nameof(value));
+      {
+         writer.WriteNullValue();
+         return;
+      }
 
       writer.WriteStringValue(value.ToValue());
    }
