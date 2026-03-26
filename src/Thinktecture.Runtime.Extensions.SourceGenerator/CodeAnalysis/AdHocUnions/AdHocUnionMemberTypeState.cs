@@ -2,9 +2,8 @@ namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
 public sealed class AdHocUnionMemberTypeState
    : IEquatable<AdHocUnionMemberTypeState>,
-     IMemberInformation,
-     ITypeMinimallyQualified,
-     IHashCodeComputable
+     IMemberState,
+     ITypeMinimallyQualified
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
@@ -22,7 +21,7 @@ public sealed class AdHocUnionMemberTypeState
    public AdHocUnionMemberTypeSetting Setting { get; }
 
    public bool IsRecord => false;
-   public bool IsTypeParameter => false;
+   public bool IsTypeParameter { get; }
 
    public AdHocUnionMemberTypeState(
       string name,
@@ -46,6 +45,7 @@ public sealed class AdHocUnionMemberTypeState
       IsNullableStruct = typeState.IsNullableStruct;
       SpecialType = typeState.SpecialType;
       IsInterface = typeState.TypeKind == TypeKind.Interface;
+      IsTypeParameter = typeState.IsTypeParameter;
       Setting = setting;
    }
 
@@ -66,6 +66,7 @@ public sealed class AdHocUnionMemberTypeState
              && IsValueType == other.IsValueType
              && SpecialType == other.SpecialType
              && IsInterface == other.IsInterface
+             && IsTypeParameter == other.IsTypeParameter
              && TypeDuplicateCounter == other.TypeDuplicateCounter
              && Setting.Equals(other.Setting);
    }
@@ -79,6 +80,7 @@ public sealed class AdHocUnionMemberTypeState
          hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsTypeParameter.GetHashCode();
          hashCode = (hashCode * 397) ^ TypeDuplicateCounter;
          hashCode = (hashCode * 397) ^ Setting.GetHashCode();
 

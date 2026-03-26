@@ -13,9 +13,7 @@ public static class TypeParameterSymbolExtensions
       {
          var constraints = typeParam.GetConstraints();
 
-         return new GenericTypeParameterState(
-            typeParam.Name,
-            constraints);
+         return new GenericTypeParameterState(typeParam.Name, constraints);
       });
    }
 }

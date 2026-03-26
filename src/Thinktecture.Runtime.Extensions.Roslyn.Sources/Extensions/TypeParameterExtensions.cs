@@ -29,6 +29,9 @@ public static class TypeParameterExtensions
       if (typeParam.HasUnmanagedTypeConstraint)
          (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("unmanaged");
 
+      if (typeParam.AllowsRefLikeType)
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("allows ref struct");
+
       return constraints?.DrainToImmutable() ?? [];
    }
 }

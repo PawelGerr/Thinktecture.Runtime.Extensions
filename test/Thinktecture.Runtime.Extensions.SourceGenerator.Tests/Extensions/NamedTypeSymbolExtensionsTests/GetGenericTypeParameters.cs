@@ -331,6 +331,24 @@ public class GenericClass<T1, T2> where T2 : T1;
    }
 
    [Fact]
+   public void Returns_parameter_with_class_nullable_constraint_stored_as_class()
+   {
+      var src = @"
+namespace Test;
+
+public class GenericClass<T> where T : class?;
+";
+      var type = GetTypeSymbol(src, "Test.GenericClass`1");
+
+      var result = type.GetGenericTypeParameters();
+
+      result.Should().HaveCount(1);
+      result[0].Name.Should().Be("T");
+      result[0].Constraints.Should().HaveCount(1);
+      result[0].Constraints[0].Should().Be("class");
+   }
+
+   [Fact]
    public void Returns_parameter_with_notnull_constraint()
    {
       var src = @"

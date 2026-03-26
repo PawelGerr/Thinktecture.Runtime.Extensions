@@ -154,7 +154,7 @@ public partial class PriorityLevel<TContext> where TContext : notnull
 
 Note: Generated partial declarations do not need to repeat generic constraints -- C# inherits them from the original declaration.
 
-**Important**: Ad-hoc unions cannot be generic (the analyzer enforces this via a diagnostic).
+**Important**: Ad-hoc unions can be generic via `TypeParamRef1`–`TypeParamRef5` placeholders. The source generator resolves these placeholders to the union's own type parameters. For type parameter members, factory methods are generated instead of conversion operators (C# limitation). See diagnostics TTRESG071, TTRESG072, TTRESG107 for validation rules.
 
 ## Nullability Awareness
 

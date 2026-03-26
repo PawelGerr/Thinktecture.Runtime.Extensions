@@ -23,7 +23,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.InnerSmartEnumOnNonFirstLevelMustBePublic,
       DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
       DiagnosticsDescriptors.StaticPropertiesAreNotConsideredItems,
-      DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric,
       DiagnosticsDescriptors.BaseClassFieldMustBeReadOnly,
       DiagnosticsDescriptors.BaseClassPropertyMustBeReadOnly,
       DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable,
@@ -558,7 +557,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
-      TypeMustNotBeGeneric(context, type, type.GetTypeIdentifierLocation(context.CancellationToken));
    }
 
    private static void ValidateRegularUnion(
@@ -1100,18 +1098,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       ValidateKeyMemberComparers(context, enumType, keyType, smartEnumAttribute, factory, tdsLocation, false);
-   }
-
-   private static void TypeMustNotBeGeneric(SymbolAnalysisContext context, INamedTypeSymbol type, Location tdsLocation)
-   {
-      if (!type.TypeParameters.IsDefaultOrEmpty)
-      {
-         ReportDiagnostic(
-            context,
-            DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric,
-            tdsLocation,
-            BuildTypeName(type));
-      }
    }
 
    private static void Check_ItemLike_StaticProperties(

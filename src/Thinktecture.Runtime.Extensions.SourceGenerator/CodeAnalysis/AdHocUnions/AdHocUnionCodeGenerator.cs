@@ -18,7 +18,7 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
       _state = state;
       _sb = sb;
       _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
-                                    || _state.MemberTypes.Where(t => t.IsReferenceType && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
+                                    || _state.MemberTypes.Where(t => t.IsReferenceType && !t.IsTypeParameter && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage(""ThinktectureRuntimeExtensionsAnalyzer"", ""TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage"")]
-   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Append(" :");
+   ").Append(_state.IsReferenceType ? "sealed " : "readonly ").Append("partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(" :");
 
       if (!_state.IsRefStruct && !_state.Settings.SkipEqualityComparison)
       {
@@ -154,10 +154,18 @@ namespace ").Append(_state.Namespace).Append(@"
              || memberType.TypeDuplicateCounter != 0)
             continue;
 
+         // C# does not allow user-defined conversion operators where the source or target is a type parameter.
+         // Generate a factory method instead.
+         if (memberType.IsTypeParameter)
+         {
+            GenerateFactoryMethodForTypeParam(memberType);
+            continue;
+         }
+
          _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from type ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to convert from.</param>
       /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.</returns>
@@ -166,6 +174,21 @@ namespace ").Append(_state.Namespace).Append(@"
          return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
       }");
       }
+   }
+
+   private void GenerateFactoryMethodForTypeParam(AdHocUnionMemberTypeState memberType)
+   {
+      _sb.Append(@"
+
+      /// <summary>
+      /// Creates a new instance of ").AppendTypeForXmlComment(_state).Append(" from a value of type ").AppendMemberTypeForXmlComment(memberType).Append(@".
+      /// </summary>
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>
+      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>
+      public static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
+      {
+         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
+      }");
    }
 
    private void GenerateConversionsToValue()
@@ -177,17 +200,18 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          if (memberType.IsInterface
              || memberType.SpecialType == SpecialType.System_Object
-             || memberType.TypeDuplicateCounter != 0)
+             || memberType.TypeDuplicateCounter != 0
+             || memberType.IsTypeParameter)
             continue;
 
          _sb.Append(@"
 
       /// <summary>
-      /// ").Append(_state.Settings.ConversionToValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
+      /// ").Append(_state.Settings.ConversionToValue == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to type ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
-      /// <returns>Inner value of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</returns>
-      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</exception>
+      /// <returns>Inner value of type ").AppendMemberTypeForXmlComment(memberType).Append(@".</returns>
+      /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendMemberTypeForXmlComment(memberType).Append(@".</exception>
       public static ").AppendConversionOperator(_state.Settings.ConversionToValue).Append(" operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.As").Append(memberType.Name).Append(@";
@@ -266,7 +290,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (memberType.SpecialType != SpecialType.System_String)
          {
-            if (memberType.IsReferenceType)
+            if (memberType.IsReferenceType || memberType is { IsTypeParameter: true, IsValueType: false })
                _sb.Append("?");
 
             _sb.Append(".ToString()");
@@ -307,6 +331,14 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.Setting.IsStateless)
          {
             _sb.Append("typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+         }
+         else if (memberType.IsTypeParameter)
+         {
+            _sb.Append("global::System.Collections.Generic.EqualityComparer<").AppendTypeFullyQualified(memberType).Append(">.Default.GetHashCode(")
+               .AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, nullAnnotated: false, suppressed: true).Append("!)");
+
+            _sb.Append(",");
+            continue;
          }
          else
          {
@@ -397,6 +429,12 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             _sb.Append("true");
          }
+         else if (memberType.IsTypeParameter)
+         {
+            _sb.Append("global::System.Collections.Generic.EqualityComparer<").AppendTypeFullyQualified(memberType).Append(">.Default.Equals(")
+               .AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, nullAnnotated: false, suppressed: true).Append(", ")
+               .AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, nullAnnotated: false, suppressed: true, qualifier: "other").Append(")");
+         }
          else
          {
             if (memberType.IsReferenceType)
@@ -452,7 +490,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -570,7 +608,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append((memberType.IsReferenceType || memberType is { IsTypeParameter: true, IsValueType: false }) && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
          }
 
          _sb.Append(@");
@@ -621,7 +659,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -742,7 +780,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } ? "!" : null);
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType is { IsReferenceType: true, Setting.IsNullableReferenceType: false } or { IsTypeParameter: true, IsValueType: false } ? "!" : null);
          }
 
          _sb.Append(");");
@@ -785,7 +823,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(".</param>");
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
       if (!_state.IsReferenceType)
@@ -970,10 +1008,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
 
          _sb.Append(@"
-      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").Append(_state.Name).Append(" Create").Append(memberType.Name).Append("(")
+      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(")
             .AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
-         return new ").Append(_state.Name).Append("(").AppendEscaped(memberType.ArgumentName).Append(", ").Append(i + 1).Append(@");
+         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(", ").Append(i + 1).Append(@");
       }");
       }
    }
@@ -1017,7 +1055,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Indication whether the current value is of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
+      /// Indication whether the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
@@ -1028,9 +1066,9 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       /// <summary>
-      /// Gets the current value as ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".
+      /// Gets the current value as ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
-      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@".</exception>
+      /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendMemberTypeForXmlComment(memberType).Append(@".</exception>
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
             .Append(" ? ");
 
@@ -1040,7 +1078,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append(memberType.IsReferenceType && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append((memberType.IsReferenceType || memberType is { IsTypeParameter: true, IsValueType: false }) && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
          }
 
          _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("' but of type '{GetMemberTypeName()}'.\");");
@@ -1118,7 +1156,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, withCast: false, nullAnnotated: false, suppressed: false).Append(memberType.IsReferenceType && !hasNullableTypes ? "!" : null);
+            _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, withCast: false, nullAnnotated: false, suppressed: false).Append((memberType.IsReferenceType || memberType is { IsTypeParameter: true, IsValueType: false }) && !hasNullableTypes ? "!" : null);
          }
 
          _sb.Append(",");
@@ -1153,6 +1191,9 @@ file static class Extensions
       bool useSharedObjectForRefTypes,
       AdHocUnionMemberTypeState memberType)
    {
+      if (memberType.IsTypeParameter)
+         return state.Settings.UseSingleBackingField;
+
       return state.Settings.UseSingleBackingField || (useSharedObjectForRefTypes && memberType.IsReferenceType);
    }
 

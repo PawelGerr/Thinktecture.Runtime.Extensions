@@ -50,7 +50,7 @@ A .NET library providing Smart Enums, Value Objects, and Discriminated Unions vi
 | Keyless Smart Enum   | `[SmartEnum]`                                 | Type-safe enum without underlying value. Identified by field reference only.                                     |
 | Simple Value Object  | `[ValueObject<TKey>]`                         | Single-value immutable type wrapping one underlying value.                                                       |
 | Complex Value Object | `[ComplexValueObject]`                        | Multi-property immutable type.                                                                                   |
-| Ad-hoc Union         | `[Union<T1, T2, ...>]` or `[AdHocUnion(...)]` | "One of" several types. Up to 5 type parameters. Cannot be generic.                                              |
+| Ad-hoc Union         | `[Union<T1, T2, ...>]` or `[AdHocUnion(...)]` | "One of" several types. Up to 5 type parameters. Can be generic via `TypeParamRef1`–`TypeParamRef5` placeholders. |
 | Regular Union        | `[Union]`                                     | Inheritance-based union. Abstract base with sealed derived types.                                                |
 
 All types must be declared as `partial`. Source generators produce: factory methods (`Create`, `TryCreate`, `Validate`), equality members, conversion operators, `Switch`/`Map` pattern matching, `IParsable<T>`/`ISpanParsable<T>` (NET9+), and serialization integration.
@@ -94,6 +94,8 @@ All types must be declared as `partial`. Source generators produce: factory meth
 
 **Ad-hoc Unions** (`[Union<T1, T2>]` or `[AdHocUnion(...)]`):
 
+- Generic unions: use `TypeParamRef1`–`TypeParamRef5` placeholders (in namespace `Thinktecture`) to reference the union's own type parameters. E.g., `[Union<TypeParamRef1, string>] public partial struct Result<T>`. Nested usage supported (e.g., `List<TypeParamRef1>`). For type parameter members: no implicit/explicit conversion operators (C# limitation), factory methods generated instead.
+- `allows ref struct` is **not supported** on ad-hoc union type parameters (TTRESG073). Ref structs cannot be boxed, which conflicts with equality, `Value` property, and Switch/Map delegate patterns.
 - Stateless types (`TXIsStateless = true`): store only discriminator, not instance. Prefer structs.
 - Backing fields: with 2+ distinct non-stateless reference types, reference types auto-share a single `object? _obj` field (value types keep typed fields). `UseSingleBackingField = true` forces all types (including value types, with boxing) into `_obj`.
 
@@ -156,7 +158,7 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Analyzers & Refactorings
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 57 diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- 59 diagnostic rules (`TTRESG` prefix) for correct usage
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 3. `SwitchMapCompletionRefactoringProvider` -- IDE refactoring (light bulb action) that auto-generates arguments for `Switch`/`Map`/`SwitchPartially`/`MapPartially` method calls on Smart Enums and Unions
 

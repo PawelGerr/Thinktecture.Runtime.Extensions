@@ -2,6 +2,7 @@ namespace Thinktecture.CodeAnalysis.AdHocUnions;
 
 public sealed class AdHocUnionSourceGenState
    : ITypeInformation,
+     IHasGenerics,
      IEquatable<AdHocUnionSourceGenState>
 {
    public string? Namespace { get; }
@@ -20,8 +21,9 @@ public sealed class AdHocUnionSourceGenState
    public bool IsRecord => false;
    public bool IsTypeParameter => false;
    public bool DisallowsDefaultValue => true;
-   public int NumberOfGenerics => 0;
+   public int NumberOfGenerics => GenericParameters.Length;
 
+   public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
    public ImmutableArray<AdHocUnionMemberTypeState> MemberTypes { get; }
    public AdHocUnionSettings Settings { get; }
    public AttributeInfo AttributeInfo { get; }
@@ -38,6 +40,7 @@ public sealed class AdHocUnionSourceGenState
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       ContainingTypes = type.GetContainingTypes();
+      GenericParameters = type.GetGenericTypeParameters();
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeMinimallyQualified = type.ToMinimallyQualifiedDisplayString();
       IsReferenceType = type.IsReferenceType;
@@ -64,7 +67,8 @@ public sealed class AdHocUnionSourceGenState
              && Settings.Equals(other.Settings)
              && AttributeInfo.Equals(other.AttributeInfo)
              && MemberTypes.SequenceEqual(other.MemberTypes)
-             && ContainingTypes.SequenceEqual(other.ContainingTypes);
+             && ContainingTypes.SequenceEqual(other.ContainingTypes)
+             && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
    public override int GetHashCode()
@@ -79,6 +83,7 @@ public sealed class AdHocUnionSourceGenState
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ MemberTypes.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();
+         hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;
       }

@@ -103,18 +103,18 @@ namespace Thinktecture.Tests
       /// Creates new instance with <paramref name="string1"/>.
       /// </summary>
       /// <param name="string1">Value to create a new instance for.</param>
-      public static TestUnion CreateString1(string @string1)
+      public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
       {
-         return new TestUnion(@string1, 2);
+         return new global::Thinktecture.Tests.TestUnion(@string1, 2);
       }
 
       /// <summary>
       /// Creates new instance with <paramref name="string2"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
-      public static TestUnion CreateString2(string @string2)
+      public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
-         return new TestUnion(@string2, 3);
+         return new global::Thinktecture.Tests.TestUnion(@string2, 3);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly

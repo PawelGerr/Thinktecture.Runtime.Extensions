@@ -67,12 +67,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
    private static bool IsCandidate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
    {
-      return syntaxNode switch
-      {
-         ClassDeclarationSyntax classDeclaration => !classDeclaration.IsGeneric(),
-         StructDeclarationSyntax structDeclaration => !structDeclaration.IsGeneric(),
-         _ => false
-      };
+      return syntaxNode is ClassDeclarationSyntax or StructDeclarationSyntax;
    }
 
    private SourceGenContext? GetSourceGenContextOrNullForGeneric(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
@@ -130,9 +125,6 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          if (type.TypeKind == TypeKind.Error)
             return null;
 
-         if (type.Arity > 0)
-            return null; // Analyzer emits DiagnosticsDescriptors.AdHocUnionsMustNotBeGeneric
-
          if (context.Attributes.IsDefaultOrEmpty)
             return null;
 
@@ -149,6 +141,55 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
          var memberTypeSymbols = getMemberTypes(attributeData.AttributeClass, attributeData.ConstructorArguments);
 
+         SourceGenDiagnostic? warning = null;
+         ITypeParameterSymbol? firstAllowsRefLikeTypeParam = null;
+
+         if (type.Arity == 0)
+         {
+            for (var i = 0; i < memberTypeSymbols.Length; i++)
+            {
+               var maxIndex = memberTypeSymbols[i].GetMaxTypeParamRefIndex();
+
+               if (maxIndex > 0)
+                  return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeParamRefOnNonGenericUnion, [maxIndex, type.ToMinimallyQualifiedDisplayString()]);
+            }
+         }
+         else
+         {
+            var anyTypeParamRefResolved = false;
+            var resolvedBuilder = ImmutableArray.CreateBuilder<ITypeSymbol>(memberTypeSymbols.Length);
+
+            for (var i = 0; i < memberTypeSymbols.Length; i++)
+            {
+               var (resolved, maxIndex) = memberTypeSymbols[i].ResolveTypeParamRefs(type.TypeParameters, context.SemanticModel.Compilation);
+
+               if (maxIndex > type.Arity)
+                  return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeParamRefIndexOutOfRange, [maxIndex, type.ToMinimallyQualifiedDisplayString(), type.Arity]);
+
+               if (maxIndex > 0)
+                  anyTypeParamRefResolved = true;
+
+               resolvedBuilder.Add(resolved);
+            }
+
+            if (!anyTypeParamRefResolved)
+               warning = new SourceGenDiagnostic(tds, DiagnosticsDescriptors.GenericUnionWithoutTypeParamRef, [type.ToMinimallyQualifiedDisplayString()]);
+
+            memberTypeSymbols = resolvedBuilder.DrainToImmutable();
+
+            for (var i = 0; i < type.TypeParameters.Length; i++)
+            {
+               if (!type.TypeParameters[i].AllowsRefLikeType)
+                  continue;
+
+               firstAllowsRefLikeTypeParam = type.TypeParameters[i];
+               break;
+            }
+
+            if (firstAllowsRefLikeTypeParam is not null)
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.AllowsRefStructNotSupportedOnAdHocUnion, [type.ToMinimallyQualifiedDisplayString(), firstAllowsRefLikeTypeParam.Name]);
+         }
+
          if (memberTypeSymbols.Length < 2)
             return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes, [type.ToMinimallyQualifiedDisplayString()]);
 
@@ -164,6 +205,7 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
 
          var settings = new AdHocUnionSettings(context.Attributes[0],
                                                memberTypeSymbols.Length);
+
          var memberTypeStates = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeState>(memberTypeSymbols.Length);
 
          for (var i = 0; i < memberTypeSymbols.Length; i++)
@@ -216,10 +258,15 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
                                                                memberTypeSettings));
          }
 
-         return new AdHocUnionSourceGenState(type,
-                                             memberTypeStates.DrainToImmutable(),
-                                             settings,
-                                             attributeInfo);
+         var state = new AdHocUnionSourceGenState(type,
+                                                  memberTypeStates.DrainToImmutable(),
+                                                  settings,
+                                                  attributeInfo);
+
+         if (warning is not null)
+            return new SourceGenContext(state, null, warning);
+
+         return state;
       }
       catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
       {

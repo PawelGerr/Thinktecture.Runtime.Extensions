@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -161,6 +162,30 @@ public abstract class SourceGeneratorTestsBase
       string[] expectedCompilerErrors)
       where T : IIncrementalGenerator, new()
    {
+      var result = RunGenerator<T>(source, generatedFileNameFragment, furtherAssemblies, expectedCompilerErrors, assertNoUnexpectedGeneratorErrors: true);
+      return result.Outputs;
+   }
+
+   protected record GeneratorResult(
+      Dictionary<string, string> Outputs,
+      ImmutableArray<Diagnostic> GeneratorDiagnostics);
+
+   protected static GeneratorResult GetGeneratedOutputsWithDiagnostics<T>(
+      string source,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      return RunGenerator<T>(source, null, furtherAssemblies, [], assertNoUnexpectedGeneratorErrors: false);
+   }
+
+   private static GeneratorResult RunGenerator<T>(
+      string source,
+      string generatedFileNameFragment,
+      Assembly[] furtherAssemblies,
+      string[] expectedCompilerErrors,
+      bool assertNoUnexpectedGeneratorErrors)
+      where T : IIncrementalGenerator, new()
+   {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
                        {
@@ -187,12 +212,17 @@ public abstract class SourceGeneratorTestsBase
       var generator = new T();
       CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
-      errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
-      errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
+      if (assertNoUnexpectedGeneratorErrors)
+      {
+         errors = generateDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Id == _GENERATION_ERROR).ToList();
+         errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
+      }
 
-      return outputCompilation.SyntaxTrees
-                              .Skip(1)
-                              .Where(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))
-                              .ToDictionary(t => t.FilePath, t => t.ToString());
+      var outputs = outputCompilation.SyntaxTrees
+                                     .Skip(1)
+                                     .Where(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))
+                                     .ToDictionary(t => t.FilePath, t => t.ToString());
+
+      return new GeneratorResult(outputs, generateDiagnostics);
    }
 }

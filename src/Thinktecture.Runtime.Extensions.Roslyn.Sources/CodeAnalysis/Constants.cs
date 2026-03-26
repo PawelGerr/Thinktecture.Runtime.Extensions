@@ -94,6 +94,23 @@ public static class Constants
       }
    }
 
+   public static class TypeParamRef
+   {
+      public const string NAMESPACE = "Thinktecture";
+
+      public const string NAME_1 = "TypeParamRef1";
+      public const string NAME_2 = "TypeParamRef2";
+      public const string NAME_3 = "TypeParamRef3";
+      public const string NAME_4 = "TypeParamRef4";
+      public const string NAME_5 = "TypeParamRef5";
+
+      public const string FULL_NAME_1 = $"{NAMESPACE}.{NAME_1}";
+      public const string FULL_NAME_2 = $"{NAMESPACE}.{NAME_2}";
+      public const string FULL_NAME_3 = $"{NAMESPACE}.{NAME_3}";
+      public const string FULL_NAME_4 = $"{NAMESPACE}.{NAME_4}";
+      public const string FULL_NAME_5 = $"{NAMESPACE}.{NAME_5}";
+   }
+
    public static class Attributes
    {
       public const string NAMESPACE = "Thinktecture";

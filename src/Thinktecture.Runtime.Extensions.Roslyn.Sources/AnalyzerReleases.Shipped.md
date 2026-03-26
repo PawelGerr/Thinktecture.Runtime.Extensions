@@ -33,7 +33,6 @@
  TTRESG049  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Complex Value Object with string members needs equality comparer                 
  TTRESG050  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Method with UseDelegateFromConstructor must be partial                           
  TTRESG051  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Method with UseDelegateFromConstructor must not have generics                    
- TTRESG052  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The type must not be inside generic type                                         
  TTRESG053  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Derived type of a union must not be generic                                      
  TTRESG054  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Discriminated union must be sealed or have private constructors only             
  TTRESG055  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Discriminated union implemented using a record must be sealed                    

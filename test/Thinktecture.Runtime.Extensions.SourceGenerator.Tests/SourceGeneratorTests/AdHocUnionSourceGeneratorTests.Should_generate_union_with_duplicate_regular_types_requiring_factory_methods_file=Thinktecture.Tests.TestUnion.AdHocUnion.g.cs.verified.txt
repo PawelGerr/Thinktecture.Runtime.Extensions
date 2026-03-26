@@ -113,36 +113,36 @@ namespace Thinktecture.Tests
       /// Creates new instance with <paramref name="value1"/>.
       /// </summary>
       /// <param name="value1">Value to create a new instance for.</param>
-      public static TestUnion CreateValue1(int @value1)
+      public static global::Thinktecture.Tests.TestUnion CreateValue1(int @value1)
       {
-         return new TestUnion(@value1, 1);
+         return new global::Thinktecture.Tests.TestUnion(@value1, 1);
       }
 
       /// <summary>
       /// Creates new instance with <paramref name="string1"/>.
       /// </summary>
       /// <param name="string1">Value to create a new instance for.</param>
-      public static TestUnion CreateString1(string @string1)
+      public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
       {
-         return new TestUnion(@string1, 2);
+         return new global::Thinktecture.Tests.TestUnion(@string1, 2);
       }
 
       /// <summary>
       /// Creates new instance with <paramref name="value2"/>.
       /// </summary>
       /// <param name="value2">Value to create a new instance for.</param>
-      public static TestUnion CreateValue2(int @value2)
+      public static global::Thinktecture.Tests.TestUnion CreateValue2(int @value2)
       {
-         return new TestUnion(@value2, 3);
+         return new global::Thinktecture.Tests.TestUnion(@value2, 3);
       }
 
       /// <summary>
       /// Creates new instance with <paramref name="string2"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
-      public static TestUnion CreateString2(string @string2)
+      public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
-         return new TestUnion(@string2, 4);
+         return new global::Thinktecture.Tests.TestUnion(@string2, 4);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly

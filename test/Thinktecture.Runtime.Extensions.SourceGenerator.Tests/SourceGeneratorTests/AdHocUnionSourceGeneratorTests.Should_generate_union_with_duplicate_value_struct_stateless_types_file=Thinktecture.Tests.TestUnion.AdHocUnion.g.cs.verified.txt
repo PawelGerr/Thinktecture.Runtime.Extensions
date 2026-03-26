@@ -101,18 +101,18 @@ namespace Thinktecture.Tests
       /// Creates new instance with <paramref name="nullValue1"/>.
       /// </summary>
       /// <param name="nullValue1">Value to create a new instance for.</param>
-      public static TestUnion CreateNullValue1(global::Thinktecture.Tests.NullValue @nullValue1)
+      public static global::Thinktecture.Tests.TestUnion CreateNullValue1(global::Thinktecture.Tests.NullValue @nullValue1)
       {
-         return new TestUnion(@nullValue1, 1);
+         return new global::Thinktecture.Tests.TestUnion(@nullValue1, 1);
       }
 
       /// <summary>
       /// Creates new instance with <paramref name="nullValue2"/>.
       /// </summary>
       /// <param name="nullValue2">Value to create a new instance for.</param>
-      public static TestUnion CreateNullValue2(global::Thinktecture.Tests.NullValue @nullValue2)
+      public static global::Thinktecture.Tests.TestUnion CreateNullValue2(global::Thinktecture.Tests.NullValue @nullValue2)
       {
-         return new TestUnion(@nullValue2, 2);
+         return new global::Thinktecture.Tests.TestUnion(@nullValue2, 2);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
