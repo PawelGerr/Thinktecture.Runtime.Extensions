@@ -616,6 +616,22 @@ public class ReadJson : JsonTestsBase
    }
 
    [Fact]
+   public void Should_deserialize_timespan_reference_value_object()
+   {
+      var deserialized = Deserialize<TimeSpanBasedReferenceValueObject>("\"01:00:00\"");
+
+      deserialized.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1)));
+   }
+
+   [Fact]
+   public void Should_deserialize_null_as_null_timespan_reference_value_object()
+   {
+      var deserialized = Deserialize<TimeSpanBasedReferenceValueObject>("null");
+
+      deserialized.Should().BeNull();
+   }
+
+   [Fact]
    public void Should_deserialize_keyed_smart_enum_nested_in_generic_class()
    {
       var item = Deserialize<SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum>("1");

@@ -205,6 +205,26 @@ public class WriteJson : JsonTestsBase
    }
 
    [Fact]
+   public void Should_serialize_timespan_reference_value_object()
+   {
+      var obj = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1));
+
+      var json = Serialize<TimeSpanBasedReferenceValueObject, TimeSpan>(obj);
+
+      json.Should().Be("\"01:00:00\"");
+   }
+
+   [Fact]
+   public void Should_serialize_timespan_struct_value_object()
+   {
+      var obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      var json = Serialize<TimeSpanBasedStructValueObject, TimeSpan>(obj);
+
+      json.Should().Be("\"01:00:00\"");
+   }
+
+   [Fact]
    public void Should_serialize_generic_class()
    {
       var obj = GenericComplexValueObject<string, int, TimeSpan>.Create(

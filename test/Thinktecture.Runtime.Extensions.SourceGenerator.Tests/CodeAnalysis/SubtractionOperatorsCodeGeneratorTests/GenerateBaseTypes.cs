@@ -147,7 +147,7 @@ public class GenerateBaseTypes
    }
 
    [Fact]
-   public void Should_not_generate_interface_when_operators_do_not_include_all()
+   public void Should_generate_interface_when_default_operators_only()
    {
       // Arrange
       var state = new SubtractionOperatorsStateBuilder()
@@ -166,7 +166,7 @@ public class GenerateBaseTypes
       generator!.GenerateBaseTypes(sb, state);
 
       // Assert
-      sb.Length.Should().Be(0, "should not generate interfaces when operators don't include All");
+      sb.ToString().Should().Contain("global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.TestType, global::Thinktecture.Tests.TestType, global::Thinktecture.Tests.TestType>");
    }
 
    [Fact]

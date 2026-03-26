@@ -531,6 +531,14 @@ public class ReadJson : JsonTestsBase
       doubleDeserialized.Should().BeSameAs(doubleItem);
    }
 
+   [Fact]
+   public void Should_deserialize_timespan_reference_value_object()
+   {
+      var value = Deserialize<TimeSpanBasedReferenceValueObject>("\"01:00:00\"");
+
+      value.Should().BeEquivalentTo(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1)));
+   }
+
    private static T Deserialize<T>(
       string json,
       NamingStrategy namingStrategy)

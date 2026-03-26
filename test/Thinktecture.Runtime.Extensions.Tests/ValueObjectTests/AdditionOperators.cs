@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
@@ -98,5 +99,47 @@ public class AdditionOperators
       DecimalBasedClassValueObject result = obj + other;
 
       result.Should().Be(DecimalBasedClassValueObject.Create(decimal.MaxValue));
+   }
+
+   [Fact]
+   public void Should_add_timespan_struct_value_objects()
+   {
+      var obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var other = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2));
+
+      TimeSpanBasedStructValueObject result = obj + other;
+
+      result.Should().Be(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(3)));
+   }
+
+   [Fact]
+   public void Should_add_timespan_struct_value_object_with_key_type()
+   {
+      var obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      TimeSpanBasedStructValueObject result = obj + TimeSpan.FromHours(2);
+
+      result.Should().Be(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(3)));
+   }
+
+   [Fact]
+   public void Should_add_timespan_reference_value_objects()
+   {
+      var obj = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(30));
+      var other = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(45));
+
+      TimeSpanBasedReferenceValueObject result = obj + other;
+
+      result.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(75)));
+   }
+
+   [Fact]
+   public void Should_add_timespan_reference_value_object_with_key_type()
+   {
+      var obj = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(30));
+
+      TimeSpanBasedReferenceValueObject result = obj + TimeSpan.FromMinutes(45);
+
+      result.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(75)));
    }
 }

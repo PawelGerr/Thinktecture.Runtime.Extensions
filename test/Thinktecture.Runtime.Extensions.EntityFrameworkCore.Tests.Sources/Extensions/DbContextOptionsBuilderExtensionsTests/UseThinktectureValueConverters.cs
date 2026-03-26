@@ -39,6 +39,8 @@ public class UseThinktectureValueConverters : IDisposable
 
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_IntBased), _converterType.MakeGenericType(typeof(SmartEnum_IntBased), typeof(int), typeof(ValidationError)));
       ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.SmartEnum_StringBased));
+      ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TimeSpanBasedReferenceValueObject), _converterType.MakeGenericType(typeof(TimeSpanBasedReferenceValueObject), typeof(TimeSpan), typeof(ValidationError)));
+      ValidateConverter(entityType, nameof(TestEntity_with_Enum_and_ValueObjects.TimeSpanBasedStructValueObject), _converterType.MakeGenericType(typeof(TimeSpanBasedStructValueObject), typeof(TimeSpan), typeof(ValidationError)));
    }
 
    [Fact]

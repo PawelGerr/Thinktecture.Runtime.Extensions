@@ -88,4 +88,10 @@ public class FormattableTests
       var culture = CultureInfo.CreateSpecificCulture(cultureName);
       TestValueObjectDateTime.Create(new DateTime(2024, 1, 1)).ToString("D", culture).Should().Be(expected);
    }
+
+   [Fact]
+   public void Should_format_timespan_value_object()
+   {
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)).ToString("c", CultureInfo.InvariantCulture).Should().Be("01:00:00");
+   }
 }

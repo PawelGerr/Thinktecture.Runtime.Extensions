@@ -33,6 +33,9 @@ public class TestEntity_with_Enum_and_ValueObjects
    public required TestComplexValueObject_ObjectFactory_and_Constructor TestComplexValueObject_ObjectFactory_and_Constructor { get; set; }
    public CustomObject_ObjectFactory? CustomObject_ObjectFactory { get; set; }
 
+   public TimeSpanBasedReferenceValueObject? TimeSpanBasedReferenceValueObject { get; set; }
+   public TimeSpanBasedStructValueObject TimeSpanBasedStructValueObject { get; set; }
+
    public static void Configure(
       ModelBuilder modelBuilder,
       ValueConverterRegistration valueConverterRegistration,
@@ -59,6 +62,9 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasThinktectureValueConverter(configuration);
 
             builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter(configuration);
+
+            builder.Property(e => e.TimeSpanBasedReferenceValueObject).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.TimeSpanBasedStructValueObject).HasThinktectureValueConverter(configuration);
 
             builder.Property(e => e.TestComplexValueObject_ObjectFactory).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter(configuration);

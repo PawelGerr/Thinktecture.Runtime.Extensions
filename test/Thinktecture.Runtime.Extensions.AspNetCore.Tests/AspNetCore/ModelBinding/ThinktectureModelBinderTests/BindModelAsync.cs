@@ -285,6 +285,36 @@ public class BindModelAsync
       ctx.Result.Model.Should().Be(IntBasedReferenceValueObjectWithCustomFactoryNames.Get(1));
    }
 
+   [Fact]
+   public async Task Should_bind_timespan_reference_value_object()
+   {
+      var ctx = await BindAsync<TimeSpanBasedReferenceValueObject>("01:30:00");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(90)));
+   }
+
+   [Fact]
+   public async Task Should_bind_timespan_struct_value_object()
+   {
+      var ctx = await BindAsync<TimeSpanBasedStructValueObject>("01:30:00");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(TimeSpanBasedStructValueObject.Create(TimeSpan.FromMinutes(90)));
+   }
+
+   [Fact]
+   public async Task Should_not_bind_timespan_when_null()
+   {
+      var ctx = await BindAsync<TimeSpanBasedReferenceValueObject>(null);
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeFalse();
+      ctx.Result.Model.Should().BeNull();
+   }
+
    private static T Bind<T>(string value)
    {
       var context = BindAsync<T>(value).GetAwaiter().GetResult();

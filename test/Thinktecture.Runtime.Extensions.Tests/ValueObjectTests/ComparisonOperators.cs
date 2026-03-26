@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
@@ -151,5 +152,57 @@ public class ComparisonOperators
       (obj1 >= obj2).Should().BeTrue();
       (obj3 >= obj1).Should().BeTrue();
       (obj1 >= obj3).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_compare_timespan_struct_value_objects()
+   {
+      var obj_1 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var obj_2 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2));
+
+      // ReSharper disable EqualExpressionComparison
+      (obj_1 < obj_1).Should().BeFalse();
+      (obj_1 <= obj_1).Should().BeTrue();
+      (obj_1 > obj_1).Should().BeFalse();
+      (obj_1 >= obj_1).Should().BeTrue();
+      // ReSharper restore EqualExpressionComparison
+
+      (obj_1 < obj_2).Should().BeTrue();
+      (obj_1 <= obj_2).Should().BeTrue();
+      (obj_1 > obj_2).Should().BeFalse();
+      (obj_1 >= obj_2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_compare_timespan_struct_value_object_with_key_type()
+   {
+      var obj_1 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var obj_1_key = TimeSpan.FromHours(1);
+      var obj_2 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2));
+      var obj_2_key = TimeSpan.FromHours(2);
+
+      (obj_1 < obj_1_key).Should().BeFalse();
+      (obj_1_key < obj_1).Should().BeFalse();
+
+      (obj_1 <= obj_1_key).Should().BeTrue();
+      (obj_1_key <= obj_1).Should().BeTrue();
+
+      (obj_1 > obj_1_key).Should().BeFalse();
+      (obj_1_key > obj_1).Should().BeFalse();
+
+      (obj_1 >= obj_1_key).Should().BeTrue();
+      (obj_1_key >= obj_1).Should().BeTrue();
+
+      (obj_1_key < obj_2).Should().BeTrue();
+      (obj_1 < obj_2_key).Should().BeTrue();
+
+      (obj_1_key <= obj_2).Should().BeTrue();
+      (obj_1 <= obj_2_key).Should().BeTrue();
+
+      (obj_1_key > obj_2).Should().BeFalse();
+      (obj_1 > obj_2_key).Should().BeFalse();
+
+      (obj_1_key >= obj_2).Should().BeFalse();
+      (obj_1 >= obj_2_key).Should().BeFalse();
    }
 }

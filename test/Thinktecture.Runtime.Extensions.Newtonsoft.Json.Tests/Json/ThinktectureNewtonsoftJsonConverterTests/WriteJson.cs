@@ -313,6 +313,22 @@ public class WriteJson : JsonTestsBase
       json.Should().Be("{\"Value\":42}");
    }
 
+   [Fact]
+   public void Should_serialize_timespan_reference_value_object()
+   {
+      var json = Serialize<TimeSpanBasedReferenceValueObject, TimeSpan>(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1)));
+
+      json.Should().Be("\"01:00:00\"");
+   }
+
+   [Fact]
+   public void Should_serialize_timespan_struct_value_object()
+   {
+      var json = SerializeStruct<TimeSpanBasedStructValueObject, TimeSpan>(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)));
+
+      json.Should().Be("\"01:00:00\"");
+   }
+
    private static T DeserializeEnum<T>(string json)
    {
       using var reader = new StringReader(json);

@@ -111,4 +111,25 @@ public class TryCreate
       obj.Should().NotBeNull();
       obj!.Value.Should().Be("test");
    }
+
+   [Fact]
+   public void Should_try_create_timespan_struct_value_object()
+   {
+      var ts = TimeSpan.FromHours(1);
+      var result = TimeSpanBasedStructValueObject.TryCreate(ts, out var obj);
+
+      result.Should().BeTrue();
+      obj.Property.Should().Be(ts);
+   }
+
+   [Fact]
+   public void Should_try_create_timespan_reference_value_object()
+   {
+      var ts = TimeSpan.FromHours(2);
+      var result = TimeSpanBasedReferenceValueObject.TryCreate(ts, out var obj);
+
+      result.Should().BeTrue();
+      obj.Should().NotBeNull();
+      obj!.Property.Should().Be(ts);
+   }
 }

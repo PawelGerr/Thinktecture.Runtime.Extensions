@@ -301,4 +301,19 @@ public class TryParse
       success.Should().BeFalse();
       result.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_try_parse_valid_timespan_string()
+   {
+      var expected = TimeSpanBasedStructValueObject.Create(TimeSpan.FromMinutes(90));
+      TimeSpanBasedStructValueObject.TryParse("01:30:00", CultureInfo.InvariantCulture, out var item).Should().BeTrue();
+      item.Should().Be(expected);
+   }
+
+   [Fact]
+   public void Should_return_false_for_invalid_timespan_string()
+   {
+      TimeSpanBasedStructValueObject.TryParse("not_a_timespan", CultureInfo.InvariantCulture, out var item).Should().BeFalse();
+      item.Should().Be(default(TimeSpanBasedStructValueObject));
+   }
 }

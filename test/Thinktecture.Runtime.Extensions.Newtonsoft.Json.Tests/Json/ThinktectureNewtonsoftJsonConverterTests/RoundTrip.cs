@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -202,6 +203,30 @@ public class RoundTrip : JsonTestsBase
       json.Should().Be("{\"Value\":42}");
 
       var deserialized = JsonConvert.DeserializeObject<ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_timespan_reference_value_object()
+   {
+      var original = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1));
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("\"01:00:00\"");
+
+      var deserialized = JsonConvert.DeserializeObject<TimeSpanBasedReferenceValueObject>(json);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_timespan_struct_value_object()
+   {
+      var original = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("\"01:00:00\"");
+
+      var deserialized = JsonConvert.DeserializeObject<TimeSpanBasedStructValueObject>(json);
       deserialized.Should().Be(original);
    }
 

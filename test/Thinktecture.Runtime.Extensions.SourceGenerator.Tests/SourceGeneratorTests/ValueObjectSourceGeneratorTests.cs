@@ -2944,6 +2944,138 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
 
+   [Fact]
+   public async Task Should_generate_code_for_keyed_struct_with_TimeSpan()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<TimeSpan>]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_TimeSpan()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<TimeSpan>]
+         	public partial class TestValueObject
+         	{
+           }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_TimeSpan_struct_with_comparison_operators()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<TimeSpan>(ComparisonOperators = OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_TimeSpan_struct_with_addition_operators()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<TimeSpan>(AdditionOperators = OperatorsGeneration.Default)]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Parsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.SubtractionOperators.g.cs");
+   }
+
 #if NET9_0_OR_GREATER
    [Fact]
    public async Task Should_generate_string_value_object_with_readonlyspan_of_char_object_factory()

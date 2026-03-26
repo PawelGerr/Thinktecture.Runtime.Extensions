@@ -435,6 +435,44 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
+   public void Should_roundtrip_serialize_timespan_reference_value_object()
+   {
+      var timeSpan = TimeSpan.FromHours(1.5);
+      var obj = TimeSpanBasedReferenceValueObject.Create(timeSpan);
+
+      RoundTrip(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_timespan_struct_value_object()
+   {
+      var timeSpan = TimeSpan.FromHours(1.5);
+      var obj = TimeSpanBasedStructValueObject.Create(timeSpan);
+
+      RoundTrip(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_nullable_timespan_struct_value_object()
+   {
+      TimeSpanBasedStructValueObject? obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromMinutes(30));
+
+      RoundTrip(obj);
+   }
+
+   [Fact]
+   public void Should_try_deserialize_timespan_struct_when_null()
+   {
+      // nullable struct - null round-trips to null
+      RoundTrip((object)null, (TimeSpanBasedStructValueObject?)null);
+
+      // non-nullable struct - null should throw because AllowDefaultStructs = true still can't deserialize null
+      FluentActions.Invoking(() => RoundTrip((object)null, default(TimeSpanBasedStructValueObject)))
+                   .Should().Throw<MessagePackSerializationException>()
+                   .WithInnerException<MessagePackSerializationException>().WithMessage("Unexpected msgpack code 192 (nil) encountered.");
+   }
+
+   [Fact]
    public void Should_roundtrip_serialize_generic_complex_value_object()
    {
       var obj = GenericComplexValueObject<string, int, TimeSpan>.Create(

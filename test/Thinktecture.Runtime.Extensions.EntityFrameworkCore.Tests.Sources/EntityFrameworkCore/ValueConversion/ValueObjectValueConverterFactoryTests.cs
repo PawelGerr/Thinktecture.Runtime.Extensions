@@ -49,6 +49,8 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                          IntBasedReferenceValueObject.Create(1),
                          IntBasedReferenceValueObject.Create(2)
                       ],
+                      TimeSpanBasedReferenceValueObject = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1.5)),
+                      TimeSpanBasedStructValueObject = TimeSpanBasedStructValueObject.Create(TimeSpan.FromMinutes(30)),
                    };
       _ctx.Add(entity);
       await _ctx.SaveChangesAsync(TestContext.Current.CancellationToken);

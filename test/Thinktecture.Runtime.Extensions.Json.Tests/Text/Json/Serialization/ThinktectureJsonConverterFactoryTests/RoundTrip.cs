@@ -383,6 +383,46 @@ public class RoundTrip : JsonTestsBase
    }
 
    [Fact]
+   public void Should_roundtrip_serialize_timespan_reference_value_object()
+   {
+      var timeSpan = TimeSpan.FromHours(1);
+      var obj = TimeSpanBasedReferenceValueObject.Create(timeSpan);
+
+      var json = Serialize<TimeSpanBasedReferenceValueObject, TimeSpan>(obj);
+      json.Should().Be("\"01:00:00\"");
+
+      var deserialized = Deserialize<TimeSpanBasedReferenceValueObject>(json);
+      deserialized.Should().Be(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_timespan_struct_value_object()
+   {
+      var timeSpan = TimeSpan.FromHours(1);
+      var obj = TimeSpanBasedStructValueObject.Create(timeSpan);
+
+      var json = Serialize<TimeSpanBasedStructValueObject, TimeSpan>(obj);
+      json.Should().Be("\"01:00:00\"");
+
+      var deserialized = Deserialize<TimeSpanBasedStructValueObject>(json);
+      deserialized.Should().Be(obj);
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_nullable_timespan_struct_value_object()
+   {
+      TimeSpanBasedStructValueObject? obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      var options = new JsonSerializerOptions { Converters = { new ThinktectureJsonConverterFactory() } };
+
+      var json = JsonSerializer.Serialize(obj, options);
+      json.Should().Be("\"01:00:00\"");
+
+      var deserialized = JsonSerializer.Deserialize<TimeSpanBasedStructValueObject?>(json, options);
+      deserialized.Should().Be(obj);
+   }
+
+   [Fact]
    public void Should_roundtrip_int_based_generic_smart_enum_items_for_constrained_type_argument()
    {
       foreach (var original in SmartEnum_Generic_IntBased<string>.Items)

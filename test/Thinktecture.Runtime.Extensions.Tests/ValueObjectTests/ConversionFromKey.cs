@@ -76,4 +76,20 @@ public class ConversionFromKey
 
       obj.Value.Should().Be(guid);
    }
+
+   [Fact]
+   public void Should_convert_from_timespan_to_struct_value_object()
+   {
+      var ts = TimeSpan.FromHours(1);
+      var value = (TimeSpanBasedStructValueObject)ts;
+      value.Should().Be(TimeSpanBasedStructValueObject.Create(ts));
+   }
+
+   [Fact]
+   public void Should_convert_from_timespan_to_reference_value_object()
+   {
+      var ts = TimeSpan.FromHours(2);
+      var value = (TimeSpanBasedReferenceValueObject)ts;
+      value.Should().Be(TimeSpanBasedReferenceValueObject.Create(ts));
+   }
 }

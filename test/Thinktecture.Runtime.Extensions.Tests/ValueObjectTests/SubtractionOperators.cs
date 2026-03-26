@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
@@ -109,5 +110,47 @@ public class SubtractionOperators
       DecimalBasedClassValueObject result = obj - other;
 
       result.Should().Be(DecimalBasedClassValueObject.Create(decimal.MinValue));
+   }
+
+   [Fact]
+   public void Should_subtract_timespan_struct_value_objects()
+   {
+      var obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(3));
+      var other = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      TimeSpanBasedStructValueObject result = obj - other;
+
+      result.Should().Be(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2)));
+   }
+
+   [Fact]
+   public void Should_subtract_timespan_struct_value_object_with_key_type()
+   {
+      var obj = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(3));
+
+      TimeSpanBasedStructValueObject result = obj - TimeSpan.FromHours(1);
+
+      result.Should().Be(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2)));
+   }
+
+   [Fact]
+   public void Should_subtract_timespan_reference_value_objects()
+   {
+      var obj = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(90));
+      var other = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(30));
+
+      TimeSpanBasedReferenceValueObject result = obj - other;
+
+      result.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(60)));
+   }
+
+   [Fact]
+   public void Should_subtract_timespan_reference_value_object_with_key_type()
+   {
+      var obj = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(90));
+
+      TimeSpanBasedReferenceValueObject result = obj - TimeSpan.FromMinutes(30);
+
+      result.Should().Be(TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromMinutes(60)));
    }
 }

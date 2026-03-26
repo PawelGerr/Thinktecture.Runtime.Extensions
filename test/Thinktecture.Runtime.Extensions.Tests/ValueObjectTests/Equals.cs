@@ -130,5 +130,58 @@ public class Equals
       (obj1 == obj2).Should().BeFalse();
       (obj1 != obj2).Should().BeTrue();
    }
+
+   [Fact]
+   public void Should_be_equal_for_same_timespan_struct_value()
+   {
+      var obj1 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var obj2 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_not_be_equal_for_different_timespan_struct_values()
+   {
+      var obj1 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var obj2 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2));
+
+      obj1.Should().NotBe(obj2);
+      (obj1 == obj2).Should().BeFalse();
+      (obj1 != obj2).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_have_consistent_hashcode_for_timespan_struct()
+   {
+      var obj1 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+      var obj2 = TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1));
+
+      obj1.GetHashCode().Should().Be(obj2.GetHashCode());
+   }
+
+   [Fact]
+   public void Should_be_equal_for_same_timespan_reference_value()
+   {
+      var obj1 = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1));
+      var obj2 = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1));
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_not_be_equal_for_different_timespan_reference_values()
+   {
+      var obj1 = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1));
+      var obj2 = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(2));
+
+      obj1.Should().NotBe(obj2);
+      (obj1 == obj2).Should().BeFalse();
+      (obj1 != obj2).Should().BeTrue();
+   }
 }
 

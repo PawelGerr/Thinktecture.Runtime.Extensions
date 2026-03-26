@@ -1,3 +1,4 @@
+using System;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
 namespace Thinktecture.Runtime.Tests.ValueObjectTests;
@@ -47,5 +48,26 @@ public class CompareTo
       obj1.CompareTo(obj2).Should().BeLessThan(0);
       obj2.CompareTo(obj1).Should().BeGreaterThan(0);
       obj1.CompareTo(obj3).Should().Be(0);
+   }
+
+   [Fact]
+   public void Should_return_0_if_timespan_struct_items_are_equal()
+   {
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)).CompareTo(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1))).Should().Be(0);
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)).CompareTo((object)TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1))).Should().Be(0);
+   }
+
+   [Fact]
+   public void Should_return_positive_if_timespan_struct_item_is_bigger()
+   {
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2)).CompareTo(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1))).Should().Be(1);
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2)).CompareTo((object)TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1))).Should().Be(1);
+   }
+
+   [Fact]
+   public void Should_return_negative_if_timespan_struct_item_is_smaller()
+   {
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)).CompareTo(TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2))).Should().Be(-1);
+      TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(1)).CompareTo((object)TimeSpanBasedStructValueObject.Create(TimeSpan.FromHours(2))).Should().Be(-1);
    }
 }

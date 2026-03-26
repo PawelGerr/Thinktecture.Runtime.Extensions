@@ -179,4 +179,23 @@ public class Create
 
       stringInstance1.Should().Be(stringInstance2);
    }
+
+   [Fact]
+   public void Should_create_timespan_struct_value_object()
+   {
+      var ts = TimeSpan.FromHours(1);
+      var obj = TimeSpanBasedStructValueObject.Create(ts);
+
+      obj.Property.Should().Be(ts);
+   }
+
+   [Fact]
+   public void Should_create_timespan_reference_value_object()
+   {
+      var ts = TimeSpan.FromHours(2);
+      var obj = TimeSpanBasedReferenceValueObject.Create(ts);
+
+      obj.Should().NotBeNull();
+      obj.Property.Should().Be(ts);
+   }
 }

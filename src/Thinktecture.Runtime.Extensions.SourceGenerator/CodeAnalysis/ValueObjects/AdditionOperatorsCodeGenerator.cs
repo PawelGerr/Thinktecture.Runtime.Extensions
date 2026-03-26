@@ -56,7 +56,7 @@ public sealed class AdditionOperatorsCodeGenerator : IInterfaceCodeGenerator
 
    public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
    {
-      if (!_keyMemberOperators.HasOperator(ImplementedOperators.All))
+      if (!_keyMemberOperators.HasOperator(ImplementedOperators.Default))
          return;
 
       sb.Append(@"
