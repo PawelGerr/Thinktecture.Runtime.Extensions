@@ -1316,6 +1316,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
             .Which.GetMessage().Should().Be("TypeParamRef1 cannot be used on non-generic ad-hoc union 'TestUnion'");
    }
 
+#if NET9_0_OR_GREATER
    [Fact]
    public void Should_not_generate_when_type_parameter_allows_ref_struct()
    {
@@ -1335,6 +1336,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
       result.GeneratorDiagnostics.Should().ContainSingle(d => d.Id == "TTRESG073")
             .Which.GetMessage().Should().Be("Ad-hoc union 'TestUnion<T>' has type parameter 'T' with 'allows ref struct' which is not supported. Remove the 'allows ref struct' anti-constraint from the type parameter.");
    }
+#endif
 
    [Fact]
    public async Task Should_generate_with_warning_when_generic_type_does_not_use_TypeParamRef()
