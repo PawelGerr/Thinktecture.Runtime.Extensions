@@ -33,13 +33,33 @@ public static class Utf8JsonReaderHelper
       where T : IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
       where TValidationError : class, IValidationError<TValidationError>
    {
+      return ValidateFromUtf8<T, TValidationError, ObjectFactoryAdapter<T, TValidationError>>(
+         ref reader, provider, default, out result);
+   }
+
+   /// <summary>
+   /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
+   /// the same compatibility standards as public APIs. It may be changed or removed without notice in
+   /// any release. You should only use it directly in your code with extreme caution and knowing that
+   /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
+   /// </summary>
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   public static TValidationError? ValidateFromUtf8<T, TValidationError, TFactory>(
+      ref Utf8JsonReader reader,
+      IFormatProvider? provider,
+      TFactory factory,
+      out T? result)
+      where T : notnull
+      where TValidationError : class, IValidationError<TValidationError>
+      where TFactory : struct, IUtf8JsonFactory<T, TValidationError>
+   {
       // Escaped values (rarest case): CopyString handles unescaping and reassembly
       if (reader.ValueIsEscaped)
-         return ValidateEscaped<T, TValidationError>(ref reader, provider, out result);
+         return ValidateEscaped<T, TValidationError, TFactory>(ref reader, provider, factory, out result);
 
       // Fragmented but not escaped: assemble bytes, then transcode
       if (reader.HasValueSequence)
-         return ValidateFragmentedUnescaped<T, TValidationError>(ref reader, provider, out result);
+         return ValidateFragmentedUnescaped<T, TValidationError, TFactory>(ref reader, provider, factory, out result);
 
       // Fast path: contiguous, unescaped, short value (most common case)
       var utf8Bytes = reader.ValueSpan;
@@ -49,29 +69,31 @@ public static class Utf8JsonReaderHelper
          // Constant size enables JIT to emit a simple stack bump instead of localloc
          Span<char> charBuf = stackalloc char[_STACKALLOC_CHAR_THRESHOLD];
          var charsWritten = Encoding.UTF8.GetChars(utf8Bytes, charBuf);
-         return T.Validate(charBuf[..charsWritten], provider, out result);
+         return factory.Validate(charBuf[..charsWritten], provider, out result);
       }
 
       // Large contiguous unescaped value
-      return ValidateLargeContiguousValue<T, TValidationError>(utf8Bytes, provider, out result);
+      return ValidateLargeContiguousValue<T, TValidationError, TFactory>(utf8Bytes, provider, factory, out result);
    }
 
    // NoInlining: keeps the try/finally and ArrayPool machinery out of ValidateFromUtf8's inlined body,
    // ensuring the JIT emits compact native code for the hot stackalloc path.
    [MethodImpl(MethodImplOptions.NoInlining)]
-   private static TValidationError? ValidateLargeContiguousValue<T, TValidationError>(
+   private static TValidationError? ValidateLargeContiguousValue<T, TValidationError, TFactory>(
       ReadOnlySpan<byte> utf8Bytes,
       IFormatProvider? provider,
+      TFactory factory,
       out T? result)
-      where T : IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
+      where T : notnull
       where TValidationError : class, IValidationError<TValidationError>
+      where TFactory : struct, IUtf8JsonFactory<T, TValidationError>
    {
       var rentedChars = ArrayPool<char>.Shared.Rent(utf8Bytes.Length);
 
       try
       {
          var charsWritten = Encoding.UTF8.GetChars(utf8Bytes, rentedChars);
-         return T.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
+         return factory.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
       }
       finally
       {
@@ -82,12 +104,14 @@ public static class Utf8JsonReaderHelper
    // NoInlining: fragmented values are rare; isolating this keeps ValidateFromUtf8's
    // inlined body compact and avoids polluting the caller with ArrayPool<byte> machinery.
    [MethodImpl(MethodImplOptions.NoInlining)]
-   private static TValidationError? ValidateFragmentedUnescaped<T, TValidationError>(
+   private static TValidationError? ValidateFragmentedUnescaped<T, TValidationError, TFactory>(
       ref Utf8JsonReader reader,
       IFormatProvider? provider,
+      TFactory factory,
       out T? result)
-      where T : IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
+      where T : notnull
       where TValidationError : class, IValidationError<TValidationError>
+      where TFactory : struct, IUtf8JsonFactory<T, TValidationError>
    {
       var sequence = reader.ValueSequence;
       var byteLength = checked((int)sequence.Length);
@@ -104,7 +128,7 @@ public static class Utf8JsonReaderHelper
          {
             Span<char> charBuf = stackalloc char[_STACKALLOC_CHAR_THRESHOLD];
             var charsWritten = Encoding.UTF8.GetChars(utf8Bytes, charBuf);
-            return T.Validate(charBuf[..charsWritten], provider, out result);
+            return factory.Validate(charBuf[..charsWritten], provider, out result);
          }
 
          var rentedChars = ArrayPool<char>.Shared.Rent(byteLength);
@@ -112,7 +136,7 @@ public static class Utf8JsonReaderHelper
          try
          {
             var charsWritten = Encoding.UTF8.GetChars(utf8Bytes, rentedChars);
-            return T.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
+            return factory.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
          }
          finally
          {
@@ -127,12 +151,14 @@ public static class Utf8JsonReaderHelper
 
    // NoInlining: escaped values are the rarest case; isolating this keeps the dispatch compact.
    [MethodImpl(MethodImplOptions.NoInlining)]
-   private static TValidationError? ValidateEscaped<T, TValidationError>(
+   private static TValidationError? ValidateEscaped<T, TValidationError, TFactory>(
       ref Utf8JsonReader reader,
       IFormatProvider? provider,
+      TFactory factory,
       out T? result)
-      where T : IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
+      where T : notnull
       where TValidationError : class, IValidationError<TValidationError>
+      where TFactory : struct, IUtf8JsonFactory<T, TValidationError>
    {
       // CopyString handles both unescaping and reassembly of fragmented sequences
       var byteLength = reader.HasValueSequence
@@ -143,7 +169,7 @@ public static class Utf8JsonReaderHelper
       {
          Span<char> charBuf = stackalloc char[_STACKALLOC_CHAR_THRESHOLD];
          var charsWritten = reader.CopyString(charBuf);
-         return T.Validate(charBuf[..charsWritten], provider, out result);
+         return factory.Validate(charBuf[..charsWritten], provider, out result);
       }
 
       var rentedChars = ArrayPool<char>.Shared.Rent(byteLength);
@@ -151,7 +177,7 @@ public static class Utf8JsonReaderHelper
       try
       {
          var charsWritten = reader.CopyString(rentedChars);
-         return T.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
+         return factory.Validate(rentedChars.AsSpan(0, charsWritten), provider, out result);
       }
       finally
       {
