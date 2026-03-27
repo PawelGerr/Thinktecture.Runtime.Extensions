@@ -139,27 +139,50 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string1"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string1">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
       {
          return new global::Thinktecture.Tests.TestUnion(@string1, 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
+      /// </summary>
+      /// <param name="int32">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateInt32(int @int32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@int32);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
          return new global::Thinktecture.Tests.TestUnion(@string2, 3);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string3"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="bool"/>.
+      /// </summary>
+      /// <param name="boolean">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateBoolean(bool @boolean)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@boolean);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string3">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString3(string @string3)
       {
          return new global::Thinktecture.Tests.TestUnion(@string3, 5);

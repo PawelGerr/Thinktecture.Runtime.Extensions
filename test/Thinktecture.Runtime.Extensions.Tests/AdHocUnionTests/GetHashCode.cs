@@ -89,13 +89,13 @@ public class GetHashCode
    [Fact]
    public void Should_return_same_hashcode_for_duplicate_value_struct_stateless()
    {
-      var union1a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
-      var union1b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+      var union1a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
+      var union1b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
 
       union1a.GetHashCode().Should().Be(union1b.GetHashCode());
 
-      var union2a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
-      var union2b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+      var union2a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
+      var union2b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
 
       union2a.GetHashCode().Should().Be(union2b.GetHashCode());
    }
@@ -103,13 +103,13 @@ public class GetHashCode
    [Fact]
    public void Should_return_same_hashcode_for_duplicate_reference_type_stateless()
    {
-      var union1a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
-      var union1b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+      var union1a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
+      var union1b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
 
       union1a.GetHashCode().Should().Be(union1b.GetHashCode());
 
-      var union2a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
-      var union2b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+      var union2a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
+      var union2b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
 
       union2a.GetHashCode().Should().Be(union2b.GetHashCode());
    }
@@ -117,13 +117,13 @@ public class GetHashCode
    [Fact]
    public void Should_return_same_hashcode_for_duplicate_markers_in_struct_union()
    {
-      var union1a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
-      var union1b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+      var union1a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
+      var union1b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
 
       union1a.GetHashCode().Should().Be(union1b.GetHashCode());
 
-      var union2a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
-      var union2b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+      var union2a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
+      var union2b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
 
       union2a.GetHashCode().Should().Be(union2b.GetHashCode());
    }

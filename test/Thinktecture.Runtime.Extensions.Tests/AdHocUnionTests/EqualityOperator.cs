@@ -73,14 +73,14 @@ public class EqualityOperator
    [Fact]
    public void Should_use_equality_operator_with_duplicate_value_struct_stateless()
    {
-      var union1a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
-      var union1b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+      var union1a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
+      var union1b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
 
       // Same marker index should be equal
       (union1a == union1b).Should().BeTrue();
 
-      var union2a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
-      var union2b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+      var union2a = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
+      var union2b = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
 
       // Same marker index should be equal
       (union2a == union2b).Should().BeTrue();
@@ -93,13 +93,13 @@ public class EqualityOperator
    [Fact]
    public void Should_use_equality_operator_with_duplicate_value_struct_stateless_T2_and_T3()
    {
-      var union1a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
-      var union1b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
+      var union1a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1();
+      var union1b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1();
 
       (union1a == union1b).Should().BeTrue();
 
-      var union2a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
-      var union2b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
+      var union2a = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2();
+      var union2b = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2();
 
       (union2a == union2b).Should().BeTrue();
 
@@ -111,14 +111,14 @@ public class EqualityOperator
    [Fact]
    public void Should_use_equality_operator_with_duplicate_reference_type_stateless()
    {
-      var union1a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
-      var union1b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+      var union1a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
+      var union1b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
 
       // Same marker index should be equal
       (union1a == union1b).Should().BeTrue();
 
-      var union2a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
-      var union2b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+      var union2a = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
+      var union2b = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
 
       // Same marker index should be equal
       (union2a == union2b).Should().BeTrue();
@@ -131,13 +131,13 @@ public class EqualityOperator
    [Fact]
    public void Should_use_equality_operator_with_duplicate_markers_in_struct_union()
    {
-      var union1a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
-      var union1b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+      var union1a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
+      var union1b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
 
       (union1a == union1b).Should().BeTrue();
 
-      var union2a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
-      var union2b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+      var union2a = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
+      var union2b = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
 
       (union2a == union2b).Should().BeTrue();
 

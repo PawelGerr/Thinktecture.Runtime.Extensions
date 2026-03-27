@@ -98,21 +98,31 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="emptyState1"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
-      /// <param name="emptyState1">Value to create a new instance for.</param>
-      public static global::Thinktecture.Tests.TestUnion CreateEmptyState1(global::Thinktecture.Tests.EmptyState @emptyState1)
+      /// <param name="string">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateString(string @string)
       {
-         return new global::Thinktecture.Tests.TestUnion(@emptyState1, 2);
+         return new global::Thinktecture.Tests.TestUnion(@string);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="emptyState2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
-      /// <param name="emptyState2">Value to create a new instance for.</param>
-      public static global::Thinktecture.Tests.TestUnion CreateEmptyState2(global::Thinktecture.Tests.EmptyState @emptyState2)
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateEmptyState1()
       {
-         return new global::Thinktecture.Tests.TestUnion(@emptyState2, 3);
+         return new global::Thinktecture.Tests.TestUnion(default(global::Thinktecture.Tests.EmptyState), 2);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="global::Thinktecture.Tests.EmptyState"/>.
+      /// </summary>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateEmptyState2()
+      {
+         return new global::Thinktecture.Tests.TestUnion(default(global::Thinktecture.Tests.EmptyState), 3);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly

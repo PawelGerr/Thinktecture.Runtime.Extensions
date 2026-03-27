@@ -266,6 +266,12 @@ public static class AttributeDataExtensions
              ?? UnionConstructorAccessModifier.Public;
    }
 
+   public static FactoryMethodGeneration FindFactoryMethodGeneration(this AttributeData attributeData)
+   {
+      return GetEnumParameterValue<FactoryMethodGeneration>(attributeData, Constants.Attributes.Properties.FACTORY_METHOD_GENERATION)
+             ?? FactoryMethodGeneration.Default;
+   }
+
    public static bool? FindUseSingleBackingField(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_SINGLE_BACKING_FIELD);

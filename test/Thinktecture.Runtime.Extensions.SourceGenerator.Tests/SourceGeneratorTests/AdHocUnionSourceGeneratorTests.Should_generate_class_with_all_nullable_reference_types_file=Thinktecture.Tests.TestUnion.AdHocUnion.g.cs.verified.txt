@@ -112,6 +112,36 @@ namespace Thinktecture.Tests
          this._valueIndex = 3;
       }
 
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>string?</c>.
+      /// </summary>
+      /// <param name="string">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateString(string? @string)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@string);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>global::System.Collections.Generic.List&lt;int&gt;?</c>.
+      /// </summary>
+      /// <param name="listOfInt32">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateListOfInt32(global::System.Collections.Generic.List<int>? @listOfInt32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@listOfInt32);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>object?</c>.
+      /// </summary>
+      /// <param name="object">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateObject(object? @object)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@object);
+      }
+
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current value.

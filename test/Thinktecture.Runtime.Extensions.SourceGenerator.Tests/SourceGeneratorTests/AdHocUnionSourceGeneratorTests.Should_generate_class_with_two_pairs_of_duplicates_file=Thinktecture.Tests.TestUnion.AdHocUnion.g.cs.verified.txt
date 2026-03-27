@@ -110,36 +110,40 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string1"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string1">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
       {
          return new global::Thinktecture.Tests.TestUnion(@string1, 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
          return new global::Thinktecture.Tests.TestUnion(@string2, 2);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="int321"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
       /// </summary>
       /// <param name="int321">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateInt321(int @int321)
       {
          return new global::Thinktecture.Tests.TestUnion(@int321, 3);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="int322"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
       /// </summary>
       /// <param name="int322">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateInt322(int @int322)
       {
          return new global::Thinktecture.Tests.TestUnion(@int322, 4);

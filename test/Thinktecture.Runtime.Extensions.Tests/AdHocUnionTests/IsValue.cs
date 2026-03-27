@@ -276,13 +276,13 @@ public class IsValue
    public void Should_correctly_identify_duplicate_value_struct_stateless()
    {
       // First marker
-      var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+      var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
       union1.IsNullValue1.Should().BeTrue();
       union1.IsNullValue2.Should().BeFalse();
       union1.IsString.Should().BeFalse();
 
       // Second marker (same type as first)
-      var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+      var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
       union2.IsNullValue1.Should().BeFalse();
       union2.IsNullValue2.Should().BeTrue();
       union2.IsString.Should().BeFalse();
@@ -304,13 +304,13 @@ public class IsValue
       union1.IsEmptyState2.Should().BeFalse();
 
       // First marker
-      var union2 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
+      var union2 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1();
       union2.IsString.Should().BeFalse();
       union2.IsEmptyState1.Should().BeTrue();
       union2.IsEmptyState2.Should().BeFalse();
 
       // Second marker (same type as first)
-      var union3 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
+      var union3 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2();
       union3.IsString.Should().BeFalse();
       union3.IsEmptyState1.Should().BeFalse();
       union3.IsEmptyState2.Should().BeTrue();
@@ -320,13 +320,13 @@ public class IsValue
    public void Should_correctly_identify_duplicate_reference_type_stateless()
    {
       // First marker
-      var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+      var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
       union1.IsNullValueClass1.Should().BeTrue();
       union1.IsNullValueClass2.Should().BeFalse();
       union1.IsInt32.Should().BeFalse();
 
       // Second marker (same type as first)
-      var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+      var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
       union2.IsNullValueClass1.Should().BeFalse();
       union2.IsNullValueClass2.Should().BeTrue();
       union2.IsInt32.Should().BeFalse();
@@ -342,13 +342,13 @@ public class IsValue
    public void Should_correctly_identify_duplicate_markers_in_struct_union()
    {
       // First marker
-      var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+      var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
       union1.IsNullValue1.Should().BeTrue();
       union1.IsNullValue2.Should().BeFalse();
       union1.IsInt32.Should().BeFalse();
 
       // Second marker
-      var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+      var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
       union2.IsNullValue1.Should().BeFalse();
       union2.IsNullValue2.Should().BeTrue();
       union2.IsInt32.Should().BeFalse();

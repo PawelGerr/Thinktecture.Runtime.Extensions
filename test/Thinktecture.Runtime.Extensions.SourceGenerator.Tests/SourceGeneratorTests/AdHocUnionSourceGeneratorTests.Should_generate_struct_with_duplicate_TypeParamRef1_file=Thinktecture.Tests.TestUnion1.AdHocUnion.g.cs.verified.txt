@@ -78,18 +78,20 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="t1"/>.
+      /// Creates a new instance of <c>TestUnion&lt;T&gt;</c> from a value of type <typeparamref name="T"/>.
       /// </summary>
       /// <param name="t1">Value to create a new instance for.</param>
+      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
       public static global::Thinktecture.Tests.TestUnion<T> CreateT1(T @t1)
       {
          return new global::Thinktecture.Tests.TestUnion<T>(@t1, 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="t2"/>.
+      /// Creates a new instance of <c>TestUnion&lt;T&gt;</c> from a value of type <typeparamref name="T"/>.
       /// </summary>
       /// <param name="t2">Value to create a new instance for.</param>
+      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
       public static global::Thinktecture.Tests.TestUnion<T> CreateT2(T @t2)
       {
          return new global::Thinktecture.Tests.TestUnion<T>(@t2, 2);

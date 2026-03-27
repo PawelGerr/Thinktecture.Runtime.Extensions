@@ -139,30 +139,53 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="text"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="text">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateText(string @text)
       {
          return new global::Thinktecture.Tests.TestUnion(@text, 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
+      /// </summary>
+      /// <param name="int32">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateInt32(int @int32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@int32);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
          return new global::Thinktecture.Tests.TestUnion(@string2, 3);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string3"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>string?</c>.
       /// </summary>
       /// <param name="string3">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString3(string? @string3)
       {
          return new global::Thinktecture.Tests.TestUnion(@string3, 4);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>int?</c>.
+      /// </summary>
+      /// <param name="nullableOfInt32">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateNullableOfInt32(int? @nullableOfInt32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@nullableOfInt32);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly

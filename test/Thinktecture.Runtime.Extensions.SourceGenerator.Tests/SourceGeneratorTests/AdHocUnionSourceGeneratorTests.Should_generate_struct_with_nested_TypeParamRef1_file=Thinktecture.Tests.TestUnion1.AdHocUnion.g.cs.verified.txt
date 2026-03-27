@@ -92,6 +92,26 @@ namespace Thinktecture.Tests
          this._valueIndex = 2;
       }
 
+      /// <summary>
+      /// Creates a new instance of <c>TestUnion&lt;T&gt;</c> from a value of type <typeparamref name="T"/>.
+      /// </summary>
+      /// <param name="t">Value to create a new instance for.</param>
+      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
+      public static global::Thinktecture.Tests.TestUnion<T> CreateT(T @t)
+      {
+         return new global::Thinktecture.Tests.TestUnion<T>(@t);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <c>TestUnion&lt;T&gt;</c> from a value of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.
+      /// </summary>
+      /// <param name="listOfT">Value to create a new instance for.</param>
+      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
+      public static global::Thinktecture.Tests.TestUnion<T> CreateListOfT(global::System.Collections.Generic.List<T> @listOfT)
+      {
+         return new global::Thinktecture.Tests.TestUnion<T>(@listOfT);
+      }
+
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current value.
@@ -239,16 +259,6 @@ namespace Thinktecture.Tests
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
-      }
-
-      /// <summary>
-      /// Creates a new instance of <c>TestUnion&lt;T&gt;</c> from a value of type <typeparamref name="T"/>.
-      /// </summary>
-      /// <param name="t">Value to create a new instance for.</param>
-      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
-      public static global::Thinktecture.Tests.TestUnion<T> CreateT(T @t)
-      {
-         return new global::Thinktecture.Tests.TestUnion<T>(@t);
       }
 
       /// <summary>

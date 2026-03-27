@@ -95,6 +95,7 @@ All types must be declared as `partial`. Source generators produce: factory meth
 **Ad-hoc Unions** (`[Union<T1, T2>]` or `[AdHocUnion(...)]`):
 
 - Generic unions: use `TypeParamRef1`–`TypeParamRef5` placeholders (in namespace `Thinktecture`) to reference the union's own type parameters. E.g., `[Union<TypeParamRef1, string>] public partial struct Result<T>`. Nested usage supported (e.g., `List<TypeParamRef1>`). For type parameter members: no implicit/explicit conversion operators (C# limitation), factory methods generated instead.
+- Factory methods: when any member triggers factory method generation (type parameter, interface, `System.Object`, or duplicate type), factory methods (`Create{MemberName}`) are generated for **all** members — not just the triggering ones. Constructors retain their configured access modifier; conversion operators are still generated for eligible members. Use `FactoryMethodGeneration` to override: `None` suppresses all factory methods (even for type parameters/duplicates), `Always` generates for all members unconditionally.
 - `allows ref struct` is **not supported** on ad-hoc union type parameters (TTRESG073). Ref structs cannot be boxed, which conflicts with equality, `Value` property, and Switch/Map delegate patterns.
 - Stateless types (`TXIsStateless = true`): store only discriminator, not instance. Prefer structs.
 - Backing fields: with 2+ distinct non-stateless reference types, reference types auto-share a single `object? _obj` field (value types keep typed fields). `UseSingleBackingField = true` forces all types (including value types, with boxing) into `_obj`.
@@ -115,7 +116,8 @@ Several attribute settings cascade to other settings. The AI assistant must acco
 - **`EmptyStringInFactoryMethodsYieldsNull = true`**: Forces `NullInFactoryMethodsYieldsNull = true`
 - **`TXIsStateless = true`** (Unions): Automatically sets `TXIsNullableReferenceType = true` for reference types
 - **`UseSingleBackingField = true`** (Ad-hoc Unions): Forces all member types into a single `object? _obj` backing field. Without this setting, the generator already auto-merges reference types into `_obj` when there are 2+ distinct non-stateless reference types; this setting additionally forces value types into `_obj` (causing boxing)
-- **`ConstructorAccessModifier`** (Unions): Also controls accessibility of implicit conversion operators
+- **`ConstructorAccessModifier`** (Unions): Also controls accessibility of implicit conversion operators and factory method accessibility
+- **`FactoryMethodGeneration`** (Ad-hoc Unions): `None` suppresses all factory methods — including for type parameters and duplicates (user must provide custom creation methods). `Always` generates factory methods for all members even without triggers. `Default` auto-detects based on trigger conditions (type parameter, interface, `System.Object`, duplicate type) and generates for all members when any trigger is present
 
 ### What Gets Generated
 
@@ -125,7 +127,7 @@ Additionally per type:
 
 - **Keyed Smart Enums / Value Objects**: factory methods (`Create`, `TryCreate`, `Validate`), conversion operators, `IParsable<T>`/`ISpanParsable<T>`, serializer integration
 - **Complex Value Objects**: factory methods, validation
-- **Ad-hoc Unions**: constructors, implicit/explicit conversion operators, `IsT1`/`AsT1` properties
+- **Ad-hoc Unions**: constructors, implicit/explicit conversion operators, `IsT1`/`AsT1` properties, factory methods (`Create{MemberName}`) when triggered or forced via `FactoryMethodGeneration`
 - **Regular Unions**: implicit/explicit conversion operators from derived types
 
 ### Framework Integration Quick Reference

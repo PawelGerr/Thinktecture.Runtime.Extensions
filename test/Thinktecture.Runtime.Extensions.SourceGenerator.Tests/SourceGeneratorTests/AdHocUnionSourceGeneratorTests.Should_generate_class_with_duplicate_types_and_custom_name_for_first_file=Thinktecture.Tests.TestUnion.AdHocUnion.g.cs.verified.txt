@@ -75,18 +75,20 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="first"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="first">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateFirst(string @first)
       {
          return new global::Thinktecture.Tests.TestUnion(@first, 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="string2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
       /// <param name="string2">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
          return new global::Thinktecture.Tests.TestUnion(@string2, 2);

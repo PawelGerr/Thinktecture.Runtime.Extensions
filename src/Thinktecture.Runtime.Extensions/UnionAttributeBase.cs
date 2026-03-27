@@ -68,6 +68,12 @@ public abstract class UnionAttributeBase : Attribute
    public bool SkipEqualityComparison { get; set; }
 
    /// <summary>
+   /// Controls factory method generation.
+   /// <c>Default</c> = auto-detect, <c>None</c> = suppress all, <c>Always</c> = generate for all members.
+   /// </summary>
+   public FactoryMethodGeneration FactoryMethodGeneration { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()

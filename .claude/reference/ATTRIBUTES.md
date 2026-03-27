@@ -46,6 +46,7 @@ Base class for `AdHocUnionAttribute` and generic `UnionAttribute<T1, T2, ...>`.
 | `SwitchMapStateParameterName` | `string?`                        | `"state"`           | Name of state parameter in Switch/Map methods                                         |
 | `UseSingleBackingField`       | `bool`                           | `false`             | Use single backing field for all union values (reduces memory, increases type checks) |
 | `SkipEqualityComparison`      | `bool`                           | `false`             | Skip generation of equality members (ad-hoc unions only)                              |
+| `FactoryMethodGeneration`     | `FactoryMethodGeneration`        | `Default`           | Controls factory method generation: `Default` = auto-detect based on triggers (type parameter, interface, `object`, duplicate type), `None` = suppress all, `Always` = generate for all members unconditionally |
 
 ## Smart Enum Attributes
 
@@ -438,6 +439,14 @@ Flags enum:
 - `Public`
 - `Internal`
 - `Private`
+
+### FactoryMethodGeneration
+
+Controls whether factory methods (`Create{MemberName}`) are generated for ad-hoc union members.
+
+- `Default` (0): Auto-detect — generate factory methods for all members when any member triggers it (type parameter, interface, `System.Object`, or duplicate type)
+- `None` (1): Suppress all factory method generation, even when triggers are present. The user must provide custom creation methods for members that cannot have conversion operators (e.g., type parameters)
+- `Always` (2): Generate factory methods for all members regardless of triggers
 
 ### NestedUnionParameterNameGeneration
 

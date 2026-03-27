@@ -627,14 +627,14 @@ public class Switch
          [Fact]
          public void Should_switch_correctly_with_duplicate_value_struct_stateless()
          {
-            var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+            var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
             var result1 = union1.Switch(
                nullValue1: _ => "marker1",
                nullValue2: _ => "marker2",
                @string: _ => "text");
             result1.Should().Be("marker1");
 
-            var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+            var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
             var result2 = union2.Switch(
                nullValue1: _ => "marker1",
                nullValue2: _ => "marker2",
@@ -652,14 +652,14 @@ public class Switch
          [Fact]
          public void Should_switch_correctly_with_duplicate_reference_type_stateless()
          {
-            var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+            var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
             var result1 = union1.Switch(
                nullValueClass1: _ => "marker1",
                nullValueClass2: _ => "marker2",
                int32: v => v.ToString());
             result1.Should().Be("marker1");
 
-            var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+            var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
             var result2 = union2.Switch(
                nullValueClass1: _ => "marker1",
                nullValueClass2: _ => "marker2",
@@ -967,14 +967,14 @@ public class Switch
          [Fact]
          public void Should_switch_correctly_with_duplicate_markers_in_struct_union()
          {
-            var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+            var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
             var result1 = union1.Switch(
                nullValue1: _ => 0,
                nullValue2: _ => -1,
                int32: v => v);
             result1.Should().Be(0);
 
-            var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+            var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
             var result2 = union2.Switch(
                nullValue1: _ => 0,
                nullValue2: _ => -1,

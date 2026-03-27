@@ -10,6 +10,7 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
    private readonly AdHocUnionSourceGenState _state;
    private readonly StringBuilder _sb;
    private readonly bool _useSharedObjectForRefTypes;
+   private readonly bool _needsFactoryMethods;
 
    public AdHocUnionCodeGenerator(
       AdHocUnionSourceGenState state,
@@ -19,6 +20,15 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
       _sb = sb;
       _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
                                     || _state.MemberTypes.Where(t => t.IsReferenceType && !t.IsTypeParameter && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
+      _needsFactoryMethods = state.Settings.FactoryMethodGeneration switch
+      {
+         FactoryMethodGeneration.Always => true,
+         FactoryMethodGeneration.None => false,
+         _ => state.MemberTypes.Any(m => m.IsTypeParameter
+                                         || m.TypeDuplicateCounter != 0
+                                         || m.IsInterface
+                                         || m.SpecialType == SpecialType.System_Object)
+      };
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -90,7 +100,7 @@ namespace ").Append(_state.Namespace).Append(@"
       GenerateGetMemberTypeName();
       GenerateRawValueGetter();
       GenerateConstructors();
-      GenerateFactoriesForTypeDuplicates();
+      GenerateFactoryMethods();
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -142,6 +152,17 @@ namespace ").Append(_state.Namespace).Append(@"
    }");
    }
 
+   private void GenerateFactoryMethods()
+   {
+      if (!_needsFactoryMethods)
+         return;
+
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      {
+         GenerateFactoryMethod(_state.MemberTypes[i], i);
+      }
+   }
+
    private void GenerateConversionsFromValue()
    {
       if (_state.Settings.ConversionFromValue == ConversionOperatorsGeneration.None)
@@ -151,16 +172,9 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          if (memberType.IsInterface
              || memberType.SpecialType == SpecialType.System_Object
-             || memberType.TypeDuplicateCounter != 0)
+             || memberType.TypeDuplicateCounter != 0
+             || memberType.IsTypeParameter)
             continue;
-
-         // C# does not allow user-defined conversion operators where the source or target is a type parameter.
-         // Generate a factory method instead.
-         if (memberType.IsTypeParameter)
-         {
-            GenerateFactoryMethodForTypeParam(memberType);
-            continue;
-         }
 
          _sb.Append(@"
 
@@ -176,18 +190,48 @@ namespace ").Append(_state.Namespace).Append(@"
       }
    }
 
-   private void GenerateFactoryMethodForTypeParam(AdHocUnionMemberTypeState memberType)
+   private void GenerateFactoryMethod(AdHocUnionMemberTypeState memberType, int memberIndex)
    {
       _sb.Append(@"
 
       /// <summary>
       /// Creates a new instance of ").AppendTypeForXmlComment(_state).Append(" from a value of type ").AppendMemberTypeForXmlComment(memberType).Append(@".
-      /// </summary>
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>
-      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>
-      public static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
+      /// </summary>");
+
+      if (!memberType.Setting.IsStateless)
       {
-         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
+         _sb.Append(@"
+      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
+      }
+
+      _sb.Append(@"
+      /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>
+      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(");
+
+      if (!memberType.Setting.IsStateless)
+      {
+         _sb.AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName);
+      }
+
+      _sb.Append(@")
+      {
+         return new ").AppendTypeFullyQualified(_state).Append("(");
+
+      if (memberType.Setting.IsStateless)
+      {
+         _sb.Append("default(").AppendTypeFullyQualified(memberType).Append(")");
+      }
+      else
+      {
+         _sb.AppendEscaped(memberType.ArgumentName);
+      }
+
+      if (memberType.TypeDuplicateCounter != 0)
+      {
+         _sb.Append(", ").Append(memberIndex + 1);
+      }
+
+      _sb.Append(@");
       }");
    }
 
@@ -937,13 +981,13 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.TypeDuplicateCounter > 1)
             continue;
 
-         var hasDuplicates = memberType.TypeDuplicateCounter != 0;
-         var argName = hasDuplicates ? valueArgName : memberType.ArgumentName;
+         var needsIndexedConstructor = memberType.TypeDuplicateCounter != 0;
+         var argName = needsIndexedConstructor ? valueArgName : memberType.ArgumentName;
 
          _sb.Append(@"
 ");
 
-         if (!hasDuplicates)
+         if (!needsIndexedConstructor)
          {
             _sb.Append(@"
       /// <summary>
@@ -953,10 +997,10 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@"
-      ").AppendAccessModifier(hasDuplicates ? UnionConstructorAccessModifier.Private : _state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(")
+      ").AppendAccessModifier(needsIndexedConstructor ? UnionConstructorAccessModifier.Private : _state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(")
             ;
 
-         if (hasDuplicates)
+         if (needsIndexedConstructor)
          {
             _sb.AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").Append("@value, int @valueIndex");
          }
@@ -977,7 +1021,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          this._valueIndex = ");
 
-         if (hasDuplicates)
+         if (needsIndexedConstructor)
          {
             _sb.Append("@valueIndex");
          }
@@ -987,31 +1031,6 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@";
-      }");
-      }
-   }
-
-   private void GenerateFactoriesForTypeDuplicates()
-   {
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
-      {
-         var memberType = _state.MemberTypes[i];
-
-         if (memberType.TypeDuplicateCounter == 0)
-            continue;
-
-         _sb.Append(@"
-
-      /// <summary>
-      /// Creates new instance with <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.
-      /// </summary>
-      /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to create a new instance for.</param>");
-
-         _sb.Append(@"
-      ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(")
-            .AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
-      {
-         return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(", ").Append(i + 1).Append(@");
       }");
       }
    }

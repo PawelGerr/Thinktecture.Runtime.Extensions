@@ -250,10 +250,10 @@ public class AsValue
    public void Should_return_default_for_duplicate_value_struct_stateless()
    {
       // Both stateless should return default(NullValueStruct)
-      var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1(default);
+      var union1 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue1();
       union1.AsNullValue1.Should().Be(default(NullValueStruct));
 
-      var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2(default);
+      var union2 = TestUnion_class_stateless_nullvaluestruct_stateless_nullvaluestruct_string.CreateNullValue2();
       union2.AsNullValue2.Should().Be(default(NullValueStruct));
 
       // Regular type should return its value
@@ -267,10 +267,10 @@ public class AsValue
       var union1 = new TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct("text");
       union1.AsString.Should().Be("text");
 
-      var union2 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1(default);
+      var union2 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState1();
       union2.AsEmptyState1.Should().Be(default(EmptyStateStruct));
 
-      var union3 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2(default);
+      var union3 = TestUnion_class_string_stateless_emptystatestruct_stateless_emptystatestruct.CreateEmptyState2();
       union3.AsEmptyState2.Should().Be(default(EmptyStateStruct));
    }
 
@@ -278,10 +278,10 @@ public class AsValue
    public void Should_return_null_for_multiple_reference_type_stateless()
    {
       // Both markers should return null
-      var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1(null);
+      var union1 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass1();
       union1.AsNullValueClass1.Should().BeNull();
 
-      var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2(null);
+      var union2 = TestUnion_class_stateless_nullvalueclass_stateless_nullvalueclass_int.CreateNullValueClass2();
       union2.AsNullValueClass2.Should().BeNull();
 
       // Regular type should return its value
@@ -292,10 +292,10 @@ public class AsValue
    [Fact]
    public void Should_return_default_for_duplicate_markers_in_struct_union()
    {
-      var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1(default);
+      var union1 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue1();
       union1.AsNullValue1.Should().Be(default(NullValueStruct));
 
-      var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2(default);
+      var union2 = TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int.CreateNullValue2();
       union2.AsNullValue2.Should().Be(default(NullValueStruct));
 
       var union3 = new TestUnion_struct_stateless_nullvaluestruct_stateless_nullvaluestruct_int(42);

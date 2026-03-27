@@ -133,6 +133,7 @@ public static class Constants
          public const string DIVISION_OPERATORS = "DivisionOperators";
          public const string EMPTY_STRING_IN_FACTORY_METHODS_YIELDS_NULL = "EmptyStringInFactoryMethodsYieldsNull";
          public const string EQUALITY_COMPARISON_OPERATORS = "EqualityComparisonOperators";
+         public const string FACTORY_METHOD_GENERATION = "FactoryMethodGeneration";
          public const string HAS_CORRESPONDING_CONSTRUCTOR = "HasCorrespondingConstructor";
          public const string KEY_MEMBER_ACCESS_MODIFIER = "KeyMemberAccessModifier";
          public const string KEY_MEMBER_KIND = "KeyMemberKind";

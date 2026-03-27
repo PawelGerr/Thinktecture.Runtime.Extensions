@@ -98,21 +98,31 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="nullValueClass1"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>global::Thinktecture.Tests.NullValueClass?</c>.
       /// </summary>
-      /// <param name="nullValueClass1">Value to create a new instance for.</param>
-      public static global::Thinktecture.Tests.TestUnion CreateNullValueClass1(global::Thinktecture.Tests.NullValueClass? @nullValueClass1)
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateNullValueClass1()
       {
-         return new global::Thinktecture.Tests.TestUnion(@nullValueClass1, 1);
+         return new global::Thinktecture.Tests.TestUnion(default(global::Thinktecture.Tests.NullValueClass?), 1);
       }
 
       /// <summary>
-      /// Creates new instance with <paramref name="nullValueClass2"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <c>global::Thinktecture.Tests.NullValueClass?</c>.
       /// </summary>
-      /// <param name="nullValueClass2">Value to create a new instance for.</param>
-      public static global::Thinktecture.Tests.TestUnion CreateNullValueClass2(global::Thinktecture.Tests.NullValueClass? @nullValueClass2)
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateNullValueClass2()
       {
-         return new global::Thinktecture.Tests.TestUnion(@nullValueClass2, 2);
+         return new global::Thinktecture.Tests.TestUnion(default(global::Thinktecture.Tests.NullValueClass?), 2);
+      }
+
+      /// <summary>
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
+      /// </summary>
+      /// <param name="int32">Value to create a new instance for.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
+      public static global::Thinktecture.Tests.TestUnion CreateInt32(int @int32)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@int32);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly

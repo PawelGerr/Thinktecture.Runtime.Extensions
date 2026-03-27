@@ -13,6 +13,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public string SwitchMapStateParameterName { get; }
    public bool UseSingleBackingField { get; }
    public bool SkipEqualityComparison { get; }
+   public FactoryMethodGeneration FactoryMethodGeneration { get; }
 
    public AdHocUnionSettings(
       AttributeData attribute,
@@ -28,6 +29,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
       UseSingleBackingField = attribute.FindUseSingleBackingField() ?? false;
       SkipEqualityComparison = attribute.FindSkipEqualityComparison() ?? false;
+      FactoryMethodGeneration = attribute.FindFactoryMethodGeneration();
 
       var memberTypeSettings = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeSetting>(numberOfMemberTypes);
 
@@ -63,6 +65,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && SwitchMapStateParameterName == other.SwitchMapStateParameterName
              && UseSingleBackingField == other.UseSingleBackingField
              && SkipEqualityComparison == other.SkipEqualityComparison
+             && FactoryMethodGeneration == other.FactoryMethodGeneration
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
 
@@ -80,6 +83,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ SwitchMapStateParameterName.GetHashCode();
          hashCode = (hashCode * 397) ^ UseSingleBackingField.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipEqualityComparison.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)FactoryMethodGeneration;
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 
          return hashCode;
