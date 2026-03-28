@@ -4,6 +4,19 @@ using Thinktecture.Database;
 
 namespace Thinktecture.Benchmarks;
 
+/*
+
+Runtime=.NET 10.0
+
+| Method                              | Mean     | Error    | StdDev   | Ratio | Gen0   | Allocated | Alloc Ratio |
+|------------------------------------ |---------:|---------:|---------:|------:|-------:|----------:|------------:|
+| StringBased_Class_SpanParsable      | 29.44 ns | 0.228 ns | 0.213 ns |  1.02 | 0.0013 |      24 B |        0.75 |
+| StringBased_Class_not_SpanParsable  | 31.97 ns | 0.364 ns | 0.341 ns |  1.10 | 0.0029 |      56 B |        1.75 |
+| StringBased_Struct_SpanParsable     | 26.31 ns | 0.242 ns | 0.214 ns |  0.91 |      - |         - |        0.00 |
+| StringBased_Struct_not_SpanParsable | 29.00 ns | 0.186 ns | 0.174 ns |  1.00 | 0.0017 |      32 B |        1.00 |
+
+ */
+
 public class ValueObjectJsonDeserializationBenchmarks
 {
    private readonly byte[] _stringBasedJson = "\"Value\""u8.ToArray();
