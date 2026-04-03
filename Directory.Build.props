@@ -24,4 +24,10 @@
     <VSTestResultsDirectory>$(MSBuildThisFileDirectory)test-results/$(TargetFramework)</VSTestResultsDirectory>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(DOTNET_OUTPATHS_OUTSIDE_WORK_DIR)' != ''">
+    <BaseOutputPath>$(MSBuildThisFileDirectory)../_artifacts/Thinktecture.Runtime.Extensions/$(MSBuildProjectName)/bin/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)../_artifacts/Thinktecture.Runtime.Extensions/$(MSBuildProjectName)/obj/</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+
 </Project>
