@@ -7,6 +7,9 @@ namespace Thinktecture.Tests
    readonly partial struct TestValueObject :
       global::Thinktecture.Internal.IMetadataOwner
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(global::Thinktecture.Tests.TestValueObject))
          {
@@ -25,6 +28,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Default instance of <see cref="TestValueObject"/>.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static readonly global::Thinktecture.Tests.TestValueObject Empty = default;
 
       /// <summary>
@@ -32,6 +36,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.ValidationError? Validate(
          out global::Thinktecture.Tests.TestValueObject obj)
       {
@@ -58,6 +63,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.Tests.TestValueObject Create()
       {
          var validationError = Validate(
@@ -80,6 +86,7 @@ namespace Thinktecture.Tests
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj)
       {
@@ -103,6 +110,7 @@ namespace Thinktecture.Tests
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject obj,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
@@ -119,6 +127,8 @@ namespace Thinktecture.Tests
       partial void FactoryPostInit();
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {
          return "TestValueObject";

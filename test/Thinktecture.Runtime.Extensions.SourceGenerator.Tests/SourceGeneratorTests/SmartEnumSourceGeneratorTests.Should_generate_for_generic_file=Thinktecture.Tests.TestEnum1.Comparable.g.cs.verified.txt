@@ -8,6 +8,8 @@ partial class TestEnum<T> :
    global::System.IComparable<global::Thinktecture.Tests.TestEnum<T>>
 {
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(object? obj)
    {
       if(obj is null)
@@ -20,6 +22,8 @@ partial class TestEnum<T> :
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(global::Thinktecture.Tests.TestEnum<T>? obj)
    {
       if(obj is null)

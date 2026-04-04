@@ -7,6 +7,9 @@ namespace Thinktecture.Tests;
 abstract partial class PlaceId :
    global::Thinktecture.Internal.IMetadataOwner
 {
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
       = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(global::Thinktecture.Tests.PlaceId))
       {
@@ -23,6 +26,8 @@ abstract partial class PlaceId :
                        .AsReadOnly()
       };
 
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private PlaceId()
    {
    }
@@ -37,6 +42,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId> @regionIdInnerRegionId,
@@ -83,6 +89,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void SwitchPartially(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.PlaceId>? @default = null,
@@ -167,6 +174,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -218,6 +226,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The action to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void SwitchPartially<TState>(
       TState @state,
@@ -305,6 +314,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId, TResult> @regionIdInnerRegionId,
@@ -348,6 +358,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult SwitchPartially<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.PlaceId, TResult> @default,
@@ -428,6 +439,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -474,6 +486,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The function to execute if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult SwitchPartially<TState, TResult>(
       TState @state,
@@ -555,6 +568,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @regionIdInnerRegionId,
@@ -598,6 +612,7 @@ abstract partial class PlaceId :
    /// <param name="countryId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.CountryId"/>.</param>
    /// <param name="regionId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId"/>.</param>
    /// <param name="regionIdInnerPlaceId">The instance to return if the current type is <see cref="global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult MapPartially<TResult>(
       TResult @default,

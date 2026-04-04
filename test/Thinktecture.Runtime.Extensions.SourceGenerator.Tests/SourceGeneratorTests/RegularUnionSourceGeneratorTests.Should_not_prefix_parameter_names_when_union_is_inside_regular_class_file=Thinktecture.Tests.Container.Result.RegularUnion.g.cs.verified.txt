@@ -9,6 +9,9 @@ partial class Container
 abstract partial record Result :
    global::Thinktecture.Internal.IMetadataOwner
 {
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
       = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(global::Thinktecture.Tests.Container.Result))
       {
@@ -20,6 +23,8 @@ abstract partial record Result :
                        .AsReadOnly()
       };
 
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private Result()
    {
    }
@@ -30,6 +35,7 @@ abstract partial record Result :
    /// </summary>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Success"/>.</param>
    /// <param name="failure">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Failure"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Container.Result.Success> @success,
@@ -56,6 +62,7 @@ abstract partial record Result :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Success"/>.</param>
    /// <param name="failure">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Failure"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -85,6 +92,7 @@ abstract partial record Result :
    /// </summary>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Success"/>.</param>
    /// <param name="failure">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Failure"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Container.Result.Success, TResult> @success,
@@ -112,6 +120,7 @@ abstract partial record Result :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Success"/>.</param>
    /// <param name="failure">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Failure"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -140,6 +149,7 @@ abstract partial record Result :
    /// </summary>
    /// <param name="success">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Success"/>.</param>
    /// <param name="failure">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Container.Result.Failure"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @success,
@@ -165,6 +175,8 @@ abstract partial record Result :
    /// </summary>
    /// <param name="error">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.Container.Result.Failure"/> converted from <paramref name="error"/>.</returns>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.Container.Result(string @error)
    {
       return new global::Thinktecture.Tests.Container.Result.Failure(@error);

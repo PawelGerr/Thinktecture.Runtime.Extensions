@@ -7,6 +7,9 @@ namespace Thinktecture.Tests;
 abstract partial class MixedResponse :
    global::Thinktecture.Internal.IMetadataOwner
 {
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
       = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(global::Thinktecture.Tests.MixedResponse))
       {
@@ -22,6 +25,8 @@ abstract partial class MixedResponse :
                        .AsReadOnly()
       };
 
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private MixedResponse()
    {
    }
@@ -35,6 +40,7 @@ abstract partial class MixedResponse :
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Success"/>.</param>
    /// <param name="pending">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Pending"/>.</param>
    /// <param name="cancelled">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Cancelled"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.MixedResponse.Error.Timeout> @timeout,
@@ -76,6 +82,7 @@ abstract partial class MixedResponse :
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Success"/>.</param>
    /// <param name="pending">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Pending"/>.</param>
    /// <param name="cancelled">The action to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Cancelled"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -120,6 +127,7 @@ abstract partial class MixedResponse :
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Success"/>.</param>
    /// <param name="pending">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Pending"/>.</param>
    /// <param name="cancelled">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Cancelled"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.MixedResponse.Error.Timeout, TResult> @timeout,
@@ -159,6 +167,7 @@ abstract partial class MixedResponse :
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Success"/>.</param>
    /// <param name="pending">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Pending"/>.</param>
    /// <param name="cancelled">The function to execute if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Cancelled"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -199,6 +208,7 @@ abstract partial class MixedResponse :
    /// <param name="success">The instance to return if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Success"/>.</param>
    /// <param name="pending">The instance to return if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Pending"/>.</param>
    /// <param name="cancelled">The instance to return if the current type is <see cref="global::Thinktecture.Tests.MixedResponse.Cancelled"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @timeout,
@@ -233,6 +243,8 @@ abstract partial class MixedResponse :
    /// </summary>
    /// <param name="value">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.MixedResponse.Success"/> converted from <paramref name="value"/>.</returns>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.MixedResponse(string @value)
    {
       return new global::Thinktecture.Tests.MixedResponse.Success(@value);

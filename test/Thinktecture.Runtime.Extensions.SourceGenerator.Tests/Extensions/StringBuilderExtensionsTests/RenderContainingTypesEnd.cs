@@ -15,8 +15,6 @@ public class RenderContainingTypesEnd
       ]);
 
       var s = sb.ToString();
-      s.Should().Be(@"
-}
-}");
+      s.Should().Be("\n}\n}");
    }
 }

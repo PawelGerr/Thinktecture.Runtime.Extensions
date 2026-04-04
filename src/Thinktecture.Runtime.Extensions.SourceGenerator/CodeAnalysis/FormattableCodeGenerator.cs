@@ -20,6 +20,8 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
    {
       sb.Append(@"
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
       return ((global::System.IFormattable)this.").Append(state.KeyMember.Name).Append(@").ToString(format, formatProvider);

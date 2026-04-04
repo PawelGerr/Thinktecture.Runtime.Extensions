@@ -11,6 +11,8 @@ partial class TestEnum
 }
 }
 
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.JsonConverter
 {
    private static readonly global::System.Collections.Concurrent.ConcurrentDictionary<global::System.Type, global::Newtonsoft.Json.JsonConverter> _converterByType = new();

@@ -7,6 +7,8 @@ partial class TestIntKeyEnum<T> :
    global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.TestIntKeyEnum<T>, global::Thinktecture.Tests.TestIntKeyEnum<T>, bool>
 {
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <(global::Thinktecture.Tests.TestIntKeyEnum<T> left, global::Thinktecture.Tests.TestIntKeyEnum<T> right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -15,6 +17,8 @@ partial class TestIntKeyEnum<T> :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(global::Thinktecture.Tests.TestIntKeyEnum<T> left, global::Thinktecture.Tests.TestIntKeyEnum<T> right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -23,6 +27,8 @@ partial class TestIntKeyEnum<T> :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(global::Thinktecture.Tests.TestIntKeyEnum<T> left, global::Thinktecture.Tests.TestIntKeyEnum<T> right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -31,6 +37,8 @@ partial class TestIntKeyEnum<T> :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(global::Thinktecture.Tests.TestIntKeyEnum<T> left, global::Thinktecture.Tests.TestIntKeyEnum<T> right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

@@ -10,6 +10,9 @@ partial class Outer<T>
       global::Thinktecture.Internal.IMetadataOwner,
       global::System.IEquatable<global::Thinktecture.Tests.Outer<T>.TestEnum?>
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.KeylessSmartEnum(typeof(global::Thinktecture.Tests.Outer<T>.TestEnum))
          {
@@ -37,11 +40,13 @@ partial class Outer<T>
       /// <summary>
       /// Gets all valid items.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.Outer<T>.TestEnum> Items => _items.Value;
 
       private readonly int _hashCode;
       private readonly global::Thinktecture.Internal.WriteOnceInt _itemIndex;
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       private TestEnum()
       {
          ValidateConstructorArguments();
@@ -53,23 +58,31 @@ partial class Outer<T>
       static partial void ValidateConstructorArguments();
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.Outer<T>.TestEnum? other)
       {
          return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is global::Thinktecture.Tests.Outer<T>.TestEnum item && Equals(item);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return _hashCode;
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private int GetItemIndex()
       {
@@ -87,6 +100,7 @@ partial class Outer<T>
       /// Executes an action depending on the current item.
       /// </summary>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item1)
@@ -108,6 +122,7 @@ partial class Outer<T>
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
@@ -132,6 +147,7 @@ partial class Outer<T>
       /// Executes a function depending on the current item.
       /// </summary>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @item1)
@@ -155,6 +171,7 @@ partial class Outer<T>
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
@@ -178,6 +195,7 @@ partial class Outer<T>
       /// Maps an item to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1)
@@ -194,6 +212,8 @@ partial class Outer<T>
          }
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.Outer<T>.TestEnum> GetItems()
       {
          var list = new global::System.Collections.Generic.List<global::Thinktecture.Tests.Outer<T>.TestEnum>(1);

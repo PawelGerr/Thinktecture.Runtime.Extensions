@@ -7,6 +7,8 @@ partial struct TestValueObject
    /// <summary>
    /// JSON converter for <see cref="TestValueObject"/>.
    /// </summary>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::TestValueObject>
    {
       private readonly global::System.Text.Json.Serialization.JsonConverter<string> _referenceFieldConverter;
@@ -126,6 +128,8 @@ partial struct TestValueObject
    }
 }
 
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
 {
    public override bool CanConvert(global::System.Type typeToConvert)

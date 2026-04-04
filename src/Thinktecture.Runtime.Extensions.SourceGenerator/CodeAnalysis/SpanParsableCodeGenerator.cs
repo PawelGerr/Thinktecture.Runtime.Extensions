@@ -38,6 +38,7 @@ public sealed class SpanParsableCodeGenerator : IInterfaceCodeGenerator<SpanPars
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {");
 
@@ -74,6 +75,7 @@ public sealed class SpanParsableCodeGenerator : IInterfaceCodeGenerator<SpanPars
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
    public static bool TryParse(
       global::System.ReadOnlySpan<char> s,
       global::System.IFormatProvider? provider,

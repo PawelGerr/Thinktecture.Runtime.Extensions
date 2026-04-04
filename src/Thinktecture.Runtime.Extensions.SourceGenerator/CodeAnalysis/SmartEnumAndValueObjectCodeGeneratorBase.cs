@@ -11,6 +11,9 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
       /// <summary>
       /// The identifier of this ").Append(isEnum ? "item" : "object").Append(@".
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE);
+
+      sb.Append(@"
       ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == MemberKind.Field ? "readonly " : null).AppendTypeFullyQualified(keyMember).Append(" ").Append(keyMember.Name).Append(keyMember.Kind == MemberKind.Property ? " { get; }" : ";");
    }
 

@@ -77,6 +77,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" other)
       {");
 
@@ -111,6 +113,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" other)
       {
          return !(obj == other);
@@ -126,6 +130,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
       sb.Append(@"
 
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static bool Equals(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {");
 
@@ -184,6 +190,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return Equals(obj, value);
@@ -195,6 +203,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return Equals(obj, value);
@@ -206,6 +216,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""value"">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(@" value)
       {
          return !(obj == value);
@@ -217,6 +229,8 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       /// <param name=""value"">Value to compare.</param>
       /// <param name=""obj"">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(state.KeyMember).Append(" value, ").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
       {
          return !(obj == value);

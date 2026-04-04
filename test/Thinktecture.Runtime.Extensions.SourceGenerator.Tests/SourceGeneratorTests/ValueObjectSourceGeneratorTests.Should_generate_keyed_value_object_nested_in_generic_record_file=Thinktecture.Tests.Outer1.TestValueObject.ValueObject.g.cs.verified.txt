@@ -13,6 +13,9 @@ partial record Outer<T>
       global::Thinktecture.Internal.IMetadataOwner,
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Outer<T>.TestValueObject, int, global::Thinktecture.ValidationError>
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(global::Thinktecture.Tests.Outer<T>.TestValueObject))
          {
@@ -39,6 +42,7 @@ partial record Outer<T>
       /// <summary>
       /// The identifier of this object.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       private readonly int _value;
 
       /// <summary>
@@ -50,6 +54,7 @@ partial record Outer<T>
       /// <returns>
       /// A <see cref="global::Thinktecture.ValidationError"/> representing the validation error if validation fails; otherwise, <c>null</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.ValidationError? Validate(int @value, global::System.IFormatProvider? @provider, out global::Thinktecture.Tests.Outer<T>.TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
@@ -76,6 +81,7 @@ partial record Outer<T>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">
       /// Thrown if the provided value does not pass validation.
       /// </exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.Tests.Outer<T>.TestValueObject Create(int @value)
       {
          var validationError = Validate(@value, null, out global::Thinktecture.Tests.Outer<T>.TestValueObject? obj);
@@ -96,6 +102,7 @@ partial record Outer<T>
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(int @value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.Outer<T>.TestValueObject? obj)
       {
          return TryCreate(@value, out obj, out _);
@@ -114,6 +121,7 @@ partial record Outer<T>
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(
          int @value,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.Outer<T>.TestValueObject? obj,
@@ -131,6 +139,8 @@ partial record Outer<T>
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       int global::Thinktecture.IConvertible<int>.ToValue()
       {
@@ -142,6 +152,8 @@ partial record Outer<T>
       /// </summary>
       /// <param name="obj">Object to convert.</param>
       /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/> or <c>default</c> if <paramref name="obj"/> is <c>null</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("obj")]
       public static implicit operator int?(global::Thinktecture.Tests.Outer<T>.TestValueObject? obj)
       {
@@ -154,6 +166,8 @@ partial record Outer<T>
       /// <param name="obj">Object to convert.</param>
       /// <returns>The <see cref="_value"/> of provided <paramref name="obj"/>.</returns>
       /// <exception cref="System.NullReferenceException">If <paramref name="obj"/> is <c>null</c>.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator int(global::Thinktecture.Tests.Outer<T>.TestValueObject obj)
       {
          if(obj is null)
@@ -167,6 +181,8 @@ partial record Outer<T>
       /// </summary>
       /// <param name="value">Value to convert.</param>
       /// <returns>An instance of <c>global::Thinktecture.Tests.Outer&lt;T&gt;.TestValueObject</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator global::Thinktecture.Tests.Outer<T>.TestValueObject(int @value)
       {
          return global::Thinktecture.Tests.Outer<T>.TestValueObject.Create(@value);
@@ -175,6 +191,7 @@ partial record Outer<T>
       /// <summary>
       /// Initializes a new instance of the <c>global::Thinktecture.Tests.Outer&lt;T&gt;.TestValueObject</c> type.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       private TestValueObject(int @value)
       {
          ValidateConstructorArguments(ref @value);
@@ -185,12 +202,16 @@ partial record Outer<T>
       static partial void ValidateConstructorArguments(ref int @value);
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is global::Thinktecture.Tests.Outer<T>.TestValueObject obj && Equals(obj);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.Outer<T>.TestValueObject? other)
       {
          if (other is null)
@@ -203,12 +224,16 @@ partial record Outer<T>
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return this._value.GetHashCode();
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {
          return this._value.ToString();

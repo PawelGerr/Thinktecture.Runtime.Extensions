@@ -1,6 +1,7 @@
 ﻿
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static global::Thinktecture.Tests.KeylessEnum Parse(string s, global::System.IFormatProvider? provider)
    {
 
@@ -11,6 +12,7 @@
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,

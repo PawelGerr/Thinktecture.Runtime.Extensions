@@ -120,6 +120,9 @@ namespace ").Append(_state.Namespace).Append(@";
 abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericTypeParameters(_state).Append(@" :
    global::Thinktecture.Internal.IMetadataOwner
 {
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
       = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(").AppendTypeFullyQualified(_state).Append(@"))
       {
@@ -133,6 +136,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       {
          _sb.Append(@"
 
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private ").Append(_state.Name).Append(@"()
    {
    }");
@@ -217,6 +222,8 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
    /// </summary>
    /// <param name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@""">Value to convert from.</param>
    /// <returns>A new instance of ").AppendTypeFullyQualifiedForXmlComment(memberType).Append(@" converted from <paramref name=""").AppendArgumentName(ctorArg.ArgumentName).Append(@"""/>.</returns>
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(ctorArg).Append(" ").AppendEscaped(ctorArg.ArgumentName).Append(@")
    {
       return new ").AppendTypeFullyQualified(memberType).Append("(").AppendEscaped(ctorArg.ArgumentName).Append(@");
@@ -255,6 +262,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
 
       _sb.Append(@"
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -416,6 +424,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
 
       _sb.Append(@"
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -571,6 +580,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       }
 
       _sb.Append(@"
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
 

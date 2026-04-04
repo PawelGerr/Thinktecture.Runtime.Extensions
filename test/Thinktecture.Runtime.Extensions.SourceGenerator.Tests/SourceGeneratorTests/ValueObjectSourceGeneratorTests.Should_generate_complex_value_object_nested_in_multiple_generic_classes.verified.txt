@@ -13,6 +13,9 @@ partial class Middle<U>
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject, global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject, bool>,
       global::Thinktecture.Internal.IMetadataOwner
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject))
          {
@@ -35,6 +38,7 @@ partial class Middle<U>
       /// <param name="value">Value</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.ValidationError? Validate(
          int @value,
          out global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? obj)
@@ -65,6 +69,7 @@ partial class Middle<U>
       /// <param name="value">Value</param>
       /// <returns>A newly created <c>global::Thinktecture.Tests.Outer&lt;T&gt;.Middle&lt;U&gt;.TestValueObject</c> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject Create(
          int @value)
       {
@@ -90,6 +95,7 @@ partial class Middle<U>
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(
          int @value,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? obj)
@@ -116,6 +122,7 @@ partial class Middle<U>
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static bool TryCreate(
          int @value,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? obj,
@@ -137,6 +144,7 @@ partial class Middle<U>
       /// <summary>
       /// Initializes a new instance of the <c>global::Thinktecture.Tests.Outer&lt;T&gt;.Middle&lt;U&gt;.TestValueObject</c> type.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       private TestValueObject(
          int @value)
       {
@@ -155,6 +163,8 @@ partial class Middle<U>
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? obj, global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? other)
       {
          if (obj is null)
@@ -169,18 +179,24 @@ partial class Middle<U>
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? obj, global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? other)
       {
          return !(obj == other);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject obj && Equals(obj);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.Outer<T>.Middle<U>.TestValueObject? other)
       {
          if (other is null)
@@ -193,6 +209,8 @@ partial class Middle<U>
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return global::System.HashCode.Combine(
@@ -200,6 +218,8 @@ partial class Middle<U>
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {
          return $"{{ Value = {this.Value} }}";

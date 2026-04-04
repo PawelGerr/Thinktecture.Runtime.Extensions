@@ -72,6 +72,8 @@ namespace ").Append(_state.Namespace).Append(@";
    {
       _sb.Append(@"
 
+").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.JsonConverter
 {
    private static readonly global::System.Collections.Concurrent.ConcurrentDictionary<global::System.Type, global::Newtonsoft.Json.JsonConverter> _converterByType = new();

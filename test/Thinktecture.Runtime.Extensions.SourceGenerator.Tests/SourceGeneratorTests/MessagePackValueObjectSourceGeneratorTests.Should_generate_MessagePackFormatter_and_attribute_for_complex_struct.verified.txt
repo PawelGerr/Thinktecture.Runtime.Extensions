@@ -9,6 +9,8 @@ partial struct TestValueObject
    /// <summary>
    /// MassagePack formatter for <see cref="TestValueObject"/>.
    /// </summary>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject>
    {
       /// <inheritdoc />

@@ -1,5 +1,7 @@
 ﻿
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
       return ((global::System.IFormattable)this.Key).ToString(format, formatProvider);

@@ -7,6 +7,8 @@ namespace Thinktecture.Tests;
 partial record Result<T> : global::Thinktecture.Internal.IObjectFactoryOwner,
       global::Thinktecture.IObjectFactory<global::Thinktecture.Tests.Result<T>, string, global::Thinktecture.ValidationError>
 {
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.ObjectFactoryMetadata> global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories { get; } =
       new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
       {

@@ -57,6 +57,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    /// <summary>
    /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
       private static readonly global::System.Type _type = typeof(").AppendTypeFullyQualified(_type).Append(@");
@@ -339,6 +341,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    {
       _sb.Append(@"
 
+").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.JsonConverter
 {
    private static readonly global::System.Collections.Concurrent.ConcurrentDictionary<global::System.Type, global::Newtonsoft.Json.JsonConverter> _converterByType = new();

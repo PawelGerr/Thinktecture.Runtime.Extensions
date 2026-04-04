@@ -6,6 +6,8 @@ partial class TestEnum :
    global::System.IComparable<global::TestEnum>
 {
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(object? obj)
    {
       if(obj is null)
@@ -18,6 +20,8 @@ partial class TestEnum :
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(global::TestEnum? obj)
    {
       if(obj is null)

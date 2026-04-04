@@ -8,6 +8,7 @@ partial class TestUnion :
 {
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static global::Thinktecture.Tests.TestUnion Parse(string s, global::System.IFormatProvider? provider)
    {
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestUnion, string, global::Thinktecture.ValidationError>(s, provider, out var result);
@@ -19,6 +20,7 @@ partial class TestUnion :
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,

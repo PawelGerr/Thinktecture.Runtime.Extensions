@@ -89,6 +89,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    /// <summary>
    /// MassagePack formatter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@">
    {
       /// <inheritdoc />

@@ -8,6 +8,9 @@ namespace Thinktecture.Tests
       global::Thinktecture.Internal.IMetadataOwner,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.KeylessSmartEnum(typeof(global::Thinktecture.Tests.TestEnum))
          {
@@ -36,11 +39,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _items.Value;
 
       private readonly int _hashCode;
       private readonly global::Thinktecture.Internal.WriteOnceInt _itemIndex;
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       private TestEnum()
       {
          ValidateConstructorArguments();
@@ -52,23 +57,31 @@ namespace Thinktecture.Tests
       static partial void ValidateConstructorArguments();
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.TestEnum? other)
       {
          return global::System.Object.ReferenceEquals(this, other);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is global::Thinktecture.Tests.TestEnum item && Equals(item);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return _hashCode;
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private int GetItemIndex()
       {
@@ -87,6 +100,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item1,
@@ -113,6 +127,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no item-specific action is provided.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestEnum>? @default = null,
@@ -148,6 +163,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
@@ -179,6 +195,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no item-specific action is provided.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
@@ -217,6 +234,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @item1,
@@ -244,6 +262,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no item-specific action is provided.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestEnum, TResult> @default,
@@ -280,6 +299,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
@@ -310,6 +330,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no item-specific action is provided.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
@@ -346,6 +367,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1,
@@ -371,6 +393,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The instance to return if no value is provided for current item.</param>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult MapPartially<TResult>(
          TResult @default,
@@ -399,6 +422,8 @@ namespace Thinktecture.Tests
          return @default;
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> GetItems()
       {
          var list = new global::System.Collections.Generic.List<global::Thinktecture.Tests.TestEnum>(2);

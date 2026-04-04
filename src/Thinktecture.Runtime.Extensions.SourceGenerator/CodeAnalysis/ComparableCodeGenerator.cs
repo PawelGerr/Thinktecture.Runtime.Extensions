@@ -28,6 +28,8 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
    {
       sb.Append(@"
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(object? obj)
    {
       if(obj is null)
@@ -40,6 +42,8 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
    }
 
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(").AppendTypeFullyQualifiedNullAnnotated(state.Type).Append(@" obj)
    {");
 

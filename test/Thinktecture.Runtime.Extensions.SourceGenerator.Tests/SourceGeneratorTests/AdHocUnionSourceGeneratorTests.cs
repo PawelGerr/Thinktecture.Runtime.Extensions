@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Thinktecture.CodeAnalysis.AdHocUnions;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
@@ -7,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public AdHocUnionSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 28_000)
+      : base(output, 37_000)
    {
    }
 

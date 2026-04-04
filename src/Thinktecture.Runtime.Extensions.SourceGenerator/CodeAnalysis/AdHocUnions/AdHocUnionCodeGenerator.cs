@@ -84,6 +84,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       global::Thinktecture.Internal.IMetadataOwner
    {
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(").AppendTypeFullyQualified(_state).Append(@"))
       {
@@ -183,6 +186,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">Value to convert from.</param>
       /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@" converted from <paramref name=""").AppendArgumentName(memberType.ArgumentName).Append(@"""/>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.ConversionFromValue).Append(" operator ").AppendTypeFullyQualified(_state).Append("(").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(@")
       {
          return new ").AppendTypeFullyQualified(_state).Append("(").AppendEscaped(memberType.ArgumentName).Append(@");
@@ -206,6 +211,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       /// <returns>A new instance of ").AppendTypeForXmlComment(_state).Append(@".</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       ").AppendAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" static ").AppendTypeFullyQualified(_state).Append(" Create").Append(memberType.Name).Append("(");
 
       if (!memberType.Setting.IsStateless)
@@ -256,6 +262,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Object to convert.</param>
       /// <returns>Inner value of type ").AppendMemberTypeForXmlComment(memberType).Append(@".</returns>
       /// <exception cref=""System.InvalidOperationException"">If the inner value is not a ").AppendMemberTypeForXmlComment(memberType).Append(@".</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.ConversionToValue).Append(" operator ").AppendTypeFullyQualified(memberType).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.As").Append(memberType.Name).Append(@";
@@ -273,6 +281,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
@@ -294,6 +304,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {
          return !(obj == other);
@@ -305,6 +317,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string? ToString()
       {
          return this._valueIndex switch
@@ -354,6 +368,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return this._valueIndex switch
@@ -416,6 +432,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {");
 
@@ -434,6 +452,8 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
@@ -544,6 +564,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -713,6 +734,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -877,6 +899,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
 
@@ -997,6 +1020,15 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE);
+
+         if (needsIndexedConstructor)
+         {
+            _sb.Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
+         }
+
+         _sb.Append(@"
       ").AppendAccessModifier(needsIndexedConstructor ? UnionConstructorAccessModifier.Private : _state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(")
             ;
 
@@ -1076,6 +1108,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Indication whether the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
       }
 
@@ -1088,6 +1121,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets the current value as ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
       /// <exception cref=""global::System.InvalidOperationException"">If the current value is not of type ").AppendMemberTypeForXmlComment(memberType).Append(@".</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public ").AppendTypeFullyQualified(memberType).Append(" As").Append(memberType.Name).Append(" => Is").Append(memberType.Name)
             .Append(" ? ");
 
@@ -1108,6 +1142,8 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private string GetMemberTypeName()
       {
          return this._valueIndex switch
@@ -1145,6 +1181,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public object").Append(hasNullableTypes ? "?" : null).Append(" Value => ");
 
       if (_state.Settings.UseSingleBackingField)

@@ -5,6 +5,8 @@
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.Order? other)
       {
          if (obj is null)
@@ -19,11 +21,15 @@
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.Order? obj, global::Thinktecture.Tests.Order? other)
       {
          return !(obj == other);
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static bool Equals(global::Thinktecture.Tests.Order? obj, global::System.String? value)
       {
          if (obj is null)
@@ -41,6 +47,8 @@
       /// <param name="obj">Instance to compare.</param>
       /// <param name="value">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.Order? obj, global::System.String? value)
       {
          return Equals(obj, value);
@@ -52,6 +60,8 @@
       /// <param name="value">Value to compare.</param>
       /// <param name="obj">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::System.String? value, global::Thinktecture.Tests.Order? obj)
       {
          return Equals(obj, value);
@@ -63,6 +73,8 @@
       /// <param name="obj">Instance to compare.</param>
       /// <param name="value">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.Order? obj, global::System.String? value)
       {
          return !(obj == value);
@@ -74,6 +86,8 @@
       /// <param name="value">Value to compare.</param>
       /// <param name="obj">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::System.String? value, global::Thinktecture.Tests.Order? obj)
       {
          return !(obj == value);

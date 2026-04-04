@@ -66,7 +66,7 @@ public sealed class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBa
    private static void AddAnnotations(SourceProductionContext ctx)
    {
       ctx.AddSource("Thinktecture.Annotations.g.cs",
-                    """
+                    $$"""
                     /* MIT License
 
                     Copyright (c) 2025 JetBrains http://www.jetbrains.com
@@ -103,6 +103,8 @@ public sealed class AnnotationsSourceGenerator() : ThinktectureSourceGeneratorBa
                     /// If <see cref="RequireAwait"/> is true - the attribute will only take effect if the method invocation
                     /// is located under the <c>await</c> expression.
                     /// </summary>
+                    {{CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE}}
+                    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
                     [AttributeUsage(AttributeTargets.Parameter)]
                     internal sealed class InstantHandleAttribute : Attribute
                     {

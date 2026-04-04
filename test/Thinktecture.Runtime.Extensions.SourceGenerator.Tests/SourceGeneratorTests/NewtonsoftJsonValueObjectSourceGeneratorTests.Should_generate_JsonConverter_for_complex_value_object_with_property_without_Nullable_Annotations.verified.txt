@@ -9,6 +9,8 @@ partial struct ComplexValueObjectWithNonNullProperty
    /// <summary>
    /// JSON converter for <see cref="ComplexValueObjectWithNonNullProperty"/>.
    /// </summary>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectNewtonsoftJsonConverter : global::Newtonsoft.Json.JsonConverter
    {
       private static readonly global::System.Type _type = typeof(global::Thinktecture.Tests.ComplexValueObjectWithNonNullProperty);

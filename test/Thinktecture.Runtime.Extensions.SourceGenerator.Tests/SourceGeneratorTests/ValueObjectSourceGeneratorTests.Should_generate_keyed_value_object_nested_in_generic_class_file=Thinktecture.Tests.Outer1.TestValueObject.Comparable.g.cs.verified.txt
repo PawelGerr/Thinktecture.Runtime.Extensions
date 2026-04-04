@@ -10,6 +10,8 @@ partial class TestValueObject :
    global::System.IComparable<global::Thinktecture.Tests.Outer<T>.TestValueObject>
 {
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(object? obj)
    {
       if(obj is null)
@@ -22,6 +24,8 @@ partial class TestValueObject :
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public int CompareTo(global::Thinktecture.Tests.Outer<T>.TestValueObject? obj)
    {
       if(obj is null)

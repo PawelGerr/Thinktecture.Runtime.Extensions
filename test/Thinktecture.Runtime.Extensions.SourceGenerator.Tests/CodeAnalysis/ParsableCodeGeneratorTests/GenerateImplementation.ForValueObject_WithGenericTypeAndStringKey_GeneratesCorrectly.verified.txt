@@ -1,6 +1,7 @@
 ﻿
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static global::Thinktecture.Tests.GenericValueObject<TKey, TValue> Parse(string s, global::System.IFormatProvider? provider)
    {
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.GenericValueObject<TKey, TValue>, string, global::Thinktecture.ValidationError>(s, provider, out var result);
@@ -12,6 +13,7 @@
    }
 
    /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,

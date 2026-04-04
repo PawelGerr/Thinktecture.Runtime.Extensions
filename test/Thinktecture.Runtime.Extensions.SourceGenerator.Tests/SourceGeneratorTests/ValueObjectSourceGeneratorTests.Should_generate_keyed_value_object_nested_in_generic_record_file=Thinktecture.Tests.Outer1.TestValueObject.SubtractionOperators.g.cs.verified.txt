@@ -9,6 +9,8 @@ partial class TestValueObject :
    global::System.Numerics.ISubtractionOperators<global::Thinktecture.Tests.Outer<T>.TestValueObject, global::Thinktecture.Tests.Outer<T>.TestValueObject, global::Thinktecture.Tests.Outer<T>.TestValueObject>
 {
    /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Outer<T>.TestValueObject operator -(global::Thinktecture.Tests.Outer<T>.TestValueObject left, global::Thinktecture.Tests.Outer<T>.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -17,6 +19,8 @@ partial class TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Outer<T>.TestValueObject operator checked -(global::Thinktecture.Tests.Outer<T>.TestValueObject left, global::Thinktecture.Tests.Outer<T>.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

@@ -74,6 +74,8 @@ namespace ").Append(_state.Namespace).Append(@";
    {
       _sb.Append(@"
 
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.").Append(_state.Type.IsReferenceType ? "ThinktectureMessagePackFormatter" : "ThinktectureStructMessagePackFormatter").Append("<").AppendTypeFullyQualified(_state.Type).Append(", ").Append(keyType).Append(", ").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@">
    {
    }");

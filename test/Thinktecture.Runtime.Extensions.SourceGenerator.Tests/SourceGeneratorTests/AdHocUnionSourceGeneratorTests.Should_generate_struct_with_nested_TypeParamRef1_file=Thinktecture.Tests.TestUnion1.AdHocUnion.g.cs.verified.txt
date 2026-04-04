@@ -11,6 +11,9 @@ namespace Thinktecture.Tests
       global::Thinktecture.IDisallowDefaultValue,
       global::Thinktecture.Internal.IMetadataOwner
    {
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(global::Thinktecture.Tests.TestUnion<T>))
       {
@@ -30,25 +33,31 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Indication whether the current value is of type <typeparamref name="T"/>.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public bool IsT => this._valueIndex == 1;
 
       /// <summary>
       /// Indication whether the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.
       /// </summary>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public bool IsListOfT => this._valueIndex == 2;
 
       /// <summary>
       /// Gets the current value as <typeparamref name="T"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <typeparamref name="T"/>.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public T AsT => IsT ? this._t! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion<T>)}' is not of type 'T' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <c>global::System.Collections.Generic.List&lt;T&gt;</c>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public global::System.Collections.Generic.List<T> AsListOfT => IsListOfT ? this._listOfT! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion<T>)}' is not of type 'List<T>' but of type '{GetMemberTypeName()}'.");
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private string GetMemberTypeName()
       {
          return this._valueIndex switch
@@ -64,6 +73,7 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="object"/>.
       /// </summary>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public object Value => this._valueIndex switch
       {
          0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
@@ -76,6 +86,7 @@ namespace Thinktecture.Tests
       /// Initializes new instance with <paramref name="t"/>.
       /// </summary>
       /// <param name="t">Value to create a new instance for.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public TestUnion(T @t)
       {
          this._t = @t;
@@ -86,6 +97,7 @@ namespace Thinktecture.Tests
       /// Initializes new instance with <paramref name="listOfT"/>.
       /// </summary>
       /// <param name="listOfT">Value to create a new instance for.</param>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public TestUnion(global::System.Collections.Generic.List<T> @listOfT)
       {
          this._listOfT = @listOfT;
@@ -97,6 +109,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="t">Value to create a new instance for.</param>
       /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.Tests.TestUnion<T> CreateT(T @t)
       {
          return new global::Thinktecture.Tests.TestUnion<T>(@t);
@@ -107,6 +120,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="listOfT">Value to create a new instance for.</param>
       /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       public static global::Thinktecture.Tests.TestUnion<T> CreateListOfT(global::System.Collections.Generic.List<T> @listOfT)
       {
          return new global::Thinktecture.Tests.TestUnion<T>(@listOfT);
@@ -119,6 +133,7 @@ namespace Thinktecture.Tests
       /// <param name="t">The action to execute if the current value is of type <typeparamref name="T"/>.</param>
       /// <param name="listOfT">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<T> @t,
@@ -148,6 +163,7 @@ namespace Thinktecture.Tests
       /// <param name="t">The action to execute if the current value is of type <typeparamref name="T"/>.</param>
       /// <param name="listOfT">The action to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
@@ -180,6 +196,7 @@ namespace Thinktecture.Tests
       /// <param name="t">The function to execute if the current value is of type <typeparamref name="T"/>.</param>
       /// <param name="listOfT">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<T, TResult> @t,
@@ -210,6 +227,7 @@ namespace Thinktecture.Tests
       /// <param name="t">The function to execute if the current value is of type <typeparamref name="T"/>.</param>
       /// <param name="listOfT">The function to execute if the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
@@ -240,6 +258,7 @@ namespace Thinktecture.Tests
       /// <param name="t">The instance to return if the current value is of type <typeparamref name="T"/>.</param>
       /// <param name="listOfT">The instance to return if the current value is of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</param>
       /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @t,
@@ -266,6 +285,8 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="listOfT">Value to convert from.</param>
       /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c> converted from <paramref name="listOfT"/>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static implicit operator global::Thinktecture.Tests.TestUnion<T>(global::System.Collections.Generic.List<T> @listOfT)
       {
          return new global::Thinktecture.Tests.TestUnion<T>(@listOfT);
@@ -277,6 +298,8 @@ namespace Thinktecture.Tests
       /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>global::System.Collections.Generic.List&lt;T&gt;</c>.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator global::System.Collections.Generic.List<T>(global::Thinktecture.Tests.TestUnion<T> obj)
       {
          return obj.AsListOfT;
@@ -288,6 +311,8 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.TestUnion<T> obj, global::Thinktecture.Tests.TestUnion<T> other)
       {
          return obj.Equals(other);
@@ -299,18 +324,24 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.TestUnion<T> obj, global::Thinktecture.Tests.TestUnion<T> other)
       {
          return !(obj == other);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is global::Thinktecture.Tests.TestUnion<T> obj && Equals(obj);
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.TestUnion<T> other)
       {
          if (this._valueIndex != other._valueIndex)
@@ -326,6 +357,8 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return this._valueIndex switch
@@ -338,6 +371,8 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string? ToString()
       {
          return this._valueIndex switch

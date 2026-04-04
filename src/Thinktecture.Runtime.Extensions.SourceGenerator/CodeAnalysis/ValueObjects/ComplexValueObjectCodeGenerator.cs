@@ -69,6 +69,9 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
    {
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.ComplexValueObject(typeof(").AppendTypeFullyQualified(_state).Append(@"))
          {
@@ -91,6 +94,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Default instance of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static readonly ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
@@ -144,6 +148,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       /// <returns>A newly created ").AppendTypeForXmlComment(_state).Append(@" instance.</returns>
       /// <exception cref=""System.ComponentModel.DataAnnotations.ValidationException"">Thrown when the provided values fail validation.</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties, prefix: @"
          ", comma: ",").Append(@")
       {
@@ -192,6 +197,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -240,6 +246,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>
       /// <c>true</c> if the instance is successfully created; otherwise, <c>false</c>.
       /// </returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -285,6 +292,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       /// <param name=""obj"">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, @"
@@ -398,6 +406,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
@@ -419,6 +429,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Instance to compare.</param>
       /// <param name=""other"">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" obj, ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {
          return !(obj == other);
@@ -439,6 +451,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Initializes a new instance of the ").AppendTypeForXmlComment(_state).Append(@" type.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(");
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, prefix: @"
@@ -486,12 +499,16 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is ").AppendTypeFullyQualified(_state).Append(@" obj && Equals(obj);
       }
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
@@ -576,6 +593,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {");
 
@@ -655,6 +674,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {");
 

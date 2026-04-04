@@ -27,6 +27,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       sb.Append(@"
 
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
@@ -56,6 +57,7 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
       sb.Append(@"
 
    /// <inheritdoc />
+   ").Append(CodeGeneratorBase.GENERATED_CODE_ATTRIBUTE).Append(@"
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,

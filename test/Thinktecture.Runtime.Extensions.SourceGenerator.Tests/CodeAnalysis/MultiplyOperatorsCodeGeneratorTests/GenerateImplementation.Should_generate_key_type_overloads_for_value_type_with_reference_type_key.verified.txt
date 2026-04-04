@@ -1,17 +1,23 @@
 ﻿
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator *(global::Thinktecture.Tests.Name left, global::Thinktecture.Tests.Name right)
    {
       return Create((left.Value * right.Value));
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator checked *(global::Thinktecture.Tests.Name left, global::Thinktecture.Tests.Name right)
    {
       return Create(checked((left.Value * right.Value)));
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator *(global::Thinktecture.Tests.Name left, global::System.String right)
    {
       global::System.ArgumentNullException.ThrowIfNull(right);
@@ -19,6 +25,8 @@
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator *(global::System.String left, global::Thinktecture.Tests.Name right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -26,6 +34,8 @@
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator checked *(global::Thinktecture.Tests.Name left, global::System.String right)
    {
       global::System.ArgumentNullException.ThrowIfNull(right);
@@ -33,6 +43,8 @@
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Name operator checked *(global::System.String left, global::Thinktecture.Tests.Name right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

@@ -1,5 +1,7 @@
 ﻿
    /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.SByteValue operator -(global::Thinktecture.Tests.SByteValue left, global::Thinktecture.Tests.SByteValue right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -8,6 +10,8 @@
    }
 
    /// <inheritdoc cref="global::System.Numerics.ISubtractionOperators{TSelf, TOther, TResult}.op_Subtraction(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.SByteValue operator checked -(global::Thinktecture.Tests.SByteValue left, global::Thinktecture.Tests.SByteValue right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

@@ -72,6 +72,8 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
    private void GenerateMetadata()
    {
       _sb.Append(@"
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Internal.ObjectFactoryMetadata> global::Thinktecture.Internal.IObjectFactoryOwner.ObjectFactories { get; } =
       new global::System.Collections.Generic.List<global::Thinktecture.Internal.ObjectFactoryMetadata>()
       {");

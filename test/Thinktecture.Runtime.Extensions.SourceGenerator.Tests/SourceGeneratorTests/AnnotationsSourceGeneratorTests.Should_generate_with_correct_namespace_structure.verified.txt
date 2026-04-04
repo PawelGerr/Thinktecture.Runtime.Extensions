@@ -34,6 +34,8 @@ namespace JetBrains.Annotations;
 /// If <see cref="RequireAwait"/> is true - the attribute will only take effect if the method invocation
 /// is located under the <c>await</c> expression.
 /// </summary>
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class InstantHandleAttribute : Attribute
 {

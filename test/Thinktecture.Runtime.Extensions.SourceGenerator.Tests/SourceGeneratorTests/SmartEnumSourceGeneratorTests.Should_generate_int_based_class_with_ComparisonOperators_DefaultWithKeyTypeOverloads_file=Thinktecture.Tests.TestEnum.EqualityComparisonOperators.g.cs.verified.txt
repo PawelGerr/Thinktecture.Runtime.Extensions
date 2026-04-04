@@ -13,6 +13,8 @@ partial class TestEnum :
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.TestEnum? obj, global::Thinktecture.Tests.TestEnum? other)
       {
          return global::System.Object.ReferenceEquals(obj, other);
@@ -24,11 +26,15 @@ partial class TestEnum :
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.TestEnum? obj, global::Thinktecture.Tests.TestEnum? other)
       {
          return !(obj == other);
       }
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static bool Equals(global::Thinktecture.Tests.TestEnum? obj, int value)
       {
          if (obj is null)
@@ -43,6 +49,8 @@ partial class TestEnum :
       /// <param name="obj">Instance to compare.</param>
       /// <param name="value">Value to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.TestEnum? obj, int value)
       {
          return Equals(obj, value);
@@ -54,6 +62,8 @@ partial class TestEnum :
       /// <param name="value">Value to compare.</param>
       /// <param name="obj">Instance to compare with.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(int value, global::Thinktecture.Tests.TestEnum? obj)
       {
          return Equals(obj, value);
@@ -65,6 +75,8 @@ partial class TestEnum :
       /// <param name="obj">Instance to compare.</param>
       /// <param name="value">Value to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.TestEnum? obj, int value)
       {
          return !(obj == value);
@@ -76,6 +88,8 @@ partial class TestEnum :
       /// <param name="value">Value to compare.</param>
       /// <param name="obj">Instance to compare with.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(int value, global::Thinktecture.Tests.TestEnum? obj)
       {
          return !(obj == value);

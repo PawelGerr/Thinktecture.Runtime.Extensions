@@ -89,6 +89,9 @@ namespace ").Append(_state.Namespace).Append(@"
    {");
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.Keyed.ValueObject(typeof(").AppendTypeFullyQualified(_state).Append(@"))
          {
@@ -110,6 +113,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Default instance of ").AppendTypeForXmlComment(_state).Append(@".
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static readonly ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.DefaultInstancePropertyName).Append(" = default;");
       }
 
@@ -161,6 +165,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
       {
@@ -184,6 +190,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullable(keyMember).Append("(").AppendTypeFullyQualifiedNullable(_state).Append(@" obj)
       {
@@ -202,6 +210,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          return obj.").Append(keyMember.Name).Append(@";
@@ -227,6 +237,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""obj"">Object to convert.</param>
       /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       /// <exception cref=""System.NullReferenceException"">If <paramref name=""obj""/> is <c>null</c>.</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.UnsafeConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
          if(obj is null)
@@ -255,6 +267,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(keyMember.ArgumentName).Append(@""">Value to convert.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(".</returns>");
+
+      _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
 
       if (bothAreReferenceTypes && !emptyStringYieldsNull)
       {
@@ -292,6 +308,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Thrown if the provided value does not pass validation.
       /// </exception>");
 
+      _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE);
+
       // If emptyStringYieldsNull=true then an empty-string-argument (i.e. not null) will lead to null as return value,
       // that's why we cannot use the NotNullIfNotNullAttribute.
       if (allowNullOutput && !emptyStringYieldsNull)
@@ -326,6 +345,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(@", out obj, out _);
@@ -346,6 +366,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append(@"(
          ").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(@",
          ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj,
@@ -372,6 +393,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <returns>
       /// A ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" representing the validation error if validation fails; otherwise, <c>null</c>.
       /// </returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullKeyMemberInput).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
       {");
 
@@ -474,6 +496,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Initializes a new instance of the ").AppendTypeForXmlComment(_state).Append(@" type.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       ").RenderAccessModifier(_state.Settings.ConstructorAccessModifier).Append(" ").Append(_state.Name).Append("(").RenderArgumentWithType(_state.KeyMember).Append(@")
       {
          ValidateConstructorArguments(").RenderArgument(_state.KeyMember, "ref ").Append(@");
@@ -489,12 +512,16 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is ").AppendTypeFullyQualified(_state).Append(@" obj && Equals(obj);
       }
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {");
 
@@ -520,6 +547,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return ");
@@ -546,6 +575,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string").Append(_state.KeyMember.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
          return this.").Append(_state.KeyMember.Name).Append(@".ToString();

@@ -7,12 +7,16 @@ partial struct GenericValueObject<T> :
    global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.GenericValueObject<T>, global::Thinktecture.Tests.GenericValueObject<T>, global::Thinktecture.Tests.GenericValueObject<T>>
 {
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.GenericValueObject<T> operator *(global::Thinktecture.Tests.GenericValueObject<T> left, global::Thinktecture.Tests.GenericValueObject<T> right)
    {
       return Create((left._value * right._value));
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.GenericValueObject<T> operator checked *(global::Thinktecture.Tests.GenericValueObject<T> left, global::Thinktecture.Tests.GenericValueObject<T> right)
    {
       return Create(checked((left._value * right._value)));

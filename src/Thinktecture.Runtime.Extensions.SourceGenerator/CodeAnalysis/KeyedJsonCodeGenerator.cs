@@ -88,6 +88,8 @@ partial ").AppendTypeKind(_state.Type).Append(" ").Append(_state.Name).AppendGen
    {
       _sb.Append(@"
 
+").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
 {
    public override bool CanConvert(global::System.Type typeToConvert)

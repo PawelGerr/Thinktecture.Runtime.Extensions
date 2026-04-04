@@ -1,5 +1,7 @@
 ﻿
    /// <inheritdoc cref="global::System.Numerics.IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Amount operator +(global::Thinktecture.Tests.Amount left, global::Thinktecture.Tests.Amount right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

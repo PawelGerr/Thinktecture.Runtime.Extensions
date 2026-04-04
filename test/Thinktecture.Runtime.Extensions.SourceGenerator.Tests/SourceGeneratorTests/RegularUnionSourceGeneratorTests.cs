@@ -6,7 +6,7 @@ namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 public class RegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
 {
    public RegularUnionSourceGeneratorTests(ITestOutputHelper output)
-      : base(output, 34_000)
+      : base(output, 37_000)
    {
    }
 

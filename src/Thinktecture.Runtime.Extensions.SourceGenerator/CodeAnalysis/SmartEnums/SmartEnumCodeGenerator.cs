@@ -90,6 +90,9 @@ namespace ").Append(_state.Namespace).Append(@"
       if (_state.KeyMember is not null)
       {
          _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.Keyed.SmartEnum(typeof(").AppendTypeFullyQualified(_state).Append(@"))
          {
@@ -144,6 +147,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets all valid items.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append("> Items => _lookups.Value.List;");
 
          GenerateKeyMember(_sb, _state.KeyMember, true);
@@ -151,6 +155,9 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
          = new global::Thinktecture.Internal.Metadata.KeylessSmartEnum(typeof(").AppendTypeFullyQualified(_state).Append(@"))
          {
@@ -187,6 +194,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets all valid items.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append("> Items => _items.Value;");
       }
 
@@ -245,12 +253,16 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
          return other is ").AppendTypeFullyQualified(_state).Append(@" item && Equals(item);
       }
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
          return _hashCode;
@@ -319,6 +331,8 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private int GetItemIndex()
       {
@@ -342,6 +356,7 @@ namespace ").Append(_state.Namespace).Append(@"
             continue;
 
          _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       private delegate ").Append(method.ReturnType ?? "void").Append(" ").AppendDelegateType(method).Append("(");
 
          for (var j = 0; j < method.Parameters.Length; j++)
@@ -367,6 +382,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       ").AppendAccessibility(method.Accessibility).Append(" partial ").Append(method.ReturnType ?? "void").Append(" ").Append(method.MethodName).Append("(");
 
          for (var i = 0; i < method.Parameters.Length; i++)
@@ -406,6 +422,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string").Append(keyProperty.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
          return this.").Append(keyProperty.Name).Append(@".ToString();
@@ -444,6 +462,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -587,6 +606,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
@@ -725,6 +745,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
 
@@ -819,6 +840,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {");
 
@@ -851,6 +873,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool TryGet(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item);
@@ -871,6 +894,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -898,6 +922,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
       /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {
          if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
@@ -926,6 +951,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""item"">Item to convert.</param>
       /// <returns>The ").AppendTypeForXmlComment(_state, (keyProperty.Name, ".")).Append(@" of provided <paramref name=""item""/> or <c>default</c> if <paramref name=""item""/> is <c>null</c>.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
       {
@@ -946,7 +973,9 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion from the type ").AppendMemberTypeForXmlComment(keyProperty).Append(@".
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">Value to convert.</param>
-      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>");
+      /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if the <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is a known item.</returns>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
 
       if (keyProperty.IsReferenceType)
       {
@@ -966,6 +995,8 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
 
       /// <inheritdoc />
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" other)
       {
          return global::System.Object.ReferenceEquals(this, other);
@@ -978,6 +1009,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static Lookups GetLookups()
       {
          var lookup = new global::System.Collections.Generic.Dictionary<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append(">(").Append(totalNumberOfItems);
@@ -1068,6 +1101,8 @@ namespace ").Append(_state.Namespace).Append(@"
 #endif
       }
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private readonly record struct Lookups(
          global::System.Collections.Generic.IReadOnlyDictionary<").AppendTypeFullyQualified(keyMember).Append(", ").AppendTypeFullyQualified(_state).Append("> Lookup,");
 
@@ -1089,6 +1124,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static global::System.Collections.Generic.IReadOnlyList<").AppendTypeFullyQualified(_state).Append(@"> GetItems()
       {
          var list = new global::System.Collections.Generic.List<").AppendTypeFullyQualified(_state).Append(">(").Append(totalNumberOfItems).Append(");");
@@ -1129,6 +1166,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
       {
@@ -1144,6 +1183,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::System.ReadOnlySpan<char> global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>.ToValue()
       {
@@ -1161,7 +1202,8 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
-      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>");
+      /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE);
 
       if (keyProperty.IsReferenceType)
       {
@@ -1202,6 +1244,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of ").AppendTypeForXmlComment(_state).Append(@" if <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> is not <c>null</c>; otherwise <c>null</c>.</returns>
       /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(Constants.Methods.GET).Append("(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          if (!_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
@@ -1276,6 +1319,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       private ").Append(_state.Name).Append("(");
 
       if (_state.KeyMember is not null)

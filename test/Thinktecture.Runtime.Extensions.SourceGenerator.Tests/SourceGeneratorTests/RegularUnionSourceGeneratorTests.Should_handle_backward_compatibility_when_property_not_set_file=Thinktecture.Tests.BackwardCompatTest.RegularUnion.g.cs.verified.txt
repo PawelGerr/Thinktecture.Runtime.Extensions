@@ -7,6 +7,9 @@ namespace Thinktecture.Tests;
 abstract partial class BackwardCompatTest :
    global::Thinktecture.Internal.IMetadataOwner
 {
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
       = new global::Thinktecture.Internal.Metadata.RegularUnion(typeof(global::Thinktecture.Tests.BackwardCompatTest))
       {
@@ -20,6 +23,8 @@ abstract partial class BackwardCompatTest :
                        .AsReadOnly()
       };
 
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private BackwardCompatTest()
    {
    }
@@ -32,6 +37,7 @@ abstract partial class BackwardCompatTest :
    /// <param name="categoryItem1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/>.</param>
    /// <param name="direct">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Direct"/>.</param>
    /// <param name="category">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.BackwardCompatTest.Category.Item2> @categoryItem2,
@@ -68,6 +74,7 @@ abstract partial class BackwardCompatTest :
    /// <param name="categoryItem1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/>.</param>
    /// <param name="direct">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Direct"/>.</param>
    /// <param name="category">The action to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -107,6 +114,7 @@ abstract partial class BackwardCompatTest :
    /// <param name="categoryItem1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/>.</param>
    /// <param name="direct">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Direct"/>.</param>
    /// <param name="category">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.BackwardCompatTest.Category.Item2, TResult> @categoryItem2,
@@ -142,6 +150,7 @@ abstract partial class BackwardCompatTest :
    /// <param name="categoryItem1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/>.</param>
    /// <param name="direct">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Direct"/>.</param>
    /// <param name="category">The function to execute if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -178,6 +187,7 @@ abstract partial class BackwardCompatTest :
    /// <param name="categoryItem1">The instance to return if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/>.</param>
    /// <param name="direct">The instance to return if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Direct"/>.</param>
    /// <param name="category">The instance to return if the current type is <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category"/>.</param>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @categoryItem2,
@@ -209,6 +219,8 @@ abstract partial class BackwardCompatTest :
    /// </summary>
    /// <param name="value">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item1"/> converted from <paramref name="value"/>.</returns>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.BackwardCompatTest(string @value)
    {
       return new global::Thinktecture.Tests.BackwardCompatTest.Category.Item1(@value);
@@ -219,6 +231,8 @@ abstract partial class BackwardCompatTest :
    /// </summary>
    /// <param name="value">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.BackwardCompatTest.Category.Item2"/> converted from <paramref name="value"/>.</returns>
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.BackwardCompatTest(int @value)
    {
       return new global::Thinktecture.Tests.BackwardCompatTest.Category.Item2(@value);

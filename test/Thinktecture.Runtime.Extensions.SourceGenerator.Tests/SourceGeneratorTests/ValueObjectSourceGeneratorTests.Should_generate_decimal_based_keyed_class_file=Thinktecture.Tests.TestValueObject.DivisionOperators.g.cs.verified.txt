@@ -7,6 +7,8 @@ partial class TestValueObject :
    global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
 {
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.TestValueObject operator /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);
@@ -15,6 +17,8 @@ partial class TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.TestValueObject operator checked /(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
       global::System.ArgumentNullException.ThrowIfNull(left);

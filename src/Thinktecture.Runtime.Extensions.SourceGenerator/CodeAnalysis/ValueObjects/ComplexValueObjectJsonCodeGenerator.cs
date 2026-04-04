@@ -56,6 +56,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    /// <summary>
    /// JSON converter for ").AppendTypeForXmlComment(_type).Append(@".
    /// </summary>
+   ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<").AppendTypeFullyQualified(_type).Append(@">
    {");
 
@@ -337,6 +339,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
 
+").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+[global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
 {
    public override bool CanConvert(global::System.Type typeToConvert)
