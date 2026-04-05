@@ -24,6 +24,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
    private const string _GENERATE_VALIDATE_METHOD = "Generate Validate method";
    private const string _GENERATE_TO_VALUE_METHOD = "Generate ToValue method";
    private const string _MAKE_LAMBDA_STATIC = "Make lambdas static";
+   private const string _ADD_NOTNULL_CONSTRAINT = "Add 'notnull' constraint";
 
    /// <inheritdoc />
    public override ImmutableArray<string> FixableDiagnosticIds { get; } =
@@ -47,6 +48,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod.Id,
       DiagnosticsDescriptors.ObjectFactoryMustImplementToValueMethod.Id,
       DiagnosticsDescriptors.UseSwitchMapWithStaticLambda.Id,
+      DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint.Id,
    ];
 
    /// <inheritdoc />
@@ -161,6 +163,13 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
             else
             {
                context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, _ => MakeAllLambdasStaticAsync(context.Document, root, invocation), _MAKE_LAMBDA_STATIC), diagnostic);
+            }
+         }
+         else if (diagnostic.Id == DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint.Id)
+         {
+            if (diagnostic.Properties.TryGetValue("TypeParamName", out var typeParamName) && typeParamName is not null)
+            {
+               context.RegisterCodeFix(CodeAction.Create(_ADD_NOTNULL_CONSTRAINT, _ => AddNotnullConstraintAsync(context.Document, root, GetCodeFixesContext().TypeDeclaration, typeParamName), _ADD_NOTNULL_CONSTRAINT), diagnostic);
             }
          }
       }
@@ -989,6 +998,44 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       }
 
       return transformedLambda;
+   }
+
+   private static Task<Document> AddNotnullConstraintAsync(
+      Document document,
+      SyntaxNode root,
+      TypeDeclarationSyntax? typeDeclaration,
+      string typeParamName)
+   {
+      if (typeDeclaration is null)
+         return Task.FromResult(document);
+
+      var notnullConstraint = SyntaxFactory.TypeConstraint(SyntaxFactory.IdentifierName("notnull"));
+
+      var existingClause = typeDeclaration.ConstraintClauses
+         .FirstOrDefault(c => c.Name.Identifier.Text == typeParamName);
+
+      TypeDeclarationSyntax newTypeDeclaration;
+
+      if (existingClause is not null)
+      {
+         var newConstraints = existingClause.Constraints.Insert(0, notnullConstraint);
+         var newClause = existingClause.WithConstraints(newConstraints);
+         newTypeDeclaration = typeDeclaration.ReplaceNode(existingClause, newClause);
+      }
+      else
+      {
+         var constraintClause = SyntaxFactory.TypeParameterConstraintClause(
+               SyntaxFactory.IdentifierName(typeParamName))
+            .WithConstraints(SyntaxFactory.SingletonSeparatedList<TypeParameterConstraintSyntax>(notnullConstraint))
+            .WithWhereKeyword(SyntaxFactory.Token(SyntaxKind.WhereKeyword).WithTrailingTrivia(SyntaxFactory.Space))
+            .WithColonToken(SyntaxFactory.Token(SyntaxKind.ColonToken).WithTrailingTrivia(SyntaxFactory.Space));
+
+         newTypeDeclaration = typeDeclaration.AddConstraintClauses(constraintClause);
+      }
+
+      var newRoot = root.ReplaceNode(typeDeclaration, newTypeDeclaration);
+
+      return Task.FromResult(document.WithSyntaxRoot(newRoot));
    }
 
    private sealed class CodeFixesContext(Diagnostic diagnostic, SyntaxNode root)

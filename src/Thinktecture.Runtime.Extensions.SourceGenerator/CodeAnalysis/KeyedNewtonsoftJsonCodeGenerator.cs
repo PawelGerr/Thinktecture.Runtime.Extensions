@@ -70,6 +70,8 @@ namespace ").Append(_state.Namespace).Append(@";
 
    private void GenerateFactory(string keyType)
    {
+      var keyTypeParamIndex = _state.FindGenericParameterIndex(keyType);
+
       _sb.Append(@"
 
 ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
@@ -116,7 +118,18 @@ file class ValueObjectNewtonsoftJsonConverterFactory : global::Newtonsoft.Json.J
 
       objectType = global::System.Nullable.GetUnderlyingType(objectType) ?? objectType;
 
-      var converterType = typeof(global::Thinktecture.Json.ThinktectureNewtonsoftJsonConverter<,,>).MakeGenericType(objectType, typeof(").Append(keyType).Append("), typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"));
+      var converterType = typeof(global::Thinktecture.Json.ThinktectureNewtonsoftJsonConverter<,,>).MakeGenericType(objectType, ");
+
+      if (keyTypeParamIndex is not null)
+      {
+         _sb.Append("objectType.GetGenericArguments()[").Append(keyTypeParamIndex.Value).Append("]");
+      }
+      else
+      {
+         _sb.Append("typeof(").Append(keyType).Append(")");
+      }
+
+      _sb.Append(", typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"));
 
       return (global::Newtonsoft.Json.JsonConverter?)global::System.Activator.CreateInstance(converterType)
          ?? throw new global::System.Exception($""Could not create an instance of json converter of type \""{converterType.FullName}\""."");

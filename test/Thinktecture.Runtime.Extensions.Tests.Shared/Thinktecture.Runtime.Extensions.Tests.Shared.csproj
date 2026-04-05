@@ -18,6 +18,14 @@
                       SetTargetFramework="TargetFramework=netstandard2.0"
                       ReferenceOutputAssembly="false"
                       OutputItemType="Analyzer" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Analyzers\Thinktecture.Runtime.Extensions.Analyzers.csproj"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
+    <ProjectReference Include="..\..\src\Thinktecture.Runtime.Extensions.Refactorings\Thinktecture.Runtime.Extensions.Refactorings.csproj"
+                      SetTargetFramework="TargetFramework=netstandard2.0"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
   </ItemGroup>
 
   <!-- Rider test running cannot resolve some projects because tests target .NET 8, 9 and 10 but the libs have only 8 and 9 -->

@@ -41,15 +41,13 @@ public sealed class SmartEnumSourceGeneratorState
       ValidationErrorState validationError,
       SmartEnumSettings settings,
       bool hasDerivedTypes,
-      ImmutableArray<GenericTypeParameterState> genericParameters,
       CancellationToken cancellationToken)
    {
       KeyMember = keyMember;
       Settings = settings;
       HasDerivedTypes = hasDerivedTypes;
       ValidationError = validationError;
-      GenericParameters = genericParameters;
-
+      GenericParameters = type.GetGenericTypeParameters();
       Name = type.Name;
       Namespace = type.ContainingNamespace?.IsGlobalNamespace == true ? null : type.ContainingNamespace?.ToString();
       ContainingTypes = type.GetContainingTypes();

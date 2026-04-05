@@ -111,4 +111,36 @@ public class Map
 
       result.Should().Be("two");
    }
+
+   [Fact]
+   public void Should_map_to_correct_value_for_generic_key_based_unconstraint_enum()
+   {
+      var result = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("one");
+
+      result = SmartEnum_GenericKeyBasedUnconstraint<int>.Item2.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("two");
+   }
+
+   [Fact]
+   public void Should_map_to_correct_value_for_generic_key_based_class_constraint_enum()
+   {
+      var result = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("one");
+
+      result = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item2.Map(
+         item1: "one",
+         item2: "two");
+
+      result.Should().Be("two");
+   }
 }

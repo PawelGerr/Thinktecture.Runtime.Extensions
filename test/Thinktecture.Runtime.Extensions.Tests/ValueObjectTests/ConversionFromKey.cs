@@ -92,4 +92,21 @@ public class ConversionFromKey
       var value = (TimeSpanBasedReferenceValueObject)ts;
       value.Should().Be(TimeSpanBasedReferenceValueObject.Create(ts));
    }
+
+   [Fact]
+   public void Should_convert_from_key_for_generic_key_based_reference_value_object_unconstraint()
+   {
+      var obj = (GenericKeyBasedReferenceValueObjectUnconstraint<int>)42;
+
+      obj.Should().NotBeNull();
+      obj.Should().Be(GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42));
+   }
+
+   [Fact]
+   public void Should_convert_from_key_for_generic_key_based_struct_value_object()
+   {
+      var obj = (GenericKeyBasedStructValueObject<int>)42;
+
+      obj.Should().Be(GenericKeyBasedStructValueObject<int>.Create(42));
+   }
 }

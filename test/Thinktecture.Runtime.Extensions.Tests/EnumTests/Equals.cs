@@ -63,4 +63,32 @@ public class Equals
       item1.Equals(item1Again).Should().BeTrue();
       item1.Equals(item2).Should().BeFalse();
    }
+
+   [Fact]
+   public void Should_return_true_for_same_item_for_generic_key_based_unconstraint_enum()
+   {
+      SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Equals(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_return_false_for_different_items_for_generic_key_based_unconstraint_enum()
+   {
+      SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Equals(SmartEnum_GenericKeyBasedUnconstraint<int>.Item2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_return_false_for_null_for_generic_key_based_unconstraint_enum()
+   {
+      SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Equals(null).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_return_true_for_same_item_for_generic_key_based_class_constraint_enum()
+   {
+      var item1 = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1;
+      var item1Again = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Get(SmartEnumClassConstraintKey.Item1);
+
+      item1.Equals(item1Again).Should().BeTrue();
+      item1.Equals(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item2).Should().BeFalse();
+   }
 }

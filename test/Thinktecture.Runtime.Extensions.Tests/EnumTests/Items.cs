@@ -92,4 +92,31 @@ public class Items
    {
       SmartEnum_Generic_Keyless<string>.Item1.Should().NotBeSameAs(SmartEnum_Generic_Keyless<object>.Item1);
    }
+
+   [Fact]
+   public void Should_return_2_items_for_generic_key_based_unconstraint_enum()
+   {
+      var items = SmartEnum_GenericKeyBasedUnconstraint<int>.Items;
+      items.Should().HaveCount(2);
+      items.Should().Contain(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+      items.Should().Contain(SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+   }
+
+   [Fact]
+   public void Should_return_2_items_for_generic_key_based_struct_constraint_enum()
+   {
+      var items = SmartEnum_GenericKeyBasedStructConstraint<int>.Items;
+      items.Should().HaveCount(2);
+      items.Should().Contain(SmartEnum_GenericKeyBasedStructConstraint<int>.Item1);
+      items.Should().Contain(SmartEnum_GenericKeyBasedStructConstraint<int>.Item2);
+   }
+
+   [Fact]
+   public void Should_return_2_items_for_generic_key_based_class_constraint_enum()
+   {
+      var items = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Items;
+      items.Should().HaveCount(2);
+      items.Should().Contain(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1);
+      items.Should().Contain(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item2);
+   }
 }

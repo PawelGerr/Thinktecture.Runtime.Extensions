@@ -14,14 +14,15 @@ public static class TypeParameterExtensions
       {
          (constraints = ImmutableArray.CreateBuilder<string>()).Add("struct");
       }
+      else if (typeParam.HasNotNullConstraint)
+      {
+         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("notnull");
+      }
 
       foreach (var constraintType in typeParam.ConstraintTypes)
       {
          (constraints ??= ImmutableArray.CreateBuilder<string>()).Add(constraintType.ToFullyQualifiedDisplayString());
       }
-
-      if (typeParam.HasNotNullConstraint)
-         (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("notnull");
 
       if (typeParam.HasConstructorConstraint)
          (constraints ??= ImmutableArray.CreateBuilder<string>()).Add("new()");

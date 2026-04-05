@@ -9,7 +9,10 @@ public class GenerateStructLayoutAttributeIfRequired
    {
       var sb = new StringBuilder();
       sb.GenerateStructLayoutAttributeIfRequired(isReferenceType: false, hasStructLayoutAttribute: false);
-      sb.ToString().Should().Be("\n   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
+      sb.ToString().Should().Be("""
+
+                                   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
+                                """);
    }
 
    [Theory]

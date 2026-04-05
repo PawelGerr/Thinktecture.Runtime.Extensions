@@ -103,4 +103,32 @@ public class ConversionToKey
       TimeSpan? value = TimeSpanBasedReferenceValueObject.Create(ts);
       value.Should().Be(ts);
    }
+
+   [Fact]
+   public void Should_convert_to_key_for_generic_key_based_reference_value_object_unconstraint()
+   {
+      int? value = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42);
+      value.Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_convert_to_key_for_generic_key_based_reference_value_object_class_constraint()
+   {
+      string value = GenericKeyBasedReferenceValueObjectClassConstraint<string>.Create("test");
+      value.Should().Be("test");
+   }
+
+   [Fact]
+   public void Should_convert_to_key_for_generic_key_based_struct_value_object()
+   {
+      int value = GenericKeyBasedStructValueObject<int>.Create(42);
+      value.Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_convert_to_key_for_generic_key_based_struct_value_object_class_constraint()
+   {
+      string value = GenericKeyBasedStructValueObjectClassConstraint<string>.Create("test");
+      value.Should().Be("test");
+   }
 }

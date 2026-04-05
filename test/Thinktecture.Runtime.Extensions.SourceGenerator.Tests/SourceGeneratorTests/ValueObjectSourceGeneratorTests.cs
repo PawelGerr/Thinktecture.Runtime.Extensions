@@ -3220,8 +3220,9 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            [ValueObject<T>]
+            [ValueObject<TypeParamRef1>]
             public partial class GenericKeyValueObject<T>
+               where T : notnull
             {
             }
          }
@@ -3234,5 +3235,186 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
                         "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_struct_constrained_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : struct
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                    ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_class_constrained_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : class
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                    ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_unconstraint_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : notnull
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_struct_constraint_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : struct
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_class_constraint_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : class
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_INumber_constrained_generic_key()
+   {
+      var source = """
+
+         using System;
+         using System.Numerics;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<TypeParamRef1>]
+            public partial class GenericKeyValueObject<T>
+               where T : INumber<T>
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                    ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.Parsable.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.SpanParsable.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.Comparable.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.Formattable.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.AdditionOperators.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.SubtractionOperators.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.MultiplyOperators.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.DivisionOperators.g.cs");
    }
 }

@@ -3475,8 +3475,9 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            [SmartEnum<T>]
+            [SmartEnum<TypeParamRef1>]
             public partial class TestEnum<T>
+               where T : notnull
             {
                public static readonly TestEnum<T> Item1 = default!;
                public static readonly TestEnum<T> Item2 = default!;
@@ -3491,5 +3492,120 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
       await VerifyAsync(outputs,
                         "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
                         "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_struct_constrained_generic_key_type()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<TypeParamRef1>]
+            public partial class TestEnum<T>
+               where T : struct
+            {
+               public static readonly TestEnum<T> Item1 = default!;
+               public static readonly TestEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source,
+                                                                  [typeof(ISmartEnum<>).Assembly]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_class_constrained_generic_key_type()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<TypeParamRef1>]
+            public partial class TestEnum<T>
+               where T : class
+            {
+               public static readonly TestEnum<T> Item1 = default!;
+               public static readonly TestEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source,
+                                                                  [typeof(ISmartEnum<>).Assembly]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_IParsable_constrained_generic_key_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<TypeParamRef1>]
+            public partial class TestEnum<T>
+               where T : notnull, IParsable<T>
+            {
+               public static readonly TestEnum<T> Item1 = default!;
+               public static readonly TestEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source,
+                                                                  [typeof(ISmartEnum<>).Assembly],
+                                                                  ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Parsable.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_for_INumber_constrained_generic_key_type()
+   {
+      var source = """
+         using System;
+         using System.Numerics;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<TypeParamRef1>]
+            public partial class TestEnum<T>
+               where T : INumber<T>
+            {
+               public static readonly TestEnum<T> Item1 = default!;
+               public static readonly TestEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source,
+                                                                  [typeof(ISmartEnum<>).Assembly],
+                                                                  ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.Formattable.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.ComparisonOperators.g.cs");
    }
 }

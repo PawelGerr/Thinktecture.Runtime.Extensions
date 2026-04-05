@@ -77,4 +77,28 @@ public class Validate
 
       item.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_return_null_for_valid_key_for_generic_key_based_unconstraint_enum()
+   {
+      var validationError = SmartEnum_GenericKeyBasedUnconstraint<int>.Validate(1, null, out var item);
+      validationError.Should().BeNull();
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+   }
+
+   [Fact]
+   public void Should_return_error_for_unknown_key_for_generic_key_based_unconstraint_enum()
+   {
+      var validationError = SmartEnum_GenericKeyBasedUnconstraint<int>.Validate(99, null, out var item);
+      validationError.Should().NotBeNull();
+      item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_null_for_valid_key_for_generic_key_based_class_constraint_enum()
+   {
+      var validationError = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Validate(SmartEnumClassConstraintKey.Item1, null, out var item);
+      validationError.Should().BeNull();
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1);
+   }
 }

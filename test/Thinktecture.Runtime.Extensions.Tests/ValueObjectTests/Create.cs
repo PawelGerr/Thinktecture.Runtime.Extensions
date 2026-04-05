@@ -198,4 +198,55 @@ public class Create
       obj.Should().NotBeNull();
       obj.Property.Should().Be(ts);
    }
+
+   [Fact]
+   public void Should_create_generic_key_based_reference_value_object_unconstraint_with_int()
+   {
+      var obj = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42);
+
+      obj.Should().NotBeNull();
+      ((int?)obj).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_create_generic_key_based_reference_value_object_class_constraint_with_string()
+   {
+      var obj = GenericKeyBasedReferenceValueObjectClassConstraint<string>.Create("test");
+
+      obj.Should().NotBeNull();
+      ((string)obj).Should().Be("test");
+   }
+
+   [Fact]
+   public void Should_create_generic_key_based_reference_value_object_struct_constraint_with_int()
+   {
+      var obj = GenericKeyBasedReferenceValueObjectStructConstraint<int>.Create(42);
+
+      obj.Should().NotBeNull();
+      ((int?)obj).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_create_generic_key_based_struct_value_object_with_int()
+   {
+      var obj = GenericKeyBasedStructValueObject<int>.Create(42);
+
+      ((int?)obj).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_create_generic_key_based_struct_value_object_class_constraint_with_string()
+   {
+      var obj = GenericKeyBasedStructValueObjectClassConstraint<string>.Create("test");
+
+      ((string)obj).Should().Be("test");
+   }
+
+   [Fact]
+   public void Should_create_generic_key_based_struct_value_object_struct_constraint_with_int()
+   {
+      var obj = GenericKeyBasedStructValueObjectStructConstraint<int>.Create(42);
+
+      ((int?)obj).Should().Be(42);
+   }
 }

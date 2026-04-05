@@ -68,4 +68,16 @@ public class EqualityOperator
       (item1 == item2).Should().BeFalse();
       (item1 != item2).Should().BeTrue();
    }
+
+   [Fact]
+   public void Should_return_true_for_same_item_for_generic_key_based_unconstraint_enum()
+   {
+      (SmartEnum_GenericKeyBasedUnconstraint<int>.Item1 == SmartEnum_GenericKeyBasedUnconstraint<int>.Item1).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_return_false_for_different_items_for_generic_key_based_unconstraint_enum()
+   {
+      (SmartEnum_GenericKeyBasedUnconstraint<int>.Item1 == SmartEnum_GenericKeyBasedUnconstraint<int>.Item2).Should().BeFalse();
+   }
 }

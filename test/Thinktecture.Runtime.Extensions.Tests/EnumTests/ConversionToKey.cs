@@ -46,4 +46,14 @@ public class ConversionToKey
       value = SmartEnum_Generic_StringBased<int>.Item2;
       value.Should().Be("item2");
    }
+
+   [Fact]
+   public void Should_convert_to_key_for_generic_key_based_unconstraint_enum()
+   {
+      int value = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1;
+      value.Should().Be(1);
+
+      value = SmartEnum_GenericKeyBasedUnconstraint<int>.Item2;
+      value.Should().Be(2);
+   }
 }

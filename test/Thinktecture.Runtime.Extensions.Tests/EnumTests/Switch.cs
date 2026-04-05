@@ -112,6 +112,36 @@ public class Switch
       }
 
       [Fact]
+      public void Should_execute_correct_action_for_generic_key_based_unconstraint_enum()
+      {
+         SmartEnum_GenericKeyBasedUnconstraint<int> calledOn = null;
+
+         SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Switch(
+            item1: () => calledOn = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1,
+            item2: () => calledOn = SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+
+         calledOn.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+
+         SmartEnum_GenericKeyBasedUnconstraint<int>.Item2.Switch(
+            item1: () => calledOn = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1,
+            item2: () => calledOn = SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+
+         calledOn.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+      }
+
+      [Fact]
+      public void Should_execute_correct_action_for_generic_key_based_class_constraint_enum()
+      {
+         SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey> calledOn = null;
+
+         SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1.Switch(
+            item1: () => calledOn = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1,
+            item2: () => calledOn = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item2);
+
+         calledOn.Should().BeSameAs(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1);
+      }
+
+      [Fact]
       public void Should_not_report_issue_when_using_disposables()
       {
          using var disposable = Empty.Disposable();
@@ -235,6 +265,26 @@ public class Switch
          SmartEnum_Keyless.Item1.Switch(item1: () => SmartEnum_Keyless.Item1,
                                         item2: () => SmartEnum_Keyless.Item2)
                           .Should().Be(SmartEnum_Keyless.Item1);
+      }
+
+      [Fact]
+      public void Should_return_correct_result_for_generic_key_based_unconstraint_enum()
+      {
+         SmartEnum_GenericKeyBasedUnconstraint<int>.Item1.Switch(item1: () => 1,
+                                                                 item2: () => 2)
+                                                        .Should().Be(1);
+
+         SmartEnum_GenericKeyBasedUnconstraint<int>.Item2.Switch(item1: () => 1,
+                                                                 item2: () => 2)
+                                                        .Should().Be(2);
+      }
+
+      [Fact]
+      public void Should_return_correct_result_for_generic_key_based_class_constraint_enum()
+      {
+         SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1.Switch(item1: () => 1,
+                                                                                           item2: () => 2)
+                                                                                    .Should().Be(1);
       }
 
       [Fact]

@@ -194,8 +194,25 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullable(keyMember).Append("(").AppendTypeFullyQualifiedNullable(_state).Append(@" obj)
+      {");
+
+      if (keyMember is { IsTypeParameter: true, IsValueType: false, IsReferenceType: false })
       {
-         return obj?.").Append(keyMember.Name).Append(@";
+         _sb.Append(@"
+         return obj is null ? default(").AppendTypeFullyQualified(keyMember).Append(") : obj.");
+
+         if (_state.IsValueType)
+            _sb.Append("Value.");
+
+         _sb.Append(keyMember.Name);
+      }
+      else
+      {
+         _sb.Append(@"
+         return obj?.").Append(keyMember.Name);
+      }
+
+      _sb.Append(@";
       }");
 
       if (_state.IsReferenceType || keyMember.MayBeNull())
@@ -257,7 +274,7 @@ namespace ").Append(_state.Namespace).Append(@"
           || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
-      var bothAreReferenceTypes = _state.IsReferenceType && keyMember.MayBeNull();
+      var bothAreReferenceTypes = _state.IsReferenceType && !keyMember.IsValueType; // reference type or generic without "struct" constraint
       var nullableQuestionMark = bothAreReferenceTypes ? "?" : null;
 
       _sb.Append(@"

@@ -7,6 +7,8 @@ using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
 
+// ReSharper disable InconsistentNaming
+
 namespace Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests;
 
 public class RoundTrip : JsonTestsBase
@@ -228,6 +230,30 @@ public class RoundTrip : JsonTestsBase
 
       var deserialized = JsonConvert.DeserializeObject<TimeSpanBasedStructValueObject>(json);
       deserialized.Should().Be(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_generic_key_based_unconstraint_smart_enum()
+   {
+      var original = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1;
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("1");
+
+      var deserialized = JsonConvert.DeserializeObject<SmartEnum_GenericKeyBasedUnconstraint<int>>(json);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_generic_key_based_struct_constraint_smart_enum()
+   {
+      var original = SmartEnum_GenericKeyBasedStructConstraint<int>.Item2;
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be("2");
+
+      var deserialized = JsonConvert.DeserializeObject<SmartEnum_GenericKeyBasedStructConstraint<int>>(json);
+      deserialized.Should().BeSameAs(original);
    }
 
    private struct TestStruct<T>

@@ -38,4 +38,13 @@ public class GetHashCode
 
       item1.GetHashCode().Should().Be(item1Again.GetHashCode());
    }
+
+   [Fact]
+   public void Should_return_same_hashcode_for_same_item_for_generic_key_based_unconstraint_enum()
+   {
+      var item1 = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1;
+      var item1Again = SmartEnum_GenericKeyBasedUnconstraint<int>.Get(1);
+
+      item1.GetHashCode().Should().Be(item1Again.GetHashCode());
+   }
 }

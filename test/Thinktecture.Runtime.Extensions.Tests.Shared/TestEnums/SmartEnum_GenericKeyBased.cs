@@ -1,13 +1,12 @@
-// TODO: Uncomment after TypeParamRef support is implemented for SmartEnum (see typeparamref-for-smartenum-valueobject.md)
-// Currently blocked by CS8968: C# prohibits type parameters as attribute type arguments.
-// The TypeParamRef placeholder pattern (already used by unions) must be extended to SmartEnum first.
+using System.Numerics;
 
-// namespace Thinktecture.Runtime.Tests.TestEnums;
-//
-// // ReSharper disable once InconsistentNaming
-// [SmartEnum<TypeParamRef1>]
-// public partial class SmartEnum_GenericKeyBased<T>
-// {
-//    public static readonly SmartEnum_GenericKeyBased<T> Item1 = default!;
-//    public static readonly SmartEnum_GenericKeyBased<T> Item2 = default!;
-// }
+namespace Thinktecture.Runtime.Tests.TestEnums;
+
+// ReSharper disable once InconsistentNaming
+[SmartEnum<TypeParamRef1>]
+public partial class SmartEnum_GenericKeyBasedUnconstraint<T>
+   where T : INumber<T>
+{
+   public static readonly SmartEnum_GenericKeyBasedUnconstraint<T> Item1 = new(T.One);
+   public static readonly SmartEnum_GenericKeyBasedUnconstraint<T> Item2 = new(T.One + T.One);
+}

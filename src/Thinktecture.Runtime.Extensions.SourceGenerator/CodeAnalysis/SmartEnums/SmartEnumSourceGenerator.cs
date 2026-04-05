@@ -332,6 +332,20 @@ public sealed class SmartEnumSourceGenerator()
             if (keyMemberType.TypeKind == TypeKind.Error)
                return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Smart enum key member type could not be resolved"]);
 
+            var maxTypeParamRefIndex = keyMemberType.GetMaxTypeParamRefIndex();
+
+            if (maxTypeParamRefIndex > 0)
+            {
+               if (type.Arity == 0)
+                  return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeParamRefOnNonGenericUnion, [maxTypeParamRefIndex, type.ToMinimallyQualifiedDisplayString()]);
+
+               if (maxTypeParamRefIndex > type.Arity)
+                  return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.TypeParamRefIndexOutOfRange, [maxTypeParamRefIndex, type.ToMinimallyQualifiedDisplayString(), type.Arity]);
+
+               var (resolved, _) = keyMemberType.ResolveTypeParamRefs(type.TypeParameters, context.SemanticModel.Compilation);
+               keyMemberType = resolved;
+            }
+
             if (keyMemberType.NullableAnnotation == NullableAnnotation.Annotated || keyMemberType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
                return null; // Analyzer emits DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable
          }
@@ -361,7 +375,6 @@ public sealed class SmartEnumSourceGenerator()
                                                            attributeInfo.ValidationError,
                                                            new SmartEnumSettings(settings, attributeInfo),
                                                            type.FindDerivedInnerTypes().Count > 0,
-                                                           type.GetGenericTypeParameters(),
                                                            cancellationToken);
 
          return new ValidSourceGenState(enumState, settings, keyMember, attributeInfo);

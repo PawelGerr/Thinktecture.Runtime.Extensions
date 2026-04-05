@@ -469,4 +469,28 @@ public class RoundTrip : JsonTestsBase
          deserialized.Should().BeSameAs(original);
       }
    }
+
+   [Fact]
+   public void Should_roundtrip_generic_key_based_unconstraint_smart_enum()
+   {
+      var original = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1;
+
+      var json = JsonSerializer.Serialize(original);
+      json.Should().Be("1");
+
+      var deserialized = JsonSerializer.Deserialize<SmartEnum_GenericKeyBasedUnconstraint<int>>(json);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_generic_key_based_struct_constraint_smart_enum()
+   {
+      var original = SmartEnum_GenericKeyBasedStructConstraint<int>.Item1;
+
+      var json = JsonSerializer.Serialize(original);
+      json.Should().Be("1");
+
+      var deserialized = JsonSerializer.Deserialize<SmartEnum_GenericKeyBasedStructConstraint<int>>(json);
+      deserialized.Should().BeSameAs(original);
+   }
 }

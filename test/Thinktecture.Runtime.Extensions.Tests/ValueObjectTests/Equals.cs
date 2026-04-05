@@ -183,5 +183,71 @@ public class Equals
       (obj1 == obj2).Should().BeFalse();
       (obj1 != obj2).Should().BeTrue();
    }
+
+   [Fact]
+   public void Should_be_equal_for_same_value_for_generic_key_based_reference_value_object_unconstraint()
+   {
+      var obj1 = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42);
+      var obj2 = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42);
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_not_be_equal_for_different_values_for_generic_key_based_reference_value_object_unconstraint()
+   {
+      var obj1 = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(42);
+      var obj2 = GenericKeyBasedReferenceValueObjectUnconstraint<int>.Create(99);
+
+      obj1.Should().NotBe(obj2);
+      (obj1 == obj2).Should().BeFalse();
+      (obj1 != obj2).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_be_equal_for_same_value_for_generic_key_based_reference_value_object_class_constraint()
+   {
+      var obj1 = GenericKeyBasedReferenceValueObjectClassConstraint<string>.Create("test");
+      var obj2 = GenericKeyBasedReferenceValueObjectClassConstraint<string>.Create("test");
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_be_equal_for_same_value_for_generic_key_based_struct_value_object()
+   {
+      var obj1 = GenericKeyBasedStructValueObject<int>.Create(42);
+      var obj2 = GenericKeyBasedStructValueObject<int>.Create(42);
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_not_be_equal_for_different_values_for_generic_key_based_struct_value_object()
+   {
+      var obj1 = GenericKeyBasedStructValueObject<int>.Create(42);
+      var obj2 = GenericKeyBasedStructValueObject<int>.Create(99);
+
+      obj1.Should().NotBe(obj2);
+      (obj1 == obj2).Should().BeFalse();
+      (obj1 != obj2).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_be_equal_for_same_value_for_generic_key_based_struct_value_object_class_constraint()
+   {
+      var obj1 = GenericKeyBasedStructValueObjectClassConstraint<string>.Create("test");
+      var obj2 = GenericKeyBasedStructValueObjectClassConstraint<string>.Create("test");
+
+      obj1.Should().Be(obj2);
+      (obj1 == obj2).Should().BeTrue();
+      (obj1 != obj2).Should().BeFalse();
+   }
 }
 

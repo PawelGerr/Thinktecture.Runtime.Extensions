@@ -63,6 +63,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.AdHocUnionMustHaveAtLeastTwoMemberTypes,
       DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch,
       DiagnosticsDescriptors.UseSwitchMapWithStaticLambda,
+      DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint,
    ];
 
    /// <inheritdoc />
@@ -604,6 +605,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
+      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, type, tdsLocation))
+         return;
+
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(
@@ -1091,6 +1095,9 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
+      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, enumType, tdsLocation))
+         return;
+
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable, tdsLocation);
@@ -1386,6 +1393,41 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
+   private static bool ReportIfTypeParamRefMissingNotnullConstraint(
+      in SymbolAnalysisContext context,
+      ITypeSymbol keyType,
+      INamedTypeSymbol type,
+      Location tdsLocation)
+   {
+      var maxTypeParamRefIndex = keyType.GetMaxTypeParamRefIndex();
+
+      if (maxTypeParamRefIndex <= 0 || type.Arity == 0 || maxTypeParamRefIndex > type.Arity)
+         return false;
+
+      var (resolved, _) = keyType.ResolveTypeParamRefs(type.TypeParameters, context.Compilation);
+
+      if (resolved is ITypeParameterSymbol { HasNotNullConstraint: false, HasReferenceTypeConstraint: false, HasValueTypeConstraint: false } resolvedTypeParam
+          && !HasNonNullableTypeConstraint(resolvedTypeParam))
+      {
+         var properties = ImmutableDictionary.Create<string, string?>().Add("TypeParamName", resolvedTypeParam.Name);
+         ReportDiagnostic(context, DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint, tdsLocation, properties, resolvedTypeParam.Name, type.ToMinimallyQualifiedDisplayString());
+         return true;
+      }
+
+      return false;
+   }
+
+   private static bool HasNonNullableTypeConstraint(ITypeParameterSymbol typeParam)
+   {
+      foreach (var constraintType in typeParam.ConstraintTypes)
+      {
+         if (constraintType.NullableAnnotation == NullableAnnotation.NotAnnotated)
+            return true;
+      }
+
+      return false;
+   }
+
    private static void ReportDiagnostic(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0));
@@ -1399,6 +1441,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
    private static void ReportDiagnostic(in SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1)
    {
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location, arg0, arg1));
+   }
+
+   private static void ReportDiagnostic(in SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, ImmutableDictionary<string, string?> properties, string arg0, string arg1)
+   {
+      context.ReportDiagnostic(Diagnostic.Create(descriptor, location, properties, arg0, arg1));
    }
 
    private static void ReportDiagnostic(SymbolAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string arg0, string arg1, string arg2)

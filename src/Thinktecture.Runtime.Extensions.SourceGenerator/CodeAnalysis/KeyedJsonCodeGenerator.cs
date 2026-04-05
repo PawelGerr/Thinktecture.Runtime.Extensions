@@ -133,7 +133,20 @@ file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serializat
          }
          else
          {
-            _sb.Append("ThinktectureJsonConverter<,,>).MakeGenericType(typeToConvert, typeof(").Append(keyType).Append("), typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
+            var keyTypeParamIndex = _state.FindGenericParameterIndex(keyType);
+
+            _sb.Append("ThinktectureJsonConverter<,,>).MakeGenericType(typeToConvert, ");
+
+            if (keyTypeParamIndex is not null)
+            {
+               _sb.Append("typeToConvert.GetGenericArguments()[").Append(keyTypeParamIndex.Value).Append("]");
+            }
+            else
+            {
+               _sb.Append("typeof(").Append(keyType).Append(")");
+            }
+
+            _sb.Append(", typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append("))");
          }
 
          _sb.Append(";");

@@ -55,4 +55,14 @@ public class ConversionFromKey
       item = (SmartEnum_Generic_StringBased<int>)"item2";
       item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item2);
    }
+
+   [Fact]
+   public void Should_convert_from_key_for_generic_key_based_unconstraint_enum()
+   {
+      var item = (SmartEnum_GenericKeyBasedUnconstraint<int>)1;
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+
+      item = (SmartEnum_GenericKeyBasedUnconstraint<int>)2;
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+   }
 }

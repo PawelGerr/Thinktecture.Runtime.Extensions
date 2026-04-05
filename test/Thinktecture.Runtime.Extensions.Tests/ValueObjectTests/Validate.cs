@@ -30,4 +30,23 @@ public class Validate
 
       boundary.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_validate_generic_key_based_reference_value_object_unconstraint()
+   {
+      GenericKeyBasedReferenceValueObjectUnconstraint<int>.Validate(42, null, out var obj)
+                                                          .Should().BeNull();
+
+      obj.Should().NotBeNull();
+      ((int?)obj).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_validate_generic_key_based_struct_value_object()
+   {
+      GenericKeyBasedStructValueObject<int>.Validate(42, null, out var obj)
+                                           .Should().BeNull();
+
+      ((int?)obj).Should().Be(42);
+   }
 }

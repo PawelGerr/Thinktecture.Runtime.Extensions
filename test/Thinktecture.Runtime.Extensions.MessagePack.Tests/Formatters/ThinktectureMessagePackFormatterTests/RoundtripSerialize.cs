@@ -661,6 +661,50 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
+   public void Should_roundtrip_generic_key_based_unconstraint_smart_enum()
+   {
+      var item1 = SmartEnum_GenericKeyBasedUnconstraint<int>.Item1;
+      var item2 = SmartEnum_GenericKeyBasedUnconstraint<int>.Item2;
+
+      var bytes1 = MessagePackSerializer.Serialize(item1, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized1 = MessagePackSerializer.Deserialize<SmartEnum_GenericKeyBasedUnconstraint<int>>(bytes1, cancellationToken: TestContext.Current.CancellationToken);
+      deserialized1.Should().BeSameAs(item1);
+
+      var bytes2 = MessagePackSerializer.Serialize(item2, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized2 = MessagePackSerializer.Deserialize<SmartEnum_GenericKeyBasedUnconstraint<int>>(bytes2, cancellationToken: TestContext.Current.CancellationToken);
+      deserialized2.Should().BeSameAs(item2);
+
+      // Verify serialized value matches the key
+      var key1 = MessagePackSerializer.Deserialize<int>(bytes1, cancellationToken: TestContext.Current.CancellationToken);
+      key1.Should().Be(1);
+
+      var key2 = MessagePackSerializer.Deserialize<int>(bytes2, cancellationToken: TestContext.Current.CancellationToken);
+      key2.Should().Be(2);
+   }
+
+   [Fact]
+   public void Should_roundtrip_generic_key_based_struct_constraint_smart_enum()
+   {
+      var item1 = SmartEnum_GenericKeyBasedStructConstraint<int>.Item1;
+      var item2 = SmartEnum_GenericKeyBasedStructConstraint<int>.Item2;
+
+      var bytes1 = MessagePackSerializer.Serialize(item1, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized1 = MessagePackSerializer.Deserialize<SmartEnum_GenericKeyBasedStructConstraint<int>>(bytes1, cancellationToken: TestContext.Current.CancellationToken);
+      deserialized1.Should().BeSameAs(item1);
+
+      var bytes2 = MessagePackSerializer.Serialize(item2, cancellationToken: TestContext.Current.CancellationToken);
+      var deserialized2 = MessagePackSerializer.Deserialize<SmartEnum_GenericKeyBasedStructConstraint<int>>(bytes2, cancellationToken: TestContext.Current.CancellationToken);
+      deserialized2.Should().BeSameAs(item2);
+
+      // Verify serialized value matches the key
+      var key1 = MessagePackSerializer.Deserialize<int>(bytes1, cancellationToken: TestContext.Current.CancellationToken);
+      key1.Should().Be(1);
+
+      var key2 = MessagePackSerializer.Deserialize<int>(bytes2, cancellationToken: TestContext.Current.CancellationToken);
+      key2.Should().Be(2);
+   }
+
+   [Fact]
    public void Should_roundtrip_serialize_keyed_smart_enum_nested_in_generic_class()
    {
       RoundTrip(SmartEnums_NestedInGenericClass.GenericOuter<int>.KeyedSmartEnum.Item);

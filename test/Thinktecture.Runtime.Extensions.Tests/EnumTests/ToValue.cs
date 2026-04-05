@@ -13,4 +13,11 @@ public class ToValue
       ((IConvertible<int>)SmartEnum_Factory.Item1).ToValue()
                                                            .Should().Be(1);
    }
+
+   [Fact]
+   public void Should_return_key_for_generic_key_based_unconstraint_enum()
+   {
+      ((IConvertible<int>)SmartEnum_GenericKeyBasedUnconstraint<int>.Item1).ToValue()
+                                                                          .Should().Be(1);
+   }
 }

@@ -30,7 +30,11 @@ public class AppendGenericConstraints
 
       var t = new StringBuilderTestHelpers.FakeHasGenerics(gp1, gp2);
       sb.AppendGenericConstraints(t, prefix: "   ");
-      sb.ToString().Should().Be("\n   where T : class, new()\n   where U : global::System.IDisposable");
+      sb.ToString().Should().Be("""
+
+                                   where T : class, new()
+                                   where U : global::System.IDisposable
+                                """);
    }
 
    [Fact]

@@ -132,4 +132,23 @@ public class TryCreate
       obj.Should().NotBeNull();
       obj!.Property.Should().Be(ts);
    }
+
+   [Fact]
+   public void Should_try_create_generic_key_based_reference_value_object_unconstraint()
+   {
+      var result = GenericKeyBasedReferenceValueObjectUnconstraint<int>.TryCreate(42, out var obj);
+
+      result.Should().BeTrue();
+      obj.Should().NotBeNull();
+      ((int?)obj).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_try_create_generic_key_based_struct_value_object()
+   {
+      var result = GenericKeyBasedStructValueObject<int>.TryCreate(42, out var obj);
+
+      result.Should().BeTrue();
+      ((int?)obj).Should().Be(42);
+   }
 }

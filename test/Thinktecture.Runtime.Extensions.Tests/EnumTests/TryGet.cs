@@ -81,4 +81,32 @@ public class TryGet
       SmartEnum_Generic_StringBased<int>.TryGet("nonexistent", out item).Should().BeFalse();
       item.Should().BeNull();
    }
+
+   [Fact]
+   public void Should_return_true_for_valid_key_for_generic_key_based_unconstraint_enum()
+   {
+      SmartEnum_GenericKeyBasedUnconstraint<int>.TryGet(1, out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+   }
+
+   [Fact]
+   public void Should_return_true_for_valid_key_for_generic_key_based_struct_constraint_enum()
+   {
+      SmartEnum_GenericKeyBasedStructConstraint<int>.TryGet(1, out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedStructConstraint<int>.Item1);
+   }
+
+   [Fact]
+   public void Should_return_false_for_unknown_key_for_generic_key_based_unconstraint_enum()
+   {
+      SmartEnum_GenericKeyBasedUnconstraint<int>.TryGet(99, out var item).Should().BeFalse();
+      item.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_true_for_valid_key_for_generic_key_based_class_constraint_enum()
+   {
+      SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.TryGet(SmartEnumClassConstraintKey.Item1, out var item).Should().BeTrue();
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1);
+   }
 }

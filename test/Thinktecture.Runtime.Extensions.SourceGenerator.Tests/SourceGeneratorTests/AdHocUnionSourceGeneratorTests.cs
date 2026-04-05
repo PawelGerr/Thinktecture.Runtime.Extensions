@@ -1292,7 +1292,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
       result.Outputs.Should().BeEmpty();
 
       result.GeneratorDiagnostics.Should().ContainSingle(d => d.Id == "TTRESG071")
-            .Which.GetMessage().Should().Be("TypeParamRef3 references type parameter at index 3, but the union type 'TestUnion<T>' has only 1 type parameter(s)");
+            .Which.GetMessage().Should().Be("TypeParamRef3 references type parameter at index 3, but the type 'TestUnion<T>' has only 1 type parameter(s)");
    }
 
    [Fact]
@@ -1312,7 +1312,7 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
       result.Outputs.Should().BeEmpty();
 
       result.GeneratorDiagnostics.Should().ContainSingle(d => d.Id == "TTRESG072")
-            .Which.GetMessage().Should().Be("TypeParamRef1 cannot be used on non-generic ad-hoc union 'TestUnion'");
+            .Which.GetMessage().Should().Be("TypeParamRef1 cannot be used on non-generic type 'TestUnion'");
    }
 
 #if NET9_0_OR_GREATER

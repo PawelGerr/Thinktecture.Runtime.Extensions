@@ -37,8 +37,22 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
                          || type is { IsValueType: true, NullableAnnotation: NullableAnnotation.Annotated };
       IsToStringReturnTypeNullable = IsToStringNullable(type);
 
-      // Check for implemented interfaces
-      foreach (var @interface in type.AllInterfaces)
+      // Check for implemented interfaces.
+      IEnumerable<INamedTypeSymbol> interfaces = type.AllInterfaces;
+
+      // For type parameters, AllInterfaces is empty — check ConstraintTypes and their AllInterfaces instead.
+      if (type is ITypeParameterSymbol typeParameter)
+      {
+         foreach (var constraintType in typeParameter.ConstraintTypes)
+         {
+            if (constraintType is INamedTypeSymbol { TypeKind: TypeKind.Interface } constraintInterface)
+               interfaces = interfaces.Append(constraintInterface);
+
+            interfaces = interfaces.Concat(constraintType.AllInterfaces);
+         }
+      }
+
+      foreach (var @interface in interfaces)
       {
          if (@interface.IsFormattableInterface())
          {

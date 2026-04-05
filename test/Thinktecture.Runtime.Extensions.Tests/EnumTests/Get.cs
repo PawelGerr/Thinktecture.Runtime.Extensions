@@ -69,4 +69,41 @@ public class Get
       item = SmartEnum_Generic_StringBased<int>.Get("item2");
       item.Should().BeSameAs(SmartEnum_Generic_StringBased<int>.Item2);
    }
+
+   [Fact]
+   public void Should_return_item_with_provided_key_for_generic_key_based_unconstraint_enum()
+   {
+      var item = SmartEnum_GenericKeyBasedUnconstraint<int>.Get(1);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item1);
+
+      item = SmartEnum_GenericKeyBasedUnconstraint<int>.Get(2);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedUnconstraint<int>.Item2);
+   }
+
+   [Fact]
+   public void Should_return_item_with_provided_key_for_generic_key_based_struct_constraint_enum()
+   {
+      var item = SmartEnum_GenericKeyBasedStructConstraint<int>.Get(1);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedStructConstraint<int>.Item1);
+
+      item = SmartEnum_GenericKeyBasedStructConstraint<int>.Get(2);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedStructConstraint<int>.Item2);
+   }
+
+   [Fact]
+   public void Should_throw_for_unknown_key_for_generic_key_based_unconstraint_enum()
+   {
+      Action action = () => SmartEnum_GenericKeyBasedUnconstraint<int>.Get(99);
+      action.Should().Throw<UnknownSmartEnumIdentifierException>();
+   }
+
+   [Fact]
+   public void Should_return_item_with_provided_key_for_generic_key_based_class_constraint_enum()
+   {
+      var item = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Get(SmartEnumClassConstraintKey.Item1);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item1);
+
+      item = SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Get(SmartEnumClassConstraintKey.Item2);
+      item.Should().BeSameAs(SmartEnum_GenericKeyBasedClassConstraint<SmartEnumClassConstraintKey>.Item2);
+   }
 }

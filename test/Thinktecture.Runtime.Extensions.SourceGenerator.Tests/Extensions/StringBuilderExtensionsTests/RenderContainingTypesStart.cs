@@ -23,7 +23,11 @@ public class RenderContainingTypesStart
       var sb = new StringBuilder();
       var ct = new ContainingTypeState("Outer", isReference, isRecord, []);
       sb.RenderContainingTypesStart([ct]);
-      sb.ToString().Should().Be($"\npartial {kind} Outer\n{{");
+      sb.ToString().Should().Be($$"""
+
+                                partial {{kind}} Outer
+                                {
+                                """);
    }
 
    [Fact]
@@ -33,6 +37,10 @@ public class RenderContainingTypesStart
       var gen = new GenericTypeParameterState("T", []);
       var ct = new ContainingTypeState("Outer", isReferenceType: true, isRecord: false, genericParameters: [gen]);
       sb.RenderContainingTypesStart([ct]);
-      sb.ToString().Should().Be("\npartial class Outer<T>\n{");
+      sb.ToString().Should().Be("""
+
+                                partial class Outer<T>
+                                {
+                                """);
    }
 }
