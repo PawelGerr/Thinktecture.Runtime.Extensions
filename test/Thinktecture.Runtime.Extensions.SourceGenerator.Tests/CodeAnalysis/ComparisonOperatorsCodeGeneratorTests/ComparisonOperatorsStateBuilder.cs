@@ -57,6 +57,12 @@ public class ComparisonOperatorsStateBuilder
       return this;
    }
 
+   public ComparisonOperatorsStateBuilder WithUnconstrainedTypeParameterKeyMember(string name = "Key")
+   {
+      _keyMember = CreateUnconstrainedTypeParameterKeyMember(name);
+      return this;
+   }
+
    public ComparisonOperatorsStateBuilder WithCreateFactoryMethodName(string name)
    {
       _createFactoryMethodName = name;
@@ -92,6 +98,20 @@ public class ComparisonOperatorsStateBuilder
       member.TypeFullyQualified.Returns(typeFullyQualified);
       member.SpecialType.Returns(specialType);
       member.IsReferenceType.Returns(isReferenceType);
+      member.NullableAnnotation.Returns(NullableAnnotation.None);
+      return member;
+   }
+
+   private static IMemberInformation CreateUnconstrainedTypeParameterKeyMember(string name)
+   {
+      var member = Substitute.For<IMemberInformation>();
+      member.Name.Returns(name);
+      member.TypeFullyQualified.Returns("T");
+      member.SpecialType.Returns(SpecialType.None);
+      member.IsReferenceType.Returns(false);
+      member.IsValueType.Returns(false);
+      member.IsTypeParameter.Returns(true);
+      member.IsNullableStruct.Returns(false);
       member.NullableAnnotation.Returns(NullableAnnotation.None);
       return member;
    }

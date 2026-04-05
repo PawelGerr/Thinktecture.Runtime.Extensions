@@ -9,7 +9,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
 {
    public string TypeFullyQualified { get; }
    public string TypeMinimallyQualified { get; }
-   public bool DisallowsDefaultValue => IsValueType && (!Settings.AllowDefaultStructs || KeyMember.IsReferenceType);
+   public bool DisallowsDefaultValue => IsValueType && (!Settings.AllowDefaultStructs || KeyMember.MayBeNull());
    public ImmutableArray<ContainingTypeState> ContainingTypes { get; }
 
    public string? Namespace { get; }

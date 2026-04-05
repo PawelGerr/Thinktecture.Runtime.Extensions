@@ -67,6 +67,16 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       }
       else
       {
+         if (state.KeyMember.MayBeNull())
+         {
+            sb.Append(@"
+      if(this.").Append(state.KeyMember.Name).Append(@" is null)
+         return obj.").Append(state.KeyMember.Name).Append(@" is null ? 0 : -1;
+      if(obj.").Append(state.KeyMember.Name).Append(@" is null)
+         return 1;
+");
+         }
+
          sb.Append(@"
       return ((global::System.IComparable<").AppendTypeFullyQualified(state.KeyMember).Append(">)this.").Append(state.KeyMember.Name).Append(").CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
       }

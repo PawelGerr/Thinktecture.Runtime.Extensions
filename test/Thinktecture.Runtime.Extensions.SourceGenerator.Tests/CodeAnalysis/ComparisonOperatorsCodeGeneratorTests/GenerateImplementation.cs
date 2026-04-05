@@ -632,4 +632,31 @@ public class GenerateImplementation
       // Assert
       await Verifier.Verify(sb.ToString());
    }
+
+   [Fact]
+   public async Task WithKeyTypeOverloads_UnconstrainedTypeParameterKey_GeneratesNullChecksForKeyMember()
+   {
+      // Arrange
+      var state = new ComparisonOperatorsStateBuilder()
+                  .WithReferenceType("global::Thinktecture.Tests.GenericType", "GenericType")
+                  .WithUnconstrainedTypeParameterKeyMember("_value")
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      ComparisonOperatorsCodeGenerator.TryGet(
+         ImplementedComparisonOperators.All,
+         Thinktecture.CodeAnalysis.OperatorsGeneration.DefaultWithKeyTypeOverloads,
+         null,
+         out var generator);
+
+      // Act
+      generator!.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("global::System.ArgumentNullException.ThrowIfNull(left)");
+      result.Should().Contain("global::System.ArgumentNullException.ThrowIfNull(right)");
+      await Verifier.Verify(result);
+   }
 }

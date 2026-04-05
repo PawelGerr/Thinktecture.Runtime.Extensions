@@ -3207,4 +3207,32 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestValueObject.DivisionOperators.g.cs");
    }
 #endif
+
+   [Fact]
+   public async Task Should_generate_code_for_keyed_class_with_unconstrained_generic_key()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<T>]
+            public partial class GenericKeyValueObject<T>
+            {
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source,
+                                                                    [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                    ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.GenericKeyValueObject`1.ValueObject.g.cs",
+                        "Thinktecture.Tests.GenericKeyValueObject`1.EqualityComparisonOperators.g.cs");
+   }
 }

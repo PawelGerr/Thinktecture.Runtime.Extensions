@@ -507,4 +507,30 @@ public class GenerateImplementation_KeyOverloads
       result.Should().Contain("public static bool operator ==(global::Thinktecture.Tests.MyStruct obj, global::System.String? value)");
       await Verifier.Verify(result);
    }
+
+   [Fact]
+   public async Task WithReferenceType_AndUnconstrainedTypeParameterKey_GeneratesNullChecksForKeyValue()
+   {
+      // Arrange
+      var state = new EqualityComparisonOperatorsStateBuilder()
+                  .WithReferenceType("global::Thinktecture.Tests.GenericType", "GenericType")
+                  .WithUnconstrainedTypeParameterKeyMember("_key")
+                  .Build();
+
+      EqualityComparisonOperatorsCodeGenerator.TryGet(
+         Thinktecture.CodeAnalysis.OperatorsGeneration.DefaultWithKeyTypeOverloads,
+         null,
+         out var generator);
+
+      var sb = new StringBuilder();
+
+      // Act
+      generator!.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("value is null");
+      result.Should().Contain("obj._key is null ? value is null : obj._key.Equals(value)");
+      await Verifier.Verify(result);
+   }
 }

@@ -109,8 +109,8 @@ public sealed class MultiplyOperatorsCodeGenerator : IInterfaceCodeGenerator
       string? typeRightNullCheck,
       bool needsCastToResultType)
    {
-      var memberLeftNullCheck = state.KeyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
-      var memberRightNullCheck = state.KeyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
+      var memberLeftNullCheck = state.KeyMember.MayBeNull() ? _LEFT_NULL_CHECK : null;
+      var memberRightNullCheck = state.KeyMember.MayBeNull() ? _RIGHT_NULL_CHECK : null;
 
       if (_keyMemberOperators.HasOperator(ImplementedOperators.Default))
       {

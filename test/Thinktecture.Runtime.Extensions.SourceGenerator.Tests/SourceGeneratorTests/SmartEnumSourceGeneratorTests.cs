@@ -3466,4 +3466,30 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
    }
 #endif
+
+   [Fact]
+   public async Task Should_generate_for_unconstrained_generic_key_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<T>]
+            public partial class TestEnum<T>
+            {
+               public static readonly TestEnum<T> Item1 = default!;
+               public static readonly TestEnum<T> Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source,
+                                                                  [typeof(ISmartEnum<>).Assembly],
+                                                                  ["'T': an attribute type argument cannot use type parameters"]);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum`1.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum`1.EqualityComparisonOperators.g.cs");
+   }
 }

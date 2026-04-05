@@ -32,7 +32,7 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
       }
       else
       {
-         if (keyMember.IsReferenceType)
+         if (keyMember.MayBeNull())
             sb.Append("this.").Append(keyMember.Name).Append(" is null ? other.").Append(keyMember.Name).Append(" is null : ");
 
          sb.Append("this.").Append(keyMember.Name).Append(".Equals(other.").Append(keyMember.Name).Append(");");

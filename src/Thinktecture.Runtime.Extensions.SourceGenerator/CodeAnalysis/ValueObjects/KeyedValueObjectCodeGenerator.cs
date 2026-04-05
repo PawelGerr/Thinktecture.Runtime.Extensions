@@ -124,8 +124,8 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipFactoryMethods)
       {
-         var allowNullKeyMemberInput = _state.KeyMember.IsReferenceType;
-         var allowNullOutput = _state.KeyMember.IsReferenceType && _state is { IsReferenceType: true, Settings.NullInFactoryMethodsYieldsNull: true };
+         var allowNullKeyMemberInput = _state.KeyMember.MayBeNull();
+         var allowNullOutput = _state.KeyMember.MayBeNull() && _state is { IsReferenceType: true, Settings.NullInFactoryMethodsYieldsNull: true };
 
          GenerateValidateMethod(allowNullKeyMemberInput, allowNullOutput, emptyStringYieldsNull);
          GenerateCreateMethod(allowNullOutput, emptyStringYieldsNull);
@@ -198,7 +198,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return obj?.").Append(keyMember.Name).Append(@";
       }");
 
-      if (_state.IsReferenceType || keyMember.IsReferenceType)
+      if (_state.IsReferenceType || keyMember.MayBeNull())
          return;
 
       // if value object and key member are structs
@@ -224,7 +224,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (keyMember.IsInterface
           || keyMember.SpecialType == SpecialType.System_Object
-          || keyMember.IsReferenceType
+          || keyMember.MayBeNull()
           || !_state.IsReferenceType
           || _state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.None)
          return;
@@ -257,7 +257,7 @@ namespace ").Append(_state.Namespace).Append(@"
           || _state.Settings.ConversionFromKeyMemberType == ConversionOperatorsGeneration.None)
          return;
 
-      var bothAreReferenceTypes = _state.IsReferenceType && keyMember.IsReferenceType;
+      var bothAreReferenceTypes = _state.IsReferenceType && keyMember.MayBeNull();
       var nullableQuestionMark = bothAreReferenceTypes ? "?" : null;
 
       _sb.Append(@"
@@ -417,7 +417,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 ");
       }
-      else if (_state.KeyMember.IsReferenceType)
+      else if (_state.KeyMember.MayBeNull())
       {
          _sb.Append(@"
          if(").AppendEscaped(_state.KeyMember.ArgumentName).Append(@" is null)
@@ -561,6 +561,10 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(this.").Append(_state.KeyMember.Name).Append(")");
       }
+      else if (_state.KeyMember.IsTypeParameter && !_state.KeyMember.IsValueType)
+      {
+         _sb.Append("this.").Append(_state.KeyMember.Name).Append("?.GetHashCode() ?? 0");
+      }
       else
       {
          _sb.Append("this.").Append(_state.KeyMember.Name).Append(".GetHashCode()");
@@ -579,7 +583,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string").Append(_state.KeyMember.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
-         return this.").Append(_state.KeyMember.Name).Append(@".ToString();
+         return this.").Append(_state.KeyMember.Name).Append(_state.KeyMember.IsTypeParameter && !_state.KeyMember.IsValueType ? "?" : null).Append(@".ToString();
       }");
    }
 }

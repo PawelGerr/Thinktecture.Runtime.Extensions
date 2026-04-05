@@ -515,4 +515,30 @@ public class GenerateImplementation
       // Assert
       await Verifier.Verify(sb.ToString());
    }
+
+   [Fact]
+   public async Task Should_generate_null_checks_for_unconstrained_type_parameter_key()
+   {
+      // Arrange
+      var state = new SubtractionOperatorsStateBuilder()
+                  .WithReferenceType("global::Thinktecture.Tests.GenericAmount", "GenericAmount")
+                  .WithUnconstrainedTypeParameterKeyMember()
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      SubtractionOperatorsCodeGenerator.TryGet(
+         ImplementedOperators.All,
+         Thinktecture.CodeAnalysis.OperatorsGeneration.DefaultWithKeyTypeOverloads,
+         out var generator);
+
+      // Act
+      generator!.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("global::System.ArgumentNullException.ThrowIfNull(left)");
+      result.Should().Contain("global::System.ArgumentNullException.ThrowIfNull(right)");
+      await Verifier.Verify(result);
+   }
 }

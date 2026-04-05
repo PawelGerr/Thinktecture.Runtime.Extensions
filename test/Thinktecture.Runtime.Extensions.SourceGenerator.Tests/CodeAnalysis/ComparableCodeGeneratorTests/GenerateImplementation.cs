@@ -327,6 +327,28 @@ public class GenerateImplementation
    }
 
    [Fact]
+   public async Task WithUnconstrainedTypeParameterKey_GeneratesNullChecksInCompareTo()
+   {
+      // Arrange
+      var state = new ComparableStateBuilder()
+                  .WithReferenceType("global::Thinktecture.Tests.GenericType", "GenericType")
+                  .WithUnconstrainedTypeParameterKeyMember("_value")
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = ComparableCodeGenerator.Default;
+
+      // Act
+      generator.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("if(this._value is null)");
+      result.Should().Contain("if(obj._value is null)");
+      await Verifier.Verify(result);
+   }
+
+   [Fact]
    public async Task ObjectCompareTo_AlwaysHasNullCheck()
    {
       // Arrange - Even value types should have null check in object CompareTo

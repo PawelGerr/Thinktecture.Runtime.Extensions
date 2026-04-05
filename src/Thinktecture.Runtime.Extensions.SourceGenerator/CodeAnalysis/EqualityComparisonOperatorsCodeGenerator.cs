@@ -137,7 +137,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
 
       if (state.Type.IsReferenceType)
       {
-         if (state.KeyMember.IsReferenceType)
+         if (state.KeyMember.MayBeNull())
          {
             sb.Append(@"
          if (obj is null)
@@ -172,7 +172,7 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
       {
          sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(obj.").Append(state.KeyMember.Name).Append(", value)");
       }
-      else if (state.KeyMember.IsReferenceType)
+      else if (state.KeyMember.MayBeNull())
       {
          sb.Append("obj.").Append(state.KeyMember.Name).Append(" is null ? value").Append(" is null : obj.").Append(state.KeyMember.Name).Append(".Equals(value").Append(")");
       }

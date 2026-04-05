@@ -844,7 +844,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
       {");
 
-      if (keyProperty.IsReferenceType)
+      if (keyProperty.MayBeNull())
       {
          _sb.Append(@"
          if (").AppendEscaped(keyProperty.ArgumentName).Append(@" is null)
@@ -977,14 +977,14 @@ namespace ").Append(_state.Namespace).Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
 
-      if (keyProperty.IsReferenceType)
+      if (keyProperty.MayBeNull())
       {
          _sb.Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
-      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualified(_state, nullable: keyProperty.IsReferenceType).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      public static ").AppendConversionOperator(_state.Settings.ConversionFromKeyMemberType).Append(" operator ").AppendTypeFullyQualified(_state, nullable: keyProperty.MayBeNull()).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {
          return ").AppendTypeFullyQualified(_state).Append(".").Append(Constants.Methods.GET).Append("(").AppendEscaped(keyProperty.ArgumentName).Append(@");
       }");
@@ -1037,7 +1037,7 @@ namespace ").Append(_state.Namespace).Append(@"
                throw new global::System.ArgumentNullException($""The item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 ");
 
-         if (keyMember.IsReferenceType)
+         if (keyMember.MayBeNull())
          {
             _sb.Append(@"
             if (item.").Append(keyMember.Name).Append(@" is null)
@@ -1205,17 +1205,17 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>
       ").Append(GENERATED_CODE_ATTRIBUTE);
 
-      if (keyProperty.IsReferenceType)
+      if (keyProperty.MayBeNull())
       {
          _sb.Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""").AppendArgumentName(keyProperty.ArgumentName).Append(@""")]");
       }
 
       _sb.Append(@"
-      public static ").AppendTypeFullyQualified(_state, nullable: keyProperty.IsReferenceType).Append(" ").Append(Constants.Methods.GET).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      public static ").AppendTypeFullyQualified(_state, nullable: keyProperty.MayBeNull()).Append(" ").Append(Constants.Methods.GET).Append("(").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(@")
       {");
 
-      if (keyProperty.IsReferenceType)
+      if (keyProperty.MayBeNull())
       {
          _sb.Append(@"
          if (").AppendEscaped(keyProperty.ArgumentName).Append(@" is null)
@@ -1387,7 +1387,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.KeyMember is not null)
       {
-         if (_state.KeyMember.IsReferenceType)
+         if (_state.KeyMember.MayBeNull())
          {
             _sb.Append(@"
          if (").AppendEscaped(_state.KeyMember.ArgumentName).Append(@" is null)

@@ -83,6 +83,12 @@ public class EqualityComparisonOperatorsStateBuilder
       return this;
    }
 
+   public EqualityComparisonOperatorsStateBuilder WithUnconstrainedTypeParameterKeyMember(string name = "Key")
+   {
+      _keyMember = CreateUnconstrainedTypeParameterKeyMember(name);
+      return this;
+   }
+
    public EqualityComparisonOperatorsStateBuilder WithoutKeyMember()
    {
       _keyMember = null;
@@ -124,6 +130,20 @@ public class EqualityComparisonOperatorsStateBuilder
       member.TypeFullyQualified.Returns(typeFullyQualified);
       member.SpecialType.Returns(specialType);
       member.IsReferenceType.Returns(isReferenceType);
+      member.NullableAnnotation.Returns(NullableAnnotation.None);
+      return member;
+   }
+
+   private static IMemberInformation CreateUnconstrainedTypeParameterKeyMember(string name)
+   {
+      var member = Substitute.For<IMemberInformation>();
+      member.Name.Returns(name);
+      member.TypeFullyQualified.Returns("T");
+      member.SpecialType.Returns(SpecialType.None);
+      member.IsReferenceType.Returns(false);
+      member.IsValueType.Returns(false);
+      member.IsTypeParameter.Returns(true);
+      member.IsNullableStruct.Returns(false);
       member.NullableAnnotation.Returns(NullableAnnotation.None);
       return member;
    }

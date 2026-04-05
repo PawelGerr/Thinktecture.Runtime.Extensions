@@ -1,0 +1,60 @@
+﻿
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator /(global::Thinktecture.Tests.GenericAmount left, global::Thinktecture.Tests.GenericAmount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator checked /(global::Thinktecture.Tests.GenericAmount left, global::Thinktecture.Tests.GenericAmount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value / right.Value)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator /(global::Thinktecture.Tests.GenericAmount left, T right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left.Value / right));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator /(T left, global::Thinktecture.Tests.GenericAmount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create((left / right.Value));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator checked /(global::Thinktecture.Tests.GenericAmount left, T right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left.Value / right)));
+   }
+
+   /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public static global::Thinktecture.Tests.GenericAmount operator checked /(T left, global::Thinktecture.Tests.GenericAmount right)
+   {
+      global::System.ArgumentNullException.ThrowIfNull(left);
+      global::System.ArgumentNullException.ThrowIfNull(right);
+      return Create(checked((left / right.Value)));
+   }

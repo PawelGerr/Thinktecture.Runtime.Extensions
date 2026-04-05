@@ -87,6 +87,12 @@ public class MultiplyOperatorsStateBuilder
       return this;
    }
 
+   public MultiplyOperatorsStateBuilder WithUnconstrainedTypeParameterKeyMember(string name = "Value")
+   {
+      _keyMember = CreateUnconstrainedTypeParameterKeyMember(name);
+      return this;
+   }
+
    public MultiplyOperatorsStateBuilder WithCreateFactoryMethodName(string name)
    {
       _createFactoryMethodName = name;
@@ -122,6 +128,20 @@ public class MultiplyOperatorsStateBuilder
       member.TypeFullyQualified.Returns(typeFullyQualified);
       member.SpecialType.Returns(specialType);
       member.IsReferenceType.Returns(isReferenceType);
+      member.NullableAnnotation.Returns(NullableAnnotation.None);
+      return member;
+   }
+
+   private static IMemberInformation CreateUnconstrainedTypeParameterKeyMember(string name)
+   {
+      var member = Substitute.For<IMemberInformation>();
+      member.Name.Returns(name);
+      member.TypeFullyQualified.Returns("T");
+      member.SpecialType.Returns(SpecialType.None);
+      member.IsReferenceType.Returns(false);
+      member.IsValueType.Returns(false);
+      member.IsTypeParameter.Returns(true);
+      member.IsNullableStruct.Returns(false);
       member.NullableAnnotation.Returns(NullableAnnotation.None);
       return member;
    }

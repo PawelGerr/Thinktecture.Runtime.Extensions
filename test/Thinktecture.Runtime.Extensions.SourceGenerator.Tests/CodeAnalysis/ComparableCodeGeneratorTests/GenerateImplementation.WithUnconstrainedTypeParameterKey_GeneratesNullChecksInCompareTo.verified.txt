@@ -1,0 +1,30 @@
+﻿
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.GenericType item)
+         throw new global::System.ArgumentException("Argument must be of type \"GenericType\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public int CompareTo(global::Thinktecture.Tests.GenericType? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(this._value is null)
+         return obj._value is null ? 0 : -1;
+      if(obj._value is null)
+         return 1;
+
+      return ((global::System.IComparable<T>)this._value).CompareTo(obj._value);
+   }

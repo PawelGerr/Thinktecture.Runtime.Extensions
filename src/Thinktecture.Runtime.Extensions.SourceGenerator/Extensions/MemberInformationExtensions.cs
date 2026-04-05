@@ -12,6 +12,12 @@ public static class MemberInformationExtensions
    }
 
    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+   public static bool MayBeNull(this IMemberInformation memberInformation)
+   {
+      return memberInformation.IsReferenceType || memberInformation.IsNullableStruct || (memberInformation.IsTypeParameter && !memberInformation.IsValueType);
+   }
+
+   [MethodImpl(MethodImplOptions.AggressiveInlining)]
    public static bool DoesArithmeticOperationYieldDifferentType(this IMemberInformation memberInformation)
    {
       return memberInformation.SpecialType

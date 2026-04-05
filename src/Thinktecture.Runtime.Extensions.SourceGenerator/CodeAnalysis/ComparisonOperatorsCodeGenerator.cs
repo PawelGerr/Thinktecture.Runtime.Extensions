@@ -238,8 +238,8 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    {
       var typeLeftNullCheck = state.Type.IsReferenceType ? _LEFT_NULL_CHECK : null;
       var typeRightNullCheck = state.Type.IsReferenceType ? _RIGHT_NULL_CHECK : null;
-      var memberLeftNullCheck = state.KeyMember.IsReferenceType ? _LEFT_NULL_CHECK : null;
-      var memberRightNullCheck = state.KeyMember.IsReferenceType ? _RIGHT_NULL_CHECK : null;
+      var memberLeftNullCheck = state.KeyMember.MayBeNull() ? _LEFT_NULL_CHECK : null;
+      var memberRightNullCheck = state.KeyMember.MayBeNull() ? _RIGHT_NULL_CHECK : null;
 
       if (_comparerAccessor is not null)
       {
