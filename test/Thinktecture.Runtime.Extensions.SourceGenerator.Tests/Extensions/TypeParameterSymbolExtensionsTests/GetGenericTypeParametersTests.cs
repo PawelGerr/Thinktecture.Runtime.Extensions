@@ -513,8 +513,8 @@ namespace Test
       result.Should().HaveCount(1);
       result[0].Name.Should().Be("T");
       result[0].Constraints.Should().HaveCount(2);
-      result[0].Constraints[0].Should().Be("global::Test.IMyInterface");
-      result[0].Constraints[1].Should().Be("notnull");
+      result[0].Constraints[0].Should().Be("notnull");
+      result[0].Constraints[1].Should().Be("global::Test.IMyInterface");
    }
 
    [Fact]

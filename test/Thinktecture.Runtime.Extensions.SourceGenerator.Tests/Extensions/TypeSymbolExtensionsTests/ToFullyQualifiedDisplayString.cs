@@ -593,7 +593,7 @@ public class MyClass
    public dynamic Field;
 }
 ";
-      var compilation = CreateCompilation(src);
+      var compilation = CreateCompilation(src, additionalReferences: MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).Assembly.Location));
       var myClassType = GetTypeSymbol(compilation, "Test.MyClass");
       var field = myClassType.GetMembers("Field").OfType<IFieldSymbol>().First();
       var type = field.Type;
