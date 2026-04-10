@@ -1,7 +1,7 @@
 ; Unshipped analyzer release
 ; See https://github.com/dotnet/roslyn-analyzers/blob/main/docs/Analyzer%20Release%20Tracking.md
 
-## Release 9.0
+## Release 10.0
 
 ### New Rules
 
@@ -17,7 +17,6 @@
  TTRESG014  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Inner Smart Enum on first level must be private                                  
  TTRESG015  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Inner Smart Enum on non-first level must be public                               
  TTRESG017  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The key member must not be nullable                                              
- TTRESG033  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad hoc unions must not be generic                                                
  TTRESG034  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Field of the base class must be read-only                                        
  TTRESG035  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Property of the base class must be read-only                                     
  TTRESG036  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The key type must not be nullable                                                
@@ -40,6 +39,7 @@
  TTRESG057  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | AllowDefaultStructs must be false if VO is struct but key type is reference type 
  TTRESG058  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | AllowDefaultStructs must be false if some members disallow default values        
  TTRESG059  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | ObjectFactory must have corresponding constructor                                
+ TTRESG060  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Smart Enums with ObjectFactory must not have HasCorrespondingConstructor=true    
  TTRESG061  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG062  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG063  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
@@ -50,7 +50,10 @@
  TTRESG068  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG069  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG070  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
- TTRESG060  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Smart Enums with ObjectFactory must not have HasCorrespondingConstructor=true    
+ TTRESG071  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | TypeParamRef index exceeds the number of type parameters                         
+ TTRESG072  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | TypeParamRef cannot be used on non-generic ad-hoc union                          
+ TTRESG073  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad-hoc unions do not support 'allows ref struct' type parameters                 
+ TTRESG074  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Type parameter used via TypeParamRef must have 'notnull' constraint              
  TTRESG097  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Error during analysis of referenced modules                                      
  TTRESG098  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Error during code analysis                                                       
  TTRESG099  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Error during code generation                                                     
@@ -61,5 +64,12 @@
  TTRESG104  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Members disallowing default values must be required                              
  TTRESG105  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
  TTRESG106  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
+ TTRESG107  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Generic ad-hoc union does not reference any type parameter via TypeParamRef      
  TTRESG1000 | ThinktectureRuntimeExtensionsInternalUsageAnalyzer | Warning  | Internal Thinktecture.Runtime.Extensions API usage                               
  TTRESG1001 | ThinktectureRuntimeExtensionsAnalyzer              | Info     | UseSwitchMapWithStaticLambda                                                     
+
+### Removed Rules
+
+ Rule ID    | Category                                           | Severity | Notes                                                                            
+------------|----------------------------------------------------|----------|----------------------------------------------------------------------------------
+ TTRESG033  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad hoc unions are now allowed to be generic                                      
