@@ -9,7 +9,7 @@ partial class ApiResponse
 abstract partial class Failure :
    global::Thinktecture.Internal.IMetadataOwner
 {
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -29,7 +29,7 @@ abstract partial class Failure :
    /// </summary>
    /// <param name="notFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.NotFound"/>.</param>
    /// <param name="unauthorized">The action to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.ApiResponse.Failure.NotFound> @notFound,
@@ -56,7 +56,7 @@ abstract partial class Failure :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="notFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.NotFound"/>.</param>
    /// <param name="unauthorized">The action to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -86,7 +86,7 @@ abstract partial class Failure :
    /// </summary>
    /// <param name="notFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.NotFound"/>.</param>
    /// <param name="unauthorized">The function to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.ApiResponse.Failure.NotFound, TResult> @notFound,
@@ -114,7 +114,7 @@ abstract partial class Failure :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="notFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.NotFound"/>.</param>
    /// <param name="unauthorized">The function to execute if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -143,7 +143,7 @@ abstract partial class Failure :
    /// </summary>
    /// <param name="notFound">The instance to return if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.NotFound"/>.</param>
    /// <param name="unauthorized">The instance to return if the current type is <see cref="global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @notFound,

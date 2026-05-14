@@ -7,7 +7,7 @@ partial class TestValueObject :
    global::System.Numerics.IMultiplyOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject>
 {
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.TestValueObject operator *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {
@@ -17,7 +17,7 @@ partial class TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IMultiplyOperators{TSelf, TOther, TResult}.op_Multiply(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.TestValueObject operator checked *(global::Thinktecture.Tests.TestValueObject left, global::Thinktecture.Tests.TestValueObject right)
    {

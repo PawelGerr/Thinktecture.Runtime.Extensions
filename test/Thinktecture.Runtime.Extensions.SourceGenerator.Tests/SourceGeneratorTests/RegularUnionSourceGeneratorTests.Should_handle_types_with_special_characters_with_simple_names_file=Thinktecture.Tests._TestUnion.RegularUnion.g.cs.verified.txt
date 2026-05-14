@@ -7,7 +7,7 @@ namespace Thinktecture.Tests;
 abstract partial class _TestUnion :
    global::Thinktecture.Internal.IMetadataOwner
 {
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -23,7 +23,7 @@ abstract partial class _TestUnion :
                        .AsReadOnly()
       };
 
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private _TestUnion()
    {
@@ -37,7 +37,7 @@ abstract partial class _TestUnion :
    /// <param name="_1type">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category._1Type"/>.</param>
    /// <param name="_category">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category"/>.</param>
    /// <param name="_direct">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Direct"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests._TestUnion._Category._2Type> @_2type,
@@ -74,7 +74,7 @@ abstract partial class _TestUnion :
    /// <param name="_1type">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category._1Type"/>.</param>
    /// <param name="_category">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category"/>.</param>
    /// <param name="_direct">The action to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Direct"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -114,7 +114,7 @@ abstract partial class _TestUnion :
    /// <param name="_1type">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category._1Type"/>.</param>
    /// <param name="_category">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category"/>.</param>
    /// <param name="_direct">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Direct"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests._TestUnion._Category._2Type, TResult> @_2type,
@@ -150,7 +150,7 @@ abstract partial class _TestUnion :
    /// <param name="_1type">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category._1Type"/>.</param>
    /// <param name="_category">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category"/>.</param>
    /// <param name="_direct">The function to execute if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Direct"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -187,7 +187,7 @@ abstract partial class _TestUnion :
    /// <param name="_1type">The instance to return if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category._1Type"/>.</param>
    /// <param name="_category">The instance to return if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Category"/>.</param>
    /// <param name="_direct">The instance to return if the current type is <see cref="global::Thinktecture.Tests._TestUnion._Direct"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @_2type,

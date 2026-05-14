@@ -11,7 +11,7 @@ partial class TestEnum<T>
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static global::Thinktecture.Tests.TestEnum<T> Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
       var validationError = global::Thinktecture.Tests.TestEnum<T>.Validate(s, provider, out var result);
@@ -25,7 +25,7 @@ partial class TestEnum<T>
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static bool TryParse(
       global::System.ReadOnlySpan<char> s,
       global::System.IFormatProvider? provider,

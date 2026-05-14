@@ -1,7 +1,7 @@
 ﻿
 
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static global::Thinktecture.Tests.Country Parse(string s, global::System.IFormatProvider? provider)
    {
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.Country, string, global::Thinktecture.Tests.CountryValidationError>(s, provider, out var result);
@@ -13,7 +13,7 @@
    }
 
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static bool TryParse(
       string? s,
       global::System.IFormatProvider? provider,

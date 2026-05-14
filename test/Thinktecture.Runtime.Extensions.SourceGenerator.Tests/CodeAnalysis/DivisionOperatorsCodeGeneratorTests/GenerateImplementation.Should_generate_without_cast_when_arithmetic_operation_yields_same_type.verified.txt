@@ -1,6 +1,6 @@
 ﻿
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Price operator /(global::Thinktecture.Tests.Price left, global::Thinktecture.Tests.Price right)
    {
@@ -10,7 +10,7 @@
    }
 
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.Price operator checked /(global::Thinktecture.Tests.Price left, global::Thinktecture.Tests.Price right)
    {

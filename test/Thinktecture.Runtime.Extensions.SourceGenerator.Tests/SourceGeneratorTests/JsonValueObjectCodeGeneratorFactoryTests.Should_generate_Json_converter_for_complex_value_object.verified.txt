@@ -9,7 +9,7 @@ partial class TestValueObject
    /// <summary>
    /// JSON converter for <see cref="TestValueObject"/>.
    /// </summary>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public sealed class ValueObjectJsonConverter : global::System.Text.Json.Serialization.JsonConverter<global::Thinktecture.Tests.TestValueObject>
    {
@@ -113,7 +113,7 @@ partial class TestValueObject
    }
 }
 
-[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
 [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 file class ValueObjectJsonConverterFactory : global::System.Text.Json.Serialization.JsonConverterFactory
 {

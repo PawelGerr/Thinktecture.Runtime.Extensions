@@ -9,7 +9,7 @@ namespace Thinktecture.Tests
       global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestValueObject, global::Thinktecture.Tests.TestValueObject, bool>,
       global::Thinktecture.Internal.IMetadataOwner
    {
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -31,7 +31,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Initializes a new instance of the <see cref="TestValueObject"/> type.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       private TestValueObject(
          string @property)
       {
@@ -50,7 +50,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
       {
@@ -66,7 +66,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.TestValueObject? obj, global::Thinktecture.Tests.TestValueObject? other)
       {
@@ -74,7 +74,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
@@ -82,7 +82,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.TestValueObject? other)
       {
@@ -96,7 +96,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
@@ -106,7 +106,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {

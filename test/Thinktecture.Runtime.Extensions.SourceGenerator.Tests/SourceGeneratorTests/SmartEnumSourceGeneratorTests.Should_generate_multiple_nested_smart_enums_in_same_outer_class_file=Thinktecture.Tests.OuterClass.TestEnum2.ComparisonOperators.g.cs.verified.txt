@@ -9,7 +9,7 @@ partial class TestEnum2 :
    global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests.OuterClass.TestEnum2, global::Thinktecture.Tests.OuterClass.TestEnum2, bool>
 {
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <(global::Thinktecture.Tests.OuterClass.TestEnum2 left, global::Thinktecture.Tests.OuterClass.TestEnum2 right)
    {
@@ -19,7 +19,7 @@ partial class TestEnum2 :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(global::Thinktecture.Tests.OuterClass.TestEnum2 left, global::Thinktecture.Tests.OuterClass.TestEnum2 right)
    {
@@ -29,7 +29,7 @@ partial class TestEnum2 :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(global::Thinktecture.Tests.OuterClass.TestEnum2 left, global::Thinktecture.Tests.OuterClass.TestEnum2 right)
    {
@@ -39,7 +39,7 @@ partial class TestEnum2 :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(global::Thinktecture.Tests.OuterClass.TestEnum2 left, global::Thinktecture.Tests.OuterClass.TestEnum2 right)
    {

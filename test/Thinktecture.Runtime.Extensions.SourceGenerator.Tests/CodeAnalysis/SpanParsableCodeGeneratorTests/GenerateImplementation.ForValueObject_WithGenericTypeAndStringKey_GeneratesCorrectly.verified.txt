@@ -2,7 +2,7 @@
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static global::Thinktecture.Tests.GenericValueObject<TKey, TValue> Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
       var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<global::System.String>(s, provider);
@@ -17,7 +17,7 @@
 
 #if NET9_0_OR_GREATER
    /// <inheritdoc />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    public static bool TryParse(
       global::System.ReadOnlySpan<char> s,
       global::System.IFormatProvider? provider,

@@ -10,7 +10,7 @@ namespace Thinktecture.Tests
       global::Thinktecture.ISmartEnum<global::Thinktecture.Tests.CustomSpanParsableKey, global::Thinktecture.Tests.TestEnum, global::Thinktecture.ValidationError>,
       global::System.IEquatable<global::Thinktecture.Tests.TestEnum?>
    {
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -59,19 +59,19 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets all valid items.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::System.Collections.Generic.IReadOnlyList<global::Thinktecture.Tests.TestEnum> Items => _lookups.Value.List;
 
       /// <summary>
       /// The identifier of this item.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public global::Thinktecture.Tests.CustomSpanParsableKey Key { get; }
 
       private readonly int _hashCode;
       private readonly global::Thinktecture.Internal.WriteOnceInt _itemIndex;
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       private TestEnum(
          global::Thinktecture.Tests.CustomSpanParsableKey @key)
       {
@@ -89,7 +89,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets the identifier of the item.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::Thinktecture.Tests.CustomSpanParsableKey global::Thinktecture.IConvertible<global::Thinktecture.Tests.CustomSpanParsableKey>.ToValue()
@@ -103,7 +103,7 @@ namespace Thinktecture.Tests
       /// <param name="key">The identifier to return an enumeration item for.</param>
       /// <returns>An instance of <see cref="TestEnum"/> if <paramref name="key"/> is not <c>null</c>; otherwise <c>null</c>.</returns>
       /// <exception cref="Thinktecture.UnknownSmartEnumIdentifierException">If there is no item with the provided <paramref name="key"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.Tests.TestEnum Get(global::Thinktecture.Tests.CustomSpanParsableKey @key)
       {
          if (!_lookups.Value.Lookup.TryGetValue(@key, out var item))
@@ -120,7 +120,7 @@ namespace Thinktecture.Tests
       /// <param name="key">The identifier to return an enumeration item for.</param>
       /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name="key"/> exists; <c>false</c> otherwise.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] global::Thinktecture.Tests.CustomSpanParsableKey @key, [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestEnum item)
       {
          return _lookups.Value.Lookup.TryGetValue(@key, out item);
@@ -133,7 +133,7 @@ namespace Thinktecture.Tests
       /// <param name="provider">An object that provides culture-specific formatting information.</param>
       /// <param name="item">An instance of <see cref="TestEnum"/>.</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name="key"/> exists; <see cref="global::Thinktecture.ValidationError"/> with an error message otherwise.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.ValidationError? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] global::Thinktecture.Tests.CustomSpanParsableKey @key, global::System.IFormatProvider? @provider, [global::System.Diagnostics.CodeAnalysis.MaybeNull] out global::Thinktecture.Tests.TestEnum item)
       {
          if(global::Thinktecture.Tests.TestEnum.TryGet(@key, out item))
@@ -151,7 +151,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item">Item to convert.</param>
       /// <returns>The <see cref="TestEnum.Key"/> of provided <paramref name="item"/> or <c>default</c> if <paramref name="item"/> is <c>null</c>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull("item")]
       public static implicit operator global::Thinktecture.Tests.CustomSpanParsableKey(global::Thinktecture.Tests.TestEnum? item)
@@ -164,7 +164,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="key">Value to convert.</param>
       /// <returns>An instance of <see cref="TestEnum"/> if the <paramref name="key"/> is a known item.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator global::Thinktecture.Tests.TestEnum(global::Thinktecture.Tests.CustomSpanParsableKey @key)
       {
@@ -172,7 +172,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.TestEnum? other)
       {
@@ -180,7 +180,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
@@ -188,7 +188,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
@@ -196,14 +196,14 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string? ToString()
       {
          return this.Key.ToString();
       }
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private int GetItemIndex()
@@ -223,7 +223,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action @item1,
@@ -250,7 +250,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The action to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The action to execute if the current item is equal to <see cref="Item2"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
@@ -280,7 +280,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TResult> @item1,
@@ -308,7 +308,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="item1">The function to execute if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The function to execute if the current item is equal to <see cref="Item2"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
@@ -336,7 +336,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="item1">The instance to return if the current item is equal to <see cref="Item1"/>.</param>
       /// <param name="item2">The instance to return if the current item is equal to <see cref="Item2"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @item1,
@@ -356,7 +356,7 @@ namespace Thinktecture.Tests
          }
       }
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private static Lookups GetLookups()
       {
@@ -387,7 +387,7 @@ namespace Thinktecture.Tests
 #endif
       }
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private readonly record struct Lookups(
          global::System.Collections.Generic.IReadOnlyDictionary<global::Thinktecture.Tests.CustomSpanParsableKey, global::Thinktecture.Tests.TestEnum> Lookup,

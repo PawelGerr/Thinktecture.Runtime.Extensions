@@ -9,7 +9,7 @@ partial class Response
 abstract partial class ErrorCategory :
    global::Thinktecture.Internal.IMetadataOwner
 {
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -35,7 +35,7 @@ abstract partial class ErrorCategory :
    /// <param name="serverErrorInternalError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError"/>.</param>
    /// <param name="clientErrorNotFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="clientErrorBadRequest">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable> @serverErrorServiceUnavailable,
@@ -72,7 +72,7 @@ abstract partial class ErrorCategory :
    /// <param name="serverErrorInternalError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError"/>.</param>
    /// <param name="clientErrorNotFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="clientErrorBadRequest">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -112,7 +112,7 @@ abstract partial class ErrorCategory :
    /// <param name="serverErrorInternalError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError"/>.</param>
    /// <param name="clientErrorNotFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="clientErrorBadRequest">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable, TResult> @serverErrorServiceUnavailable,
@@ -148,7 +148,7 @@ abstract partial class ErrorCategory :
    /// <param name="serverErrorInternalError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError"/>.</param>
    /// <param name="clientErrorNotFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="clientErrorBadRequest">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -185,7 +185,7 @@ abstract partial class ErrorCategory :
    /// <param name="serverErrorInternalError">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError"/>.</param>
    /// <param name="clientErrorNotFound">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="clientErrorBadRequest">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @serverErrorServiceUnavailable,

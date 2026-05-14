@@ -9,7 +9,7 @@ partial class Outer<T>
 partial class TestValueObject
 {
 
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public class ValueObjectMessagePackFormatter : global::Thinktecture.Formatters.ThinktectureMessagePackFormatter<global::Thinktecture.Tests.Outer<T>.TestValueObject, int, global::Thinktecture.ValidationError>
    {

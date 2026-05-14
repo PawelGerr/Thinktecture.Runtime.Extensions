@@ -7,7 +7,7 @@ partial struct GenericValueObject<T> :
    global::System.Numerics.IDivisionOperators<global::Thinktecture.Tests.GenericValueObject<T>, global::Thinktecture.Tests.GenericValueObject<T>, global::Thinktecture.Tests.GenericValueObject<T>>
 {
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.GenericValueObject<T> operator /(global::Thinktecture.Tests.GenericValueObject<T> left, global::Thinktecture.Tests.GenericValueObject<T> right)
    {
@@ -15,7 +15,7 @@ partial struct GenericValueObject<T> :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static global::Thinktecture.Tests.GenericValueObject<T> operator checked /(global::Thinktecture.Tests.GenericValueObject<T> left, global::Thinktecture.Tests.GenericValueObject<T> right)
    {

@@ -7,7 +7,7 @@ namespace Thinktecture.Tests;
 abstract partial class TestUnion :
    global::Thinktecture.Internal.IMetadataOwner
 {
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -21,7 +21,7 @@ abstract partial class TestUnion :
                        .AsReadOnly()
       };
 
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private TestUnion()
    {
@@ -33,7 +33,7 @@ abstract partial class TestUnion :
    /// </summary>
    /// <param name="child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.Child1> @child1,
@@ -60,7 +60,7 @@ abstract partial class TestUnion :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="child1">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -90,7 +90,7 @@ abstract partial class TestUnion :
    /// </summary>
    /// <param name="child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.Child1, TResult> @child1,
@@ -118,7 +118,7 @@ abstract partial class TestUnion :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="child1">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -147,7 +147,7 @@ abstract partial class TestUnion :
    /// </summary>
    /// <param name="child1">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child1"/>.</param>
    /// <param name="child2">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.Child2"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @child1,
@@ -173,7 +173,7 @@ abstract partial class TestUnion :
    /// </summary>
    /// <param name="values">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.TestUnion.Child1"/> converted from <paramref name="values"/>.</returns>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.TestUnion(string[] @values)
    {
@@ -185,7 +185,7 @@ abstract partial class TestUnion :
    /// </summary>
    /// <param name="value">Value to convert from.</param>
    /// <returns>A new instance of <see cref="global::Thinktecture.Tests.TestUnion.Child2"/> converted from <paramref name="value"/>.</returns>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static implicit operator global::Thinktecture.Tests.TestUnion(int @value)
    {

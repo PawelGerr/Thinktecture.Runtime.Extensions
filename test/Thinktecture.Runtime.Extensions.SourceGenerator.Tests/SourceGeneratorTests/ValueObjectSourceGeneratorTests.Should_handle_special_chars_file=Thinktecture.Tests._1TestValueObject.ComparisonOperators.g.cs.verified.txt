@@ -7,7 +7,7 @@ partial class _1TestValueObject :
    global::System.Numerics.IComparisonOperators<global::Thinktecture.Tests._1TestValueObject, global::Thinktecture.Tests._1TestValueObject, bool>
 {
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <(global::Thinktecture.Tests._1TestValueObject left, global::Thinktecture.Tests._1TestValueObject right)
    {
@@ -17,7 +17,7 @@ partial class _1TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(global::Thinktecture.Tests._1TestValueObject left, global::Thinktecture.Tests._1TestValueObject right)
    {
@@ -27,7 +27,7 @@ partial class _1TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(global::Thinktecture.Tests._1TestValueObject left, global::Thinktecture.Tests._1TestValueObject right)
    {
@@ -37,7 +37,7 @@ partial class _1TestValueObject :
    }
 
    /// <inheritdoc cref="global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)" />
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(global::Thinktecture.Tests._1TestValueObject left, global::Thinktecture.Tests._1TestValueObject right)
    {

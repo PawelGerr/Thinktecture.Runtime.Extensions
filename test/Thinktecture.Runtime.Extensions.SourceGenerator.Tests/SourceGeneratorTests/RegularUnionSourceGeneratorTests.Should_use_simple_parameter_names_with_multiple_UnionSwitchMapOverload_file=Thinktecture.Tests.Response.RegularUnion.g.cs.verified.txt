@@ -7,7 +7,7 @@ namespace Thinktecture.Tests;
 abstract partial class Response :
    global::Thinktecture.Internal.IMetadataOwner
 {
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
    static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -27,7 +27,7 @@ abstract partial class Response :
                        .AsReadOnly()
       };
 
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    private Response()
    {
@@ -42,7 +42,7 @@ abstract partial class Response :
    /// <param name="notFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="badRequest">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable> @serviceUnavailable,
@@ -84,7 +84,7 @@ abstract partial class Response :
    /// <param name="notFound">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="badRequest">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -129,7 +129,7 @@ abstract partial class Response :
    /// <param name="notFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="badRequest">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable, TResult> @serviceUnavailable,
@@ -169,7 +169,7 @@ abstract partial class Response :
    /// <param name="notFound">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="badRequest">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -210,7 +210,7 @@ abstract partial class Response :
    /// <param name="notFound">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound"/>.</param>
    /// <param name="badRequest">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest"/>.</param>
    /// <param name="success">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @serviceUnavailable,
@@ -246,7 +246,7 @@ abstract partial class Response :
    /// </summary>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
    /// <param name="errorCategory">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Response.Success> @success,
@@ -273,7 +273,7 @@ abstract partial class Response :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
    /// <param name="errorCategory">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -303,7 +303,7 @@ abstract partial class Response :
    /// </summary>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
    /// <param name="errorCategory">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Response.Success, TResult> @success,
@@ -331,7 +331,7 @@ abstract partial class Response :
    /// <param name="state">State to be passed to the callbacks.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
    /// <param name="errorCategory">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -360,7 +360,7 @@ abstract partial class Response :
    /// </summary>
    /// <param name="success">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
    /// <param name="errorCategory">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @success,
@@ -388,7 +388,7 @@ abstract partial class Response :
    /// <param name="serverError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError"/>.</param>
    /// <param name="clientError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError"/>.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.Response.ErrorCategory.ServerError> @serverError,
@@ -420,7 +420,7 @@ abstract partial class Response :
    /// <param name="serverError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError"/>.</param>
    /// <param name="clientError">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError"/>.</param>
    /// <param name="success">The action to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public void Switch<TState>(
       TState @state,
@@ -455,7 +455,7 @@ abstract partial class Response :
    /// <param name="serverError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError"/>.</param>
    /// <param name="clientError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError"/>.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.Response.ErrorCategory.ServerError, TResult> @serverError,
@@ -487,7 +487,7 @@ abstract partial class Response :
    /// <param name="serverError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError"/>.</param>
    /// <param name="clientError">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError"/>.</param>
    /// <param name="success">The function to execute if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Switch<TState, TResult>(
       TState @state,
@@ -520,7 +520,7 @@ abstract partial class Response :
    /// <param name="serverError">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ServerError"/>.</param>
    /// <param name="clientError">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.ErrorCategory.ClientError"/>.</param>
    /// <param name="success">The instance to return if the current type is <see cref="global::Thinktecture.Tests.Response.Success"/>.</param>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.2.0.0")]
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
    public TResult Map<TResult>(
       TResult @serverError,
