@@ -15,9 +15,18 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public bool SkipEqualityComparison { get; }
    public FactoryMethodGeneration FactoryMethodGeneration { get; }
 
+   /// <summary>
+   /// Resolved/normalized info for the user-supplied <c>SingleBackingFieldType</c>.
+   /// <c>null</c> when the property was not set, or when it was set to <c>typeof(object)</c>
+   /// (normalized away to preserve the legacy <c>UseSingleBackingField = true</c> emission path).
+   /// </summary>
+   public SingleBackingFieldTypeInfo? SingleBackingFieldType { get; }
+
    public AdHocUnionSettings(
       AttributeData attribute,
-      int numberOfMemberTypes)
+      int numberOfMemberTypes,
+      bool hasSingleBackingFieldType,
+      SingleBackingFieldTypeInfo? singleBackingFieldType)
    {
       SkipToString = attribute.FindSkipToString() ?? false;
       SwitchMethods = attribute.FindSwitchMethods();
@@ -27,9 +36,16 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       ConversionFromValue = attribute.FindConversionFromValue() ?? ConversionOperatorsGeneration.Implicit;
       ConversionToValue = attribute.FindConversionToValue() ?? ConversionOperatorsGeneration.Explicit;
       SwitchMapStateParameterName = attribute.FindSwitchMapStateParameterName();
-      UseSingleBackingField = attribute.FindUseSingleBackingField() ?? false;
       SkipEqualityComparison = attribute.FindSkipEqualityComparison() ?? false;
       FactoryMethodGeneration = attribute.FindFactoryMethodGeneration();
+
+      SingleBackingFieldType = singleBackingFieldType;
+
+      // The cascade ("setting SingleBackingFieldType implies UseSingleBackingField = true") must
+      // fire whenever the user provided ANY value -- including typeof(object). The caller already
+      // determined this via the unmodified attribute value, before any normalization.
+      UseSingleBackingField = hasSingleBackingFieldType
+                              || (attribute.FindUseSingleBackingField() ?? false);
 
       var memberTypeSettings = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeSetting>(numberOfMemberTypes);
 
@@ -66,6 +82,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && UseSingleBackingField == other.UseSingleBackingField
              && SkipEqualityComparison == other.SkipEqualityComparison
              && FactoryMethodGeneration == other.FactoryMethodGeneration
+             && SingleBackingFieldType == other.SingleBackingFieldType
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
 
@@ -84,6 +101,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ UseSingleBackingField.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipEqualityComparison.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)FactoryMethodGeneration;
+         hashCode = (hashCode * 397) ^ (SingleBackingFieldType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 
          return hashCode;

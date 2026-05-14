@@ -27,8 +27,8 @@ namespace Thinktecture.Tests
 
       private readonly int _valueIndex;
 
-      private readonly int _int32;
       private readonly object? _obj;
+      private readonly int _int32;
       private readonly bool _boolean;
       private readonly int? _nullableOfInt32;
 

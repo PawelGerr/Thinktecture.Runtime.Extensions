@@ -501,17 +501,20 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            if (memberType.IsReferenceType)
+            // The "is null" short-circuit only makes sense when the backing field can actually be
+            // null. When the typed single backing field is non-nullable (SingleBackingFieldType
+            // set to a non-nullable value type, or a reference type with no nullable members),
+            // the check is unreachable and would emit CS8073 in user code -- skip it.
+            var sharedFieldIsNullable = _state.SharedBackingFieldIsNullable();
+            var emitNullShortCircuit = memberType.IsReferenceType
+                                       && (!useSharedObjectBackingField || sharedFieldIsNullable);
+
+            if (emitNullShortCircuit)
             {
                _sb.Append("this.").AppendBackingFieldName(useSharedObjectBackingField, memberType).Append(" is null ? other.").AppendBackingFieldName(_state, _useSharedObjectForRefTypes, memberType).Append(" is null : ");
             }
 
-            if (useSharedObjectBackingField)
-            {
-               _sb.Append("this._valueIndex == other._valueIndex && ");
-            }
-
-            _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
+            _sb.AppendBackingFieldAccess(useSharedObjectBackingField, memberType, nullAnnotated: false, suppressed: true, sharedFieldIsNullable: sharedFieldIsNullable).Append(".Equals(").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, qualifier: "other");
 
             if (memberType.SpecialType == SpecialType.System_String)
                _sb.Append(", global::System.StringComparison.").Append(_state.Settings.DefaultStringComparison);
@@ -1049,6 +1052,14 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(@"
          ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(";");
          }
+         else if (_state.Settings.SingleBackingFieldType is not null
+                  && memberType.IsValueType
+                  && !memberType.IsTypeParameter)
+         {
+            // Stateless struct member with a typed single backing field: assign the cached boxed default.
+            _sb.Append(@"
+         this._obj = _cachedBoxed").Append(memberType.Name).Append(";");
+         }
 
          _sb.Append(@"
          this._valueIndex = ");
@@ -1069,6 +1080,32 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateMemberTypeFieldsAndProps()
    {
+      var singleBackingFieldType = _state.Settings.SingleBackingFieldType?.FullyQualified;
+      var singleBackingFieldIsNullable = _state.SingleBackingFieldNeedsNullableAnnotation();
+
+      // Pass 1: emit `private static readonly` cached boxed defaults for stateless struct members.
+      // Static fields are emitted before any instance fields per project convention.
+      if (singleBackingFieldType is not null)
+      {
+         for (var i = 0; i < _state.MemberTypes.Length; i++)
+         {
+            var memberType = _state.MemberTypes[i];
+
+            if (!memberType.Setting.IsStateless || !memberType.IsValueType || memberType.IsTypeParameter)
+               continue;
+
+            if (memberType.TypeDuplicateCounter > 1)
+               continue;
+
+            _sb.Append(@"
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      private static readonly ").Append(singleBackingFieldType).Append(" _cachedBoxed").Append(memberType.Name).Append(" = default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(");");
+         }
+      }
+
+      // Pass 2: emit the shared non-static `_obj` field (if any non-stateless member needs it,
+      // OR -- when SingleBackingFieldType is set -- as a force-emit for all-stateless unions
+      // so the cached-boxed assignments and Value getter have a target).
       var objBackingFieldWritten = false;
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -1081,23 +1118,49 @@ namespace ").Append(_state.Namespace).Append(@"
          if (memberType.TypeDuplicateCounter > 1)
             continue;
 
-         var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
+         if (!_state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType))
+            continue;
 
-         if (useSharedObjectBackingField)
+         objBackingFieldWritten = true;
+
+         if (singleBackingFieldType is not null)
          {
-            if (objBackingFieldWritten)
-               continue;
-
-            objBackingFieldWritten = true;
-
             _sb.Append(@"
-      private readonly object? _obj;");
+      private readonly ").Append(singleBackingFieldType).Append(singleBackingFieldIsNullable ? "?" : null).Append(" _obj;");
          }
          else
          {
             _sb.Append(@"
-      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").AppendBackingFieldName(memberType.BackingFieldName).Append(";");
+      private readonly object? _obj;");
          }
+
+         break;
+      }
+
+      // All-stateless force-emit: with a typed SingleBackingFieldType, the cached-boxed assignments
+      // and Value getter still reference `_obj`, so we declare it here when the regular pass did not.
+      if (!objBackingFieldWritten && singleBackingFieldType is not null && _state.Settings.UseSingleBackingField)
+      {
+         _sb.Append(@"
+      private readonly ").Append(singleBackingFieldType).Append(singleBackingFieldIsNullable ? "?" : null).Append(" _obj;");
+      }
+
+      // Pass 3: emit per-member non-shared instance fields.
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      {
+         var memberType = _state.MemberTypes[i];
+
+         if (memberType.Setting.IsStateless)
+            continue;
+
+         if (memberType.TypeDuplicateCounter > 1)
+            continue;
+
+         if (_state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType))
+            continue;
+
+         _sb.Append(@"
+      private readonly ").AppendTypeFullyQualifiedNullAnnotated(memberType).Append(" ").AppendBackingFieldName(memberType.BackingFieldName).Append(";");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -1166,12 +1229,37 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateRawValueGetter()
    {
-      var hasNullableTypes = _state.MemberTypes.Any(t => t.IsNullableStruct || t.NullableAnnotation == NullableAnnotation.Annotated);
+      var hasNullableTypes = _state.HasNullableMemberTypes();
+      var singleBackingFieldType = _state.Settings.SingleBackingFieldType?.FullyQualified;
+      var singleBackingFieldNeedsNullable = _state.SingleBackingFieldNeedsNullableAnnotation();
 
       _sb.Append(@"
 
       /// <summary>
-      /// Gets the current value as <see cref=""object""/>.
+      /// Gets the current value as ");
+
+      if (singleBackingFieldType is not null)
+      {
+         // Match the codebase XML-doc convention (see AppendTypeForXmlComment in
+         // StringBuilderExtensions): generic / array / nullable / tuple type names contain
+         // characters that are invalid inside a "cref" attribute -- use <c>...&lt;T&gt;</c>.
+         var hasProblematicCharsForXmlDocs = singleBackingFieldType.IndexOfAny(['<', '[', '?', '(']) > -1;
+
+         if (hasProblematicCharsForXmlDocs)
+         {
+            _sb.Append("<c>").Append(singleBackingFieldType.Replace("<", "&lt;").Replace(">", "&gt;")).Append("</c>.");
+         }
+         else
+         {
+            _sb.Append("<see cref=\"").Append(singleBackingFieldType).Append("\"/>.");
+         }
+      }
+      else
+      {
+         _sb.Append(@"<see cref=""object""/>.");
+      }
+
+      _sb.Append(@"
       /// </summary>");
 
       if (!_state.IsReferenceType)
@@ -1182,11 +1270,42 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public object").Append(hasNullableTypes ? "?" : null).Append(" Value => ");
+      public ");
 
+      if (singleBackingFieldType is not null)
+      {
+         // Value-type backing fields are honored as written: typeof(int) -> int, typeof(int?) -> int?.
+         // Only reference-type backing fields gain an extra "?" when any member contributes nullability.
+         _sb.Append(singleBackingFieldType).Append(singleBackingFieldNeedsNullable ? "?" : null);
+      }
+      else
+      {
+         _sb.Append("object").Append(hasNullableTypes ? "?" : null);
+      }
+
+      _sb.Append(" Value => ");
+
+      // Class unions with UseSingleBackingField=true keep the short-circuit: class instances cannot
+      // be uninitialized via `default(...)`, so no discriminator throw is needed.
+      if (_state.Settings.UseSingleBackingField && _state.IsReferenceType)
+      {
+         // Legacy object? path: always emit "!" to preserve byte-for-byte snapshot compatibility.
+         // Typed-field path: Value's nullability matches the field's, so no suppression needed.
+         var emitSuppression = singleBackingFieldType is null;
+         _sb.Append("this._obj").Append(emitSuppression ? "!" : null).Append(";");
+         return;
+      }
+
+      // Struct unions with UseSingleBackingField=true: every arm of a full discriminator switch
+      // would collapse to the same `this._obj`. Emit a single index check + return instead.
+      // A `default(StructUnion).Value` must throw to match the contract documented above and
+      // emitted by IsTx/AsTx/Switch/Map.
       if (_state.Settings.UseSingleBackingField)
       {
-         _sb.Append("this._obj!;");
+         var emitSuppression = singleBackingFieldType is null;
+         _sb.Append($@"this._valueIndex == 0
+         ? throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."")
+         : this._obj").Append(emitSuppression ? "!" : null).Append(";");
          return;
       }
 
@@ -1242,6 +1361,39 @@ file static class Extensions
       return sb;
    }
 
+   public static bool HasNullableMemberTypes(this AdHocUnionSourceGenState state)
+   {
+      return state.MemberTypes.Any(t => t.IsNullableStruct || t.NullableAnnotation == NullableAnnotation.Annotated);
+   }
+
+   /// <summary>
+   /// Whether the typed single backing field declaration needs an additional <c>?</c> annotation.
+   /// Only reference-type backing fields gain a <c>?</c>; value-type backing fields are written
+   /// exactly as the user specified them (so <c>typeof(int)</c> stays <c>int</c> and
+   /// <c>typeof(int?)</c> stays <c>int?</c>) -- upgrading them based on member nullability would
+   /// silently change the user's chosen type.
+   /// </summary>
+   public static bool SingleBackingFieldNeedsNullableAnnotation(this AdHocUnionSourceGenState state)
+   {
+      return state.Settings.SingleBackingFieldType is { IsReferenceType: true }
+             && state.HasNullableMemberTypes();
+   }
+
+   /// <summary>
+   /// Whether the shared backing field can hold a null value at runtime. Drives the "is null"
+   /// short-circuit in Equals and the "!" null-suppression operators.
+   /// True when:
+   ///  - the legacy <c>object?</c> path is used (SingleBackingFieldType not set), OR
+   ///  - SingleBackingFieldType is itself a <c>Nullable&lt;T&gt;</c> struct (HasValue can be false), OR
+   ///  - SingleBackingFieldType is a reference type and any member contributes nullability.
+   /// </summary>
+   public static bool SharedBackingFieldIsNullable(this AdHocUnionSourceGenState state)
+   {
+      return state.Settings.SingleBackingFieldType is null
+             || state.Settings.SingleBackingFieldType is { IsNullableStruct: true }
+             || (state.Settings.SingleBackingFieldType is { IsReferenceType: true } && state.HasNullableMemberTypes());
+   }
+
    public static bool UseSharedObjectBackingField(
       this AdHocUnionSourceGenState state,
       bool useSharedObjectForRefTypes,
@@ -1264,8 +1416,11 @@ file static class Extensions
       string qualifier = "this")
    {
       var useSharedObjectBackingField = state.UseSharedObjectBackingField(useSharedObjectForRefTypes, memberType);
+      // When the single backing field is typed (SingleBackingFieldType set) and not annotated nullable,
+      // the "!" null-suppression is redundant and we should not emit it.
+      var sharedFieldIsNullable = state.SharedBackingFieldIsNullable();
 
-      return AppendBackingFieldAccess(sb, useSharedObjectBackingField, memberType, withCast, nullAnnotated, suppressed, qualifier);
+      return AppendBackingFieldAccess(sb, useSharedObjectBackingField, memberType, withCast, nullAnnotated, suppressed, qualifier, sharedFieldIsNullable);
    }
 
    public static StringBuilder AppendBackingFieldAccess(
@@ -1275,7 +1430,8 @@ file static class Extensions
       bool withCast = true,
       bool nullAnnotated = true,
       bool suppressed = false,
-      string qualifier = "this")
+      string qualifier = "this",
+      bool sharedFieldIsNullable = true)
    {
       if (useSharedObjectBackingField)
       {
@@ -1299,7 +1455,8 @@ file static class Extensions
 
          if (withCast)
          {
-            if (suppressed || memberType is { IsReferenceType: false, IsNullableStruct: false })
+            if (sharedFieldIsNullable
+                && (suppressed || memberType is { IsReferenceType: false, IsNullableStruct: false }))
                sb.Append("!");
 
             sb.Append(")");

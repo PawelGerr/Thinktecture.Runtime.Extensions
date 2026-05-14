@@ -1,7 +1,7 @@
-; Unshipped analyzer release
+; Shipped analyzer releases
 ; See https://github.com/dotnet/roslyn-analyzers/blob/main/docs/Analyzer%20Release%20Tracking.md
 
-## Release 10.0
+## Release 9.0
 
 ### New Rules
 
@@ -17,6 +17,7 @@
  TTRESG014  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Inner Smart Enum on first level must be private                                  
  TTRESG015  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Inner Smart Enum on non-first level must be public                               
  TTRESG017  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The key member must not be nullable                                              
+ TTRESG033  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad hoc unions must not be generic                                                
  TTRESG034  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Field of the base class must be read-only                                        
  TTRESG035  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Property of the base class must be read-only                                     
  TTRESG036  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The key type must not be nullable                                                
@@ -32,6 +33,7 @@
  TTRESG049  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Complex Value Object with string members needs equality comparer                 
  TTRESG050  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Method with UseDelegateFromConstructor must be partial                           
  TTRESG051  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Method with UseDelegateFromConstructor must not have generics                    
+ TTRESG052  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | The type must not be inside generic type                                         
  TTRESG053  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Derived type of a union must not be generic                                      
  TTRESG054  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Discriminated union must be sealed or have private constructors only             
  TTRESG055  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Discriminated union implemented using a record must be sealed                    
@@ -50,10 +52,6 @@
  TTRESG068  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG069  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
  TTRESG070  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | DiagnosticsDescriptors                                                           
- TTRESG071  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | TypeParamRef index exceeds the number of type parameters                         
- TTRESG072  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | TypeParamRef cannot be used on non-generic ad-hoc union                          
- TTRESG073  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad-hoc unions do not support 'allows ref struct' type parameters                 
- TTRESG074  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Type parameter used via TypeParamRef must have 'notnull' constraint              
  TTRESG097  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Error during analysis of referenced modules                                      
  TTRESG098  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Error during code analysis                                                       
  TTRESG099  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Error during code generation                                                     
@@ -64,12 +62,24 @@
  TTRESG104  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Members disallowing default values must be required                              
  TTRESG105  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
  TTRESG106  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | DiagnosticsDescriptors                                                           
- TTRESG107  | ThinktectureRuntimeExtensionsAnalyzer              | Warning  | Generic ad-hoc union does not reference any type parameter via TypeParamRef      
  TTRESG1000 | ThinktectureRuntimeExtensionsInternalUsageAnalyzer | Warning  | Internal Thinktecture.Runtime.Extensions API usage                               
  TTRESG1001 | ThinktectureRuntimeExtensionsAnalyzer              | Info     | UseSwitchMapWithStaticLambda                                                     
 
+## Release 10.0
+
+### New Rules
+
+ Rule ID   | Category                              | Severity | Notes                                                                       
+-----------|---------------------------------------|----------|-----------------------------------------------------------------------------
+ TTRESG071 | ThinktectureRuntimeExtensionsAnalyzer | Error    | TypeParamRef index exceeds the number of type parameters                    
+ TTRESG072 | ThinktectureRuntimeExtensionsAnalyzer | Error    | TypeParamRef cannot be used on non-generic ad-hoc union                     
+ TTRESG073 | ThinktectureRuntimeExtensionsAnalyzer | Error    | Ad-hoc unions do not support 'allows ref struct' type parameters            
+ TTRESG074 | ThinktectureRuntimeExtensionsAnalyzer | Error    | Type parameter used via TypeParamRef must have 'notnull' constraint         
+ TTRESG107 | ThinktectureRuntimeExtensionsAnalyzer | Warning  | Generic ad-hoc union does not reference any type parameter via TypeParamRef 
+
 ### Removed Rules
 
- Rule ID    | Category                                           | Severity | Notes                                                                            
-------------|----------------------------------------------------|----------|----------------------------------------------------------------------------------
- TTRESG033  | ThinktectureRuntimeExtensionsAnalyzer              | Error    | Ad hoc unions are now allowed to be generic                                      
+ Rule ID   | Category                              | Severity | Notes                                       
+-----------|---------------------------------------|----------|---------------------------------------------
+ TTRESG033 | ThinktectureRuntimeExtensionsAnalyzer | Error    | Ad hoc unions are now allowed to be generic 
+ TTRESG052 | ThinktectureRuntimeExtensionsAnalyzer | Error    | No longer used                              

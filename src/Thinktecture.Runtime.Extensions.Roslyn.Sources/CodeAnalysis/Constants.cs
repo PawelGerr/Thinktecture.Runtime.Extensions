@@ -162,6 +162,7 @@ public static class Constants
          public const string USE_FOR_SERIALIZATION = "UseForSerialization";
          public const string USE_SINGLE_BACKING_FIELD = "UseSingleBackingField";
          public const string USE_WITH_ENTITY_FRAMEWORK = "UseWithEntityFramework";
+         public const string SINGLE_BACKING_FIELD_TYPE = "SingleBackingFieldType";
       }
 
       public static class ValueObject

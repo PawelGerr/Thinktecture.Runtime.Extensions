@@ -29,8 +29,8 @@ namespace Thinktecture.Tests
 
       private readonly int _valueIndex;
 
-      private readonly int _int32;
       private readonly object? _obj;
+      private readonly int _int32;
       private readonly bool _boolean;
       private readonly int? _nullableOfInt32;
 
@@ -568,8 +568,8 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             1 => this._int32.Equals(other._int32),
-            2 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
-            3 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Collections.Generic.List<int>)this._obj!).Equals(((global::System.Collections.Generic.List<int>?)other._obj)),
+            2 => this._obj is null ? other._obj is null : ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
+            3 => this._obj is null ? other._obj is null : ((global::System.Collections.Generic.List<int>)this._obj!).Equals(((global::System.Collections.Generic.List<int>?)other._obj)),
             4 => this._boolean.Equals(other._boolean),
             5 => this._nullableOfInt32.Equals(other._nullableOfInt32),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")

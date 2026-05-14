@@ -1600,4 +1600,397 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_use_typed_backing_field_when_SingleBackingFieldType_is_set()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(IFoo))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_typed_backing_field_with_abstract_base_class()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public abstract class FooBase { public abstract string Bar { get; } }
+         	public class Foo1 : FooBase { public override string Bar => "foo1"; }
+         	public class Foo2 : FooBase { public override string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(FooBase))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_typed_backing_field_with_value_type_members()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, double>(SingleBackingFieldType = typeof(IComparable))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_emit_cached_boxed_default_for_stateless_struct_with_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public readonly struct EmptyState : IFoo { public string Bar => "empty"; }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+
+         	[Union<EmptyState, Foo1>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_leave_obj_unassigned_for_stateless_reference_type_with_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class NullFoo : IFoo { public string Bar => "null"; }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+
+         	[Union<NullFoo, Foo1>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_make_Value_nullable_when_TXIsNullableReferenceType_set_with_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsNullableReferenceType = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public void Should_normalize_typeof_object_in_SingleBackingFieldType_to_default_behavior()
+   {
+      // The design specifies: setting SingleBackingFieldType implies UseSingleBackingField = true,
+      // and typeof(object) is normalized so it behaves identically to UseSingleBackingField = true alone.
+      // Explicit-pair: caller sets both SingleBackingFieldType = typeof(object) AND UseSingleBackingField = true
+      // (mirrors what the cascade is supposed to do). Output must match UseSingleBackingField = true alone.
+      var sourceWithTypeofObject = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string, List<int>, bool, int?>(SingleBackingFieldType = typeof(object), UseSingleBackingField = true)]
+            public partial class TestUnion;
+         }
+         """;
+      var sourceWithUseSingleBackingField = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string, List<int>, bool, int?>(UseSingleBackingField = true)]
+            public partial class TestUnion;
+         }
+         """;
+      var outputsObject = GetGeneratedOutputs<AdHocUnionSourceGenerator>(sourceWithTypeofObject, typeof(UnionAttribute<,>).Assembly);
+      var outputsFlag = GetGeneratedOutputs<AdHocUnionSourceGenerator>(sourceWithUseSingleBackingField, typeof(UnionAttribute<,>).Assembly);
+
+      outputsObject.Should().HaveCount(outputsFlag.Count);
+
+      foreach (var (key, value) in outputsObject)
+      {
+         outputsFlag.Should().ContainKey(key);
+         outputsFlag[key].Should().Be(value);
+      }
+   }
+
+   [Fact]
+   public async Task Should_apply_cascade_when_SingleBackingFieldType_set_without_UseSingleBackingField()
+   {
+      // No explicit UseSingleBackingField — cascade should kick in.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(IFoo))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_resolve_TypeParamRef_in_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<List<TypeParamRef1>, TypeParamRef1[]>(SingleBackingFieldType = typeof(IEnumerable<TypeParamRef1>))]
+         	public partial class TestUnion<T> where T : notnull;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_all_stateless_struct_members_with_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public readonly struct A : IFoo { public string Bar => "a"; }
+         	public readonly struct B : IFoo { public string Bar => "b"; }
+
+         	[Union<A, B>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsStateless = true,
+         	   T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_handle_mixed_ref_and_value_types_with_reference_base_in_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public readonly struct Foo2Struct : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2Struct>(SingleBackingFieldType = typeof(IFoo))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_nullable_struct_backing_field_when_SingleBackingFieldType_is_nullable_struct()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, short>(SingleBackingFieldType = typeof(int?))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_keep_value_type_backing_field_as_is_with_nullable_members()
+   {
+      // SingleBackingFieldType = typeof(int) (non-nullable struct) combined with a nullable
+      // reference member (string?) should NOT auto-upgrade _obj to int? -- the user's chosen
+      // non-nullable type wins. (Member-type assignability is left to the compiler.)
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class Foo {}
+
+         	[Union<int, Foo>(
+         	   SingleBackingFieldType = typeof(int),
+         	   T2IsNullableReferenceType = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_emit_Value_index_check_with_throw_for_struct_union_with_SingleBackingFieldType()
+   {
+      // Struct unions with SingleBackingFieldType: the Value getter must NOT short-circuit to
+      // `this._obj` -- it must check `_valueIndex == 0` and throw InvalidOperationException so a
+      // `default(StructUnion).Value` matches the contract documented on the property and the
+      // behavior of AsTx/Switch/Map/ToString/Equals.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(IFoo))]
+         	public readonly partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_emit_Value_index_check_with_throw_for_struct_union_with_stateless_struct_member_and_SingleBackingFieldType()
+   {
+      // Struct union with a stateless struct member: the Value getter returns `this._obj`
+      // uniformly (the ctor for the stateless member assigns _obj = _cachedBoxedX). The
+      // `_valueIndex == 0` check must still throw to match the documented contract on
+      // default(StructUnion).
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public readonly struct EmptyState : IFoo { public string Bar => "empty"; }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+
+         	[Union<EmptyState, Foo1>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsStateless = true)]
+         	public readonly partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_keep_Value_short_circuit_for_class_union_with_SingleBackingFieldType()
+   {
+      // Class unions with SingleBackingFieldType: the Value getter keeps the short-circuit
+      // `Value => this._obj;`. Class instances cannot be uninitialized via `default(...)`, so no
+      // discriminator throw is needed. This snapshot guards against accidental regressions if the
+      // struct fix is generalized to all unions.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(IFoo))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_use_typed_backing_field_for_AdHocUnionAttribute_with_SingleBackingFieldType()
+   {
+      // Non-generic [AdHocUnion(...)] form: SingleBackingFieldType lives on UnionAttributeBase
+      // and must work identically to the generic [Union<...>] form. Snapshot guards parity.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[AdHocUnion(typeof(Foo1), typeof(Foo2), SingleBackingFieldType = typeof(IFoo))]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

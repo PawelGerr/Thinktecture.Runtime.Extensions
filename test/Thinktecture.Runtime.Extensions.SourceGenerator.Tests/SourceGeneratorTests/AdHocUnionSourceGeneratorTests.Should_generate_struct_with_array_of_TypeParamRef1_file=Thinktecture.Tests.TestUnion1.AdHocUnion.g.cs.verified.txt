@@ -352,8 +352,8 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
-            1 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((T[])this._obj!).Equals(((T[]?)other._obj)),
-            2 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
+            1 => this._obj is null ? other._obj is null : ((T[])this._obj!).Equals(((T[]?)other._obj)),
+            2 => this._obj is null ? other._obj is null : ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

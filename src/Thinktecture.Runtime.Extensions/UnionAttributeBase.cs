@@ -62,6 +62,25 @@ public abstract class UnionAttributeBase : Attribute
    public bool UseSingleBackingField { get; set; }
 
    /// <summary>
+   /// When set, the generator emits the single shared backing field (and the <c>Value</c> property)
+   /// typed as the provided base type instead of <see cref="object"/>.
+   /// </summary>
+   /// <remarks>
+   /// <para>
+   /// Setting this property implies <see cref="UseSingleBackingField"/> = <c>true</c>.
+   /// </para>
+   /// <para>
+   /// Specifying <c>typeof(object)</c> is normalized to "not set" and behaves identically to
+   /// <see cref="UseSingleBackingField"/> = <c>true</c> alone.
+   /// </para>
+   /// <para>
+   /// For generic unions, <c>SingleBackingFieldType</c> supports the <c>TypeParamRef1</c>–<c>TypeParamRef5</c> placeholders to reference the union's own type parameters.
+   /// Nested usage (e.g. <c>typeof(IFoo&lt;TypeParamRef1&gt;)</c>) is supported.
+   /// </para>
+   /// </remarks>
+   public Type? SingleBackingFieldType { get; set; }
+
+   /// <summary>
    /// Indication whether the generator should skip the implementation of <c>IEquatable{T}</c> and any comparison operators.
    /// This includes the <c>Equals</c> and <c>GetHashCode</c> methods.
    /// </summary>

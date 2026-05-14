@@ -203,8 +203,17 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
          if (factory is null)
             return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), "Could not fetch type information for code generation of a discriminated union"]);
 
+         // Resolve and normalize SingleBackingFieldType at the symbol layer; pass only plain data
+         // into AdHocUnionSettings so the settings/state objects stay free of ISymbol/Compilation
+         // references (required for source-generator incremental caching).
+         var rawSingleBackingFieldType = context.Attributes[0].FindSingleBackingFieldType();
+         var hasSingleBackingFieldType = rawSingleBackingFieldType is not null;
+         var singleBackingFieldTypeInfo = NormalizeSingleBackingFieldType(context, rawSingleBackingFieldType, type);
+
          var settings = new AdHocUnionSettings(context.Attributes[0],
-                                               memberTypeSymbols.Length);
+                                               memberTypeSymbols.Length,
+                                               hasSingleBackingFieldType,
+                                               singleBackingFieldTypeInfo);
 
          var memberTypeStates = ImmutableArray.CreateBuilder<AdHocUnionMemberTypeState>(memberTypeSymbols.Length);
 
@@ -276,6 +285,37 @@ public sealed class AdHocUnionSourceGenerator() : ThinktectureSourceGeneratorBas
       {
          return new SourceGenException("Error during extraction of relevant information out of semantic model for generation of a discriminated union", ex, tds);
       }
+   }
+
+   private static SingleBackingFieldTypeInfo? NormalizeSingleBackingFieldType(
+      GeneratorAttributeSyntaxContext context,
+      ITypeSymbol? rawSingleBackingFieldType,
+      INamedTypeSymbol type)
+   {
+      SingleBackingFieldTypeInfo? singleBackingFieldTypeInfo = null;
+
+      if (rawSingleBackingFieldType is null)
+         return singleBackingFieldTypeInfo;
+
+      var resolved = rawSingleBackingFieldType;
+
+      if (!type.TypeParameters.IsDefaultOrEmpty)
+      {
+         var (r, _) = rawSingleBackingFieldType.ResolveTypeParamRefs(type.TypeParameters, context.SemanticModel.Compilation);
+         resolved = r;
+      }
+
+      // Normalize typeof(object) to "not set" so the existing UseSingleBackingField=true
+      // code path is preserved byte-for-byte.
+      if (resolved.SpecialType != SpecialType.System_Object)
+      {
+         singleBackingFieldTypeInfo = new SingleBackingFieldTypeInfo(
+            resolved.ToFullyQualifiedDisplayString(),
+            resolved.IsReferenceType,
+            resolved is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T });
+      }
+
+      return singleBackingFieldTypeInfo;
    }
 
    private void InitializeUnionTypeGeneration(

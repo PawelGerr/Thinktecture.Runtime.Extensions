@@ -342,8 +342,8 @@ namespace Thinktecture.Tests
 
          return this._valueIndex switch
          {
-            1 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Func<int, string>)this._obj!).Equals(((global::System.Func<int, string>?)other._obj)),
-            2 => this._obj is null ? other._obj is null : this._valueIndex == other._valueIndex && ((global::System.Action<int>)this._obj!).Equals(((global::System.Action<int>?)other._obj)),
+            1 => this._obj is null ? other._obj is null : ((global::System.Func<int, string>)this._obj!).Equals(((global::System.Func<int, string>?)other._obj)),
+            2 => this._obj is null ? other._obj is null : ((global::System.Action<int>)this._obj!).Equals(((global::System.Action<int>?)other._obj)),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }

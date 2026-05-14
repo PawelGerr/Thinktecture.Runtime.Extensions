@@ -277,6 +277,16 @@ public static class AttributeDataExtensions
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_SINGLE_BACKING_FIELD);
    }
 
+   public static ITypeSymbol? FindSingleBackingFieldType(this AttributeData attributeData)
+   {
+      var value = attributeData.FindNamedAttributeValue(Constants.Attributes.Properties.SINGLE_BACKING_FIELD_TYPE);
+
+      if (value.Value is not ITypeSymbol typeSymbol || typeSymbol.TypeKind == TypeKind.Error)
+         return null;
+
+      return typeSymbol;
+   }
+
    public static JsonIgnoreCondition? FindJsonIgnoreCondition(this AttributeData attributeData)
    {
       return GetEnumParameterValue<JsonIgnoreCondition>(attributeData, Constants.Attributes.Properties.CONDITION);

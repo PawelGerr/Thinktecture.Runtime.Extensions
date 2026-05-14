@@ -64,6 +64,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.ComparisonAndEqualityOperatorsMismatch,
       DiagnosticsDescriptors.UseSwitchMapWithStaticLambda,
       DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint,
+      DiagnosticsDescriptors.SingleBackingFieldTypeConflictsWithUseSingleBackingField,
    ];
 
    /// <inheritdoc />
@@ -165,7 +166,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
          if (adHocUnionAttribute is not null)
          {
-            ValidateAdHocUnion(context, type);
+            ValidateAdHocUnion(context, type, adHocUnionAttribute);
             ValidateObjectFactories(context, type, objectFactoryAttributes, false);
 
             needsObjectFactoryHandling = false;
@@ -544,7 +545,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
    private static void ValidateAdHocUnion(
       SymbolAnalysisContext context,
-      INamedTypeSymbol type)
+      INamedTypeSymbol type,
+      AttributeData adHocUnionAttribute)
    {
       if (type.IsRecord || type.TypeKind is not (TypeKind.Class or TypeKind.Struct))
       {
@@ -558,6 +560,22 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       CheckConstructors(context, type, mustBePrivate: false, canHavePrimaryConstructor: false);
       TypeMustBePartial(context, type);
+
+      // TTRESG075: explicit 'UseSingleBackingField = false' conflicts with 'SingleBackingFieldType'.
+      var hasSingleBackingFieldType = adHocUnionAttribute.FindSingleBackingFieldType() is not null;
+      var useSingleBackingField = adHocUnionAttribute.FindUseSingleBackingField();
+
+      if (hasSingleBackingFieldType && useSingleBackingField == false)
+      {
+         var location = adHocUnionAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation()
+                        ?? type.GetTypeIdentifierLocation(context.CancellationToken);
+
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.SingleBackingFieldTypeConflictsWithUseSingleBackingField,
+            location,
+            BuildTypeName(type));
+      }
    }
 
    private static void ValidateRegularUnion(
