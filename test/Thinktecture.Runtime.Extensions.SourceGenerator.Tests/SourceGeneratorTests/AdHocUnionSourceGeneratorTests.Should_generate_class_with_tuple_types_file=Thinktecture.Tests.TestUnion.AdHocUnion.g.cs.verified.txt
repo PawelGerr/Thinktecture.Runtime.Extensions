@@ -86,6 +86,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion((int, string) @valueTupleOfInt32String)
       {
+         NormalizeValueTupleOfInt32String(ref @valueTupleOfInt32String);
          this._valueTupleOfInt32String = @valueTupleOfInt32String;
          this._valueIndex = 1;
       }
@@ -97,6 +98,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(bool @boolean)
       {
+         NormalizeBoolean(ref @boolean);
          this._boolean = @boolean;
          this._valueIndex = 2;
       }
@@ -374,5 +376,11 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeValueTupleOfInt32String(ref (int, string) @valueTupleOfInt32String);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeBoolean(ref bool @boolean);
    }
 }

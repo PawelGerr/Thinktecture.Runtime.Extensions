@@ -44,6 +44,7 @@ public static class Constants
       public const string GET = "Get";
       public const string MAP = "Map";
       public const string MAP_PARTIALLY = "MapPartially";
+      public const string NORMALIZE = "Normalize";
       public const string SWITCH = "Switch";
       public const string SWITCH_PARTIALLY = "SwitchPartially";
       public const string TO_STRING = "ToString";

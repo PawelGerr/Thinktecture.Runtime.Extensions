@@ -1602,6 +1602,48 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_not_emit_Normalize_for_duplicate_member_with_FactoryMethodGeneration_None()
+   {
+      // With FactoryMethodGeneration = None and duplicate types, the duplicate members have no
+      // accessible call site (private indexed ctor, no factory). No NormalizeXxx must be emitted
+      // for those members. Counter == 0 members still get Normalize in the public ctor.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<int, string, string>(FactoryMethodGeneration = FactoryMethodGeneration.None)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_emit_Normalize_in_ctor_when_factory_generation_triggered_by_interface_member()
+   {
+      // An interface member triggers factory generation for all members. Both members have counter == 0,
+      // so both get their Normalize call in the public ctor; the generated factories simply delegate to
+      // the ctor and must not double-fire.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+
+         	[Union<string, IFoo>]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_use_typed_backing_field_when_SingleBackingFieldType_is_set()
    {
       var source = """

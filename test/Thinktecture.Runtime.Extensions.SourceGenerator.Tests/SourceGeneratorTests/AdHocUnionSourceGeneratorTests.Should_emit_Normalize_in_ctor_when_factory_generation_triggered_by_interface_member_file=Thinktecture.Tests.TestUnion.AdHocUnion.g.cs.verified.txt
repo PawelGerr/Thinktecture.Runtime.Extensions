@@ -19,69 +19,40 @@ namespace Thinktecture.Tests
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {
                            typeof(string),
-                           typeof(string),
-                           typeof(int),
-                           typeof(int)
+                           typeof(global::Thinktecture.Tests.IFoo)
                        }
                        .AsReadOnly()
       };
 
       private readonly int _valueIndex;
 
-      private readonly string? _string;
-      private readonly int _int32;
+      private readonly object? _obj;
 
       /// <summary>
       /// Indication whether the current value is of type <see cref="string"/>.
       /// </summary>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public bool IsString1 => this._valueIndex == 1;
+      public bool IsString => this._valueIndex == 1;
 
       /// <summary>
-      /// Indication whether the current value is of type <see cref="string"/>.
+      /// Indication whether the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.
       /// </summary>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public bool IsString2 => this._valueIndex == 2;
-
-      /// <summary>
-      /// Indication whether the current value is of type <see cref="int"/>.
-      /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public bool IsInt321 => this._valueIndex == 3;
-
-      /// <summary>
-      /// Indication whether the current value is of type <see cref="int"/>.
-      /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public bool IsInt322 => this._valueIndex == 4;
+      public bool IsIFoo => this._valueIndex == 2;
 
       /// <summary>
       /// Gets the current value as <see cref="string"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public string AsString1 => IsString1 ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
+      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
-      /// Gets the current value as <see cref="string"/>.
+      /// Gets the current value as <see cref="global::Thinktecture.Tests.IFoo"/>.
       /// </summary>
-      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
+      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests.IFoo"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public string AsString2 => IsString2 ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
-
-      /// <summary>
-      /// Gets the current value as <see cref="int"/>.
-      /// </summary>
-      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public int AsInt321 => IsInt321 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
-
-      /// <summary>
-      /// Gets the current value as <see cref="int"/>.
-      /// </summary>
-      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public int AsInt322 => IsInt322 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
+      public global::Thinktecture.Tests.IFoo AsIFoo => IsIFoo ? ((global::Thinktecture.Tests.IFoo?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'IFoo' but of type '{GetMemberTypeName()}'.");
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -91,9 +62,7 @@ namespace Thinktecture.Tests
          {
             0 => "<uninitialized>",
             1 => "string",
-            2 => "string",
-            3 => "int",
-            4 => "int",
+            2 => "IFoo",
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -104,106 +73,76 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public object Value => this._valueIndex switch
       {
-         1 => this._string!,
-         2 => this._string!,
-         3 => this._int32,
-         4 => this._int32,
+         1 => this._obj!,
+         2 => this._obj!,
          _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
       };
 
+      /// <summary>
+      /// Initializes new instance with <paramref name="string"/>.
+      /// </summary>
+      /// <param name="string">Value to create a new instance for.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      private TestUnion(string? @value, int @valueIndex)
+      public TestUnion(string @string)
       {
-         this._string = @value;
-         this._valueIndex = @valueIndex;
+         NormalizeString(ref @string);
+         this._obj = @string;
+         this._valueIndex = 1;
       }
 
+      /// <summary>
+      /// Initializes new instance with <paramref name="iFoo"/>.
+      /// </summary>
+      /// <param name="iFoo">Value to create a new instance for.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      private TestUnion(int @value, int @valueIndex)
+      public TestUnion(global::Thinktecture.Tests.IFoo @iFoo)
       {
-         this._int32 = @value;
-         this._valueIndex = @valueIndex;
+         NormalizeIFoo(ref @iFoo);
+         this._obj = @iFoo;
+         this._valueIndex = 2;
       }
 
       /// <summary>
       /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
       /// </summary>
-      /// <param name="string1">Value to create a new instance for.</param>
+      /// <param name="string">Value to create a new instance for.</param>
       /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
+      public static global::Thinktecture.Tests.TestUnion CreateString(string @string)
       {
-         NormalizeString1(ref @string1);
-         return new global::Thinktecture.Tests.TestUnion(@string1, 1);
+         return new global::Thinktecture.Tests.TestUnion(@string);
       }
 
       /// <summary>
-      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="string"/>.
+      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="global::Thinktecture.Tests.IFoo"/>.
       /// </summary>
-      /// <param name="string2">Value to create a new instance for.</param>
+      /// <param name="iFoo">Value to create a new instance for.</param>
       /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
+      public static global::Thinktecture.Tests.TestUnion CreateIFoo(global::Thinktecture.Tests.IFoo @iFoo)
       {
-         NormalizeString2(ref @string2);
-         return new global::Thinktecture.Tests.TestUnion(@string2, 2);
-      }
-
-      /// <summary>
-      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
-      /// </summary>
-      /// <param name="int321">Value to create a new instance for.</param>
-      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public static global::Thinktecture.Tests.TestUnion CreateInt321(int @int321)
-      {
-         NormalizeInt321(ref @int321);
-         return new global::Thinktecture.Tests.TestUnion(@int321, 3);
-      }
-
-      /// <summary>
-      /// Creates a new instance of <see cref="TestUnion"/> from a value of type <see cref="int"/>.
-      /// </summary>
-      /// <param name="int322">Value to create a new instance for.</param>
-      /// <returns>A new instance of <see cref="TestUnion"/>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public static global::Thinktecture.Tests.TestUnion CreateInt322(int @int322)
-      {
-         NormalizeInt322(ref @int322);
-         return new global::Thinktecture.Tests.TestUnion(@int322, 4);
+         return new global::Thinktecture.Tests.TestUnion(@iFoo);
       }
 
 #pragma warning disable CS0436 // InstantHandleAttribute may come from a different assembly
       /// <summary>
       /// Executes an action depending on the current value.
       /// </summary>
-      /// <param name="string1">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="string2">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="int321">The action to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="int322">The action to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+      /// <param name="iFoo">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string1,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string2,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int321,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<int> @int322)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.IFoo> @iFoo)
       {
          switch (this._valueIndex)
          {
             case 1:
-               @string1(this._string!);
+               @string(((string?)this._obj)!);
                return;
             case 2:
-               @string2(this._string!);
-               return;
-            case 3:
-               @int321(this._int32);
-               return;
-            case 4:
-               @int322(this._int32);
+               @iFoo(((global::Thinktecture.Tests.IFoo?)this._obj)!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -216,18 +155,14 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="string1">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="string2">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="int321">The action to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="int322">The action to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
+      /// <param name="iFoo">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string1,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string2,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int321,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, int> @int322)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.IFoo> @iFoo)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
 #endif
@@ -235,16 +170,10 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               @string1(@state, this._string!);
+               @string(@state, ((string?)this._obj)!);
                return;
             case 2:
-               @string2(@state, this._string!);
-               return;
-            case 3:
-               @int321(@state, this._int32);
-               return;
-            case 4:
-               @int322(@state, this._int32);
+               @iFoo(@state, ((global::Thinktecture.Tests.IFoo?)this._obj)!);
                return;
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
@@ -256,17 +185,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes a function depending on the current value.
       /// </summary>
-      /// <param name="string1">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="string2">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="int321">The function to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="int322">The function to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+      /// <param name="iFoo">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string1,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string2,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int321,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<int, TResult> @int322)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.IFoo, TResult> @iFoo)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -274,13 +199,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @string1(this._string!);
+               return @string(((string?)this._obj)!);
             case 2:
-               return @string2(this._string!);
-            case 3:
-               return @int321(this._int32);
-            case 4:
-               return @int322(this._int32);
+               return @iFoo(((global::Thinktecture.Tests.IFoo?)this._obj)!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -292,18 +213,14 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="string1">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="string2">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <param name="int321">The function to execute if the current value is of type <see cref="int"/>.</param>
-      /// <param name="int322">The function to execute if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
+      /// <param name="iFoo">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string1,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string2,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int321,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, int, TResult> @int322)
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.IFoo, TResult> @iFoo)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 		   where TState : allows ref struct
@@ -312,13 +229,9 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @string1(@state, this._string!);
+               return @string(@state, ((string?)this._obj)!);
             case 2:
-               return @string2(@state, this._string!);
-            case 3:
-               return @int321(@state, this._int32);
-            case 4:
-               return @int322(@state, this._int32);
+               return @iFoo(@state, ((global::Thinktecture.Tests.IFoo?)this._obj)!);
             default:
                throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
@@ -328,17 +241,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Maps current value to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
-      /// <param name="string1">The instance to return if the current value is of type <see cref="string"/>.</param>
-      /// <param name="string2">The instance to return if the current value is of type <see cref="string"/>.</param>
-      /// <param name="int321">The instance to return if the current value is of type <see cref="int"/>.</param>
-      /// <param name="int322">The instance to return if the current value is of type <see cref="int"/>.</param>
+      /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
+      /// <param name="iFoo">The instance to return if the current value is of type <see cref="global::Thinktecture.Tests.IFoo"/>.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
-         TResult @string1,
-         TResult @string2,
-         TResult @int321,
-         TResult @int322)
+         TResult @string,
+         TResult @iFoo)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
 #endif
@@ -346,16 +255,37 @@ namespace Thinktecture.Tests
          switch (this._valueIndex)
          {
             case 1:
-               return @string1;
+               return @string;
             case 2:
-               return @string2;
-            case 3:
-               return @int321;
-            case 4:
-               return @int322;
+               return @iFoo;
             default:
                throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
          }
+      }
+
+      /// <summary>
+      /// Implicit conversion from type <see cref="string"/>.
+      /// </summary>
+      /// <param name="string">Value to convert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
+      {
+         return new global::Thinktecture.Tests.TestUnion(@string);
+      }
+
+      /// <summary>
+      /// Explicit conversion to type <see cref="string"/>.
+      /// </summary>
+      /// <param name="obj">Object to convert.</param>
+      /// <returns>Inner value of type <see cref="string"/>.</returns>
+      /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+      public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
+      {
+         return obj.AsString;
       }
 
       /// <summary>
@@ -411,10 +341,8 @@ namespace Thinktecture.Tests
 
          return this._valueIndex switch
          {
-            1 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
-            2 => this._string is null ? other._string is null : this._string.Equals(other._string, global::System.StringComparison.OrdinalIgnoreCase),
-            3 => this._int32.Equals(other._int32),
-            4 => this._int32.Equals(other._int32),
+            1 => this._obj is null ? other._obj is null : ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
+            2 => this._obj is null ? other._obj is null : ((global::Thinktecture.Tests.IFoo)this._obj!).Equals(((global::Thinktecture.Tests.IFoo?)other._obj)),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -426,10 +354,8 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
-            2 => this._string?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
-            3 => this._int32.GetHashCode(),
-            4 => this._int32.GetHashCode(),
+            1 => ((string?)this._obj)?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
+            2 => ((global::Thinktecture.Tests.IFoo?)this._obj)?.GetHashCode() ?? 0,
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
@@ -441,24 +367,16 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            1 => this._string,
-            2 => this._string,
-            3 => this._int32.ToString(),
-            4 => this._int32.ToString(),
+            1 => ((string?)this._obj),
+            2 => ((global::Thinktecture.Tests.IFoo?)this._obj)?.ToString(),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      static partial void NormalizeString1(ref string @string1);
+      static partial void NormalizeString(ref string @string);
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      static partial void NormalizeString2(ref string @string2);
-
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      static partial void NormalizeInt321(ref int @int321);
-
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      static partial void NormalizeInt322(ref int @int322);
+      static partial void NormalizeIFoo(ref global::Thinktecture.Tests.IFoo @iFoo);
    }
 }

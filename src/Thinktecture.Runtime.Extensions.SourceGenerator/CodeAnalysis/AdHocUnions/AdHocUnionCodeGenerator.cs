@@ -151,8 +151,29 @@ namespace ").Append(_state.Namespace).Append(@"
       if (!_state.Settings.SkipToString)
          GenerateToString();
 
+      GenerateNormalizePartialDeclarations();
+
       _sb.Append(@"
    }");
+   }
+
+   private void GenerateNormalizePartialDeclarations()
+   {
+      foreach (var memberType in _state.MemberTypes)
+      {
+         if (memberType.Setting.IsStateless)
+            continue;
+
+         // No call site: with FactoryMethodGeneration = None and TypeDuplicateCounter != 0,
+         // no factory is generated and the indexed ctor is private. Skip the declaration.
+         if (!_needsFactoryMethods && memberType.TypeDuplicateCounter != 0)
+            continue;
+
+         _sb.Append(@"
+
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      static partial void ").Append(Constants.Methods.NORMALIZE).Append(memberType.Name).Append("(ref ").AppendTypeFullyQualified(memberType).Append(" ").AppendEscaped(memberType.ArgumentName).Append(");");
+      }
    }
 
    private void GenerateFactoryMethods()
@@ -220,7 +241,15 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@")
+      {");
+
+      if (memberType.TypeDuplicateCounter != 0 && !memberType.Setting.IsStateless)
       {
+         _sb.Append(@"
+         ").Append(Constants.Methods.NORMALIZE).Append(memberType.Name).Append("(ref ").AppendEscaped(memberType.ArgumentName).Append(");");
+      }
+
+      _sb.Append(@"
          return new ").AppendTypeFullyQualified(_state).Append("(");
 
       if (memberType.Setting.IsStateless)
@@ -1046,6 +1075,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
          _sb.Append(@")
       {");
+
+         if (!needsIndexedConstructor && !memberType.Setting.IsStateless)
+         {
+            _sb.Append(@"
+         ").Append(Constants.Methods.NORMALIZE).Append(memberType.Name).Append("(ref ").AppendEscaped(memberType.ArgumentName).Append(");");
+         }
 
          if (!memberType.Setting.IsStateless)
          {

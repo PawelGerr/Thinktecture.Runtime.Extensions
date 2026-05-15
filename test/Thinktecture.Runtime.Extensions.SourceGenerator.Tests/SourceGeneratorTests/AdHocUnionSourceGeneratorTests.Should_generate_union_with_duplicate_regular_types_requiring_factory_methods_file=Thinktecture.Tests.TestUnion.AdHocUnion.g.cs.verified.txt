@@ -135,6 +135,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.Tests.TestUnion CreateValue1(int @value1)
       {
+         NormalizeValue1(ref @value1);
          return new global::Thinktecture.Tests.TestUnion(@value1, 1);
       }
 
@@ -146,6 +147,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.Tests.TestUnion CreateString1(string @string1)
       {
+         NormalizeString1(ref @string1);
          return new global::Thinktecture.Tests.TestUnion(@string1, 2);
       }
 
@@ -157,6 +159,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.Tests.TestUnion CreateValue2(int @value2)
       {
+         NormalizeValue2(ref @value2);
          return new global::Thinktecture.Tests.TestUnion(@value2, 3);
       }
 
@@ -168,6 +171,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.Tests.TestUnion CreateString2(string @string2)
       {
+         NormalizeString2(ref @string2);
          return new global::Thinktecture.Tests.TestUnion(@string2, 4);
       }
 
@@ -444,5 +448,17 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeValue1(ref int @value1);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeString1(ref string @string1);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeValue2(ref int @value2);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeString2(ref string @string2);
    }
 }

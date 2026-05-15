@@ -101,6 +101,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(string? @string)
       {
+         NormalizeString(ref @string);
          this._obj = @string;
          this._valueIndex = 1;
       }
@@ -112,6 +113,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(global::System.Collections.Generic.List<int>? @listOfInt32)
       {
+         NormalizeListOfInt32(ref @listOfInt32);
          this._obj = @listOfInt32;
          this._valueIndex = 2;
       }
@@ -123,6 +125,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(object? @object)
       {
+         NormalizeObject(ref @object);
          this._obj = @object;
          this._valueIndex = 3;
       }
@@ -458,5 +461,14 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeString(ref string? @string);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeListOfInt32(ref global::System.Collections.Generic.List<int>? @listOfInt32);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeObject(ref object? @object);
    }
 }

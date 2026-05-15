@@ -80,6 +80,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(global::Thinktecture.Tests.Foo1? @foo1)
       {
+         NormalizeFoo1(ref @foo1);
          this._obj = @foo1;
          this._valueIndex = 1;
       }
@@ -91,6 +92,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(global::Thinktecture.Tests.Foo2 @foo2)
       {
+         NormalizeFoo2(ref @foo2);
          this._obj = @foo2;
          this._valueIndex = 2;
       }
@@ -368,5 +370,11 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeFoo1(ref global::Thinktecture.Tests.Foo1? @foo1);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeFoo2(ref global::Thinktecture.Tests.Foo2 @foo2);
    }
 }

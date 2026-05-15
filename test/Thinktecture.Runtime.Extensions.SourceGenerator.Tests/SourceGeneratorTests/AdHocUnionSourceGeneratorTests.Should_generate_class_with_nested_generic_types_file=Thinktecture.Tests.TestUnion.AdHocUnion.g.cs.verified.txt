@@ -86,6 +86,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(global::System.Collections.Generic.Dictionary<string, global::System.Collections.Generic.List<int>> @dictionaryOfStringListOfInt32)
       {
+         NormalizeDictionaryOfStringListOfInt32(ref @dictionaryOfStringListOfInt32);
          this._dictionaryOfStringListOfInt32 = @dictionaryOfStringListOfInt32;
          this._valueIndex = 1;
       }
@@ -97,6 +98,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(int @int32)
       {
+         NormalizeInt32(ref @int32);
          this._int32 = @int32;
          this._valueIndex = 2;
       }
@@ -374,5 +376,11 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeDictionaryOfStringListOfInt32(ref global::System.Collections.Generic.Dictionary<string, global::System.Collections.Generic.List<int>> @dictionaryOfStringListOfInt32);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeInt32(ref int @int32);
    }
 }

@@ -88,6 +88,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(global::System.Collections.Generic.List<T?> @listOfNullableOfT)
       {
+         NormalizeListOfNullableOfT(ref @listOfNullableOfT);
          this._obj = @listOfNullableOfT;
          this._valueIndex = 1;
       }
@@ -99,6 +100,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public TestUnion(string @string)
       {
+         NormalizeString(ref @string);
          this._obj = @string;
          this._valueIndex = 2;
       }
@@ -385,5 +387,11 @@ namespace Thinktecture.Tests
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeListOfNullableOfT(ref global::System.Collections.Generic.List<T?> @listOfNullableOfT);
+
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
+      static partial void NormalizeString(ref string @string);
    }
 }
