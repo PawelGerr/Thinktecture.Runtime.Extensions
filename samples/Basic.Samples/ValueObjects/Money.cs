@@ -18,7 +18,10 @@ namespace Thinktecture.ValueObjects;
 public readonly partial struct Money
    : IMultiplyOperators<Money, int, Money> // Multiplication with int don't lead to more than 2 decimal places
 {
-   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref decimal value)
+   // The additional 'roundingStrategy' parameter is declared WITHOUT a default value.
+   // The source generator reproduces it on its own declaration and supplies the default (= null) there,
+   // so the generated 'Create(decimal)' (which omits the argument) falls back to the default strategy.
+   static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref decimal value, MoneyRoundingStrategy? roundingStrategy)
    {
       if (value < 0)
       {
@@ -26,7 +29,8 @@ public readonly partial struct Money
          return;
       }
 
-      value = MoneyRoundingStrategy.Default.Round(value);
+      // Rounding happens exactly once - here in the hook - regardless of which factory method is used.
+      value = (roundingStrategy ?? MoneyRoundingStrategy.Default).Round(value);
    }
 
    public static Money? Create(decimal? amount, MoneyRoundingStrategy roundingStrategy)
@@ -36,7 +40,12 @@ public readonly partial struct Money
 
    public static Money Create(decimal amount, MoneyRoundingStrategy roundingStrategy)
    {
-      return Create(roundingStrategy.Round(amount));
+      ValidationError? validationError = null;
+      ValidateFactoryArguments(ref validationError, ref amount, roundingStrategy);
+
+      return validationError is not null
+                ? throw new System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString())
+                : new Money(amount);
    }
 
    public static Money operator *(Money left, int right)

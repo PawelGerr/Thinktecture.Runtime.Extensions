@@ -65,6 +65,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.UseSwitchMapWithStaticLambda,
       DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint,
       DiagnosticsDescriptors.SingleBackingFieldTypeConflictsWithUseSingleBackingField,
+      DiagnosticsDescriptors.ValidateFactoryArgumentsAdditionalParameterMustNotHaveDefaultOrBeByRef,
    ];
 
    /// <inheritdoc />
@@ -153,7 +154,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             var assignableMembers = ValidateSharedValueObject(context, type, tdsLocation, factory);
 
             if (assignableMembers is not null)
+            {
                CheckAssignableMembers(context, assignableMembers, type, complexValueObjectAttribute, tdsLocation);
+               ValidateFactoryArgumentsAdditionalParameters(context, type, 1 + assignableMembers.Count, tdsLocation);
+            }
          }
 
          if (regularUnionAttribute is not null)
@@ -666,6 +670,46 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (keyedValueObjectAttribute.FindSkipEqualityComparison() != true)
          CheckForComparisonMismatch(context, type, keyedValueObjectAttribute, tdsLocation);
+
+      ValidateFactoryArgumentsAdditionalParameters(context, type, 2, tdsLocation);
+   }
+
+   private static void ValidateFactoryArgumentsAdditionalParameters(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      int prefixParameterCount,
+      Location tdsLocation)
+   {
+      var members = type.GetMembers();
+
+      for (var i = 0; i < members.Length; i++)
+      {
+         if (!members[i].IsValidateFactoryArgumentsImplementation(out var method))
+            continue;
+
+         // Inspect the user's implementing declaration: on the merged partial-method symbol the parameter
+         // defaults come from the generated defining declaration, which would cause false positives.
+         var implementation = method.PartialImplementationPart ?? method;
+         var parameters = implementation.Parameters;
+
+         // The prefix parameters (ref validationError, ref value(s)) are legitimately 'ref' - only check the additional ones.
+         for (var j = prefixParameterCount; j < parameters.Length; j++)
+         {
+            var parameter = parameters[j];
+
+            if (parameter is { RefKind: RefKind.None, HasExplicitDefaultValue: false })
+               continue;
+
+            var location = parameter.Locations.IsDefaultOrEmpty ? tdsLocation : parameter.Locations[0];
+
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.ValidateFactoryArgumentsAdditionalParameterMustNotHaveDefaultOrBeByRef,
+               location,
+               parameter.Name,
+               type.ToFullyQualifiedDisplayString());
+         }
+      }
    }
 
    private static void CheckForComparisonMismatch(

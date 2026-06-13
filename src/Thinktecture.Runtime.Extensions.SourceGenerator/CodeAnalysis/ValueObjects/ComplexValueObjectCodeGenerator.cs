@@ -370,6 +370,9 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", comma: @",
          ", leadingComma: true);
 
+      _sb.RenderValidateFactoryAdditionalParameters(_state.FactoryValidationAdditionalParameters, @",
+         ");
+
       _sb.Append(");");
    }
 

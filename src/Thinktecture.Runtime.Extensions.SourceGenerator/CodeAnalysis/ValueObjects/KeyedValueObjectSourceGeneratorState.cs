@@ -26,6 +26,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
    public bool IsEqualWithReferenceEquality => false;
 
    public string? FactoryValidationReturnType { get; }
+   public ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> FactoryValidationAdditionalParameters { get; }
 
    public KeyMemberState KeyMember { get; }
    public ValidationErrorState ValidationError { get; }
@@ -47,7 +48,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
       ContainingTypes = type.GetContainingTypes();
       IsReferenceType = type.IsReferenceType;
       IsValueType = type.IsValueType;
-      FactoryValidationReturnType = type.GetValidateFactoryArgumentsReturnType();
+      (FactoryValidationReturnType, FactoryValidationAdditionalParameters) = type.GetValidateFactoryArgumentsInfo(2);
       GenericParameters = type.GetGenericTypeParameters();
    }
 
@@ -67,6 +68,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
              && IsReferenceType == other.IsReferenceType
              && IsValueType == other.IsValueType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
+             && FactoryValidationAdditionalParameters.SequenceEqual(other.FactoryValidationAdditionalParameters)
              && KeyMember.Equals(other.KeyMember)
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
@@ -82,6 +84,7 @@ public sealed class KeyedValueObjectSourceGeneratorState
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ FactoryValidationAdditionalParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ KeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();

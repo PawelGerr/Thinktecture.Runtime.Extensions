@@ -249,4 +249,43 @@ public class Create
 
       ((int?)obj).Should().Be(42);
    }
+
+   [Fact]
+   public void Should_apply_synthesized_default_for_additional_ValidateFactoryArguments_parameter_keyed()
+   {
+      // Generated Create(int) omits the extra argument -> synthesized default 'null' -> no clamping.
+      ((int)IntBasedValueObjectWithAdditionalValidateFactoryArgument.Create(42)).Should().Be(42);
+   }
+
+   [Fact]
+   public void Should_thread_additional_ValidateFactoryArguments_parameter_keyed()
+   {
+      // Hand-written factory threads the extra argument into the hook -> value is clamped.
+      ((int)IntBasedValueObjectWithAdditionalValidateFactoryArgument.Create(42, clampMax: 10)).Should().Be(10);
+   }
+
+   [Fact]
+   public void Should_run_validation_in_hook_with_additional_ValidateFactoryArguments_parameter_keyed()
+   {
+      Action action = () => IntBasedValueObjectWithAdditionalValidateFactoryArgument.Create(-1, clampMax: 10);
+
+      action.Should().Throw<ValidationException>();
+   }
+
+   [Fact]
+   public void Should_apply_synthesized_default_for_additional_ValidateFactoryArguments_parameter_complex()
+   {
+      // Generated Create(decimal, decimal) omits 'allowEqual' -> synthesized default 'default(bool)' = false -> equal boundaries are invalid.
+      Action action = () => BoundaryWithAdditionalValidateFactoryArgument.Create(5m, 5m);
+
+      action.Should().Throw<ValidationException>();
+   }
+
+   [Fact]
+   public void Should_thread_additional_ValidateFactoryArguments_parameter_complex()
+   {
+      var obj = BoundaryWithAdditionalValidateFactoryArgument.Create(5m, 5m, allowEqual: true);
+
+      obj.Should().BeEquivalentTo(new { Lower = 5m, Upper = 5m });
+   }
 }

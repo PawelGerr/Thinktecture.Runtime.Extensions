@@ -157,19 +157,78 @@ public static class NamedTypeSymbolExtensions
       return inSourceLocation ?? fallbackLocation ?? Location.None;
    }
 
-   public static string? GetValidateFactoryArgumentsReturnType(
-      this INamedTypeSymbol type)
+   /// <summary>
+   /// Discovers the user's <c>ValidateFactoryArguments</c> implementation (if any) and extracts both the
+   /// non-void return type and the additional trailing parameters declared past the fixed prefix.
+   /// </summary>
+   /// <param name="type">The value object type.</param>
+   /// <param name="prefixParameterCount">
+   /// Number of fixed leading parameters the generator controls: <c>2</c> for keyed value objects
+   /// (<c>ref validationError, ref value</c>); <c>1 + number of assignable members</c> for complex value objects.
+   /// </param>
+   public static (string? ReturnType, ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> AdditionalParameters) GetValidateFactoryArgumentsInfo(
+      this INamedTypeSymbol type,
+      int prefixParameterCount)
    {
       var members = type.GetMembers();
+
+      string? returnType = null;
+      var additionalParameters = ImmutableArray<ValidateFactoryArgumentsAdditionalParameter>.Empty;
+      var foundMethod = false;
 
       for (var i = 0; i < members.Length; i++)
       {
          var member = members[i];
 
-         if (member.IsValidateFactoryArgumentsImplementation(out var method) && method.ReturnType.SpecialType != SpecialType.System_Void)
-            return method.ReturnType.ToFullyQualifiedDisplayString();
+         if (!member.IsValidateFactoryArgumentsImplementation(out var method))
+            continue;
+
+         // The additional parameters belong to the partial hook method (exactly one in practice).
+         if (!foundMethod)
+         {
+            additionalParameters = GetValidateFactoryArgumentsAdditionalParameters(method, prefixParameterCount);
+            foundMethod = true;
+         }
+
+         // Return type is the first non-void one (kept for backward compatibility with overload resolution).
+         if (returnType is null && method.ReturnType.SpecialType != SpecialType.System_Void)
+            returnType = method.ReturnType.ToFullyQualifiedDisplayString();
       }
 
-      return null;
+      return (returnType, additionalParameters);
+   }
+
+   private static ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> GetValidateFactoryArgumentsAdditionalParameters(
+      IMethodSymbol method,
+      int prefixParameterCount)
+   {
+      var parameters = method.Parameters;
+
+      if (parameters.Length <= prefixParameterCount)
+         return ImmutableArray<ValidateFactoryArgumentsAdditionalParameter>.Empty;
+
+      var builder = ImmutableArray.CreateBuilder<ValidateFactoryArgumentsAdditionalParameter>(parameters.Length - prefixParameterCount);
+
+      for (var i = prefixParameterCount; i < parameters.Length; i++)
+      {
+         var parameter = parameters[i];
+
+         // 'ref'/'out' params and user-written defaults are reported by TTRESG076 and would otherwise be malformed.
+         if (parameter.RefKind != RefKind.None || parameter.HasExplicitDefaultValue)
+            continue;
+
+         var isReferenceType = parameter.Type.IsReferenceType;
+         var typeFullyQualified = parameter.Type.ToFullyQualifiedDisplayString();
+
+         // Reference types are emitted as nullable so the synthesized '= null' default is valid.
+         if (isReferenceType && parameter.Type.NullableAnnotation != NullableAnnotation.Annotated)
+            typeFullyQualified += "?";
+
+         builder.Add(new ValidateFactoryArgumentsAdditionalParameter(parameter.Name, typeFullyQualified, isReferenceType));
+      }
+
+      return builder.Count == builder.Capacity
+                ? builder.MoveToImmutable()
+                : builder.ToImmutable();
    }
 }

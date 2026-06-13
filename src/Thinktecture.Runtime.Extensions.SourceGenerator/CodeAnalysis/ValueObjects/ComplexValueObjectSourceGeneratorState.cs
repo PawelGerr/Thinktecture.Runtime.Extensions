@@ -30,6 +30,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
    public bool IsEqualWithReferenceEquality => false;
 
    public string? FactoryValidationReturnType { get; }
+   public ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> FactoryValidationAdditionalParameters { get; }
 
    public ImmutableArray<InstanceMemberInfo> AssignableInstanceFieldsAndProperties { get; }
    public ImmutableArray<EqualityInstanceMemberInfo> EqualityMembers { get; }
@@ -57,7 +58,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
 
       AssignableInstanceFieldsAndProperties = [..type.GetAssignableFieldsAndPropertiesAndCheckForReadOnly(factory, true, true, cancellationToken)];
       EqualityMembers = GetEqualityMembers();
-      FactoryValidationReturnType = type.GetValidateFactoryArgumentsReturnType();
+      (FactoryValidationReturnType, FactoryValidationAdditionalParameters) = type.GetValidateFactoryArgumentsInfo(1 + AssignableInstanceFieldsAndProperties.Length);
    }
 
    private ImmutableArray<EqualityInstanceMemberInfo> GetEqualityMembers()
@@ -115,6 +116,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
              && IsReferenceType == other.IsReferenceType
              && IsValueType == other.IsValueType
              && FactoryValidationReturnType == other.FactoryValidationReturnType
+             && FactoryValidationAdditionalParameters.SequenceEqual(other.FactoryValidationAdditionalParameters)
              && ValidationError.Equals(other.ValidationError)
              && Settings.Equals(other.Settings)
              && AssignableInstanceFieldsAndProperties.SequenceEqual(other.AssignableInstanceFieldsAndProperties)
@@ -131,6 +133,7 @@ public sealed class ComplexValueObjectSourceGeneratorState
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ (FactoryValidationReturnType?.GetHashCode() ?? 0);
+         hashCode = (hashCode * 397) ^ FactoryValidationAdditionalParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ Settings.GetHashCode();
          hashCode = (hashCode * 397) ^ EqualityMembers.ComputeHashCode();

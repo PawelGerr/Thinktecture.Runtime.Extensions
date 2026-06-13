@@ -183,6 +183,29 @@ public static class StringBuilderExtensions
       return sb.Append("@").Append(argName);
    }
 
+   /// <summary>
+   /// Renders the user-declared additional trailing parameters of <c>ValidateFactoryArguments</c> onto the
+   /// generated defining declaration, synthesizing the default value (<c>= null</c> for reference types,
+   /// <c>= default</c> for value types). Each parameter is prefixed with <paramref name="separator"/>; the
+   /// fixed prefix is never empty, so a leading separator is always valid. Pass the same separator the
+   /// surrounding declaration uses for its parameters (single-line <c>", "</c> vs. multi-line).
+   /// </summary>
+   public static StringBuilder RenderValidateFactoryAdditionalParameters(
+      this StringBuilder sb,
+      ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> parameters,
+      string separator = ", ")
+   {
+      for (var i = 0; i < parameters.Length; i++)
+      {
+         var parameter = parameters[i];
+
+         sb.Append(separator).Append(parameter.TypeFullyQualifiedWithNullability).Append(' ')
+           .AppendEscaped(parameter.Name).Append(parameter.IsReferenceType ? " = null" : " = default");
+      }
+
+      return sb;
+   }
+
    public static StringBuilder AppendEscaped(
       this StringBuilder sb,
       ArgumentName argName)

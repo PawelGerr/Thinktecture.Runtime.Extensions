@@ -2035,6 +2035,67 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_keyed_class_with_additional_ValidateFactoryArguments_parameter()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+         	public partial class TestValueObject
+         	{
+               static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref int value, string? extra, int count)
+               {
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  "ValueObject.g.cs",
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  ["No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?, ref int, string?, int)'"]);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_generate_complex_class_with_additional_ValidateFactoryArguments_parameter()
+   {
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         #nullable enable
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+         	public partial class TestValueObject
+         	{
+               public int Property { get; }
+
+               static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref int property, string? extra)
+               {
+               }
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  ["No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?, ref int, string?)'"]);
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
    public async Task Should_generate_keyed_class_with_SerializationFrameworks_None()
    {
       var source = """
