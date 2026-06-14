@@ -99,6 +99,22 @@ All generated types integrate with the .NET ecosystem out of the box:
 - **Newtonsoft.Json** -- `JsonConverter` support
 - **Swashbuckle / OpenAPI** -- schema and operation filters
 
+## AI Coding Assistants
+
+Two complementary ways to give an AI coding assistant accurate knowledge of this library:
+
+**Agent skill** -- a curated guidance package bundled in this repository that teaches AI coding agents (Claude Code, Cursor, and others) how to design and implement Smart Enums, Value Objects, Discriminated Unions, and Object Factories with this library. Install it into your project with the `skills` CLI:
+
+```bash
+npx skills@latest add PawelGerr/Thinktecture.Runtime.Extensions
+```
+
+This copies the skill into `.claude/skills/` (or the equivalent folder for your agent). Add `-g` to install it globally for all your projects.
+
+**Context7 (MCP)** -- this library's documentation is indexed by [Context7](https://context7.com/pawelgerr/thinktecture.runtime.extensions). Agents with the Context7 MCP server configured can pull current docs on demand; reference the library ID `/pawelgerr/thinktecture.runtime.extensions` (or add `use context7` to your prompt).
+
+[Full documentation](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/AI-Coding-Assistants) -- what the skill covers, install scopes, agent targeting, and Context7 usage.
+
 ## Packages
 
 | Package | NuGet |
@@ -133,6 +149,7 @@ All generated types integrate with the .NET ecosystem out of the box:
 - [Object Factories](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Object-Factories) -- custom creation logic for advanced parsing and deserialization
 - [Analyzer Diagnostics](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Analyzer-Diagnostics) -- reference for all `TTRESG` diagnostic rules
 - [Source Generator Configuration](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Source-Generator-Configuration) -- MSBuild properties for controlling generator behavior
+- [AI Coding Assistants](https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/AI-Coding-Assistants) -- the bundled agent skill and Context7 (MCP) support for Claude Code, Cursor, and other AI coding agents
 
 ## Articles
 

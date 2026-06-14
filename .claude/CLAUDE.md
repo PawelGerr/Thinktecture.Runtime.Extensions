@@ -207,6 +207,7 @@ The following documentation files in `docs/` are read by both humans and AI agen
 - `Analyzer-Diagnostics.md` -- Analyzer diagnostic rules reference
 - `Object-Factories.md` -- Object factory documentation
 - `Source-Generator-Configuration.md` -- Source generator configuration options
+- `AI-Coding-Assistants.md` -- The bundled agent skill (`npx skills` CLI) and Context7 (MCP) support for AI coding assistants
 - `Migrations.md`, `Migration-from-v6-to-v7.md`, `Migration-from-v7-to-v8.md`, `Migration-from-v8-to-v9.md`, `Migration-from-v9-to-v10.md` -- Migration guides
 - `Home.md`, `_Sidebar.md` -- Wiki navigation
 - `Empty-....md`, `SingleItem.md`, `ToReadOnlyCollection.md`, `TrimOrNullify.md` -- Utility/helper documentation
