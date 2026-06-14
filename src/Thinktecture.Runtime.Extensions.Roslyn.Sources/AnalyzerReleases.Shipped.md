@@ -83,3 +83,12 @@
 -----------|---------------------------------------|----------|---------------------------------------------
  TTRESG033 | ThinktectureRuntimeExtensionsAnalyzer | Error    | Ad hoc unions are now allowed to be generic 
  TTRESG052 | ThinktectureRuntimeExtensionsAnalyzer | Error    | No longer used                              
+
+## Release 10.3
+
+### New Rules
+
+ Rule ID   | Category                              | Severity | Notes                                                                                            
+-----------|---------------------------------------|----------|--------------------------------------------------------------------------------------------------
+ TTRESG075 | ThinktectureRuntimeExtensionsAnalyzer | Error    | 'SingleBackingFieldType' conflicts with 'UseSingleBackingField = false'                          
+ TTRESG076 | ThinktectureRuntimeExtensionsAnalyzer | Error    | Additional 'ValidateFactoryArguments' parameter must not be 'ref'/'out' or have a default value  
