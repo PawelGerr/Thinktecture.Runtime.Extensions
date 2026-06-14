@@ -102,9 +102,18 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (!_state.Settings.SkipFactoryMethods)
       {
-         GenerateValidateMethod();
+         var hasAdditionalFactoryParams = !_state.FactoryValidationAdditionalParameters.IsDefaultOrEmpty;
+
+         GenerateValidateMethod(hasAdditionalFactoryParams);
          GenerateCreateMethod();
          GenerateTryCreateMethod();
+
+         if (hasAdditionalFactoryParams)
+         {
+            GenerateValidateCoreMethod();
+            GenerateCreateCoreMethod();
+         }
+
          GenerateValidateFactoryArguments();
          GenerateFactoryPostInit();
       }
@@ -271,7 +280,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateValidateMethod()
+   private void GenerateValidateMethod(bool hasAdditionalFactoryParams)
    {
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
@@ -318,17 +327,104 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
+      if (hasAdditionalFactoryParams)
+      {
+         // The full validation/construction plumbing lives in the generated ValidateCore building block,
+         // which threads the user's additional factory parameters into the hook. The public Validate has
+         // no access to those values, so it forwards their defaults (one 'default' per additional parameter).
+         _sb.Append(@"
+         return ").Append(Constants.Methods.VALIDATE).Append("Core(");
+
+         _sb.RenderArguments(fieldsAndProperties, prefix: @"
+            ", comma: ",");
+
+         _sb.RenderValidateFactoryAdditionalParametersAsDefaultArguments(
+            _state.FactoryValidationAdditionalParameters,
+            firstSeparator: fieldsAndProperties.Length > 0 ? @",
+            " : @"
+            ",
+            separator: @",
+            ");
+
+         _sb.Append(@",
+            out obj);
+      }");
+         return;
+      }
+
       _sb.Append(@"
          ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
 
          ");
+
+      GenerateValidateBody(renderAdditionalParametersAsArguments: false);
+
+      _sb.Append(@"
+
+         return validationError;
+      }");
+   }
+
+   private void GenerateValidateCoreMethod()
+   {
+      var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+      _sb.Append(@"
+
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private static ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(Constants.Methods.VALIDATE).Append("Core(");
+
+      _sb.RenderArgumentsWithType(fieldsAndProperties, prefix: @"
+         ", comma: ",");
+
+      _sb.RenderValidateFactoryAdditionalParametersAsRequiredParameters(
+         _state.FactoryValidationAdditionalParameters,
+         firstSeparator: fieldsAndProperties.Length > 0 ? @",
+         " : @"
+         ",
+         separator: @",
+         ");
+
+      _sb.Append(@",
+         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+      {
+         ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
+
+         ");
+
+      GenerateValidateBody(renderAdditionalParametersAsArguments: true);
+
+      _sb.Append(@"
+
+         return validationError;
+      }");
+   }
+
+   private void GenerateValidateBody(bool renderAdditionalParametersAsArguments)
+   {
+      var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("var ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
       _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
             ref validationError").RenderArguments(fieldsAndProperties, @"
-            ref ", comma: ",", leadingComma: true).Append(@");
+            ref ", comma: ",", leadingComma: true);
+
+      if (renderAdditionalParametersAsArguments)
+      {
+         // 'ref validationError' (and possibly members) always precede the extras here, so both the first
+         // and subsequent separators carry the inter-element comma.
+         _sb.RenderValidateFactoryAdditionalParametersAsArguments(
+            _state.FactoryValidationAdditionalParameters,
+            firstSeparator: @",
+            ",
+            separator: @",
+            ");
+      }
+
+      _sb.Append(@");
 
          if (validationError is null)
          {
@@ -347,9 +443,52 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             obj = default;
-         }
+         }");
+   }
 
-         return validationError;
+   private void GenerateCreateCoreMethod()
+   {
+      var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
+
+      _sb.Append(@"
+
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("Core(");
+
+      _sb.RenderArgumentsWithType(fieldsAndProperties, prefix: @"
+         ", comma: ",");
+
+      _sb.RenderValidateFactoryAdditionalParametersAsRequiredParameters(
+         _state.FactoryValidationAdditionalParameters,
+         firstSeparator: fieldsAndProperties.Length > 0 ? @",
+         " : @"
+         ",
+         separator: @",
+         ");
+
+      _sb.Append(@")
+      {
+         var validationError = ").Append(Constants.Methods.VALIDATE).Append("Core(");
+
+      _sb.RenderArguments(fieldsAndProperties, prefix: @"
+            ", comma: ",");
+
+      _sb.RenderValidateFactoryAdditionalParametersAsArguments(
+         _state.FactoryValidationAdditionalParameters,
+         firstSeparator: fieldsAndProperties.Length > 0 ? @",
+            " : @"
+            ",
+         separator: @",
+            ");
+
+      _sb.Append(@",
+            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
+
+         if (validationError is not null)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
+
+         return obj!;
       }");
    }
 

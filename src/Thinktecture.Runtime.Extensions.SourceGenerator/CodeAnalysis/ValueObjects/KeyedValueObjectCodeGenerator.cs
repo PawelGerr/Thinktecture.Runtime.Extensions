@@ -126,10 +126,18 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var allowNullKeyMemberInput = _state.KeyMember.MayBeNull();
          var allowNullOutput = _state.KeyMember.MayBeNull() && _state is { IsReferenceType: true, Settings.NullInFactoryMethodsYieldsNull: true };
+         var hasAdditionalFactoryParams = !_state.FactoryValidationAdditionalParameters.IsDefaultOrEmpty;
 
-         GenerateValidateMethod(allowNullKeyMemberInput, allowNullOutput, emptyStringYieldsNull);
+         GenerateValidateMethod(allowNullKeyMemberInput, allowNullOutput, emptyStringYieldsNull, hasAdditionalFactoryParams);
          GenerateCreateMethod(allowNullOutput, emptyStringYieldsNull);
          GenerateTryCreateMethod(allowNullOutput, emptyStringYieldsNull);
+
+         if (hasAdditionalFactoryParams)
+         {
+            GenerateValidateCoreMethod();
+            GenerateCreateCoreMethod();
+         }
+
          GenerateValidateFactoryArguments();
          GenerateFactoryPostInit();
       }
@@ -395,7 +403,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }");
    }
 
-   private void GenerateValidateMethod(bool allowNullKeyMemberInput, bool allowNullOutput, bool emptyStringYieldsNull)
+   private void GenerateValidateMethod(bool allowNullKeyMemberInput, bool allowNullOutput, bool emptyStringYieldsNull, bool hasAdditionalFactoryParams)
    {
       var providerArgumentName = _state.KeyMember.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
 
@@ -445,14 +453,59 @@ namespace ").Append(_state.Namespace).Append(@"
 ");
       }
 
+      if (hasAdditionalFactoryParams)
+      {
+         // The full validation/construction plumbing lives in the generated ValidateCore building block,
+         // which threads the user's additional factory parameters into the hook. The public Validate has
+         // no access to those values, so it forwards their defaults (one 'default' per additional parameter).
+         _sb.Append(@"
+         return ").Append(Constants.Methods.VALIDATE).Append("Core(").RenderArgument(_state.KeyMember).RenderValidateFactoryAdditionalParametersAsDefaultArguments(_state.FactoryValidationAdditionalParameters).Append(@", out obj);
+      }");
+         return;
+      }
+
       _sb.Append(@"
          ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
          ");
 
+      GenerateValidateBody();
+
+      _sb.Append(@"
+
+         return validationError;
+      }");
+   }
+
+   private void GenerateValidateCoreMethod()
+   {
+      _sb.Append(@"
+
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private static ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(Constants.Methods.VALIDATE).Append("Core(").RenderArgumentWithType(_state.KeyMember).RenderValidateFactoryAdditionalParametersAsRequiredParameters(_state.FactoryValidationAdditionalParameters).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+      {
+         ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
+         ");
+
+      GenerateValidateBody(renderAdditionalParametersAsArguments: true);
+
+      _sb.Append(@"
+
+         return validationError;
+      }");
+   }
+
+   private void GenerateValidateBody(bool renderAdditionalParametersAsArguments = false)
+   {
       if (_state.FactoryValidationReturnType is not null)
          _sb.Append("var ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
 
-      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationError, ").RenderArgument(_state.KeyMember, "ref ").Append(@");
+      _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append("(ref validationError, ").RenderArgument(_state.KeyMember, "ref ");
+
+      if (renderAdditionalParametersAsArguments)
+         _sb.RenderValidateFactoryAdditionalParametersAsArguments(_state.FactoryValidationAdditionalParameters);
+
+      _sb.Append(@");
 
          if (validationError is null)
          {
@@ -471,9 +524,23 @@ namespace ").Append(_state.Namespace).Append(@"
          else
          {
             obj = default;
-         }
+         }");
+   }
 
-         return validationError;
+   private void GenerateCreateCoreMethod()
+   {
+      _sb.Append(@"
+
+      ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
+      [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+      private static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("Core(").RenderArgumentWithType(_state.KeyMember).RenderValidateFactoryAdditionalParametersAsRequiredParameters(_state.FactoryValidationAdditionalParameters).Append(@")
+      {
+         var validationError = ").Append(Constants.Methods.VALIDATE).Append("Core(").RenderArgument(_state.KeyMember).RenderValidateFactoryAdditionalParametersAsArguments(_state.FactoryValidationAdditionalParameters).Append(", out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
+
+         if (validationError is not null)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
+
+         return obj!;
       }");
    }
 

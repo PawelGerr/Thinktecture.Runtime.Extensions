@@ -288,4 +288,25 @@ public class Create
 
       obj.Should().BeEquivalentTo(new { Lower = 5m, Upper = 5m });
    }
+
+   [Fact]
+   public void Should_return_validation_error_and_null_obj_when_ValidateCore_input_is_invalid()
+   {
+      // 'TryValidate' delegates to the generated non-throwing core 'ValidateCore'.
+      var error = IntBasedValueObjectWithAdditionalValidateFactoryArgument.TryValidate(-1, clampMax: 10, out var obj);
+
+      error.Should().NotBeNull();
+      obj.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_null_error_and_clamped_obj_when_ValidateCore_input_is_valid()
+   {
+      // 'TryValidate' delegates to the generated non-throwing core 'ValidateCore', threading the real extra (clampMax).
+      var error = IntBasedValueObjectWithAdditionalValidateFactoryArgument.TryValidate(42, clampMax: 10, out var obj);
+
+      error.Should().BeNull();
+      obj.Should().NotBeNull();
+      ((int)obj!).Should().Be(10);
+   }
 }

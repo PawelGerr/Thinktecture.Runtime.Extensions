@@ -34,19 +34,10 @@ public readonly partial struct Money
    }
 
    public static Money? Create(decimal? amount, MoneyRoundingStrategy roundingStrategy)
-   {
-      return amount is null ? null : Create(amount.Value, roundingStrategy);
-   }
+      => amount is null ? null : CreateCore(amount.Value, roundingStrategy);
 
    public static Money Create(decimal amount, MoneyRoundingStrategy roundingStrategy)
-   {
-      ValidationError? validationError = null;
-      ValidateFactoryArguments(ref validationError, ref amount, roundingStrategy);
-
-      return validationError is not null
-                ? throw new System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString())
-                : new Money(amount);
-   }
+      => CreateCore(amount, roundingStrategy);
 
    public static Money operator *(Money left, int right)
    {

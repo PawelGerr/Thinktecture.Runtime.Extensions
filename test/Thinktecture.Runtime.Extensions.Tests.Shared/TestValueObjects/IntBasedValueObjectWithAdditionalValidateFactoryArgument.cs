@@ -18,14 +18,12 @@ public partial class IntBasedValueObjectWithAdditionalValidateFactoryArgument
    }
 
    // Hand-written factory threading the extra argument; the generated 'Create(int)' omits it (synthesized '= null').
+   // Delegates to the generated throwing core 'CreateCore' - a compile-time gate proving the private core
+   // exists and is accessible from the user's own partial declaration.
    public static IntBasedValueObjectWithAdditionalValidateFactoryArgument Create(int value, int? clampMax)
-   {
-      ValidationError? validationError = null;
-      ValidateFactoryArguments(ref validationError, ref value, clampMax);
+      => CreateCore(value, clampMax);
 
-      if (validationError is not null)
-         throw new System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
-
-      return new IntBasedValueObjectWithAdditionalValidateFactoryArgument(value);
-   }
+   // Thin public passthrough to the generated non-throwing core 'ValidateCore' (try-semantics: error is null).
+   public static ValidationError? TryValidate(int value, int? clampMax, out IntBasedValueObjectWithAdditionalValidateFactoryArgument? obj)
+      => ValidateCore(value, clampMax, out obj);
 }

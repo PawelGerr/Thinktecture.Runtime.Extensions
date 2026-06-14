@@ -126,7 +126,7 @@ namespace Thinktecture.Tests
       {
          global::Thinktecture.ValidationError? validationError = null;
 
-         ValidateFactoryArguments(
+         var factoryArgumentsValidationError = ValidateFactoryArguments(
             ref validationError,
             ref @property,
             @extra);
@@ -135,7 +135,7 @@ namespace Thinktecture.Tests
          {
             obj = new global::Thinktecture.Tests.TestValueObject(
                @property);
-            obj.FactoryPostInit();
+            obj.FactoryPostInit(factoryArgumentsValidationError);
          }
          else
          {
@@ -162,12 +162,12 @@ namespace Thinktecture.Tests
          return obj!;
       }
 
-      static partial void ValidateFactoryArguments(
+      private static partial int ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
          ref int @property,
          string? @extra = null);
 
-      partial void FactoryPostInit();
+      partial void FactoryPostInit(int factoryArgumentsValidationError);
 
       /// <summary>
       /// Initializes a new instance of the <see cref="TestValueObject"/> type.

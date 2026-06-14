@@ -56,7 +56,7 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.ValidationError? Validate(int @value, global::System.IFormatProvider? @provider, out global::Thinktecture.Tests.TestValueObject? obj)
       {
-         return ValidateCore(@value, default, default, out obj);
+         return ValidateCore(@value, default, out obj);
       }
       /// <summary>
       /// Creates an instance of the type <see cref="TestValueObject"/> from the provided value,
@@ -120,15 +120,15 @@ namespace Thinktecture.Tests
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      private static global::Thinktecture.ValidationError? ValidateCore(int @value, string? @extra, int @count, out global::Thinktecture.Tests.TestValueObject? obj)
+      private static global::Thinktecture.ValidationError? ValidateCore(int @value, string? @extra, out global::Thinktecture.Tests.TestValueObject? obj)
       {
          global::Thinktecture.ValidationError? validationError = null;
-         ValidateFactoryArguments(ref validationError, ref @value, @extra, @count);
+         var factoryArgumentsValidationError = ValidateFactoryArguments(ref validationError, ref @value, @extra);
 
          if (validationError is null)
          {
             obj = new global::Thinktecture.Tests.TestValueObject(@value);
-            obj.FactoryPostInit();
+            obj.FactoryPostInit(factoryArgumentsValidationError);
          }
          else
          {
@@ -140,9 +140,9 @@ namespace Thinktecture.Tests
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-      private static global::Thinktecture.Tests.TestValueObject CreateCore(int @value, string? @extra, int @count)
+      private static global::Thinktecture.Tests.TestValueObject CreateCore(int @value, string? @extra)
       {
-         var validationError = ValidateCore(@value, @extra, @count, out global::Thinktecture.Tests.TestValueObject? obj);
+         var validationError = ValidateCore(@value, @extra, out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationError is not null)
             throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
@@ -150,9 +150,9 @@ namespace Thinktecture.Tests
          return obj!;
       }
 
-      static partial void ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int @value, string? @extra = null, int @count = default);
+      private static partial int ValidateFactoryArguments(ref global::Thinktecture.ValidationError? validationError, ref int @value, string? @extra = null);
 
-      partial void FactoryPostInit();
+      partial void FactoryPostInit(int factoryArgumentsValidationError);
 
       /// <summary>
       /// Gets the identifier of the item.

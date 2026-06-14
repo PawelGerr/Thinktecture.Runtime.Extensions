@@ -21,7 +21,6 @@ namespace Thinktecture.Tests
                         ((global::System.Linq.Expressions.Expression<global::System.Func<global::Thinktecture.Tests.TestValueObject, object>>)
                            (object (global::Thinktecture.Tests.TestValueObject o) => new
                               {
-                                 o.Property
                               })).Body).Arguments,
                      arg => ((global::System.Linq.Expressions.MemberExpression)arg).Member)
                )
@@ -31,16 +30,13 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Validates the values and creates an instance of type <see cref="TestValueObject"/> if validation is successful.
       /// </summary>
-      /// <param name="property">Property</param>
       /// <param name="obj">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static global::Thinktecture.ValidationError? Validate(
-         int @property,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
          return ValidateCore(
-            @property,
             default,
             out obj);
       }
@@ -48,15 +44,12 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Creates an instance of the <see cref="TestValueObject"/> type if the provided values pass validation.
       /// </summary>
-      /// <param name="property">Property</param>
       /// <returns>A newly created <see cref="TestValueObject"/> instance.</returns>
       /// <exception cref="System.ComponentModel.DataAnnotations.ValidationException">Thrown when the provided values fail validation.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      public static global::Thinktecture.Tests.TestValueObject Create(
-         int @property)
+      public static global::Thinktecture.Tests.TestValueObject Create()
       {
          var validationError = Validate(
-            @property,
             out global::Thinktecture.Tests.TestValueObject? obj);
 
          if (validationError is not null)
@@ -69,7 +62,6 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">Property</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -79,11 +71,9 @@ namespace Thinktecture.Tests
       /// </returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static bool TryCreate(
-         int @property,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj)
       {
          return TryCreate(
-            @property,
             out obj,
             out _);
       }
@@ -92,7 +82,6 @@ namespace Thinktecture.Tests
       /// Attempts to create an instance of type <see cref="TestValueObject"/>
       /// if the provided values pass validation.
       /// </summary>
-      /// <param name="property">Property</param>
       /// <param name="obj">
       /// When this method returns, contains the created instance of type <see cref="TestValueObject"/>
       /// if the operation is successful; otherwise, <c>null</c>.
@@ -106,12 +95,10 @@ namespace Thinktecture.Tests
       /// </returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       public static bool TryCreate(
-         int @property,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Thinktecture.Tests.TestValueObject? obj,
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out global::Thinktecture.ValidationError? validationError)
       {
          validationError = Validate(
-            @property,
             out obj);
 
          return validationError is null;
@@ -120,7 +107,6 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private static global::Thinktecture.ValidationError? ValidateCore(
-         int @property,
          string? @extra,
          out global::Thinktecture.Tests.TestValueObject? obj)
       {
@@ -128,13 +114,11 @@ namespace Thinktecture.Tests
 
          ValidateFactoryArguments(
             ref validationError,
-            ref @property,
             @extra);
 
          if (validationError is null)
          {
-            obj = new global::Thinktecture.Tests.TestValueObject(
-               @property);
+            obj = new global::Thinktecture.Tests.TestValueObject();
             obj.FactoryPostInit();
          }
          else
@@ -148,11 +132,9 @@ namespace Thinktecture.Tests
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       private static global::Thinktecture.Tests.TestValueObject CreateCore(
-         int @property,
          string? @extra)
       {
          var validationError = ValidateCore(
-            @property,
             @extra,
             out global::Thinktecture.Tests.TestValueObject? obj);
 
@@ -164,7 +146,6 @@ namespace Thinktecture.Tests
 
       static partial void ValidateFactoryArguments(
          ref global::Thinktecture.ValidationError? validationError,
-         ref int @property,
          string? @extra = null);
 
       partial void FactoryPostInit();
@@ -173,17 +154,9 @@ namespace Thinktecture.Tests
       /// Initializes a new instance of the <see cref="TestValueObject"/> type.
       /// </summary>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.3.0.0")]
-      private TestValueObject(
-         int @property)
+      private TestValueObject()
       {
-         ValidateConstructorArguments(
-            ref @property);
-
-         this.Property = @property;
       }
-
-      static partial void ValidateConstructorArguments(
-         ref int @property);
 
       /// <summary>
       /// Compares two instances of <see cref="TestValueObject"/>.
@@ -233,7 +206,7 @@ namespace Thinktecture.Tests
          if (global::System.Object.ReferenceEquals(this, other))
             return true;
 
-         return this.Property.Equals(other.Property);
+         return true;
       }
 
       /// <inheritdoc />
@@ -241,8 +214,7 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
-         return global::System.HashCode.Combine(
-            this.Property);
+         return 0;
       }
 
       /// <inheritdoc />
@@ -250,7 +222,7 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string ToString()
       {
-         return $"{{ Property = {this.Property} }}";
+         return "TestValueObject";
       }
    }
 }

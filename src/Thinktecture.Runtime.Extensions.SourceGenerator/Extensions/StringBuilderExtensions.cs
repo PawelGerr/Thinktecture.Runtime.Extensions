@@ -206,6 +206,75 @@ public static class StringBuilderExtensions
       return sb;
    }
 
+   /// <summary>
+   /// Renders the user-declared additional trailing parameters of <c>ValidateFactoryArguments</c> as
+   /// <b>required</b> parameter declarations (no synthesized default value), for the generated
+   /// <c>ValidateCore</c>/<c>{Create}Core</c> building-block methods. The first parameter is prefixed with
+   /// <paramref name="firstSeparator"/> (the caller-controlled boundary to whatever precedes the extras;
+   /// it may be comma-less when no member/key prefix precedes them, e.g. a memberless complex value object).
+   /// Parameters 2..N are prefixed with <paramref name="separator"/>, which must carry the inter-element
+   /// comma so the commas between extras are never dropped.
+   /// </summary>
+   public static StringBuilder RenderValidateFactoryAdditionalParametersAsRequiredParameters(
+      this StringBuilder sb,
+      ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> parameters,
+      string firstSeparator = ", ",
+      string separator = ", ")
+   {
+      for (var i = 0; i < parameters.Length; i++)
+      {
+         var parameter = parameters[i];
+
+         sb.Append(i == 0 ? firstSeparator : separator).Append(parameter.TypeFullyQualifiedWithNullability).Append(' ')
+           .AppendEscaped(parameter.Name);
+      }
+
+      return sb;
+   }
+
+   /// <summary>
+   /// Renders the user-declared additional trailing parameters of <c>ValidateFactoryArguments</c> as
+   /// call arguments (escaped names only), for forwarding the real values into the hook from the
+   /// generated <c>ValidateCore</c> method. The first argument is prefixed with <paramref name="firstSeparator"/>
+   /// (caller-controlled, may be comma-less when nothing precedes the extras); arguments 2..N use
+   /// <paramref name="separator"/>, which must carry the inter-element comma.
+   /// </summary>
+   public static StringBuilder RenderValidateFactoryAdditionalParametersAsArguments(
+      this StringBuilder sb,
+      ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> parameters,
+      string firstSeparator = ", ",
+      string separator = ", ")
+   {
+      for (var i = 0; i < parameters.Length; i++)
+      {
+         sb.Append(i == 0 ? firstSeparator : separator).AppendEscaped(parameters[i].Name);
+      }
+
+      return sb;
+   }
+
+   /// <summary>
+   /// Renders one <c>default</c> call argument per user-declared additional trailing parameter of
+   /// <c>ValidateFactoryArguments</c>. Used by the public <c>Validate</c> method, which has no access to
+   /// the user-supplied values and therefore forwards the defaults into the generated <c>ValidateCore</c>
+   /// building block. The first argument is prefixed with <paramref name="firstSeparator"/> (caller-controlled,
+   /// may be comma-less when nothing precedes the extras); arguments 2..N use <paramref name="separator"/>,
+   /// which must carry the inter-element comma.
+   /// </summary>
+   public static StringBuilder RenderValidateFactoryAdditionalParametersAsDefaultArguments(
+      this StringBuilder sb,
+      ImmutableArray<ValidateFactoryArgumentsAdditionalParameter> parameters,
+      string firstSeparator = ", ",
+      string separator = ", ")
+   {
+      for (var i = 0; i < parameters.Length; i++)
+      {
+         sb.Append(i == 0 ? firstSeparator : separator).Append("default");
+      }
+
+      return sb;
+   }
+
    public static StringBuilder AppendEscaped(
       this StringBuilder sb,
       ArgumentName argName)

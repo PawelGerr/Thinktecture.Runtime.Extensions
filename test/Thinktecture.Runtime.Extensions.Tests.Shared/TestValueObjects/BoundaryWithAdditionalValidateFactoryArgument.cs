@@ -23,14 +23,8 @@ public partial class BoundaryWithAdditionalValidateFactoryArgument
 
    // Hand-written factory threading the extra argument through the hook (the generated 'Create(decimal, decimal)'
    // omits it, so the synthesized default - 'default(bool)' = false - applies there).
+   // Delegates to the generated throwing core 'CreateCore' - a compile-time gate proving the private core
+   // exists and is accessible from the user's own partial declaration.
    public static BoundaryWithAdditionalValidateFactoryArgument Create(decimal lower, decimal upper, bool allowEqual)
-   {
-      ValidationError? validationError = null;
-      ValidateFactoryArguments(ref validationError, ref lower, ref upper, allowEqual);
-
-      if (validationError is not null)
-         throw new System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? "Validation failed.");
-
-      return new BoundaryWithAdditionalValidateFactoryArgument(lower, upper);
-   }
+      => CreateCore(lower, upper, allowEqual);
 }
