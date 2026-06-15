@@ -32,10 +32,12 @@ string txt = (string)u;         // explicit cast
 
 - **No conversion operator** is generated for `object`, interface, or type-parameter members
   (C# forbids it) — use the constructor or a factory method for those.
-- Member names default to the type name; rename with `T1Name`/`T2Name`/… (drives `IsX`/`AsX`/
-  `CreateX`/`NormalizeX`). For a **type-parameter** member of a generic union the name is the parameter
-  itself, so you get `IsT1`/`AsT1`/`CreateT1` (the type name literally *is* `T1`) — `IsString`-style
-  names are the norm only for concrete-typed members.
+- Member names default to the member's type name; rename with `T1Name`/`T2Name`/… (drives `IsX`/`AsX`/
+  `CreateX`/`NormalizeX`). A **passed (concrete) type** is named after the type itself — `string` gives
+  `IsString`/`AsString`/`CreateString`. A **type-reference** member (`TypeParamRef1`–`TypeParamRef5`) is
+  named after the **referenced type parameter**, *not* the ref index — so a union over `<T1, T2>` yields
+  `IsT1`/`AsT1`/`CreateT1` and `IsT2`/`AsT2`/`CreateT2`, while one over `<T>` yields `IsT`/`AsT`/`CreateT`
+  (and `<TValue>` → `IsTValue`/…).
 - `allows ref struct` is **not** supported on ad-hoc member type parameters (TTRESG073) — ref
   structs can't be boxed, which conflicts with `Value`/equality/Switch.
 - **Struct unions and `default`:** a `default(TUnion)` struct is uninitialized — reading

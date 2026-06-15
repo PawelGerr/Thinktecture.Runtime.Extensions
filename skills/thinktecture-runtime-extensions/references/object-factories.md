@@ -84,7 +84,7 @@ lets System.Text.Json transcode UTF-8 JSON directly to a `ReadOnlySpan<char>` an
 span-based `Validate` — no intermediate `string`. Pattern-match the span against string constants
 for known values to allocate nothing; fall back to `value.ToString()` only for unknown values. Use
 `SystemTextJson` specifically (only it supports span deserialization); the converter `stackalloc`s
-up to 128 bytes and rents from `ArrayPool<char>.Shared` beyond that. `ToValue()` returns
+up to 128 chars and rents from `ArrayPool<char>.Shared` beyond that. `ToValue()` returns
 `ReadOnlySpan<char>`.
 
 ## Type-specific notes
