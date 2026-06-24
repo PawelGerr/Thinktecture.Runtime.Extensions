@@ -146,8 +146,11 @@ route. See `references/object-factories.md` (real example: `test/Thinktecture.Ru
 
 - Derived types must be **nested inner classes**.
 - First-level nested types must be `private` (TTRESG014); deeper levels must be `public` (TTRESG015).
-- Prefer `sealed`. The generator auto-seals enums with no derived types; TTRESG037 is an **error**
-  (not a warning) if your `sealed`/non-`sealed` declaration conflicts.
+- The generator auto-seals only the **top-level** enum's own generated `partial` part when it has no
+  derived types, so you never write `sealed` on the root yourself. This does **not** extend to the
+  inner derived classes — they aren't `partial`, so the generator can't touch them. Each **leaf**
+  derived item must be declared `sealed` by you; a non-`sealed`, non-`abstract` leaf raises TTRESG037
+  (an **error**, with a code-fix). Derived classes that themselves have further derived types stay open.
 - **When the Smart Enum is itself nested in another type, every enclosing type must also be `partial`**
   (TTRESG006) — a common "nothing generated" cause.
 

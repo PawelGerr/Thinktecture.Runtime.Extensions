@@ -9,8 +9,7 @@ public static class StringBuilderExtensions
    {
       if (!isReferenceType && !hasStructLayoutAttribute)
       {
-         sb.Append(@"
-   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
+         sb.Append("\n   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
       }
    }
 
@@ -755,9 +754,7 @@ public static class StringBuilderExtensions
                            ? containingType.IsReferenceType ? "record " : "record struct "
                            : containingType.IsReferenceType ? "class " : "struct ";
 
-         sb.Append(@"
-partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType).Append(@"
-{");
+         sb.Append("\npartial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType).Append("\n{");
       }
 
       return sb;
@@ -769,8 +766,7 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
    {
       for (var i = 0; i < containingTypes.Length; i++)
       {
-         sb.Append(@"
-}");
+         sb.Append("\n}");
       }
 
       return sb;
@@ -892,8 +888,7 @@ partial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParamet
          if (parameter.Constraints.IsDefaultOrEmpty)
             continue;
 
-         sb.Append(@"
-").Append(prefix).Append("where ").Append(parameter.Name).Append(" : ").AppendGenericConstraints(parameter.Constraints);
+         sb.Append("\n").Append(prefix).Append("where ").Append(parameter.Name).Append(" : ").AppendGenericConstraints(parameter.Constraints);
       }
 
       return sb;

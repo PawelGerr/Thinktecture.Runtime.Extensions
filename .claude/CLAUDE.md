@@ -62,7 +62,7 @@ All types must be declared as `partial`. Source generators produce: factory meth
 - Items are `public static readonly` fields. No on-demand creation.
 - Interface implementations depend on key type capabilities: `IParsable<T>`, `ISpanParsable<T>` (NET9+), `IComparable<T>`, `IFormattable`
 - Span-based JSON deserialization (NET9+, string keys): automatic, opt out via `DisableSpanBasedJsonConversion = true`
-- Inheritance: derived classes must be nested inner classes; first-level must be `private` (TTRESG014), deeper-level must be `public` (TTRESG015); prefer `sealed` unless further derived. The source generator automatically seals Smart Enums that have no derived types (TTRESG037 warns if the user's declaration conflicts).
+- Inheritance: derived classes must be nested inner classes; first-level must be `private` (TTRESG014), deeper-level must be `public` (TTRESG015); prefer `sealed` unless further derived. The source generator auto-seals only the **top-level** enum's generated `partial` part when it has no derived types (so the root never needs a manual `sealed`); it does **not** seal the inner derived classes (they aren't `partial`). Each leaf derived item must be `sealed` by the user — enforced by TTRESG037, which is an **Error** (with a code-fix), not a warning.
 
 **Keyless Smart Enums** (`[SmartEnum]`):
 
@@ -206,6 +206,7 @@ The following documentation files in `docs/` are read by both humans and AI agen
 - `Discriminated-Unions.md`, `Discriminated-Unions-Customization.md`, `Discriminated-Unions-Framework-Integration.md` -- Discriminated Union documentation
 - `Analyzer-Diagnostics.md` -- Analyzer diagnostic rules reference
 - `Object-Factories.md` -- Object factory documentation
+- `Serilog.md` -- Serilog destructuring policy for structured logging
 - `Source-Generator-Configuration.md` -- Source generator configuration options
 - `AI-Coding-Assistants.md` -- The bundled agent skill (`npx skills` CLI) and Context7 (MCP) support for AI coding assistants
 - `Migrations.md`, `Migration-from-v6-to-v7.md`, `Migration-from-v7-to-v8.md`, `Migration-from-v8-to-v9.md`, `Migration-from-v9-to-v10.md` -- Migration guides
@@ -217,6 +218,8 @@ The following documentation files in `docs/` are read by both humans and AI agen
 
 - Use `Console.WriteLine` in doc examples, not logger injection -- unless the example specifically demonstrates closure/capture patterns
 - Keep example items consistent across documentation pages -- reuse the same enum items (e.g., Electronics, Clothing, Food) rather than switching between different items within or across pages
+
+**The bundled AI skill mirrors the docs.** Whenever you change anything under `docs/`, you MUST apply the corresponding update to `skills/thinktecture-runtime-extensions/` (the matching `references/*.md` page, and `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift.
 
 **Legacy documentation is frozen.** The `docs/version-7/`, `docs/version-8/` directories and `docs/Version-7.x.x.md`, `docs/Version-8.x.x.md` files are archived and must NEVER be read, updated, or modified. Ignore them completely -- they do not exist for the purposes of any task.
 

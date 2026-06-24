@@ -167,11 +167,54 @@ combine with `|`. On `[ObjectFactory<T>]`, `UseForSerialization` plays the same 
 path and **takes priority over key-based conversion** when both exist (per integration point — see
 the metadata-priority note in `object-factories.md`).
 
+## Serilog
+
+Package: `Thinktecture.Runtime.Extensions.Serilog` (requires Serilog `>= 4.0.0`). Register once at startup:
+
+```csharp
+using Thinktecture;
+
+Log.Logger = new LoggerConfiguration()
+    .Destructure.UsingThinktectureRuntimeExtensions()
+    .WriteTo.Console()
+    .CreateLogger();
+```
+
+**Behavior by type:**
+
+| Type | Logged as |
+|---|---|
+| Keyed Smart Enum | Underlying key (`OrderStatus.Paid` → `"Paid"`) |
+| Simple Value Object | Underlying key (`Amount.Create(99.95m)` → `99.95`) |
+| Ad-hoc Union | Current `Value` (recurses through nested Thinktecture types) |
+| Keyless Smart Enum | Serilog default (not handled) |
+| Complex Value Object | Serilog default (not handled) |
+| Regular Union (`[Union]`) | Serilog default (not handled) |
+
+Object factories are **always ignored** for logging — the key is used regardless of any `[ObjectFactory<T>]` attribute.
+
+**`renderAsString` flag**: optionally coerce matched types to log as string via `ToString()` instead of as a scalar:
+
+```csharp
+.Destructure.UsingThinktectureRuntimeExtensions(
+    renderAsString: TypesToRenderAsString.SmartEnums | TypesToRenderAsString.ValueObjects)
+```
+
+Available flags: `None` (default), `SmartEnums`, `ValueObjects`, `AdHocUnions`, `All`.
+
+**Caveats:**
+- `default(struct union)` throws `InvalidOperationException` when its `Value` is read — ensure struct unions are initialized before logging.
+- Types with `SkipToString = true` log as their **type name** (not key) when opted into `renderAsString`.
+- Use `{@Property}` (the destructuring operator) — without `@` Serilog calls `ToString()` directly.
+- Recursion uses `destructureObjects: true`, so a non-Thinktecture inner value (e.g. a union wrapping a plain POCO) is reflected by Serilog. Bound large graphs with Serilog's native `Destructure.ToMaximumDepth`/`ToMaximumCollectionCount`/`ToMaximumStringLength` — there is no Thinktecture-specific setting.
+
 ## Exact details
 
 For precise method/option names and per-version differences, query **context7** for
 `Thinktecture.Runtime.Extensions`, or see the wiki: https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Smart-Enums-Framework-Integration,
 https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Value-Objects-Framework-Integration, and
 https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Discriminated-Unions-Framework-Integration.
+
+For Serilog integration details, see https://github.com/PawelGerr/Thinktecture.Runtime.Extensions/wiki/Serilog.
 
 For custom conversion formats see `references/object-factories.md`.

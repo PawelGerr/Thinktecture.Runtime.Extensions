@@ -137,6 +137,8 @@ Group related changes under a shared heading. Order entries by impact: most comm
 - `docs/version-7/`, `docs/version-8/` -- Historical version documentation
 - `docs/articles/` -- Published blog posts
 
+**Skill mirror rule:** Every change under `docs/` must be mirrored to `skills/thinktecture-runtime-extensions/` (matching `references/*.md` file, plus `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift.
+
 ## Workflow
 
 1. **Get details** of the implemented feature from the user (description, affected files, design decisions, limitations)

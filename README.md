@@ -98,6 +98,7 @@ All generated types integrate with the .NET ecosystem out of the box:
 - **MessagePack** -- binary serialization support
 - **Newtonsoft.Json** -- `JsonConverter` support
 - **Swashbuckle / OpenAPI** -- schema and operation filters
+- **Serilog** -- destructuring policy for compact, key-based structured logging
 
 ## AI Coding Assistants
 
@@ -128,6 +129,7 @@ This copies the skill into `.claude/skills/` (or the equivalent folder for your 
 | Thinktecture.Runtime.Extensions.EntityFrameworkCore10 | [![NuGet](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.EntityFrameworkCore10.svg?maxAge=60)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.EntityFrameworkCore10/) |
 | Thinktecture.Runtime.Extensions.AspNetCore | [![NuGet](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.AspNetCore.svg?maxAge=60)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.AspNetCore/) |
 | Thinktecture.Runtime.Extensions.Swashbuckle | [![NuGet](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Swashbuckle.svg?maxAge=60)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Swashbuckle/) |
+| Thinktecture.Runtime.Extensions.Serilog | [![NuGet](https://img.shields.io/nuget/v/Thinktecture.Runtime.Extensions.Serilog.svg?maxAge=60)](https://www.nuget.org/packages/Thinktecture.Runtime.Extensions.Serilog/) |
 
 ## Requirements
 

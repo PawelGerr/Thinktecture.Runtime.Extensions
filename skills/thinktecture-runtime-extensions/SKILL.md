@@ -39,7 +39,7 @@ rules shared across all of them, then **load the matching reference file for the
 | You're working on…                                                     | Reference file                       |
 |------------------------------------------------------------------------|--------------------------------------|
 | `Switch`/`Map` pattern matching (Smart Enums **and** Unions)           | `references/switch-map.md`           |
-| Serialization (JSON/MessagePack), ASP.NET model binding, Swashbuckle, EF Core wiring | `references/framework-integration.md` |
+| Serialization (JSON/MessagePack), ASP.NET model binding, Swashbuckle, EF Core, Serilog logging | `references/framework-integration.md` |
 | A **generic** type (`Foo<T>`) in any family — the `TypeParamRef1`–`TypeParamRef5` placeholders | `references/generic-types.md` |
 | String / case- / culture-specific **equality & ordering** comparers (Enums **and** VOs) | `references/equality-and-comparers.md` |
 | A multi-family / non-obvious **combination** (task → which refs + which sample) | `references/recipes.md` |
@@ -101,12 +101,12 @@ Quick discriminators when unsure:
   each reference file lists the codes relevant to it.
 - **Validation hook:** prefer `ValidateFactoryArguments` (runs only via factory methods) over
   `ValidateConstructorArguments` for Value Objects. Details in `references/value-objects.md`.
-- **Serialization/EF/ASP.NET are opt-in via integration packages** (`*.Json`, `*.Newtonsoft`,
-  `*.MessagePack`, `*.EntityFrameworkCore8/9/10`, `*.AspNetCore`, `*.Swashbuckle`). Add the package
+- **Serialization/EF/ASP.NET/Serilog are opt-in via integration packages** (`*.Json`, `*.Newtonsoft`,
+  `*.MessagePack`, `*.EntityFrameworkCore8/9/10`, `*.AspNetCore`, `*.Swashbuckle`, `*.Serilog`). Add the package
   and integration is auto-generated; no manual converter wiring. **Verify the relevant integration
   package is referenced** before relying on auto-generated converters — a missing package is the
   usual cause of "I added the attribute but serialization didn't happen." Full registration mechanics
-  (package vs manual converter/resolver/provider, EF extension methods) are in
+  (package vs manual converter/resolver/provider, EF extension methods, Serilog destructuring) are in
   `references/framework-integration.md`.
 - **`[ObjectFactory<T>]` is the escape hatch for custom conversion** — and it works even on a plain
   `partial class`, not just generated types. See `references/object-factories.md`.

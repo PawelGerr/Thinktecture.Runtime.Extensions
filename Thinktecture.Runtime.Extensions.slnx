@@ -62,6 +62,7 @@
         <Project Path="src/Thinktecture.Runtime.Extensions.Refactorings/Thinktecture.Runtime.Extensions.Refactorings.csproj" />
         <Project Path="src/Thinktecture.Runtime.Extensions.SourceGenerator/Thinktecture.Runtime.Extensions.SourceGenerator.csproj" />
         <Project Path="src/Thinktecture.Runtime.Extensions.Swashbuckle/Thinktecture.Runtime.Extensions.Swashbuckle.csproj" />
+        <Project Path="src/Thinktecture.Runtime.Extensions.Serilog/Thinktecture.Runtime.Extensions.Serilog.csproj" />
         <Project Path="src/Thinktecture.Runtime.Extensions/Thinktecture.Runtime.Extensions.csproj" />
         <File Path="src/.editorconfig" />
         <File Path="src/Directory.Build.props" />
@@ -77,6 +78,7 @@
         <Project Path="test/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests/Thinktecture.Runtime.Extensions.Newtonsoft.Json.Tests.csproj" />
         <Project Path="test/Thinktecture.Runtime.Extensions.Refactorings.Tests/Thinktecture.Runtime.Extensions.Refactorings.Tests.csproj" />
         <Project Path="test/Thinktecture.Runtime.Extensions.RoslynTests.Shared/Thinktecture.Runtime.Extensions.RoslynTests.Shared.csproj" />
+        <Project Path="test/Thinktecture.Runtime.Extensions.Serilog.Tests/Thinktecture.Runtime.Extensions.Serilog.Tests.csproj" />
         <Project Path="test/Thinktecture.Runtime.Extensions.SourceGenerator.Tests/Thinktecture.Runtime.Extensions.SourceGenerator.Tests.csproj" />
         <Project Path="test/Thinktecture.Runtime.Extensions.Swashbuckle.3_0.Tests/Thinktecture.Runtime.Extensions.Swashbuckle.3_0.Tests.csproj" />
         <Project Path="test/Thinktecture.Runtime.Extensions.Swashbuckle.3_1.Tests/Thinktecture.Runtime.Extensions.Swashbuckle.3_1.Tests.csproj" />

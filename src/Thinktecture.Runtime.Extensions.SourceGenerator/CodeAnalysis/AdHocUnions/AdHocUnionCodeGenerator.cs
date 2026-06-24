@@ -81,6 +81,11 @@ namespace ").Append(_state.Namespace).Append(@"
       global::Thinktecture.IDisallowDefaultValue,");
       }
 
+      var singleBackingFieldType = _state.Settings.SingleBackingFieldType?.FullyQualified;
+      var valueType = singleBackingFieldType is not null
+                         ? singleBackingFieldType + (_state.SingleBackingFieldNeedsNullableAnnotation() ? "?" : null)
+                         : "object" + (_state.HasNullableMemberTypes() ? "?" : null);
+
       _sb.Append(@"
       global::Thinktecture.Internal.IMetadataOwner
    {
@@ -93,7 +98,30 @@ namespace ").Append(_state.Namespace).Append(@"
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {").AppendMemberTypes(_state.MemberTypes).Append(@"
                        }
-                       .AsReadOnly()
+                       .AsReadOnly(),");
+
+      if (_state.IsRefStruct)
+      {
+         // Ref structs cannot be boxed and cannot appear in expression trees, so all three
+         // value-accessor members are emitted as throw-based stubs using object-typed delegates.
+         _sb.Append(@"
+         ConvertToValue = static object? (object _) => throw new global::System.NotSupportedException(""Value accessor is not supported for ref struct unions.""),
+         ConvertToValueExpression = global::System.Linq.Expressions.Expression.Lambda(
+                                       global::System.Linq.Expressions.Expression.Throw(
+                                          global::System.Linq.Expressions.Expression.New(typeof(global::System.NotSupportedException)),
+                                          typeof(object)),
+                                       global::System.Linq.Expressions.Expression.Parameter(typeof(object), ""_"")),
+         GetValue = static object? (object _) => throw new global::System.NotSupportedException(""Value accessor is not supported for ref struct unions."")");
+      }
+      else
+      {
+         _sb.Append(@"
+         ConvertToValue = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.Value,
+         ConvertToValueExpression = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.Value,
+         GetValue = static object? (object item) => ((").AppendTypeFullyQualified(_state).Append(@")item).Value");
+      }
+
+      _sb.Append(@"
       };
 
       private readonly int _valueIndex;

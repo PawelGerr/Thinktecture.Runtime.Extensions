@@ -1,5 +1,6 @@
 using Serilog;
 using Thinktecture.EmptyClass;
+using Thinktecture.Logging;
 using Thinktecture.SmartEnums;
 using Thinktecture.Unions;
 using Thinktecture.ValueObjects;
@@ -17,6 +18,7 @@ internal class Program
       DiscriminatedUnionsDemos.Demo(logger);
       EmptyActionDemos.Demo();
       EmptyCollectionsDemos.Demo();
+      SerilogDestructuringDemos.Demo();
    }
 
    private static ILogger GetLogger()
