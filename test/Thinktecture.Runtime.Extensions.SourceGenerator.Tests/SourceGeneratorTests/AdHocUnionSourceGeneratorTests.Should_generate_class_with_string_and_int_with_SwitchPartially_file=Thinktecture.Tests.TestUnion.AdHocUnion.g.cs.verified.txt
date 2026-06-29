@@ -10,7 +10,7 @@ namespace Thinktecture.Tests
       global::Thinktecture.IDisallowDefaultValue,
       global::Thinktecture.Internal.IMetadataOwner
    {
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
@@ -35,30 +35,30 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Indication whether the current value is of type <see cref="string"/>.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public bool IsString => this._valueIndex == 1;
 
       /// <summary>
       /// Indication whether the current value is of type <see cref="int"/>.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public bool IsInt32 => this._valueIndex == 2;
 
       /// <summary>
       /// Gets the current value as <see cref="string"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public string AsString => IsString ? this._string! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="int"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="int"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public int AsInt32 => IsInt32 ? this._int32 : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'int' but of type '{GetMemberTypeName()}'.");
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       private string GetMemberTypeName()
       {
@@ -74,7 +74,7 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets the current value as <see cref="object"/>.
       /// </summary>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public object Value => this._valueIndex switch
       {
          1 => this._string!,
@@ -86,7 +86,7 @@ namespace Thinktecture.Tests
       /// Initializes new instance with <paramref name="string"/>.
       /// </summary>
       /// <param name="string">Value to create a new instance for.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public TestUnion(string @string)
       {
          NormalizeString(ref @string);
@@ -98,7 +98,7 @@ namespace Thinktecture.Tests
       /// Initializes new instance with <paramref name="int32"/>.
       /// </summary>
       /// <param name="int32">Value to create a new instance for.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       public TestUnion(int @int32)
       {
          NormalizeInt32(ref @int32);
@@ -112,7 +112,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string,
@@ -139,7 +139,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no value-specific action is provided.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<object?>? @default = null,
@@ -175,7 +175,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
@@ -207,7 +207,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The action to execute if no value-specific action is provided.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The action to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void SwitchPartially<TState>(
          TState @state,
@@ -246,7 +246,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string,
@@ -274,7 +274,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no value-specific action is provided.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TResult>(
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<object?, TResult> @default,
@@ -311,7 +311,7 @@ namespace Thinktecture.Tests
       /// <param name="state">State to be passed to the callbacks.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
@@ -342,7 +342,7 @@ namespace Thinktecture.Tests
       /// <param name="default">The function to execute if no value-specific action is provided.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The function to execute if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult SwitchPartially<TState, TResult>(
          TState @state,
@@ -379,7 +379,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
       /// <param name="int32">The instance to return if the current value is of type <see cref="int"/>.</param>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
          TResult @string,
@@ -404,7 +404,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="string">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
       {
@@ -416,7 +416,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="int32">Value to convert from.</param>
       /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="int32"/>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static implicit operator global::Thinktecture.Tests.TestUnion(int @int32)
       {
@@ -429,7 +429,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="string"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
       {
@@ -442,7 +442,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Object to convert.</param>
       /// <returns>Inner value of type <see cref="int"/>.</returns>
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="int"/>.</exception>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static explicit operator int(global::Thinktecture.Tests.TestUnion obj)
       {
@@ -455,7 +455,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator ==(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
       {
@@ -471,7 +471,7 @@ namespace Thinktecture.Tests
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static bool operator !=(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
       {
@@ -479,7 +479,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
@@ -487,7 +487,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public bool Equals(global::Thinktecture.Tests.TestUnion? other)
       {
@@ -509,7 +509,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override int GetHashCode()
       {
@@ -522,7 +522,7 @@ namespace Thinktecture.Tests
       }
 
       /// <inheritdoc />
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string? ToString()
       {
@@ -534,10 +534,10 @@ namespace Thinktecture.Tests
          };
       }
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       static partial void NormalizeString(ref string @string);
 
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       static partial void NormalizeInt32(ref int @int32);
    }
 }
