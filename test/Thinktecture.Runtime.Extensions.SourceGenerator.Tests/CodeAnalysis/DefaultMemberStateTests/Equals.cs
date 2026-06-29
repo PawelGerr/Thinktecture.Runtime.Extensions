@@ -613,6 +613,7 @@ public class Equals
       public NullableAnnotation NullableAnnotation { get; }
       public bool IsFormattable => false;
       public bool IsComparable => false;
+      public bool IsGenericComparable => false;
       public bool IsParsable => false;
       public bool IsSpanParsable => false;
       public bool IsToStringReturnTypeNullable => false;

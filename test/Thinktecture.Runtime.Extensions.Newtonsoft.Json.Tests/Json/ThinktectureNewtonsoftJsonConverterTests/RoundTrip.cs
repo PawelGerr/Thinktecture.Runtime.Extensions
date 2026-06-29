@@ -256,6 +256,94 @@ public class RoundTrip : JsonTestsBase
       deserialized.Should().BeSameAs(original);
    }
 
+   [Theory]
+   [InlineData(1)]
+   [InlineData(2)]
+   [InlineData(3)]
+   public void Should_roundtrip_enum_based_smart_enum(int key)
+   {
+      var original = SmartEnum_EnumBased.Get((SmartEnum_EnumKey)key);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be(key.ToString());
+
+      var deserialized = JsonConvert.DeserializeObject<SmartEnum_EnumBased>(json);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Theory]
+   [InlineData(ValueObject_EnumKey.Item1, 1)]
+   [InlineData(ValueObject_EnumKey.Item2, 2)]
+   [InlineData(ValueObject_EnumKey.Item3, 3)]
+   public void Should_roundtrip_enum_based_value_object(ValueObject_EnumKey key, int expectedKey)
+   {
+      var original = EnumBasedValueObject.Create(key);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be(expectedKey.ToString());
+
+      var deserialized = JsonConvert.DeserializeObject<EnumBasedValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   [Theory]
+   [InlineData(ValueObject_FlagsEnumKey.None, 0)]
+   [InlineData(ValueObject_FlagsEnumKey.First, 1)]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second, 3)]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second | ValueObject_FlagsEnumKey.Third, 7)]
+   public void Should_roundtrip_flags_enum_based_value_object(ValueObject_FlagsEnumKey key, int expectedKey)
+   {
+      var original = FlagsEnumBasedValueObject.Create(key);
+      var json = JsonConvert.SerializeObject(original);
+
+      json.Should().Be(expectedKey.ToString());
+
+      var deserialized = JsonConvert.DeserializeObject<FlagsEnumBasedValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_based_smart_enum_using_StringEnumConverter()
+   {
+      var settings = new JsonSerializerSettings
+                     {
+                        Converters =
+                        {
+                           new ThinktectureNewtonsoftJsonConverterFactory(),
+                           new Newtonsoft.Json.Converters.StringEnumConverter()
+                        }
+                     };
+
+      var original = SmartEnum_EnumBased.Item2;
+      var json = JsonConvert.SerializeObject(original, settings);
+
+      json.Should().Be("\"Item2\"");
+
+      var deserialized = JsonConvert.DeserializeObject<SmartEnum_EnumBased>(json, settings);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_based_value_object_using_StringEnumConverter()
+   {
+      var settings = new JsonSerializerSettings
+                     {
+                        Converters =
+                        {
+                           new ThinktectureNewtonsoftJsonConverterFactory(),
+                           new Newtonsoft.Json.Converters.StringEnumConverter()
+                        }
+                     };
+
+      var original = EnumBasedValueObject.Create(ValueObject_EnumKey.Item2);
+      var json = JsonConvert.SerializeObject(original, settings);
+
+      json.Should().Be("\"Item2\"");
+
+      var deserialized = JsonConvert.DeserializeObject<EnumBasedValueObject>(json, settings);
+      deserialized.Should().Be(original);
+   }
+
    private struct TestStruct<T>
    {
       public T Prop { get; set; }

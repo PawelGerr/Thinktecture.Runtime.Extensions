@@ -366,6 +366,7 @@ public class Constructor
       public NullableAnnotation NullableAnnotation { get; }
       public bool IsFormattable { get; }
       public bool IsComparable { get; }
+      public bool IsGenericComparable => IsComparable;
       public bool IsParsable { get; }
       public bool IsSpanParsable { get; }
       public bool IsToStringReturnTypeNullable { get; }

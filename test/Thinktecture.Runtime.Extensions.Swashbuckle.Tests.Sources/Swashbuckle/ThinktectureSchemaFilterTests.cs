@@ -28,6 +28,8 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
    private RequiredMemberEvaluator _requiredMemberEvaluator = RequiredMemberEvaluator.Default;
    private bool _nonNullableReferenceTypesAsRequired;
    private bool _useOneOfForPolymorphism;
+   private bool _useStringEnumConverter;
+   private bool _keepOrphanedKeyTypeSchemas;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -61,7 +63,18 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
                    filterOptions.SmartEnumSchemaFilter = _smartEnumFilter;
                    filterOptions.SmartEnumSchemaExtension = _smartEnumExtension;
                    filterOptions.RequiredMemberEvaluator = _requiredMemberEvaluator;
+
+                   if (_keepOrphanedKeyTypeSchemas)
+                      filterOptions.RemoveOrphanedKeyTypeSchemas = false;
                 });
+
+      if (_useStringEnumConverter)
+      {
+         // Swashbuckle's schema generator and Thinktecture's value factory both read the MVC JSON options,
+         // so registering the converter here makes enum-keyed types serialize (and be schematized) as strings.
+         appBuilder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(
+            jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+      }
 
       if (_controllerType is not null)
       {

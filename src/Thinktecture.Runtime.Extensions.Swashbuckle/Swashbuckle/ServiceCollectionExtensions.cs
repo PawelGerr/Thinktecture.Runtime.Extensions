@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
       this IServiceCollection services,
       Action<ThinktectureSchemaFilterOptions>? configureOptions = null)
    {
+      services.TryAddSingleton<OrphanKeyTypeSchemaRegistry>();
       services.TryAddSingleton<IOpenApiValueFactoryProvider, JsonSerializerOpenApiValueFactoryProvider>();
       services.TryAddSingleton<IKeylessSmartEnumSchemaFilter, KeylessSmartEnumSchemaFilter>();
       services.TryAddSingleton<IKeyedValueObjectSchemaFilter, KeyedValueObjectSchemaFilter>();
@@ -56,6 +57,12 @@ public static class ServiceCollectionExtensions
             options.AddSchemaFilterInstance(schemaFilter);
             options.AddParameterFilterInstance(parameterFilter);
             options.AddRequestBodyFilterInstance(requestBodyFilter);
+
+            if (ttOptions.RemoveOrphanedKeyTypeSchemas)
+            {
+               var removeOrphanedKeyTypeSchemasFilter = ActivatorUtilities.CreateInstance<RemoveOrphanedKeyTypeSchemasDocumentFilter>(serviceProvider);
+               options.AddDocumentFilterInstance(removeOrphanedKeyTypeSchemasFilter);
+            }
          });
 
       return services;

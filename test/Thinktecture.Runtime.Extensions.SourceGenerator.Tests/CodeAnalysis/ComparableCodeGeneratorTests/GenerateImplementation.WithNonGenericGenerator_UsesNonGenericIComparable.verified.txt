@@ -1,0 +1,25 @@
+﻿
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public int CompareTo(object? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      if(obj is not global::Thinktecture.Tests.MigrationStep item)
+         throw new global::System.ArgumentException("Argument must be of type \"MigrationStep\".", nameof(obj));
+
+      return this.CompareTo(item);
+   }
+
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.4.0.0")]
+   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+   public int CompareTo(global::Thinktecture.Tests.MigrationStep? obj)
+   {
+      if(obj is null)
+         return 1;
+
+      return ((global::System.IComparable)this._value).CompareTo(obj._value);
+   }

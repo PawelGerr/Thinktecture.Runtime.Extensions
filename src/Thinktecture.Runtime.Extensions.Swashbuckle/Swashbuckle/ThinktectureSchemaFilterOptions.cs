@@ -42,4 +42,16 @@ public class ThinktectureSchemaFilterOptions
    /// Default is <c>true</c>.
    /// </summary>
    public bool CreateExtraSchemasForParameters { get; set; } = true;
+
+   /// <summary>
+   /// Gets or sets a value indicating whether orphaned key-type component schemas should be removed.
+   ///
+   /// While generating a Smart Enum whose key is itself componentized (e.g. an <c>enum</c>), Swashbuckle
+   /// registers the key type as a separate component. After the Smart Enum's schema is rewritten that component
+   /// is left behind, referenced by nothing. When enabled, such components are removed - but only if they are
+   /// not referenced anywhere else in the document, so a key type that is also used directly elsewhere is kept.
+   ///
+   /// Default is <c>true</c>.
+   /// </summary>
+   public bool RemoveOrphanedKeyTypeSchemas { get; set; } = true;
 }

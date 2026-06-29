@@ -3608,4 +3608,36 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.TestEnum`1.Formattable.g.cs",
                         "Thinktecture.Tests.TestEnum`1.ComparisonOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_use_non_generic_IComparable_when_key_is_an_enum()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public enum KeyEnum
+            {
+               Item1 = 1,
+               Item2 = 2,
+            }
+
+            [SmartEnum<KeyEnum>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.Formattable.g.cs");
+   }
 }

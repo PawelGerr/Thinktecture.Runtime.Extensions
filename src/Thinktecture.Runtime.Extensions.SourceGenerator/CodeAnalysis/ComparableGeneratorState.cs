@@ -9,6 +9,7 @@ public sealed class ComparableGeneratorState
    public string CreateFactoryMethodName { get; }
    public bool SkipIComparable { get; }
    public bool IsKeyMemberComparable { get; }
+   public bool IsKeyMemberGenericComparable { get; }
    public string? ComparerAccessor { get; }
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
@@ -18,6 +19,7 @@ public sealed class ComparableGeneratorState
       string createFactoryMethodName,
       bool skipIComparable,
       bool isKeyMemberComparable,
+      bool isKeyMemberGenericComparable,
       string? comparerAccessor,
       ImmutableArray<GenericTypeParameterState> genericParameters)
    {
@@ -26,6 +28,7 @@ public sealed class ComparableGeneratorState
       CreateFactoryMethodName = createFactoryMethodName;
       SkipIComparable = skipIComparable;
       IsKeyMemberComparable = isKeyMemberComparable;
+      IsKeyMemberGenericComparable = isKeyMemberGenericComparable;
       ComparerAccessor = comparerAccessor;
       GenericParameters = genericParameters;
    }
@@ -37,6 +40,7 @@ public sealed class ComparableGeneratorState
              && CreateFactoryMethodName == other.CreateFactoryMethodName
              && SkipIComparable == other.SkipIComparable
              && IsKeyMemberComparable == other.IsKeyMemberComparable
+             && IsKeyMemberGenericComparable == other.IsKeyMemberGenericComparable
              && ComparerAccessor == other.ComparerAccessor
              && GenericParameters.SequenceEqual(other.GenericParameters);
    }
@@ -55,6 +59,7 @@ public sealed class ComparableGeneratorState
          hashCode = (hashCode * 397) ^ CreateFactoryMethodName.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsKeyMemberComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsKeyMemberGenericComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ (ComparerAccessor?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 

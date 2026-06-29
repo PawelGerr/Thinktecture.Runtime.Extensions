@@ -19,6 +19,7 @@ public sealed class KeyMemberState : IParsableMemberInformation, IMemberState, I
    public bool IsValueType => _typedMemberState.IsValueType;
    public bool IsFormattable => _typedMemberState.IsFormattable;
    public bool IsComparable => _typedMemberState.IsComparable;
+   public bool IsGenericComparable => _typedMemberState.IsGenericComparable;
    public bool IsParsable => _typedMemberState.IsParsable;
    public bool IsSpanParsable => _typedMemberState.IsSpanParsable;
    public bool IsToStringReturnTypeNullable => _typedMemberState.IsToStringReturnTypeNullable;

@@ -4,17 +4,20 @@ namespace Thinktecture.CodeAnalysis;
 
 public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 {
-   public static readonly IInterfaceCodeGenerator Default = new ComparableCodeGenerator(null);
+   public static readonly IInterfaceCodeGenerator Default = new ComparableCodeGenerator(null, true);
+   public static readonly IInterfaceCodeGenerator NonGeneric = new ComparableCodeGenerator(null, false);
 
    private readonly string? _comparerAccessor;
+   private readonly bool _isKeyMemberGenericComparable;
 
    public string CodeGeneratorName => "Comparable-CodeGenerator";
    public string FileNameSuffix => ".Comparable";
    public bool CanAppendColon => true;
 
-   public ComparableCodeGenerator(string? comparerAccessor)
+   public ComparableCodeGenerator(string? comparerAccessor, bool isKeyMemberGenericComparable = true)
    {
       _comparerAccessor = comparerAccessor;
+      _isKeyMemberGenericComparable = isKeyMemberGenericComparable;
    }
 
    public void GenerateBaseTypes(StringBuilder sb, InterfaceCodeGeneratorState state)
@@ -77,8 +80,17 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
 ");
          }
 
-         sb.Append(@"
+         if (_isKeyMemberGenericComparable)
+         {
+            sb.Append(@"
       return ((global::System.IComparable<").AppendTypeFullyQualified(state.KeyMember).Append(">)this.").Append(state.KeyMember.Name).Append(").CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
+         }
+         else
+         {
+            // The key member type (e.g. an enum) implements only the non-generic System.IComparable.
+            sb.Append(@"
+      return ((global::System.IComparable)this.").Append(state.KeyMember.Name).Append(").CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
+         }
       }
 
       sb.Append(@"

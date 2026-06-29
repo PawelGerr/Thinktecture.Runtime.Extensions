@@ -206,6 +206,42 @@ public partial class ThinktectureSchemaFilterTests
          await Verify(GetOpenApiJsonAsync());
       }
 
+      [Fact]
+      public async Task Should_handle_EnumBased_ValueObject_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] EnumBasedValueObject value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_handle_EnumBased_ValueObject_with_string_enum_converter_as_body_parameter()
+      {
+         _useStringEnumConverter = true;
+
+         App.MapPost("/test", ([FromBody] EnumBasedValueObject value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_handle_FlagsEnumBased_ValueObject_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] FlagsEnumBasedValueObject value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_handle_EnumBased_ValueObject_with_public_key_as_body_parameter()
+      {
+         // The public key property makes Swashbuckle register the key enum as a component that must be pruned
+         // as an orphan (it is not referenced once the Value Object schema is replaced by the key schema).
+         App.MapPost("/test", ([FromBody] EnumBasedValueObjectWithPublicKey value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_Struct_StringBased_as_route_parameter(

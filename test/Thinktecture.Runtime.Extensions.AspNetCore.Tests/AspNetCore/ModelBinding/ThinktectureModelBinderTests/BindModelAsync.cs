@@ -75,6 +75,55 @@ public class BindModelAsync
    }
 
    [Fact]
+   public async Task Should_bind_enum_based_enum_by_name()
+   {
+      var ctx = await BindAsync<SmartEnum_EnumBased>("Item2");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(SmartEnum_EnumBased.Item2);
+   }
+
+   [Fact]
+   public async Task Should_bind_enum_based_enum_by_numeric_value()
+   {
+      var ctx = await BindAsync<SmartEnum_EnumBased>("2");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(SmartEnum_EnumBased.Item2);
+   }
+
+   [Fact]
+   public async Task Should_not_bind_enum_based_enum_if_key_is_unknown()
+   {
+      var ctx = await BindAsync<SmartEnum_EnumBased>("Unknown");
+
+      ctx.ModelState.ErrorCount.Should().Be(1);
+      ctx.Result.IsModelSet.Should().BeFalse();
+   }
+
+   [Fact]
+   public async Task Should_bind_enum_based_value_object_by_name()
+   {
+      var ctx = await BindAsync<EnumBasedValueObject>("Item2");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(EnumBasedValueObject.Create(ValueObject_EnumKey.Item2));
+   }
+
+   [Fact]
+   public async Task Should_bind_enum_based_value_object_by_numeric_value()
+   {
+      var ctx = await BindAsync<EnumBasedValueObject>("2");
+
+      ctx.ModelState.ErrorCount.Should().Be(0);
+      ctx.Result.IsModelSet.Should().BeTrue();
+      ctx.Result.Model.Should().Be(EnumBasedValueObject.Create(ValueObject_EnumKey.Item2));
+   }
+
+   [Fact]
    public async Task Should_return_null_if_value_is_empty_string()
    {
       var ctx = await BindAsync<SmartEnum_IntBased>(String.Empty);

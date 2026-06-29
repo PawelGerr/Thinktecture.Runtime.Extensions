@@ -215,7 +215,7 @@ public abstract class ThinktectureSourceGeneratorBase
                                                                                                  state.Left.CreateFactoryMethodName,
                                                                                                  state.Left.GenericParameters),
                                                                                               state.Right,
-                                                                                              InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor)));
+                                                                                              InterfaceCodeGeneratorFactory.Comparable(state.Left.ComparerAccessor, state.Left.IsKeyMemberGenericComparable)));
    }
 
    protected void InitializeParsableCodeGenerator(

@@ -26,15 +26,21 @@ public static class InterfaceCodeGeneratorFactory
    private static readonly ICodeGeneratorFactory<SpanParsableGeneratorState> _spanParsableForValueObject = new InterfaceCodeGeneratorFactory<SpanParsableGeneratorState, IParsableTypeInformation>(SpanParsableCodeGenerator.ForValueObject);
    private static readonly ICodeGeneratorFactory<SpanParsableGeneratorState> _spanParsableForEnum = new InterfaceCodeGeneratorFactory<SpanParsableGeneratorState, IParsableTypeInformation>(SpanParsableCodeGenerator.ForEnum);
    private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _comparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(ComparableCodeGenerator.Default);
+   private static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> _nonGenericComparable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(ComparableCodeGenerator.NonGeneric);
 
    public static readonly ICodeGeneratorFactory<ParsableGeneratorState> Parsable = new InterfaceCodeGeneratorFactory<ParsableGeneratorState, IParsableTypeInformation>(ParsableCodeGenerator.Instance);
    public static readonly ICodeGeneratorFactory<InterfaceCodeGeneratorState> Formattable = new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(FormattableCodeGenerator.Instance);
 
-   public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Comparable(string? comparerAccessor)
+   public static ICodeGeneratorFactory<InterfaceCodeGeneratorState> Comparable(string? comparerAccessor, bool isKeyMemberGenericComparable)
    {
-      return String.IsNullOrWhiteSpace(comparerAccessor)
+      // When a custom comparer is configured the key member is not cast to IComparable<T>,
+      // so the generic-vs-non-generic distinction is irrelevant in that branch.
+      if (!String.IsNullOrWhiteSpace(comparerAccessor))
+         return new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor, true));
+
+      return isKeyMemberGenericComparable
                 ? _comparable
-                : new InterfaceCodeGeneratorFactory<InterfaceCodeGeneratorState, ITypeInformation>(new ComparableCodeGenerator(comparerAccessor));
+                : _nonGenericComparable;
    }
 
    public static ICodeGeneratorFactory<SpanParsableGeneratorState> SpanParsable(bool forEnum)

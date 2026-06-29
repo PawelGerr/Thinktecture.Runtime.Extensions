@@ -3609,4 +3609,34 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                         "Thinktecture.Tests.GenericKeyValueObject`1.MultiplyOperators.g.cs",
                         "Thinktecture.Tests.GenericKeyValueObject`1.DivisionOperators.g.cs");
    }
+
+   [Fact]
+   public async Task Should_use_non_generic_IComparable_when_key_is_an_enum()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            public enum KeyEnum
+            {
+               Item1 = 1,
+               Item2 = 2,
+            }
+
+            [ValueObject<KeyEnum>]
+            public partial class TestValueObject
+            {
+            }
+         }
+         """;
+
+      var outputs = GetGeneratedOutputs<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestValueObject.ValueObject.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Comparable.g.cs",
+                        "Thinktecture.Tests.TestValueObject.EqualityComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestValueObject.Formattable.g.cs");
+   }
 }

@@ -219,6 +219,7 @@ public sealed class ValueObjectSourceGenerator()
                     state.Settings.CreateFactoryMethodName,
                     state.Settings.SkipIComparable,
                     state.State.KeyMember.IsComparable,
+                    state.State.KeyMember.IsGenericComparable,
                     state.AttributeInfo.KeyMemberComparerAccessor,
                     state.State.GenericParameters));
 

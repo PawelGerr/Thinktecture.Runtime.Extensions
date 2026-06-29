@@ -14,6 +14,7 @@ public interface ITypedMemberState : IEquatable<ITypedMemberState>
    NullableAnnotation NullableAnnotation { get; }
    bool IsFormattable { get; }
    bool IsComparable { get; }
+   bool IsGenericComparable { get; }
    bool IsParsable { get; }
    bool IsSpanParsable { get; }
    bool IsToStringReturnTypeNullable { get; }

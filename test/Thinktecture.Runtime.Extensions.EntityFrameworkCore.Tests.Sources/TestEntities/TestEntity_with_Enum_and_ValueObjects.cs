@@ -16,8 +16,11 @@ public class TestEntity_with_Enum_and_ValueObjects
 
    public SmartEnum_IntBased? SmartEnum_IntBased { get; set; }
    public SmartEnum_StringBased? SmartEnum_StringBased { get; set; }
+   public SmartEnum_EnumBased? SmartEnum_EnumBased { get; set; }
    public TestSmartEnum_CustomError? TestSmartEnum_CustomError { get; set; }
 
+   public EnumBasedValueObject? EnumBasedValueObject { get; set; }
+   public FlagsEnumBasedValueObject? FlagsEnumBasedValueObject { get; set; }
    public IntBasedReferenceValueObject? IntBasedReferenceValueObject { get; set; }
    public IntBasedStructValueObject IntBasedStructValueObject { get; set; }
    public StringBasedReferenceValueObject? StringBasedReferenceValueObject { get; set; }
@@ -53,8 +56,11 @@ public class TestEntity_with_Enum_and_ValueObjects
          {
             builder.Property(e => e.SmartEnum_IntBased).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.SmartEnum_StringBased).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.SmartEnum_EnumBased).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.TestSmartEnum_CustomError).HasThinktectureValueConverter(configuration);
 
+            builder.Property(e => e.EnumBasedValueObject).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.FlagsEnumBasedValueObject).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.IntBasedReferenceValueObject).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.IntBasedStructValueObject).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.StringBasedReferenceValueObject).HasThinktectureValueConverter(configuration);

@@ -15,6 +15,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
    public bool IsReferenceTypeOrNullableStruct => IsReferenceType || IsNullableStruct || (IsTypeParameter && !IsValueType);
    public bool IsFormattable { get; }
    public bool IsComparable { get; }
+   public bool IsGenericComparable { get; }
    public bool IsParsable { get; }
    public bool IsSpanParsable { get; }
    public bool IsToStringReturnTypeNullable { get; }
@@ -61,6 +62,12 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
          else if (@interface.IsComparableInterface(type))
          {
             IsComparable = true;
+
+            // Enums (and some custom types) implement only the non-generic System.IComparable,
+            // not System.IComparable<T>. Track the generic variant separately so the generated
+            // comparison code casts to the interface that is actually implemented.
+            if (@interface.IsGenericType)
+               IsGenericComparable = true;
          }
          else if (@interface.IsParsableInterface(type))
          {
@@ -207,6 +214,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
              && IsValueType == other.IsValueType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
+             && IsGenericComparable == other.IsGenericComparable
              && IsParsable == other.IsParsable
              && IsSpanParsable == other.IsSpanParsable
              && IsToStringReturnTypeNullable == other.IsToStringReturnTypeNullable
@@ -230,6 +238,7 @@ public sealed class TypedMemberState : IEquatable<TypedMemberState>, ITypedMembe
          hashCode = (hashCode * 397) ^ IsValueType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsFormattable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsComparable.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsGenericComparable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsSpanParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ IsToStringReturnTypeNullable.GetHashCode();

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -15,6 +16,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
 {
    private readonly IOpenApiValueFactoryProvider _valueFactoryProvider;
    private readonly ISmartEnumSchemaExtension _extension;
+   private readonly OrphanKeyTypeSchemaRegistry _orphanKeyTypeSchemaRegistry;
    private readonly bool _clearAllOf;
 
    /// <summary>
@@ -30,6 +32,7 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    {
       _valueFactoryProvider = valueFactoryProvider;
       _extension = options.Value.SmartEnumSchemaExtension.CreateSchemaExtension(serviceProvider);
+      _orphanKeyTypeSchemaRegistry = serviceProvider.GetRequiredService<OrphanKeyTypeSchemaRegistry>();
       _clearAllOf = options.Value.ClearAllOfOnKeyedTypes;
    }
 
@@ -55,7 +58,18 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
 
       SetItems(schema, items);
 
-      var keySchema = context.SchemaGenerator.GenerateSchema(metadata.KeyType, context.SchemaRepository);
+      // Resolve the key schema (an enum key is resolved to its referenced component so the real wire
+      // representation is used). The "enum" values themselves are set separately (see "SetItems") and already
+      // honor the configured representation (numeric vs. string).
+      var keySchema = KeySchemaResolver.Resolve(context, metadata.KeyType, out var keyTypeComponentId);
+
+      // Swashbuckle walks the Smart Enum's public "Key" property while generating the type and registers a
+      // componentized key type (e.g. an enum) in the main repository before this filter runs. Clearing the
+      // properties above leaves that component orphaned. Record it so it can be removed afterwards if it ends
+      // up unreferenced (see "RemoveOrphanedKeyTypeSchemasDocumentFilter").
+      if (keyTypeComponentId is not null)
+         _orphanKeyTypeSchemaRegistry.Register(context.SchemaRepository, keyTypeComponentId);
+
       CopyPropertiesFromKeyTypeSchema(schema, context, keySchema);
 
       _extension.Apply(schema, context, items);

@@ -125,6 +125,28 @@ public class GenerateImplementation
    }
 
    [Fact]
+   public async Task WithNonGenericGenerator_UsesNonGenericIComparable()
+   {
+      // Arrange - key member types that implement only the non-generic System.IComparable (e.g. enums)
+      var state = new ComparableStateBuilder()
+                  .WithReferenceType("global::Thinktecture.Tests.MigrationStep", "MigrationStep")
+                  .WithIntKeyMember("_value")
+                  .Build();
+
+      var sb = new StringBuilder();
+      var generator = ComparableCodeGenerator.NonGeneric;
+
+      // Act
+      generator.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("((global::System.IComparable)this._value).CompareTo(obj._value)");
+      result.Should().NotContain("IComparable<");
+      await Verifier.Verify(result);
+   }
+
+   [Fact]
    public async Task WithCustomComparerAccessor_UsesProvidedComparer()
    {
       // Arrange

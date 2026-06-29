@@ -722,6 +722,70 @@ public partial class RoundTripSerialize
       RoundTrip(ValueObjects_NestedInGenericClass.GenericOuter<int>.ComplexValueObject.Create(42));
    }
 
+   [Theory]
+   [InlineData(SmartEnum_EnumKey.Item1)]
+   [InlineData(SmartEnum_EnumKey.Item2)]
+   [InlineData(SmartEnum_EnumKey.Item3)]
+   public void Should_roundtrip_serialize_enum_based_smart_enum(SmartEnum_EnumKey key)
+   {
+      var item = SmartEnum_EnumBased.Get(key);
+
+      var bytes = MessagePackSerializer.Serialize(item, _options, TestContext.Current.CancellationToken);
+
+      // serialized value is the underlying enum key
+      var serializedKey = MessagePackSerializer.Deserialize<SmartEnum_EnumKey>(bytes, _options, TestContext.Current.CancellationToken);
+      serializedKey.Should().Be(key);
+
+      var deserialized = MessagePackSerializer.Deserialize<SmartEnum_EnumBased>(bytes, _options, TestContext.Current.CancellationToken);
+      deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_round_trip_all_enum_based_smart_enum_items()
+   {
+      foreach (var original in SmartEnum_EnumBased.Items)
+      {
+         RoundTrip(original);
+      }
+   }
+
+   [Theory]
+   [InlineData(ValueObject_EnumKey.Item1)]
+   [InlineData(ValueObject_EnumKey.Item2)]
+   [InlineData(ValueObject_EnumKey.Item3)]
+   public void Should_roundtrip_serialize_enum_based_value_object(ValueObject_EnumKey key)
+   {
+      var obj = EnumBasedValueObject.Create(key);
+
+      var bytes = MessagePackSerializer.Serialize(obj, _options, TestContext.Current.CancellationToken);
+
+      // serialized value is the underlying enum key
+      var serializedKey = MessagePackSerializer.Deserialize<ValueObject_EnumKey>(bytes, _options, TestContext.Current.CancellationToken);
+      serializedKey.Should().Be(key);
+
+      var deserialized = MessagePackSerializer.Deserialize<EnumBasedValueObject>(bytes, _options, TestContext.Current.CancellationToken);
+      deserialized.Should().Be(obj);
+   }
+
+   [Theory]
+   [InlineData(ValueObject_FlagsEnumKey.None)]
+   [InlineData(ValueObject_FlagsEnumKey.First)]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second)]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second | ValueObject_FlagsEnumKey.Third)]
+   public void Should_roundtrip_serialize_flags_enum_based_value_object(ValueObject_FlagsEnumKey key)
+   {
+      var obj = FlagsEnumBasedValueObject.Create(key);
+
+      var bytes = MessagePackSerializer.Serialize(obj, _options, TestContext.Current.CancellationToken);
+
+      // serialized value is the underlying flags enum key
+      var serializedKey = MessagePackSerializer.Deserialize<ValueObject_FlagsEnumKey>(bytes, _options, TestContext.Current.CancellationToken);
+      serializedKey.Should().Be(key);
+
+      var deserialized = MessagePackSerializer.Deserialize<FlagsEnumBasedValueObject>(bytes, _options, TestContext.Current.CancellationToken);
+      deserialized.Should().Be(obj);
+   }
+
    private static void Roundtrip_serialize_types_with_struct_properties_using_resolver(
       bool skipValueObjectsWithMessagePackFormatter,
       object obj)

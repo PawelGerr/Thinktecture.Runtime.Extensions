@@ -223,6 +223,48 @@ public partial class ThinktectureSchemaFilterTests
          await Verify(GetOpenApiJsonAsync());
       }
 
+      [Fact]
+      public async Task Should_handle_EnumBased_SmartEnum_as_body_parameter()
+      {
+         App.MapPost("/test", ([FromBody] SmartEnum_EnumBased value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_handle_EnumBased_SmartEnum_with_string_enum_converter_as_body_parameter()
+      {
+         _useStringEnumConverter = true;
+
+         App.MapPost("/test", ([FromBody] SmartEnum_EnumBased value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_keep_orphaned_key_type_component_when_orphan_removal_is_disabled()
+      {
+         // Opt-out of the document filter: the key enum that Swashbuckle registers while generating the Smart Enum
+         // stays in the document as an (unreferenced) orphan. Contrast with Should_handle_EnumBased_SmartEnum_as_body_parameter.
+         _keepOrphanedKeyTypeSchemas = true;
+
+         App.MapPost("/test", ([FromBody] SmartEnum_EnumBased value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
+      public async Task Should_keep_EnumBased_SmartEnum_key_component_when_key_enum_is_also_used_directly()
+      {
+         // The Smart Enum endpoint causes the key enum to be registered as a component that would normally be
+         // pruned as an orphan. The second endpoint references the raw key enum directly, so the document filter
+         // must retain "SmartEnum_EnumKey" instead of removing it.
+         App.MapPost("/smart-enum", ([FromBody] SmartEnum_EnumBased value) => value);
+         App.MapPost("/raw-enum", ([FromBody] SmartEnum_EnumKey value) => value);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_SmartEnumClass_StringBased_as_form_parameter(

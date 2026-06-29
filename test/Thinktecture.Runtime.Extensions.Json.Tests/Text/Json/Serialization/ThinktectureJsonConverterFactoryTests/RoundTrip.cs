@@ -493,4 +493,105 @@ public class RoundTrip : JsonTestsBase
       var deserialized = JsonSerializer.Deserialize<SmartEnum_GenericKeyBasedStructConstraint<int>>(json);
       deserialized.Should().BeSameAs(original);
    }
+
+   public static IEnumerable<object[]> EnumBasedSmartEnumTestData =>
+   [
+      [SmartEnum_EnumBased.Item1, "1"],
+      [SmartEnum_EnumBased.Item2, "2"],
+      [SmartEnum_EnumBased.Item3, "3"]
+   ];
+
+   [Theory]
+   [MemberData(nameof(EnumBasedSmartEnumTestData))]
+   public void Should_roundtrip_enum_based_smart_enum_serializing_key_as_number(SmartEnum_EnumBased original, string expectedJson)
+   {
+      var json = JsonSerializer.Serialize(original);
+      json.Should().Be(expectedJson);
+
+      var deserialized = JsonSerializer.Deserialize<SmartEnum_EnumBased>(json);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Theory]
+   [InlineData(ValueObject_EnumKey.Item1, "1")]
+   [InlineData(ValueObject_EnumKey.Item2, "2")]
+   [InlineData(ValueObject_EnumKey.Item3, "3")]
+   public void Should_roundtrip_enum_based_value_object_serializing_key_as_number(ValueObject_EnumKey key, string expectedJson)
+   {
+      var original = EnumBasedValueObject.Create(key);
+
+      var json = Serialize<EnumBasedValueObject, ValueObject_EnumKey>(original);
+      json.Should().Be(expectedJson);
+
+      var deserialized = Deserialize<EnumBasedValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   [Theory]
+   [InlineData(ValueObject_FlagsEnumKey.None, "0")]
+   [InlineData(ValueObject_FlagsEnumKey.First, "1")]
+   [InlineData(ValueObject_FlagsEnumKey.Second, "2")]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second, "3")]
+   [InlineData(ValueObject_FlagsEnumKey.First | ValueObject_FlagsEnumKey.Second | ValueObject_FlagsEnumKey.Third, "7")]
+   public void Should_roundtrip_flags_enum_based_value_object_serializing_key_as_number(ValueObject_FlagsEnumKey key, string expectedJson)
+   {
+      var original = FlagsEnumBasedValueObject.Create(key);
+
+      var json = Serialize<FlagsEnumBasedValueObject, ValueObject_FlagsEnumKey>(original);
+      json.Should().Be(expectedJson);
+
+      var deserialized = Deserialize<FlagsEnumBasedValueObject>(json);
+      deserialized.Should().Be(original);
+   }
+
+   private static JsonSerializerOptions StringEnumOptions()
+   {
+      return new JsonSerializerOptions
+             {
+                Converters =
+                {
+                   new ThinktectureJsonConverterFactory(),
+                   new JsonStringEnumConverter()
+                }
+             };
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_based_smart_enum_serializing_key_as_name_with_string_enum_converter()
+   {
+      var original = SmartEnum_EnumBased.Item2;
+      var options = StringEnumOptions();
+
+      var json = JsonSerializer.Serialize(original, options);
+      json.Should().Be("\"Item2\"");
+
+      var deserialized = JsonSerializer.Deserialize<SmartEnum_EnumBased>(json, options);
+      deserialized.Should().BeSameAs(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_enum_based_value_object_serializing_key_as_name_with_string_enum_converter()
+   {
+      var original = EnumBasedValueObject.Create(ValueObject_EnumKey.Item2);
+      var options = StringEnumOptions();
+
+      var json = JsonSerializer.Serialize(original, options);
+      json.Should().Be("\"Item2\"");
+
+      var deserialized = JsonSerializer.Deserialize<EnumBasedValueObject>(json, options);
+      deserialized.Should().Be(original);
+   }
+
+   [Fact]
+   public void Should_roundtrip_flags_enum_based_value_object_serializing_single_flag_as_name_with_string_enum_converter()
+   {
+      var original = FlagsEnumBasedValueObject.Create(ValueObject_FlagsEnumKey.First);
+      var options = StringEnumOptions();
+
+      var json = JsonSerializer.Serialize(original, options);
+      json.Should().Be("\"First\"");
+
+      var deserialized = JsonSerializer.Deserialize<FlagsEnumBasedValueObject>(json, options);
+      deserialized.Should().Be(original);
+   }
 }

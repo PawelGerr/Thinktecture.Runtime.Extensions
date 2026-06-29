@@ -26,7 +26,7 @@ public class DefaultSmartEnumMaxLengthStrategyTests
    [Fact]
    public void GetMaxLength_should_return_None_for_empty_items_collection()
    {
-      var result = _strategy.GetMaxLength(typeof(string), typeof(string), Array.Empty<ISmartEnumItem>());
+      var result = _strategy.GetMaxLength(typeof(string), typeof(string), []);
 
       result.IsSet.Should().BeFalse();
    }

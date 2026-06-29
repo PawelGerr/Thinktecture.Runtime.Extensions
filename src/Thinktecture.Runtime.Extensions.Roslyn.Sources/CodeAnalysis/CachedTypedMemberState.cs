@@ -18,6 +18,7 @@ public sealed class CachedTypedMemberState(ITypedMemberState typedMemberState)
    public NullableAnnotation NullableAnnotation { get; } = typedMemberState.NullableAnnotation;
    public bool IsFormattable { get; } = typedMemberState.IsFormattable;
    public bool IsComparable { get; } = typedMemberState.IsComparable;
+   public bool IsGenericComparable { get; } = typedMemberState.IsGenericComparable;
    public bool IsParsable { get; } = typedMemberState.IsParsable;
    public bool IsSpanParsable { get; } = typedMemberState.IsSpanParsable;
    public bool IsToStringReturnTypeNullable { get; } = typedMemberState.IsToStringReturnTypeNullable;
@@ -59,6 +60,7 @@ public sealed class CachedTypedMemberState(ITypedMemberState typedMemberState)
              && IsValueType == other.IsValueType
              && IsFormattable == other.IsFormattable
              && IsComparable == other.IsComparable
+             && IsGenericComparable == other.IsGenericComparable
              && IsParsable == other.IsParsable
              && IsSpanParsable == other.IsSpanParsable
              && IsToStringReturnTypeNullable == other.IsToStringReturnTypeNullable

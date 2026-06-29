@@ -151,6 +151,7 @@ public sealed class SmartEnumSourceGenerator()
                   Constants.Methods.GET,
                   state.Settings.SkipIComparable,
                   state.KeyMember.IsComparable,
+                  state.KeyMember.IsGenericComparable,
                   state.AttributeInfo.KeyMemberComparerAccessor,
                   state.State.GenericParameters)
             ];
