@@ -21,9 +21,12 @@ public abstract class UnionAttributeBase : Attribute
    /// Default is <see cref="UnionConstructorAccessModifier.Public"/>.
    /// </summary>
    /// <remarks>
-   /// The access modifier also applies to the generated implicit conversion operators (from member types to union type).
-   /// For example, setting this to <see cref="UnionConstructorAccessModifier.Private"/> makes both the constructors
-   /// and the implicit conversion operators private, requiring custom factory methods for union creation.
+   /// The access modifier also applies to the generated factory methods.
+   /// It does <b>not</b> apply to the generated conversion operators, because C# requires user-defined
+   /// conversion operators to be <c>public</c>. To restrict union creation to custom factory methods,
+   /// set <see cref="ConstructorAccessModifier"/> to <see cref="UnionConstructorAccessModifier.Private"/>
+   /// <b>and</b> additionally disable the inbound conversions via
+   /// <see cref="ConversionFromValue"/> = <see cref="ConversionOperatorsGeneration.None"/>.
    /// </remarks>
    public UnionConstructorAccessModifier ConstructorAccessModifier { get; set; } = UnionConstructorAccessModifier.Public;
 

@@ -57,6 +57,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseWithEntityFramework,
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseForModelBinding,
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithOverlappingSerializationFrameworks,
+      DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
@@ -1016,6 +1017,32 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          return;
 
       var valueType = attribute.AttributeClass.TypeArguments[0];
+
+      // TTRESG078: ReadOnlySpan<char> is a ref struct and cannot be used as the generic value type argument
+      // required by the Entity Framework Core value converters or the ASP.NET Core model binders. Both flags
+      // would cause a runtime failure, so forbid them on a ReadOnlySpan<char>-based object factory.
+      if (valueType.IsReadOnlySpanOfChar())
+      {
+         if (attribute.FindUseWithEntityFramework())
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+               attribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? objectType.GetTypeIdentifierLocation(context.CancellationToken),
+               objectType,
+               Constants.Attributes.Properties.USE_WITH_ENTITY_FRAMEWORK);
+         }
+
+         if (attribute.FindUseForModelBinding())
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+               attribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? objectType.GetTypeIdentifierLocation(context.CancellationToken),
+               objectType,
+               Constants.Attributes.Properties.USE_FOR_MODEL_BINDING);
+         }
+      }
 
       if (attribute.FindHasCorrespondingConstructor())
       {

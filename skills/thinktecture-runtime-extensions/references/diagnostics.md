@@ -59,6 +59,7 @@ code; check the full table for anything not here.
 | TTRESG075 | `SingleBackingFieldType` conflicts with `UseSingleBackingField = false`. |
 | TTRESG076 | An extra `ValidateFactoryArguments` parameter must be by-value with no default (no `ref`/`out`/default). |
 | TTRESG077 | An ad-hoc union member type must not be less accessible than the union (the generated operators would not compile). |
+| TTRESG078 | `ObjectFactoryAttribute<ReadOnlySpan<char>>` must not enable `UseWithEntityFramework` or `UseForModelBinding` (ref struct cannot be an EF/model-binding generic argument). Span factories may still set `UseForSerialization = SystemTextJson`. |
 | TTRESG106 / TTRESG107 | Inner type should derive from the union / generic ad-hoc union references no type parameter via `TypeParamRef`. |
 
 ## Object Factory

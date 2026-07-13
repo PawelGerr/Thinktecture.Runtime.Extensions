@@ -120,17 +120,38 @@ public static class TypeSymbolExtensions
                   }
                }
 
-               return resolvedArgs is not null
-                         ? (namedType.ConstructedFrom.Construct(resolvedArgs), maxIndex)
-                         : (type, maxIndex);
+               if (resolvedArgs is null)
+                  return (type, maxIndex);
+
+               ITypeSymbol constructed = namedType.ConstructedFrom.Construct(resolvedArgs);
+
+               // Construct does not carry over the top-level nullable annotation of the original type,
+               // so a nested nullable constructed type (e.g. List<TypeParamRef1>? in Dictionary<int, List<TypeParamRef1>?>)
+               // would lose its "?". Re-apply the annotation explicitly.
+               if (type.NullableAnnotation == NullableAnnotation.Annotated)
+                  constructed = constructed.WithNullableAnnotation(NullableAnnotation.Annotated);
+
+               return (constructed, maxIndex);
             }
             case IArrayTypeSymbol arrayType:
             {
                var (resolvedElement, elementMaxIndex) = arrayType.ElementType.ResolveTypeParamRefs(unionTypeParams, compilation);
 
-               return SymbolEqualityComparer.Default.Equals(resolvedElement, arrayType.ElementType)
-                         ? (type, elementMaxIndex)
-                         : (compilation.CreateArrayTypeSymbol(resolvedElement, arrayType.Rank), elementMaxIndex);
+               if (SymbolEqualityComparer.Default.Equals(resolvedElement, arrayType.ElementType))
+                  return (type, elementMaxIndex);
+
+               // CreateArrayTypeSymbol ignores the resolved element's own nullable annotation and defaults the
+               // element nullability to None, so a resolved "T?" element would render as "T[]" instead of "T?[]".
+               // Pass the element's annotation explicitly to preserve it.
+               ITypeSymbol resolvedArray = compilation.CreateArrayTypeSymbol(resolvedElement, arrayType.Rank, resolvedElement.NullableAnnotation);
+
+               // CreateArrayTypeSymbol also does not carry over the array's own top-level nullable annotation,
+               // so a nested nullable array (e.g. TypeParamRef1[]? in List<TypeParamRef1[]?>) would lose its "?".
+               // Re-apply the annotation explicitly, mirroring the named-type branch above.
+               if (type.NullableAnnotation == NullableAnnotation.Annotated)
+                  resolvedArray = resolvedArray.WithNullableAnnotation(NullableAnnotation.Annotated);
+
+               return (resolvedArray, elementMaxIndex);
             }
             default:
             {

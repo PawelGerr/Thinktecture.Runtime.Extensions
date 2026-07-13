@@ -1462,6 +1462,59 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_struct_with_array_of_nullable_TypeParamRef1_and_class_constraint()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[AdHocUnion(typeof(TypeParamRef1?[]), typeof(string))]
+         	public partial struct TestUnion<T> where T : class;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_nested_nullable_constructed_TypeParamRef1_and_class_constraint()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[AdHocUnion(typeof(Dictionary<int, List<TypeParamRef1>?>), typeof(string))]
+         	public partial struct TestUnion<T> where T : class;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_nullable_nested_array_of_TypeParamRef1()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[AdHocUnion(typeof(List<TypeParamRef1[]?>), typeof(string))]
+         	public partial struct TestUnion<T> where T : notnull;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_struct_with_nullable_nested_TypeParamRef1_and_struct_constraint()
    {
       var source = """

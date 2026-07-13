@@ -38,7 +38,7 @@ Base class for `AdHocUnionAttribute` and generic `UnionAttribute<T1, T2, ...>`.
 |-------------------------------|----------------------------------|---------------------|---------------------------------------------------------------------------------------|
 | `DefaultStringComparison`     | `StringComparison`               | `OrdinalIgnoreCase` | Default string comparison for union operations                                        |
 | `SkipToString`                | `bool`                           | `false`             | Skip `ToString()` generation                                                          |
-| `ConstructorAccessModifier`   | `UnionConstructorAccessModifier` | `Public`            | Access modifier for generated constructor; also affects accessibility of implicit conversion operators |
+| `ConstructorAccessModifier`   | `UnionConstructorAccessModifier` | `Public`            | Access modifier for generated constructors and factory methods (ad-hoc unions). Does NOT affect conversion operators (C# requires them to be `public`); disable those separately via `ConversionFromValue = None` |
 | `ConversionFromValue`         | `ConversionOperatorsGeneration`  | `Implicit`          | Generate implicit conversion operators from member types to union                     |
 | `ConversionToValue`           | `ConversionOperatorsGeneration`  | `Explicit`          | Generate explicit conversion operators from union to member types                     |
 | `SwitchMethods`               | `SwitchMapMethodsGeneration`     | (varies)            | Configure Switch method generation                                                    |

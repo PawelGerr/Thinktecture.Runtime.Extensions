@@ -157,8 +157,10 @@ Several settings silently force others:
 
 - `TXIsStateless = true` → auto-sets `TXIsNullableReferenceType = true` for reference types.
 - `ConstructorAccessModifier` (**ad-hoc unions only**) → also sets accessibility of the generated
-  conversion operators **and** factory methods. (Regular unions instead control conversion operators
-  via `ConversionFromValue`; ad-hoc unions also have `ConversionToValue`.)
+  factory methods, but **not** of the conversion operators (C# requires user-defined operators to be
+  `public`). To restrict creation to custom factory methods, also set `ConversionFromValue =
+  ConversionOperatorsGeneration.None`. (Regular unions do not read `ConstructorAccessModifier` at all;
+  they control conversion operators via `ConversionFromValue`.)
 - `SingleBackingFieldType = typeof(TBase)` → implies `UseSingleBackingField = true` (conflict with
   explicit `false` is `TTRESG075`).
 - `FactoryMethodGeneration` → `None` suppresses all factories (even type-param/duplicate members);
