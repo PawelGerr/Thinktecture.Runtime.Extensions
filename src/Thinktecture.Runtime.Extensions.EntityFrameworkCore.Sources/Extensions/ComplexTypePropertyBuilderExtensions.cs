@@ -17,6 +17,7 @@ public static class ComplexTypePropertyBuilderExtensions
    /// <param name="propertyBuilder">The complex type property builder.</param>
    /// <param name="useConstructorForRead">For keyed Value Objects only. Whether to use the constructor when reading from the database.</param>
    /// <returns>The complex type property builder for chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static ComplexTypePropertyBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
       this ComplexTypePropertyBuilder<TProperty> propertyBuilder,
       bool useConstructorForRead = true)

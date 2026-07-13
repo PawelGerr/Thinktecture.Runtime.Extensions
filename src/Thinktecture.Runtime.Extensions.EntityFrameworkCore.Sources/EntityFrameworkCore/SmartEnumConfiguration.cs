@@ -20,7 +20,9 @@ public sealed class SmartEnumConfiguration : IEquatable<SmartEnumConfiguration>
 
    /// <summary>
    /// Strategy for calculating and applying max length to smart enum key properties.
-   /// If null, no max length configuration is applied.
+   /// If <c>null</c> or unset, <see cref="DefaultSmartEnumMaxLengthStrategy"/> is used, which applies a computed
+   /// max length to string-based smart enum key properties. To disable max length configuration, use
+   /// <see cref="NoOpSmartEnumMaxLengthStrategy"/> (or <see cref="NoMaxLength"/>).
    /// </summary>
    public ISmartEnumMaxLengthStrategy MaxLengthStrategy
    {

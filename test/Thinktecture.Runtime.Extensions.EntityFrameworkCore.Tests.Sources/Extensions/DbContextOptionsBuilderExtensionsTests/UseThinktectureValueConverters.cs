@@ -287,6 +287,27 @@ public class UseThinktectureValueConverters : IDisposable
    }
 
    [Fact]
+   public void Should_not_apply_string_max_length_when_object_factory_stores_int_for_string_based_smart_enum()
+   {
+      var options = new DbContextOptionsBuilder<TestDbContext>()
+                    .UseSqlite("DataSource=:memory:")
+                    .EnableServiceProviderCaching(false)
+                    .UseThinktectureValueConverters() // Uses Configuration.Default
+                    .Options;
+
+      using var ctx = new TestDbContext(options);
+      var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Types_having_ObjectFactories));
+      var property = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithIntObjectFactory));
+
+      // The Entity-Framework-flagged object factory stores an int, so the converter provider type is int.
+      property.GetValueConverter().Should().BeOfType(
+         _converterType.MakeGenericType(typeof(SmartEnum_StringBased_WithIntObjectFactoryForEntityFramework), typeof(int), typeof(ValidationError)));
+
+      // The string-key based max length must not be applied to the int column.
+      property.GetMaxLength().Should().BeNull();
+   }
+
+   [Fact]
    public void Should_not_apply_max_length_to_int_based_smart_enums()
    {
       var options = new DbContextOptionsBuilder<TestDbContext>()

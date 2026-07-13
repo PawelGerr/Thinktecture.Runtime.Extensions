@@ -17,6 +17,7 @@ public static class PrimitiveCollectionBuilderExtensions
    /// <param name="primitiveCollectionBuilder">The primitive collection builder.</param>
    /// <param name="useConstructorForRead">For keyed value objects only. Whether to use the constructor when reading from the database.</param>
    /// <returns>The primitive collection builder for chaining.</returns>
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static PrimitiveCollectionBuilder<TProperty> HasThinktectureValueConverter<TProperty>(
       this PrimitiveCollectionBuilder<TProperty> primitiveCollectionBuilder,
       bool useConstructorForRead = true)

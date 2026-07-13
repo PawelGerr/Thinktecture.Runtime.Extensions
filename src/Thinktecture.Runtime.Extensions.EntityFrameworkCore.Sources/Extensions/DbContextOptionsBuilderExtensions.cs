@@ -51,7 +51,7 @@ public static class DbContextOptionsBuilderExtensions
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from a database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
-   [Obsolete("Use the overload accepting ThinktectureEfCoreConfiguration instead. This method will be removed in a future version.")]
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static DbContextOptionsBuilder<T> UseThinktectureValueConverters<T>(
       this DbContextOptionsBuilder<T> builder,
       // ReSharper disable once MethodOverloadWithOptionalParameter
@@ -101,7 +101,7 @@ public static class DbContextOptionsBuilderExtensions
    /// <param name="useConstructorForRead">For keyed value objects only. Use the constructor instead of the factory method when reading the data from a database.</param>
    /// <param name="configureEnumsAndKeyedValueObjects">Action for further configuration of the property.</param>
    /// <returns>The provided <paramref name="builder"/>.</returns>
-   [Obsolete("Use the overload accepting ThinktectureEfCoreConfiguration instead. This method will be removed in a future version.")]
+   [Obsolete("Use the overload accepting Configuration instead. This method will be removed in a future version.")]
    public static DbContextOptionsBuilder UseThinktectureValueConverters(
       this DbContextOptionsBuilder builder,
       // ReSharper disable once MethodOverloadWithOptionalParameter

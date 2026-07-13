@@ -19,14 +19,12 @@ internal sealed class ThinktectureConventionsPlugin(
 {
    public void ProcessEntityTypeAdded(IConventionEntityTypeBuilder entityTypeBuilder, IConventionContext<IConventionEntityTypeBuilder> context)
    {
-      AddSmartEnumAndKeyedValueObjects(entityTypeBuilder);
-      AddNonKeyedValueObjectMembers(entityTypeBuilder);
+      AddSmartEnumAndKeyedValueObjects(entityTypeBuilder.Metadata);
+      AddNonKeyedValueObjectMembers(entityTypeBuilder.Metadata);
    }
 
-   private void AddSmartEnumAndKeyedValueObjects(IConventionEntityTypeBuilder entityTypeBuilder)
+   private void AddSmartEnumAndKeyedValueObjects(IConventionEntityType entity)
    {
-      var entity = entityTypeBuilder.Metadata;
-
       foreach (var propertyInfo in entity.ClrType.GetRuntimeProperties())
       {
          if (entity.IsIgnored(propertyInfo.Name))
@@ -61,10 +59,8 @@ internal sealed class ThinktectureConventionsPlugin(
       }
    }
 
-   private static void AddNonKeyedValueObjectMembers(IConventionEntityTypeBuilder entityTypeBuilder)
+   private static void AddNonKeyedValueObjectMembers(IConventionEntityType entity)
    {
-      var entity = entityTypeBuilder.Metadata;
-
       if (!entity.ClrType.TryGetAssignableMembers(out var members) || members.Count == 0)
          return;
 
@@ -116,7 +112,14 @@ internal sealed class ThinktectureConventionsPlugin(
          return;
 
       elementType.SetValueConverter(GetValueConverter(metadata));
-      ApplyConfigurationToProperty(propertyBuilder.Metadata, metadata);
+
+      // The max-length strategy must be applied to the element, not to the collection property. The collection is
+      // stored as a single JSON column, so a max length on the property would constrain the whole array to the
+      // length of one element and truncate the persisted JSON.
+      ApplyMaxLengthStrategy(new MaxLengthTarget(elementType), metadata);
+
+      // Apply legacy callback if present. It operates on the collection property, matching the previous behavior.
+      configureSmartEnumsAndKeyedValueObjects?.Invoke(propertyBuilder.Metadata);
    }
 
    private void ProcessNavigation(IConventionNavigation navigation)
@@ -152,36 +155,39 @@ internal sealed class ThinktectureConventionsPlugin(
    private void SetConverterAndExecuteCallback(IConventionProperty property, ConversionMetadata metadata)
    {
       property.SetValueConverter(GetValueConverter(metadata));
-      ApplyConfigurationToProperty(property, metadata);
+      ApplyMaxLengthStrategy(new MaxLengthTarget(property), metadata);
+
+      // Apply legacy callback if present
+      configureSmartEnumsAndKeyedValueObjects?.Invoke(property);
    }
 
-   private void ApplyConfigurationToProperty(IConventionProperty property, ConversionMetadata conversionMetadata)
+   private void ApplyMaxLengthStrategy(MaxLengthTarget target, ConversionMetadata conversionMetadata)
    {
       var metadata = MetadataLookup.Find(conversionMetadata.Type);
 
+      // The value converter stores the type reported by the conversion metadata, which may differ from the
+      // key type of the Smart Enum or keyed Value Object when an Entity-Framework-flagged object factory is used.
+      // The key-based max-length strategy only applies when the converter actually stores the key type.
       switch (metadata)
       {
-         case Metadata.Keyed.SmartEnum smartEnumMetadata:
+         case Metadata.Keyed.SmartEnum smartEnumMetadata when conversionMetadata.KeyType == smartEnumMetadata.KeyType:
          {
-            ApplyToSmartEnumProperty(
-               property,
+            ApplyToSmartEnum(
+               target,
                configuration.SmartEnums.MaxLengthStrategy,
                smartEnumMetadata);
 
             break;
          }
-         case Metadata.Keyed.ValueObject keyedValueObjectMetadata:
+         case Metadata.Keyed.ValueObject keyedValueObjectMetadata when conversionMetadata.KeyType == keyedValueObjectMetadata.KeyType:
          {
-            ApplyToKeyedValueObjectProperty(
-               property,
+            ApplyToKeyedValueObject(
+               target,
                configuration.KeyedValueObjects.MaxLengthStrategy,
                keyedValueObjectMetadata);
             break;
          }
       }
-
-      // Apply legacy callback if present
-      configureSmartEnumsAndKeyedValueObjects?.Invoke(property);
    }
 
    private ValueConverter GetValueConverter(ConversionMetadata metadata)
@@ -189,8 +195,8 @@ internal sealed class ThinktectureConventionsPlugin(
       return ThinktectureValueConverterFactory.Create(metadata, useConstructorForRead: configuration.UseConstructorForRead);
    }
 
-   private void ApplyToSmartEnumProperty(
-      IConventionProperty property,
+   private static void ApplyToSmartEnum(
+      MaxLengthTarget target,
       ISmartEnumMaxLengthStrategy strategy,
       Metadata.Keyed.SmartEnum smartEnumMetadata)
    {
@@ -202,7 +208,7 @@ internal sealed class ThinktectureConventionsPlugin(
       // Check if we should overwrite existing max length
       if (!strategy.OverwriteExistingMaxLength)
       {
-         var existingMaxLength = property.GetMaxLength();
+         var existingMaxLength = target.GetMaxLength();
 
          if (existingMaxLength.HasValue)
             return;
@@ -215,18 +221,18 @@ internal sealed class ThinktectureConventionsPlugin(
          items);
 
       if (maxLengthChange.IsSet)
-         property.Builder.HasMaxLength(maxLengthChange.Value);
+         target.SetMaxLength(maxLengthChange.Value);
    }
 
-   private void ApplyToKeyedValueObjectProperty(
-      IConventionProperty property,
+   private static void ApplyToKeyedValueObject(
+      MaxLengthTarget target,
       IKeyedValueObjectMaxLengthStrategy strategy,
       Metadata.Keyed.ValueObject keyedValueObjectMetadata)
    {
       // Check if we should overwrite existing max length
       if (!strategy.OverwriteExistingMaxLength)
       {
-         var existingMaxLength = property.GetMaxLength();
+         var existingMaxLength = target.GetMaxLength();
 
          if (existingMaxLength.HasValue)
             return;
@@ -238,6 +244,39 @@ internal sealed class ThinktectureConventionsPlugin(
          keyedValueObjectMetadata.KeyType);
 
       if (maxLengthChange.IsSet)
-         property.Builder.HasMaxLength(maxLengthChange.Value);
+         target.SetMaxLength(maxLengthChange.Value);
+   }
+
+   /// <summary>
+   /// Abstracts the metadata object that carries the max length. For a scalar property this is the property itself;
+   /// for a primitive collection it is the element, because the collection is persisted as a single JSON column.
+   /// </summary>
+   private readonly struct MaxLengthTarget
+   {
+      private readonly IConventionProperty? _property;
+      private readonly IConventionElementType? _elementType;
+
+      public MaxLengthTarget(IConventionProperty property)
+      {
+         _property = property;
+         _elementType = null;
+      }
+
+      public MaxLengthTarget(IConventionElementType elementType)
+      {
+         _property = null;
+         _elementType = elementType;
+      }
+
+      public int? GetMaxLength()
+      {
+         return _property?.GetMaxLength() ?? _elementType?.GetMaxLength();
+      }
+
+      public void SetMaxLength(int? maxLength)
+      {
+         _property?.Builder.HasMaxLength(maxLength);
+         _elementType?.Builder.HasMaxLength(maxLength);
+      }
    }
 }
