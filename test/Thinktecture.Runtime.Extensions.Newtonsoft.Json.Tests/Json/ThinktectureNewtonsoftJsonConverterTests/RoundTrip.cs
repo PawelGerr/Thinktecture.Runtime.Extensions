@@ -178,6 +178,48 @@ public class RoundTrip : JsonTestsBase
       deserialized.Should().BeEquivalentTo(original);
    }
 
+   // A naming strategy that inserts a separator between words (e.g. "StructProperty" => "struct_property").
+   // Unlike CamelCaseNamingStrategy, it changes more than the first letter, so an ordinal-ignore-case read
+   // that compares against the raw argument name no longer matches. This exercises the read path's use of
+   // the contract resolver.
+   private sealed class SnakeCaseTestNamingStrategy : NamingStrategy
+   {
+      protected override string ResolvePropertyName(string name)
+      {
+         var sb = new StringBuilder();
+
+         for (var i = 0; i < name.Length; i++)
+         {
+            var c = name[i];
+
+            if (i > 0 && char.IsUpper(c))
+               sb.Append('_');
+
+            sb.Append(char.ToLowerInvariant(c));
+         }
+
+         return sb.ToString();
+      }
+   }
+
+   [Fact]
+   public void Should_roundtrip_complex_value_object_with_non_default_naming_strategy()
+   {
+      var original = ValueObjectWithMultipleProperties.Create(1.5m, 3, "foo");
+      var settings = new JsonSerializerSettings
+                     {
+                        ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseTestNamingStrategy() }
+                     };
+
+      var json = JsonConvert.SerializeObject(original, settings);
+
+      json.Should().Contain("struct_property");
+      json.Should().NotContain("structProperty");
+
+      var deserialized = JsonConvert.DeserializeObject<ValueObjectWithMultipleProperties>(json, settings);
+      deserialized.Should().BeEquivalentTo(original);
+   }
+
    [Fact]
    public void Should_roundtrip_keyed_value_object_having_custom_factory()
    {
@@ -371,6 +413,66 @@ public class RoundTrip : JsonTestsBase
       var deserialized = JsonConvert.DeserializeObject<EnumBasedValueObject>(json, settings);
       deserialized.Should().Be(original);
    }
+
+   [Fact]
+   public void Should_roundtrip_item_of_derived_smart_enum_type_using_factory()
+   {
+      // Regression: FindMetadataForConversion returned null for a derived (nested) Smart Enum runtime type, so the
+      // factory could not create a converter for such an item. The factory is exercised directly because, in
+      // Newtonsoft.Json, the class-level [JsonConverter] attribute takes precedence over converters registered in the
+      // settings, which would otherwise mask the defect at the JsonConvert level. skipObjectsWithJsonConverterAttribute
+      // is false so that the factory handles the type itself (as when the domain assembly does not reference the
+      // Newtonsoft integration package and thus has no generated attribute), which is the code path that failed.
+      var factory = new ThinktectureNewtonsoftJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var item = SmartEnum_DerivedTypes.ItemOfDerivedType; // runtime type is a private nested derived class
+      item.GetType().Should().NotBe(typeof(SmartEnum_DerivedTypes));
+
+      factory.CanConvert(item.GetType()).Should().BeTrue();
+
+      var sb = new StringBuilder();
+      using (var writer = new JsonTextWriter(new StringWriter(sb)))
+      {
+         factory.WriteJson(writer, item, JsonSerializer.CreateDefault());
+      }
+
+      sb.ToString().Should().Be("2");
+
+      using var reader = new JsonTextReader(new StringReader(sb.ToString()));
+      reader.Read();
+      var deserialized = factory.ReadJson(reader, typeof(SmartEnum_DerivedTypes), null, JsonSerializer.CreateDefault());
+
+      deserialized.Should().BeSameAs(item);
+   }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_fall_back_to_key_based_conversion_for_span_object_factory_flagged_for_newtonsoft()
+   {
+      // Regression: a ReadOnlySpan<char> object factory flagged for Newtonsoft.Json must be ignored by the runtime
+      // factory, which must fall back to the string key. Before the fix, CreateConverter built the converter with
+      // ReadOnlySpan<char> as the generic key argument, throwing ArgumentException (a ref struct cannot be a generic
+      // type argument). The factory is exercised directly (as when the domain assembly does not reference the
+      // Newtonsoft integration package and thus has no generated attribute), which is the code path that failed.
+      var factory = new ThinktectureNewtonsoftJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var original = TestClasses.StringValueObjectWithSpanFactoryForNewtonsoft.Create("test-value");
+
+      factory.CanConvert(original.GetType()).Should().BeTrue();
+
+      var sb = new StringBuilder();
+      using (var writer = new JsonTextWriter(new StringWriter(sb)))
+      {
+         factory.WriteJson(writer, original, JsonSerializer.CreateDefault());
+      }
+
+      sb.ToString().Should().Be("\"test-value\"");
+
+      using var reader = new JsonTextReader(new StringReader(sb.ToString()));
+      reader.Read();
+      var deserialized = factory.ReadJson(reader, typeof(TestClasses.StringValueObjectWithSpanFactoryForNewtonsoft), null, JsonSerializer.CreateDefault());
+
+      deserialized.Should().BeEquivalentTo(original);
+   }
+#endif
 
    private struct TestStruct<T>
    {

@@ -396,6 +396,48 @@ public class ReadJson : JsonTestsBase
       deserialized.Should().Be(expected);
    }
 
+   [Fact]
+   public void Should_deserialize_complex_value_object_when_JsonIgnoreCondition_Always_member_has_object_or_array_value()
+   {
+      // Regression: an Always-ignored member whose payload value is an object or array must be skipped
+      // in full. Without reader.Skip() the reader descended into the nested value, so the following
+      // properties were mis-parsed (silent wrong assignment on a name collision, JsonException
+      // "Unknown member" otherwise) or the object read terminated early on a nested EndObject.
+      var deserialized = Deserialize<ComplexValueObjectWithJsonIgnore>(
+         """
+            {
+               "StringProperty_Ignore_Always":{"Nested":{"StringProperty":"WRONG"}},
+               "IntProperty_Ignore_Always":[1,2,3],
+               "NullableIntProperty_Ignore_Always":{"A":{"B":1}},
+               "StringProperty":"StringProperty",
+               "IntProperty":5,
+               "NullableIntProperty":11
+            }
+         """);
+
+      var expected = ComplexValueObjectWithJsonIgnore.Create(
+         stringProperty_Ignore: null,
+         stringProperty_Ignore_Always: null, // ignored, object value skipped
+         stringProperty_Ignore_WhenWritingDefault: null,
+         stringProperty_Ignore_WhenWritingNull: null,
+         stringProperty_Ignore_Never: null,
+         stringProperty: "StringProperty",
+         intProperty_Ignore: 0,
+         intProperty_Ignore_Always: 0, // ignored, array value skipped
+         intProperty_Ignore_WhenWritingDefault: 0,
+         intProperty_Ignore_Never: 0,
+         intProperty: 5,
+         nullableIntProperty_Ignore: null,
+         nullableIntProperty_Ignore_Always: null, // ignored, object value skipped
+         nullableIntProperty_Ignore_WhenWritingDefault: null,
+         nullableIntProperty_Ignore_WhenWritingNull: null,
+         nullableIntProperty_Ignore_Never: null,
+         nullableIntProperty: 11
+      );
+
+      deserialized.Should().Be(expected);
+   }
+
    [Theory]
    [InlineData("2025", 2025, null, null)]
    [InlineData("2025-06", 2025, 6, null)]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.Runtime.Tests.Collections;
@@ -122,5 +123,12 @@ public class SingleItemReadOnlySetTests
       _sut.SetEquals([1, 2]).Should().BeFalse();
       _sut.SetEquals([42, 42]).Should().BeTrue();
       _sut.SetEquals([42, 43]).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_throw_ArgumentNullException_when_argument_is_null_like_HashSet()
+   {
+      FluentActions.Invoking(() => _sut.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>();
+      FluentActions.Invoking(() => _sut.SetEquals(null!)).Should().Throw<ArgumentNullException>();
    }
 }

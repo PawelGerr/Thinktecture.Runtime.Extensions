@@ -32,11 +32,15 @@ internal sealed class EmptySet<T> : IReadOnlySet<T>
 
    public bool IsSubsetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return true;
    }
 
    public bool IsProperSupersetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return false;
    }
 
@@ -47,6 +51,8 @@ internal sealed class EmptySet<T> : IReadOnlySet<T>
 
    public bool Overlaps(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return false;
    }
 

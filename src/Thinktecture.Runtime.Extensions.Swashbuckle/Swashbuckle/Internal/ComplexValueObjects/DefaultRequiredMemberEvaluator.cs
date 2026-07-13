@@ -39,8 +39,10 @@ public class DefaultRequiredMemberEvaluator : IRequiredMemberEvaluator
       if (typeof(IDisallowDefaultValue).IsAssignableFrom(type))
          return true;
 
-      // Use "ReadState" instead of "WriteState" because the members are read-only
-      if (type.IsClass && nullabilityInfo.ReadState == NullabilityState.NotNull)
+      // Use "ReadState" instead of "WriteState" because the members are read-only.
+      // Check "!IsValueType" instead of "IsClass" so that non-nullable interface-typed members
+      // (interfaces are reference types but "IsClass" is false for them) are treated as required.
+      if (!type.IsValueType && nullabilityInfo.ReadState == NullabilityState.NotNull)
          return true;
 
       // Is struct, nullable struct or nullable reference type

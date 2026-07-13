@@ -374,6 +374,12 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateTryCreateMethod(bool allowNullOutput, bool emptyStringYieldsNull)
    {
+      // The out value can be null on a successful (true) result when null input yields null (allowNullOutput)
+      // or when an empty string yields null (emptyStringYieldsNull). In those cases the out value is not
+      // guaranteed to be non-null on true, so the [NotNullWhen(true)] contract must be omitted. This matches
+      // the null-success branch emitted by Validate.
+      var objMayBeNullOnSuccess = emptyStringYieldsNull || allowNullOutput;
+
       _sb.Append(@"
 
       /// <summary>
@@ -387,7 +393,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
+      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(objMayBeNullOnSuccess ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(", out ").Append(_objArgumentName).Append(@", out _);
       }");
@@ -410,7 +416,7 @@ namespace ").Append(_state.Namespace).Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append(@"(
          ").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(@",
-         ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@",
+         ").Append(objMayBeNullOnSuccess ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@",
          [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName).Append(@")
       {
          ").Append(_validationErrorArgumentName).Append(" = Validate(").RenderArgument(_state.KeyMember).Append(", null, out ").Append(_objArgumentName).Append(@");

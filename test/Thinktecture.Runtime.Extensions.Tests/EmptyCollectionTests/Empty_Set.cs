@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
@@ -71,6 +72,17 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
       {
          SUT.SetEquals(_realEmptySet).Should().Be(_realEmptySet.SetEquals(_realEmptySet));
          SUT.SetEquals(_realNonEmptySet).Should().Be(_realEmptySet.SetEquals(_realNonEmptySet));
+      }
+
+      [Fact]
+      public void Should_throw_ArgumentNullException_when_argument_is_null_like_HashSet()
+      {
+         FluentActions.Invoking(() => SUT.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.IsSubsetOf(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.IsProperSupersetOf(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.IsSupersetOf(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.Overlaps(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.SetEquals(null!)).Should().Throw<ArgumentNullException>();
       }
    }
 }

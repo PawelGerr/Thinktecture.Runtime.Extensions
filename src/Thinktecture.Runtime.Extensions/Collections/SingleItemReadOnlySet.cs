@@ -32,6 +32,8 @@ internal sealed class SingleItemReadOnlySet<T> : IReadOnlySet<T>
 
    public bool IsProperSubsetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       var foundItem = false;
       var foundOtherItem = false;
 
@@ -78,6 +80,8 @@ internal sealed class SingleItemReadOnlySet<T> : IReadOnlySet<T>
 
    public bool SetEquals(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       var found = false;
 
       foreach (var item in other)

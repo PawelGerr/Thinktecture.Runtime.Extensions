@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Thinktecture.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
+using Thinktecture.Runtime.Tests.Extensions.DbContextOptionsBuilderExtensionsTests;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -554,6 +555,50 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
 
          item1Results.Should().HaveCount(2);
          item1Results.Should().AllSatisfy(e => e.SmartEnum_StringBased.Should().Be(SmartEnum_StringBased.Item1));
+      }
+
+      // Regression test for the imperative registration path (EntityTypeBuilder.AddThinktectureValueConverters)
+      // applying the element max length of a primitive collection to the collection property instead of the element.
+      //
+      // A primitive collection is persisted as a single JSON column. The default strategy computes the max length from
+      // the longest key of the string-based Smart Enum (rounded up to the next multiple of 10, i.e. 10). The length must
+      // be applied to the element, and the collection property must stay unconstrained. This mirrors the convention-path
+      // test UseThinktectureValueConverters_ConventionDiscovery.Should_apply_element_max_length_to_element_of_string_based_smart_enum_collection.
+      [Fact]
+      public void Should_apply_element_max_length_to_element_of_string_based_smart_enum_collection()
+      {
+         var options = new DbContextOptionsBuilder<PrimitiveCollectionDbContext>()
+                       .UseSqlite("DataSource=:memory:")
+                       .EnableServiceProviderCaching(false)
+                       .Options;
+
+         using var ctx = new PrimitiveCollectionDbContext(options);
+         var entityType = ctx.Model.FindEntityType(typeof(EntityWithStringSmartEnumCollection)) ?? throw new Exception("Entity not found");
+         var property = entityType.FindProperty(nameof(EntityWithStringSmartEnumCollection.Items)) ?? throw new Exception("Collection property not found");
+
+         var elementType = property.GetElementType() ?? throw new Exception("Element type not found");
+
+         // The element carries the max length ...
+         elementType.GetMaxLength().Should().Be(10);
+
+         // ... and the collection property must not be constrained to a single key length.
+         property.GetMaxLength().Should().BeNull();
+      }
+
+      private class PrimitiveCollectionDbContext(DbContextOptions<PrimitiveCollectionDbContext> options) : DbContext(options)
+      {
+         protected override void OnModelCreating(ModelBuilder modelBuilder)
+         {
+            base.OnModelCreating(modelBuilder);
+
+            // The primitive collection must be declared explicitly, because EF Core does not map a collection of a type
+            // without a type mapping by convention. The converters are registered imperatively on the entity builder.
+            modelBuilder.Entity<EntityWithStringSmartEnumCollection>(builder =>
+            {
+               builder.PrimitiveCollection(e => e.Items);
+               builder.AddThinktectureValueConverters();
+            });
+         }
       }
 
       public void Dispose()
