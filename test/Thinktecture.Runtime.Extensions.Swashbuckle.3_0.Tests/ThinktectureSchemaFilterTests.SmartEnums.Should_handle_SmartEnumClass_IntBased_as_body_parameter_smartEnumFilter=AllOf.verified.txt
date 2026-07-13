@@ -16,12 +16,13 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                    "$ref": "#/components/schemas/SmartEnum_IntBased"
                   }
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -29,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                  "$ref": "#/components/schemas/SmartEnum_IntBased"
                 }
               }
             }
@@ -40,31 +41,20 @@
   },
   "components": {
     "schemas": {
-      "SmartEnum_StringBased_with_BaseClass": {
-        "type": "string",
+      "SmartEnum_IntBased": {
+        "type": "integer",
         "allOf": [
           {
-            "$ref": "#/components/schemas/TestBaseClassWithNonEmptyCtor"
-          },
-          {
             "enum": [
-              "Item1",
-              "Item2"
+              1,
+              2,
+              3,
+              4,
+              5
             ]
           }
-        ]
-      },
-      "TestBaseClassWithNonEmptyCtor": {
-        "required": [
-          "testProperty"
         ],
-        "type": "object",
-        "properties": {
-          "testProperty": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
+        "format": "int32"
       }
     }
   },

@@ -28,10 +28,6 @@ public class OneOfSmartEnumSchemaFilter : SmartEnumSchemaFilterBase
    /// <inheritdoc />
    protected override void SetItems(OpenApiSchema schema, IReadOnlyList<SmartEnumItem> items)
    {
-      schema.OneOf = items.Select(item => (IOpenApiSchema)new OpenApiSchema
-                                                          {
-                                                             Title = item.Item.ToString(),
-                                                             Const = item.OpenApiValue.ToString()
-                                                          }).ToList();
+      schema.OneOf = items.Select(item => (IOpenApiSchema)CreateItemSchema(item)).ToList();
    }
 }

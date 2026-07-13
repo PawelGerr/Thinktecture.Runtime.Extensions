@@ -374,6 +374,17 @@ public class SpanParsableJsonConverterTests : JsonTestsBase
    }
 
    [Fact]
+   public void Should_throw_JsonException_for_non_string_token()
+   {
+      // A JSON number is not a string token. Without a token-type check the raw bytes ("123") would be
+      // transcoded and silently accepted as the string value object "123", diverging from the net8.0 path.
+      var act = () => Deserialize<StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory>("123");
+
+      act.Should().Throw<JsonException>()
+         .WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory\". Expected token: \"String\".");
+   }
+
+   [Fact]
    public void ThinktectureJsonConverterFactory_should_use_regular_converter_for_string_based_smart_enum_with_non_string_serialization_factory()
    {
       // Regression: a string-keyed Smart Enum with [ObjectFactory<int>(UseForSerialization = SystemTextJson)] must NOT

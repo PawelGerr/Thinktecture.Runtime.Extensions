@@ -108,6 +108,12 @@ public class ThinktectureJsonConverter<T, TValidationError> : JsonConverter<T>
    /// <inheritdoc />
    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
    {
+      // "GetString" accepts only String, PropertyName ("ReadAsPropertyName" routes through here) and Null
+      // tokens and throws "InvalidOperationException" otherwise. Reject every other token with the
+      // idiomatic "JsonException" instead, so a malformed payload surfaces consistently.
+      if (reader.TokenType is not (JsonTokenType.String or JsonTokenType.PropertyName or JsonTokenType.Null))
+         throw new JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"{typeof(T).Name}\". Expected token: \"{JsonTokenType.String}\".");
+
       var key = reader.GetString();
 
       if (key is null)

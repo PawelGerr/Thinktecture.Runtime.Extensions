@@ -45,12 +45,10 @@
         "type": "string",
         "allOf": [
           {
-            "const": "Item1",
-            "title": "Item1"
-          },
-          {
-            "const": "Item2",
-            "title": "Item2"
+            "enum": [
+              "Item1",
+              "Item2"
+            ]
           }
         ]
       }

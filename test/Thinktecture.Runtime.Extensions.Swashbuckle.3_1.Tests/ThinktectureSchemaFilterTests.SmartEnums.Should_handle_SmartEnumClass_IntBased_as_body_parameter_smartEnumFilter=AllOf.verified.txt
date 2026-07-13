@@ -6,31 +6,31 @@
   },
   "paths": {
     "/test": {
-      "get": {
+      "post": {
         "tags": [
           "Tests"
         ],
-        "parameters": [
-          {
-            "name": "value",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/components/schemas/SmartEnum_StringBased"
-                }
-              ]
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SmartEnum_IntBased"
+                  }
+                ]
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SmartEnum_StringBased"
+                  "$ref": "#/components/schemas/SmartEnum_IntBased"
                 }
               }
             }
@@ -41,16 +41,20 @@
   },
   "components": {
     "schemas": {
-      "SmartEnum_StringBased": {
-        "type": "string",
+      "SmartEnum_IntBased": {
+        "type": "integer",
         "allOf": [
           {
             "enum": [
-              "Item1",
-              "Item2"
+              1,
+              2,
+              3,
+              4,
+              5
             ]
           }
-        ]
+        ],
+        "format": "int32"
       }
     }
   },

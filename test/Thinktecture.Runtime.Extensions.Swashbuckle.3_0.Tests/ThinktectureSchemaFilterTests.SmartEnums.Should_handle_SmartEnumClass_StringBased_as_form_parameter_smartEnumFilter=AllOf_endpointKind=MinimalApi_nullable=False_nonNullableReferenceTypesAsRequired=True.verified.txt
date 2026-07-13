@@ -79,14 +79,8 @@
         "type": "string",
         "allOf": [
           {
-            "title": "Item1",
             "enum": [
-              "Item1"
-            ]
-          },
-          {
-            "title": "Item2",
-            "enum": [
+              "Item1",
               "Item2"
             ]
           }

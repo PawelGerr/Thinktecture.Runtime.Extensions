@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Thinktecture.Json;
+using Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -13,6 +16,31 @@ namespace Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTes
 
 public class RoundTrip : JsonTestsBase
 {
+   [Fact]
+   public void Should_not_let_shared_converter_cache_bypass_skip_attribute_check_across_factory_instances()
+   {
+      // Regression: the converter cache is a static field shared by all factory instances, but the skip-attribute
+      // policy is per-instance. A converter cached by a non-skipping instance must not let a skipping instance's
+      // CanConvert short-circuit to true and thereby ignore the type's own foreign [JsonConverter] attribute.
+      var type = typeof(ValueObjectWithForeignNewtonsoftConverter);
+
+      var nonSkippingFactory = new ThinktectureNewtonsoftJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var skippingFactory = new ThinktectureNewtonsoftJsonConverterFactory(skipObjectsWithJsonConverterAttribute: true);
+
+      // The non-skipping factory converts the type and, by serializing an instance, populates the shared static cache.
+      nonSkippingFactory.CanConvert(type).Should().BeTrue();
+
+      var instance = ValueObjectWithForeignNewtonsoftConverter.Create(1);
+      var sb = new StringBuilder();
+      using (var writer = new JsonTextWriter(new StringWriter(sb)))
+      {
+         nonSkippingFactory.WriteJson(writer, instance, JsonSerializer.CreateDefault());
+      }
+
+      // The skipping factory must still refuse the type because it carries a foreign [JsonConverter] attribute.
+      skippingFactory.CanConvert(type).Should().BeFalse();
+   }
+
    [Fact]
    public void Should_roundtrip_serialize_dictionary_with_string_based_enum_key()
    {

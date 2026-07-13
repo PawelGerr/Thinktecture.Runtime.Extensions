@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
@@ -82,6 +83,35 @@ public abstract class SmartEnumSchemaFilterBase : IInternalSmartEnumSchemaFilter
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
    protected abstract void SetItems(OpenApiSchema schema, IReadOnlyList<SmartEnumItem> items);
+
+   /// <summary>
+   /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
+   /// the same compatibility standards as public APIs. It may be changed or removed without notice in
+   /// any release. You should only use it directly in your code with extreme caution and knowing that
+   /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
+   /// </summary>
+   protected static OpenApiSchema CreateItemSchema(SmartEnumItem item)
+   {
+      var itemSchema = new OpenApiSchema
+                       {
+                          Title = item.Item.ToString()
+                       };
+
+      // "OpenApiSchema.Const" is typed as "string". Assigning it for a non-string key (for example an "int") would
+      // emit a quoted JSON string like "1" that contradicts the "integer" schema type. For a string key the "const"
+      // keyword keeps the existing, precise output. For every other key type a single-value "enum" (an
+      // "IList<JsonNode>") preserves the real JSON type, for example the number 1 instead of the string "1".
+      if (item.OpenApiValue is JsonValue value && value.TryGetValue<string>(out var stringValue))
+      {
+         itemSchema.Const = stringValue;
+      }
+      else
+      {
+         itemSchema.Enum = [item.OpenApiValue];
+      }
+
+      return itemSchema;
+   }
 
    /// <summary>
    /// Creates a list of OpenAPI values for the items of a Smart Enum.

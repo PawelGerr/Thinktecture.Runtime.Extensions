@@ -13,6 +13,7 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
    private static readonly ConcurrentDictionary<Type, JsonConverter> _cache = new();
 
    private readonly bool _skipObjectsWithJsonConverterAttribute;
+   private readonly ConcurrentDictionary<Type, bool> _canConvertCache = new();
 
    /// <summary>
    /// Initializes new instance of <see cref="ThinktectureNewtonsoftJsonConverterFactory"/>.
@@ -37,9 +38,15 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
    /// <inheritdoc />
    public override bool CanConvert(Type objectType)
    {
-      if (_cache.ContainsKey(objectType))
-         return true;
+      // Newtonsoft.Json calls CanConvert once per value, not once per type, so the result is memoized.
+      // The memoization is per instance, not via the static converter cache: that cache is shared across
+      // all factory instances, but "_skipObjectsWithJsonConverterAttribute" is per-instance. A converter
+      // cached by another instance must not let this instance bypass its own skip-attribute policy.
+      return _canConvertCache.GetOrAdd(objectType, static (type, factory) => factory.CanConvertCore(type), this);
+   }
 
+   private bool CanConvertCore(Type objectType)
+   {
       var metadata = FindMetadataForConversion(objectType);
 
       if (metadata is null)

@@ -1,5 +1,5 @@
 ﻿{
-  "openapi": "3.0.4",
+  "openapi": "3.1.1",
   "info": {
     "title": "Test API",
     "version": "v1"
@@ -16,12 +16,13 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                    "$ref": "#/components/schemas/SmartEnum_IntBased"
                   }
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -29,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SmartEnum_StringBased_with_BaseClass"
+                  "$ref": "#/components/schemas/SmartEnum_IntBased"
                 }
               }
             }
@@ -40,31 +41,41 @@
   },
   "components": {
     "schemas": {
-      "SmartEnum_StringBased_with_BaseClass": {
-        "type": "string",
-        "allOf": [
+      "SmartEnum_IntBased": {
+        "type": "integer",
+        "oneOf": [
           {
-            "$ref": "#/components/schemas/TestBaseClassWithNonEmptyCtor"
+            "title": "1",
+            "enum": [
+              1
+            ]
           },
           {
+            "title": "2",
             "enum": [
-              "Item1",
-              "Item2"
+              2
+            ]
+          },
+          {
+            "title": "3",
+            "enum": [
+              3
+            ]
+          },
+          {
+            "title": "4",
+            "enum": [
+              4
+            ]
+          },
+          {
+            "title": "5",
+            "enum": [
+              5
             ]
           }
-        ]
-      },
-      "TestBaseClassWithNonEmptyCtor": {
-        "required": [
-          "testProperty"
         ],
-        "type": "object",
-        "properties": {
-          "testProperty": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
+        "format": "int32"
       }
     }
   },

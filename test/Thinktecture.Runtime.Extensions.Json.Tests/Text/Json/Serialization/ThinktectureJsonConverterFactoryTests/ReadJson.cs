@@ -184,6 +184,15 @@ public class ReadJson : JsonTestsBase
    }
 
    [Fact]
+   public void Should_throw_JsonException_if_string_based_value_object_token_is_not_a_string()
+   {
+      // "reader.GetString()" throws "InvalidOperationException" on a non-string token. The converter must
+      // surface the idiomatic "JsonException" instead, matching the complex value object converter.
+      FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObject>("123"))
+                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject\". Expected token: \"String\".");
+   }
+
+   [Fact]
    public void Should_deserialize_using_custom_factory_specified_by_ObjectFactoryAttribute()
    {
       var value = Deserialize<BoundaryWithFactories>("\"1:2\"");

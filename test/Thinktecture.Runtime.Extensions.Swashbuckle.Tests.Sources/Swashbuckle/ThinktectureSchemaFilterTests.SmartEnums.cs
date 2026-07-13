@@ -34,6 +34,12 @@ public partial class ThinktectureSchemaFilterTests
                               .CrossJoin([true, false])
                               .Select(i => new object[] { i.Item1, i.Item2, i.Item3, i.Item4, i.Item5 });
 
+      // The OneOf/AnyOf/AllOf strategies build a subschema per item. Only these strategies are exercised here because
+      // the Default strategy already has numeric-key coverage and does not stringify the item value.
+      public static IEnumerable<object[]> NonDefaultSmartEnumStrategies =
+         new[] { SmartEnumSchemaFilter.OneOf, SmartEnumSchemaFilter.AnyOf, SmartEnumSchemaFilter.AllOf }
+            .Select(f => new object[] { f });
+
       [Theory]
       [MemberData(nameof(TestData))]
       public async Task Should_handle_SmartEnumClass_StringBased_as_route_parameter(
@@ -140,6 +146,25 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Theory]
+      [MemberData(nameof(NonDefaultSmartEnumStrategies))]
+      public async Task Should_handle_SmartEnumClass_IntBased_as_body_parameter(
+         SmartEnumSchemaFilter smartEnumFilter)
+      {
+         // Regression: for a numeric-keyed Smart Enum the OneOf/AnyOf/AllOf strategies must document the item value
+         // with its real JSON type. Before the fix the value was stringified via "JsonNode.ToString()" and emitted as
+         // "const": "1" (a string) although the schema type is "integer". The verified output must show the number 1
+         // (via a single-value "enum"), not the string "1".
+         _smartEnumFilter = smartEnumFilter;
+
+         App.MapPost("/test", ([FromBody] SmartEnum_IntBased value) => value);
+
+         var openApi = GetOpenApiJsonAsync();
+
+         await Verify(openApi)
+            .UseParameters(smartEnumFilter);
+      }
+
+      [Theory]
       [MemberData(nameof(TestDataWithPolymorphism))]
       public async Task Should_handle_SmartEnumClass_with_BaseClass_as_body_parameter(
          SmartEnumSchemaFilter smartEnumFilter,
@@ -174,6 +199,52 @@ public partial class ThinktectureSchemaFilterTests
 
          await Verify(openApi)
             .UseParameters(smartEnumFilter, endpointKind, nullable, nonNrtAsRequired, polymorphism);
+      }
+
+      [Fact]
+      public async Task Should_document_query_parameter_of_keyed_SmartEnum_with_serialization_only_factory_using_key_type()
+      {
+         // The Smart Enum has a string key but an object factory that serializes as int for System.Text.Json only
+         // (UseForModelBinding is not set). ThinktectureModelBinderProvider therefore binds via the string key, so
+         // the query parameter must be documented as string. Before the fix the parameter filter reused the type's
+         // own schema, which the object factory rewrites to the int serialization format, documenting it as integer.
+         App.MapGet("/test", (SmartEnum_StringBased_WithIntObjectFactoryForJson value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var doc = System.Text.Json.JsonDocument.Parse(openApi);
+         var parameterSchema = doc.RootElement
+                                  .GetProperty("paths")
+                                  .GetProperty("/test")
+                                  .GetProperty("get")
+                                  .GetProperty("parameters")[0]
+                                  .GetProperty("schema");
+
+         var resolvedType = ResolveSchemaType(parameterSchema, doc.RootElement);
+
+         resolvedType.Should().Be("string");
+      }
+
+      // Resolves the JSON "type" of an OpenAPI schema element, following a single-item "allOf" wrapper (added by
+      // UseAllOfToExtendReferenceSchemas) and "$ref" references into "#/components/schemas".
+      private static string? ResolveSchemaType(
+         System.Text.Json.JsonElement schema,
+         System.Text.Json.JsonElement root)
+      {
+         if (schema.TryGetProperty("type", out var type))
+            return type.GetString();
+
+         if (schema.TryGetProperty("allOf", out var allOf) && allOf.GetArrayLength() > 0)
+            return ResolveSchemaType(allOf[0], root);
+
+         if (schema.TryGetProperty("$ref", out var reference))
+         {
+            var componentName = reference.GetString()!.Substring("#/components/schemas/".Length);
+            var component = root.GetProperty("components").GetProperty("schemas").GetProperty(componentName);
+            return ResolveSchemaType(component, root);
+         }
+
+         return null;
       }
 
       [Fact]

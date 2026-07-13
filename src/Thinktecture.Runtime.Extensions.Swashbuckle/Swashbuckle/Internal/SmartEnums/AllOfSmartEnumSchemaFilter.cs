@@ -28,14 +28,20 @@ public class AllOfSmartEnumSchemaFilter : SmartEnumSchemaFilterBase
    /// <inheritdoc />
    protected override void SetItems(OpenApiSchema schema, IReadOnlyList<SmartEnumItem> items)
    {
+      // "allOf" is a conjunction: a value must satisfy every subschema at once. Emitting one
+      // single-value subschema per item would require the value to equal all items simultaneously,
+      // which no value can. The items are therefore combined into a single "enum" subschema (as in
+      // "DefaultSmartEnumSchemaFilter"), appended to any pre-existing "allOf" entries, for example a
+      // "$ref" to the key type.
+      var enumSchema = new OpenApiSchema
+                       {
+                          Enum = items.Select(item => item.OpenApiValue).ToList()
+                       };
+
       schema.AllOf =
       [
          .. schema.AllOf ?? Array.Empty<OpenApiSchema>(),
-         .. items.Select(item => new OpenApiSchema
-                                 {
-                                    Title = item.Item.ToString(),
-                                    Const = item.OpenApiValue.ToString()
-                                 })
+         enumSchema
       ];
    }
 }

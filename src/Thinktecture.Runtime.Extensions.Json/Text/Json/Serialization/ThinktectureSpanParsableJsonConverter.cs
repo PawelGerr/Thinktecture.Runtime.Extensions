@@ -38,6 +38,12 @@ public class ThinktectureSpanParsableJsonConverter<T, TValidationError> : JsonCo
          return default;
       }
 
+      // "ReadAsPropertyName" also routes through this method, so a "PropertyName" token is valid too.
+      // Every other token (Number, True, False, ...) would otherwise be transcoded from its raw bytes
+      // and silently accepted as a string, so it is rejected here.
+      if (reader.TokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
+         throw new JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"{typeof(T).Name}\". Expected token: \"{JsonTokenType.String}\".");
+
       var validationError = Utf8JsonReaderHelper.ValidateFromUtf8<T, TValidationError>(ref reader, null, out var obj);
 
       if (validationError is not null)
