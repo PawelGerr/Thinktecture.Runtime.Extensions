@@ -896,8 +896,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      testUnion.Switch<string>(
                         state: state,
-                        @string: static (state, x) => { },
-                        int32: static (state, x) => { });
+                        @string: static (state1, x) => { },
+                        int32: static (state1, x) => { });
                   }
                }
             }
@@ -950,8 +950,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      testUnion.Switch<string>(
                         state: state,
-                        child1: static (state, x) => { },
-                        child2: static (state, x) => { });
+                        child1: static (state1, x) => { },
+                        child2: static (state1, x) => { });
                   }
                }
             }
@@ -1533,6 +1533,11 @@ public class SwitchMapCompletionRefactoringTests
       [Fact]
       public async Task Should_generate_state_action_arguments_with_custom_state_parameter_name()
       {
+         // A local named "context" is in scope at the invocation, and the union's state parameter is
+         // also named "context". The generated state lambda parameter must not reuse "context",
+         // because a lambda parameter cannot shadow an enclosing local (CS0136). The refactoring
+         // therefore renames the state lambda parameter to "context1" while the state argument still
+         // references the enclosing local "context".
          var code = """
 
             using System;
@@ -1571,8 +1576,172 @@ public class SwitchMapCompletionRefactoringTests
 
                      testUnion.Switch<string>(
                         context: context,
-                        @string: static (context, x) => { },
-                        int32: static (context, x) => { });
+                        @string: static (context1, x) => { },
+                        int32: static (context1, x) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_Action_WithState_KeywordStateParameterName
+   {
+      [Fact]
+      public async Task Should_escape_keyword_state_parameter_name_in_generated_lambda()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithKeywordSwitchMapStateParameterName)"hello";
+                     string @default = "";
+
+                     testUnion.[||]Switch<string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithKeywordSwitchMapStateParameterName)"hello";
+                     string @default = "";
+
+                     testUnion.Switch<string>(
+                        @default: @default,
+                        @string: static (default1, x) => { },
+                        int32: static (default1, x) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_Action_WithState_StateParameterNameEqualsValueParameterName
+   {
+      [Fact]
+      public async Task Should_not_produce_duplicate_lambda_parameter_when_state_name_equals_value_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithXSwitchMapStateParameterName)"hello";
+                     string x = "";
+
+                     testUnion.[||]Switch<string>();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnionWithXSwitchMapStateParameterName)"hello";
+                     string x = "";
+
+                     testUnion.Switch<string>(
+                        x: x,
+                        @string: static (x1, value) => { },
+                        int32: static (x1, value) => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_Action_ValueParameterNameCollidesWithInScopeLocal
+   {
+      [Fact]
+      public async Task Should_avoid_value_parameter_name_that_collides_with_in_scope_local()
+      {
+         // A local named "x" is in scope at the invocation. The generated value lambda parameter must
+         // not reuse "x", because a lambda parameter cannot shadow an enclosing local (CS0136). The
+         // refactoring therefore falls back to the next free candidate name "value".
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+                     int x = 5;
+
+                     testUnion.[||]Switch();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+                     int x = 5;
+
+                     testUnion.Switch(
+                        @string: static value => { },
+                        int32: static value => { });
                   }
                }
             }
@@ -1625,8 +1794,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      var result = testUnion.Switch<string, string>(
                         context: context,
-                        @string: static (context, x) => throw new System.NotImplementedException(),
-                        int32: static (context, x) => throw new System.NotImplementedException());
+                        @string: static (context1, x) => throw new System.NotImplementedException(),
+                        int32: static (context1, x) => throw new System.NotImplementedException());
                   }
                }
             }
@@ -1679,8 +1848,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      testUnion.Switch<string>(
                         context: context,
-                        child1: static (context, x) => { },
-                        child2: static (context, x) => { });
+                        child1: static (context1, x) => { },
+                        child2: static (context1, x) => { });
                   }
                }
             }
@@ -1733,9 +1902,9 @@ public class SwitchMapCompletionRefactoringTests
 
                      testUnion.SwitchPartially<string>(
                         context: context,
-                        @default: static (context, x) => { },
-                        @string: static (context, x) => { },
-                        int32: static (context, x) => { });
+                        @default: static (context1, x) => { },
+                        @string: static (context1, x) => { },
+                        int32: static (context1, x) => { });
                   }
                }
             }
@@ -1788,15 +1957,186 @@ public class SwitchMapCompletionRefactoringTests
 
                      var result = testUnion.SwitchPartially<string, string>(
                         context: context,
-                        @default: static (context, x) => throw new System.NotImplementedException(),
-                        @string: static (context, x) => throw new System.NotImplementedException(),
-                        int32: static (context, x) => throw new System.NotImplementedException());
+                        @default: static (context1, x) => throw new System.NotImplementedException(),
+                        @string: static (context1, x) => throw new System.NotImplementedException(),
+                        int32: static (context1, x) => throw new System.NotImplementedException());
                   }
                }
             }
             """;
 
          await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences);
+      }
+   }
+
+   public class CursorOnForeignNestedInvocation
+   {
+      [Fact]
+      public async Task Should_offer_refactoring_when_cursor_is_on_foreign_nested_invocation_with_matching_name()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public static class Ext
+               {
+                  public static int Map(this int value, Func<int, int> selector) => selector(value);
+               }
+
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { },
+                        item1: static () => { var value = 5.[||]Map(v => v + 1); });
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public static class Ext
+               {
+                  public static int Map(this int value, Func<int, int> selector) => selector(value);
+               }
+
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { },
+                        item1: static () => { var value = 5.Map(v => v + 1); },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_NonTrailingNamedArgument
+   {
+      [Fact]
+      public async Task Should_not_duplicate_positional_argument_when_named_argument_is_non_trailing()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(@default: static x => { }, static () => { });
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { },
+                        static () => { },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_PreservesComments
+   {
+      [Fact]
+      public async Task Should_preserve_comment_on_existing_argument()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(
+                        // must run first
+                        @default: static x => { });
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        // must run first
+                        @default: static x => { },
+                        item1: static () => { },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
       }
    }
 }

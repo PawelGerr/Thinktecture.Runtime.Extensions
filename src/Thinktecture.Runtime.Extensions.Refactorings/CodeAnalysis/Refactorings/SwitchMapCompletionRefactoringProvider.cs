@@ -37,18 +37,21 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
 
          var methods = GetThinktectureSwitchMapMethods(semanticModel, invocation, context.CancellationToken);
 
+         // This invocation shares the name Switch/Map but is not a Thinktecture method (e.g. a
+         // foreign Map inside a lambda argument). Keep walking the ancestors so the enclosing
+         // Thinktecture invocation still gets the refactoring.
          if (methods.IsEmpty)
-            return;
+            continue;
 
          var existingNamedArgs = GetExistingNamedArgs(invocation);
-         var positionalArgCount = GetPositionalArgCount(invocation);
+         var positionalOrdinals = GetPositionalArgOrdinals(invocation);
 
          foreach (var method in methods)
          {
             // Check if all arguments are already provided
             var nonStateParamCount = method.Parameters.Length;
 
-            if (existingNamedArgs.Length + positionalArgCount >= nonStateParamCount)
+            if (existingNamedArgs.Length + positionalOrdinals.Length >= nonStateParamCount)
                continue;
 
             var title = GetCodeActionTitle(method);
@@ -57,7 +60,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
             context.RegisterRefactoring(
                CodeAction.Create(
                   title: title,
-                  createChangedDocument: ct => GenerateArgumentsAsync(context.Document, invocation, capturedMethod, existingNamedArgs, positionalArgCount, ct),
+                  createChangedDocument: ct => GenerateArgumentsAsync(context.Document, invocation, capturedMethod, existingNamedArgs, positionalOrdinals, ct),
                   equivalenceKey: title));
          }
 
@@ -71,7 +74,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       InvocationExpressionSyntax invocation,
       IMethodSymbol method,
       ImmutableArray<string> existingNamedArgs,
-      int positionalArgCount,
+      ImmutableArray<int> positionalOrdinals,
       CancellationToken cancellationToken)
    {
       var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
@@ -79,18 +82,17 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       if (root is null)
          return document;
 
-      var newArguments = BuildArguments(method, existingNamedArgs, positionalArgCount);
+      var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+      var reservedNames = GetReservedLambdaParameterNames(semanticModel, invocation);
+
+      var newArguments = BuildArguments(method, existingNamedArgs, positionalOrdinals, reservedNames);
 
       if (newArguments.Count == 0)
          return document;
 
-      // Merge existing arguments with the new ones
-      var allArguments = SyntaxFactory.SeparatedList(
-         invocation.ArgumentList.Arguments.Concat(newArguments));
-
       var baseIndentation = GetIndentation(invocation);
       var eol = DetectEndOfLine(root);
-      var newArgumentList = BuildFormattedArgumentList(allArguments, baseIndentation, eol);
+      var newArgumentList = BuildFormattedArgumentList(invocation.ArgumentList.Arguments, newArguments, baseIndentation, eol);
       var newInvocation = invocation.WithArgumentList(newArgumentList);
       var newRoot = root.ReplaceNode(invocation, newInvocation);
 
@@ -115,17 +117,21 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       return builder.ToImmutable();
    }
 
-   private static int GetPositionalArgCount(InvocationExpressionSyntax invocation)
+   private static ImmutableArray<int> GetPositionalArgOrdinals(InvocationExpressionSyntax invocation)
    {
-      var count = 0;
+      var args = invocation.ArgumentList.Arguments;
+      var builder = ImmutableArray.CreateBuilder<int>(args.Count);
 
-      foreach (var arg in invocation.ArgumentList.Arguments)
+      for (var i = 0; i < args.Count; i++)
       {
-         if (arg.NameColon is null)
-            count++;
+         // A positional argument binds the parameter whose ordinal equals the argument's position
+         // in the argument list. This holds even when a non-trailing named argument (C# 7.2)
+         // precedes it, because such a named argument must sit at its own correct position.
+         if (args[i].NameColon is null)
+            builder.Add(i);
       }
 
-      return count;
+      return builder.DrainToImmutable();
    }
 
    private static SyntaxTriviaList GetIndentation(SyntaxNode node)
@@ -229,21 +235,24 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
    private static SeparatedSyntaxList<ArgumentSyntax> BuildArguments(
       IMethodSymbol method,
       ImmutableArray<string> existingNamedArgs,
-      int positionalArgCount = 0)
+      ImmutableArray<int> positionalOrdinals,
+      ImmutableHashSet<string> reservedNames)
    {
       var arguments = new List<ArgumentSyntax>();
 
       foreach (var parameter in method.Parameters)
       {
-         // Skip parameters already covered by positional arguments
-         if (parameter.Ordinal < positionalArgCount)
+         // Skip parameters already bound by a positional argument. Comparing against the actual set
+         // of bound ordinals (instead of a leading count) is correct even when a non-trailing named
+         // argument shifts the positional argument to a later ordinal.
+         if (positionalOrdinals.Contains(parameter.Ordinal))
             continue;
 
          // Skip if already provided by name
          if (existingNamedArgs.Contains(parameter.Name, StringComparer.Ordinal))
             continue;
 
-         var expression = BuildArgumentExpression(parameter, method);
+         var expression = BuildArgumentExpression(parameter, method, reservedNames);
 
          if (expression is null)
             continue;
@@ -256,26 +265,40 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
    }
 
    private static ArgumentListSyntax BuildFormattedArgumentList(
-      SeparatedSyntaxList<ArgumentSyntax> arguments,
+      SeparatedSyntaxList<ArgumentSyntax> existingArguments,
+      SeparatedSyntaxList<ArgumentSyntax> newArguments,
       SyntaxTriviaList baseIndentation,
       string eol)
    {
-      if (arguments.Count <= 1)
-         return SyntaxFactory.ArgumentList(arguments);
+      var totalCount = existingArguments.Count + newArguments.Count;
+
+      // A single argument in total (no existing arguments plus one generated one) stays on one line.
+      if (totalCount <= 1)
+         return SyntaxFactory.ArgumentList(newArguments);
 
       // Multi-line: place each argument on its own line
-      var formattedArgs = new List<SyntaxNodeOrToken>();
+      var formattedArgs = new List<SyntaxNodeOrToken>((totalCount * 2) - 1);
       var lineBreakAndIndent = SyntaxFactory.TriviaList(
          SyntaxFactory.ElasticEndOfLine(eol),
          SyntaxFactory.Whitespace(baseIndentation.ToFullString() + "   "));
 
-      for (var i = 0; i < arguments.Count; i++)
+      foreach (var existingArgument in existingArguments)
       {
-         var arg = arguments[i].WithLeadingTrivia(lineBreakAndIndent);
-         formattedArgs.Add(arg);
-
-         if (i < arguments.Count - 1)
+         if (formattedArgs.Count > 0)
             formattedArgs.Add(SyntaxFactory.Token(SyntaxKind.CommaToken));
+
+         // Regenerate the line break and indentation, but keep any comment the user attached to the
+         // existing argument, so applying the refactoring does not silently delete it.
+         var leadingTrivia = PrependComments(lineBreakAndIndent, existingArgument.GetLeadingTrivia());
+         formattedArgs.Add(existingArgument.WithLeadingTrivia(leadingTrivia));
+      }
+
+      foreach (var newArgument in newArguments)
+      {
+         if (formattedArgs.Count > 0)
+            formattedArgs.Add(SyntaxFactory.Token(SyntaxKind.CommaToken));
+
+         formattedArgs.Add(newArgument.WithLeadingTrivia(lineBreakAndIndent));
       }
 
       return SyntaxFactory.ArgumentList(
@@ -284,7 +307,35 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
          SyntaxFactory.Token(SyntaxKind.CloseParenToken));
    }
 
-   private static ExpressionSyntax BuildArgumentExpression(IParameterSymbol parameter, IMethodSymbol method)
+   private static SyntaxTriviaList PrependComments(SyntaxTriviaList lineBreakAndIndent, SyntaxTriviaList originalLeadingTrivia)
+   {
+      SyntaxTriviaList? result = null;
+
+      foreach (var trivia in originalLeadingTrivia)
+      {
+         if (!IsComment(trivia))
+            continue;
+
+         result ??= SyntaxFactory.TriviaList();
+         result = result.Value.AddRange(lineBreakAndIndent).Add(trivia);
+      }
+
+      // No comments to keep: behave exactly like the previous implementation.
+      if (result is null)
+         return lineBreakAndIndent;
+
+      return result.Value.AddRange(lineBreakAndIndent);
+   }
+
+   private static bool IsComment(SyntaxTrivia trivia)
+   {
+      return trivia.IsKind(SyntaxKind.SingleLineCommentTrivia)
+                || trivia.IsKind(SyntaxKind.MultiLineCommentTrivia)
+                || trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia)
+                || trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia);
+   }
+
+   private static ExpressionSyntax BuildArgumentExpression(IParameterSymbol parameter, IMethodSymbol method, ImmutableHashSet<string> reservedNames)
    {
       var paramType = parameter.Type;
 
@@ -304,11 +355,11 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       {
          // Check for System.Action
          if (namedType.IsSystemAction())
-            return BuildActionLambda(namedType, stateParameterName);
+            return BuildActionLambda(namedType, stateParameterName, reservedNames);
 
          // Check for System.Func
          if (namedType.IsSystemFunc())
-            return BuildFuncLambda(namedType, stateParameterName);
+            return BuildFuncLambda(namedType, stateParameterName, reservedNames);
 
          // Check for Thinktecture.Argument<T>
          if (namedType.IsThinktectureArgument())
@@ -321,7 +372,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       return SyntaxFactory.LiteralExpression(SyntaxKind.DefaultLiteralExpression);
    }
 
-   private static ExpressionSyntax BuildActionLambda(INamedTypeSymbol actionType, string stateParameterName)
+   private static ExpressionSyntax BuildActionLambda(INamedTypeSymbol actionType, string stateParameterName, ImmutableHashSet<string> reservedNames)
    {
       var staticModifier = SyntaxFactory.TokenList(
          SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space));
@@ -338,19 +389,19 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       {
          // Action<T> → static x => { }
          return SyntaxFactory.SimpleLambdaExpression(
-                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("x")),
+                                SyntaxFactory.Parameter(CreateIdentifier(GetValueParameterName(stateParameterName, reservedNames))),
                                 SyntaxFactory.Block())
                              .WithModifiers(staticModifier);
       }
 
       // Action<T1, T2, ...> → static (x1, x2, ...) => { }
       return SyntaxFactory.ParenthesizedLambdaExpression(
-                             SyntaxFactory.ParameterList(BuildMultipleParameters(actionType.TypeArguments.Length, stateParameterName)),
+                             SyntaxFactory.ParameterList(BuildMultipleParameters(actionType.TypeArguments.Length, stateParameterName, reservedNames)),
                              SyntaxFactory.Block())
                           .WithModifiers(staticModifier);
    }
 
-   private static ExpressionSyntax BuildFuncLambda(INamedTypeSymbol funcType, string stateParameterName)
+   private static ExpressionSyntax BuildFuncLambda(INamedTypeSymbol funcType, string stateParameterName, ImmutableHashSet<string> reservedNames)
    {
       var staticModifier = SyntaxFactory.TokenList(
          SyntaxFactory.Token(SyntaxKind.StaticKeyword).WithTrailingTrivia(SyntaxFactory.Space));
@@ -374,7 +425,7 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       {
          // Func<T, TResult> → static x => throw new System.NotImplementedException()
          return SyntaxFactory.SimpleLambdaExpression(
-                                SyntaxFactory.Parameter(SyntaxFactory.Identifier("x")),
+                                SyntaxFactory.Parameter(CreateIdentifier(GetValueParameterName(stateParameterName, reservedNames))),
                                 throwExpression)
                              .WithModifiers(staticModifier);
       }
@@ -382,14 +433,19 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
       // Func<T1, T2, ..., TResult> → static (x1, x2, ...) => throw new System.NotImplementedException()
       // TypeArguments.Length - 1 because the last type argument is TResult
       return SyntaxFactory.ParenthesizedLambdaExpression(
-                             SyntaxFactory.ParameterList(BuildMultipleParameters(funcType.TypeArguments.Length - 1, stateParameterName)),
+                             SyntaxFactory.ParameterList(BuildMultipleParameters(funcType.TypeArguments.Length - 1, stateParameterName, reservedNames)),
                              throwExpression)
                           .WithModifiers(staticModifier);
    }
 
-   private static SeparatedSyntaxList<ParameterSyntax> BuildMultipleParameters(int count, string stateParameterName)
+   private static SeparatedSyntaxList<ParameterSyntax> BuildMultipleParameters(int count, string stateParameterName, ImmutableHashSet<string> reservedNames)
    {
       var nodesAndTokens = new SyntaxNodeOrToken[count * 2 - 1];
+
+      // The state lambda parameter (the first one) must be resolved before the value parameter, so
+      // the value parameter can avoid colliding with the possibly renamed state parameter (CS0100).
+      var stateName = GetStateParameterName(stateParameterName, reservedNames);
+      var valueParameterName = GetValueParameterName(stateName, reservedNames);
 
       for (var i = 0; i < count; i++)
       {
@@ -399,11 +455,81 @@ public sealed class SwitchMapCompletionRefactoringProvider : CodeRefactoringProv
                                                      .WithTrailingTrivia(SyntaxFactory.Space);
          }
 
-         var name = i == 0 ? stateParameterName : "x";
-         nodesAndTokens[i * 2] = SyntaxFactory.Parameter(SyntaxFactory.Identifier(name));
+         var name = i == 0 ? stateName : valueParameterName;
+
+         // Use CreateIdentifier so a state parameter name that is a C# keyword (e.g. "default") is
+         // emitted with the "@" prefix and the generated lambda parses.
+         nodesAndTokens[i * 2] = SyntaxFactory.Parameter(CreateIdentifier(name));
       }
 
       return SyntaxFactory.SeparatedList<ParameterSyntax>(nodesAndTokens);
+   }
+
+   private static string GetStateParameterName(string stateParameterName, ImmutableHashSet<string> reservedNames)
+   {
+      // The state lambda parameter must not shadow a local or parameter that is already in scope at
+      // the invocation (CS0136). The state overload's state argument passes such an enclosing symbol
+      // by name, so the configured state parameter name is frequently already reserved. Keep the
+      // configured name when it is free; otherwise append a number until the name is free. The lambda
+      // body is empty, so the parameter is only a placeholder and can be renamed without changing
+      // behavior.
+      if (!reservedNames.Contains(stateParameterName))
+         return stateParameterName;
+
+      for (var i = 1; ; i++)
+      {
+         var candidate = stateParameterName + i;
+
+         if (!reservedNames.Contains(candidate))
+            return candidate;
+      }
+   }
+
+   private static readonly string[] _valueParameterNameCandidates = ["x", "value", "v", "arg", "item"];
+
+   private static string GetValueParameterName(string stateParameterName, ImmutableHashSet<string> reservedNames)
+   {
+      // The value lambda parameter must not collide with the state lambda parameter (CS0100, two
+      // parameters of the same lambda) and must not shadow a local or parameter that is already in
+      // scope at the invocation (CS0136). Pick the first candidate that avoids both; if every
+      // candidate is taken, fall back to a numbered name that is guaranteed to be free.
+      foreach (var candidate in _valueParameterNameCandidates)
+      {
+         if (candidate != stateParameterName && !reservedNames.Contains(candidate))
+            return candidate;
+      }
+
+      for (var i = 1; ; i++)
+      {
+         var candidate = "value" + i;
+
+         if (candidate != stateParameterName && !reservedNames.Contains(candidate))
+            return candidate;
+      }
+   }
+
+   private static ImmutableHashSet<string> GetReservedLambdaParameterNames(SemanticModel? semanticModel, InvocationExpressionSyntax invocation)
+   {
+      // Collect every identifier visible at the invocation so a generated lambda parameter does not
+      // shadow an enclosing local or parameter (CS0136). LookupSymbols also returns fields, methods
+      // and types; treating those as reserved as well is harmless, because it only makes the picker
+      // skip to the next candidate name.
+      if (semanticModel is null)
+         return ImmutableHashSet<string>.Empty;
+
+      var symbols = semanticModel.LookupSymbols(invocation.SpanStart);
+
+      if (symbols.IsDefaultOrEmpty)
+         return ImmutableHashSet<string>.Empty;
+
+      var builder = ImmutableHashSet.CreateBuilder<string>(StringComparer.Ordinal);
+
+      foreach (var symbol in symbols)
+      {
+         builder.Add(symbol.Name);
+      }
+
+      return builder.ToImmutable();
    }
 
    private static bool IsThinktectureSwitchMapMethod(IMethodSymbol method)
