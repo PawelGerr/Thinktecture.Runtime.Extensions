@@ -14,7 +14,7 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
       ").Append(GENERATED_CODE_ATTRIBUTE);
 
       sb.Append(@"
-      ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == MemberKind.Field ? "readonly " : null).AppendTypeFullyQualified(keyMember).Append(" ").Append(keyMember.Name).Append(keyMember.Kind == MemberKind.Property ? " { get; }" : ";");
+      ").RenderAccessModifier(keyMember.AccessModifier).Append(" ").Append(keyMember.Kind == MemberKind.Field ? "readonly " : null).AppendTypeFullyQualified(keyMember).Append(" ").AppendIdentifier(keyMember.Name).Append(keyMember.Kind == MemberKind.Property ? " { get; }" : ";");
    }
 
    protected static void GenerateKeyMemberEqualityComparison(StringBuilder sb, KeyMemberState keyMember, string? keyMemberEqualityComparerAccessor)
@@ -24,18 +24,18 @@ public abstract class SmartEnumAndValueObjectCodeGeneratorBase : CodeGeneratorBa
 
       if (keyMemberEqualityComparerAccessor is not null)
       {
-         sb.Append(keyMemberEqualityComparerAccessor).Append(".EqualityComparer.Equals(this.").Append(keyMember.Name).Append(", other.").Append(keyMember.Name).Append(");");
+         sb.Append(keyMemberEqualityComparerAccessor).Append(".EqualityComparer.Equals(this.").AppendIdentifier(keyMember.Name).Append(", other.").AppendIdentifier(keyMember.Name).Append(");");
       }
       else if (keyMember.IsString())
       {
-         sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(this.").Append(keyMember.Name).Append(", other.").Append(keyMember.Name).Append(");");
+         sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(this.").AppendIdentifier(keyMember.Name).Append(", other.").AppendIdentifier(keyMember.Name).Append(");");
       }
       else
       {
          if (keyMember.MayBeNull())
-            sb.Append("this.").Append(keyMember.Name).Append(" is null ? other.").Append(keyMember.Name).Append(" is null : ");
+            sb.Append("this.").AppendIdentifier(keyMember.Name).Append(" is null ? other.").AppendIdentifier(keyMember.Name).Append(" is null : ");
 
-         sb.Append("this.").Append(keyMember.Name).Append(".Equals(other.").Append(keyMember.Name).Append(");");
+         sb.Append("this.").AppendIdentifier(keyMember.Name).Append(".Equals(other.").AppendIdentifier(keyMember.Name).Append(");");
       }
    }
 }

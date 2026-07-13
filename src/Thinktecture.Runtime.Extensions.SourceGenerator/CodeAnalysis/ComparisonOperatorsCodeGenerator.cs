@@ -111,7 +111,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(" < right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(" < right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -124,7 +124,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(" <= right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(" <= right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -137,7 +137,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(" > right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(" > right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -150,7 +150,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(" >= right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(" >= right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
    }
@@ -167,7 +167,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") < 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -175,7 +175,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") <= 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -183,7 +183,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") > 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -191,7 +191,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") >= 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") >= 0;
    }");
    }
 
@@ -206,7 +206,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") < 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -214,7 +214,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") <= 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -222,7 +222,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") > 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -230,7 +230,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(", right.").Append(state.KeyMember.Name).Append(@") >= 0;
+      ").Append(leftNullCheck).Append(rightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(", right.").AppendIdentifier(state.KeyMember.Name).Append(@") >= 0;
    }");
    }
 
@@ -271,13 +271,13 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(@" < right;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(@" < right;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left < right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left < right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -290,7 +290,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(@" <= right;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(@" <= right;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -298,7 +298,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left <= right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left <= right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -311,7 +311,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(@" > right;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(@" > right;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -319,7 +319,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left > right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left > right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
 
@@ -332,7 +332,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").Append(state.KeyMember.Name).Append(@" >= right;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return left.").AppendIdentifier(state.KeyMember.Name).Append(@" >= right;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -340,7 +340,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left >= right.").Append(state.KeyMember.Name).Append(@";
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return left >= right.").AppendIdentifier(state.KeyMember.Name).Append(@";
    }");
       }
    }
@@ -359,13 +359,13 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(@", right) < 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").Append(state.KeyMember.Name).Append(@") < 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -373,7 +373,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(@", right) <= 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -381,7 +381,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").Append(state.KeyMember.Name).Append(@") <= 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -389,7 +389,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(@", right) > 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -397,7 +397,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").Append(state.KeyMember.Name).Append(@") > 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -405,7 +405,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").Append(state.KeyMember.Name).Append(@", right) >= 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) >= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -413,7 +413,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").Append(state.KeyMember.Name).Append(@") >= 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(comparerAccessor).Append(".Comparer.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") >= 0;
    }");
    }
 
@@ -430,13 +430,13 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) < 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThan(TSelf, TOther)"" />
    public static bool operator <(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") < 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") < 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -444,7 +444,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) <= 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_LessThanOrEqual(TSelf, TOther)"" />
@@ -452,7 +452,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator <=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") <= 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") <= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -460,7 +460,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) > 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThan(TSelf, TOther)"" />
@@ -468,7 +468,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") > 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") > 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -476,7 +476,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").Append(state.KeyMember.Name).Append(@", right) >= 0;
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left.").AppendIdentifier(state.KeyMember.Name).Append(@", right) >= 0;
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IComparisonOperators{TSelf, TOther, TResult}.op_GreaterThanOrEqual(TSelf, TOther)"" />
@@ -484,7 +484,7 @@ public sealed class ComparisonOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static bool operator >=(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").Append(state.KeyMember.Name).Append(@") >= 0;
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return global::System.StringComparer.OrdinalIgnoreCase.Compare(left, right.").AppendIdentifier(state.KeyMember.Name).Append(@") >= 0;
    }");
    }
 }

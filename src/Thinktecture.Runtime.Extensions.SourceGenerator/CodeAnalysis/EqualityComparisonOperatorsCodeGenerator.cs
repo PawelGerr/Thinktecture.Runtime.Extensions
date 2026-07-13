@@ -166,19 +166,19 @@ public sealed class EqualityComparisonOperatorsCodeGenerator : IInterfaceCodeGen
          if (_equalityComparer.Value.IsAccessor)
             sb.Append(".EqualityComparer");
 
-         sb.Append(".Equals(obj.").Append(state.KeyMember.Name).Append(", value)");
+         sb.Append(".Equals(obj.").AppendIdentifier(state.KeyMember.Name).Append(", value)");
       }
       else if (state.KeyMember.IsString())
       {
-         sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(obj.").Append(state.KeyMember.Name).Append(", value)");
+         sb.Append("global::System.StringComparer.OrdinalIgnoreCase.Equals(obj.").AppendIdentifier(state.KeyMember.Name).Append(", value)");
       }
       else if (state.KeyMember.MayBeNull())
       {
-         sb.Append("obj.").Append(state.KeyMember.Name).Append(" is null ? value").Append(" is null : obj.").Append(state.KeyMember.Name).Append(".Equals(value").Append(")");
+         sb.Append("obj.").AppendIdentifier(state.KeyMember.Name).Append(" is null ? value").Append(" is null : obj.").AppendIdentifier(state.KeyMember.Name).Append(".Equals(value").Append(")");
       }
       else
       {
-         sb.Append("obj.").Append(state.KeyMember.Name).Append(".Equals(value)");
+         sb.Append("obj.").AppendIdentifier(state.KeyMember.Name).Append(".Equals(value)");
       }
 
       sb.Append(@";

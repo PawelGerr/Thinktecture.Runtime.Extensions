@@ -61,21 +61,21 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
       if (_comparerAccessor is not null)
       {
          sb.Append(@"
-      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
+      return ").Append(_comparerAccessor).Append(".Comparer.Compare(this.").AppendIdentifier(state.KeyMember.Name).Append(", obj.").AppendIdentifier(state.KeyMember.Name).Append(");");
       }
       else if (state.KeyMember.IsString())
       {
          sb.Append(@"
-      return global::System.StringComparer.OrdinalIgnoreCase.Compare(this.").Append(state.KeyMember.Name).Append(", obj.").Append(state.KeyMember.Name).Append(");");
+      return global::System.StringComparer.OrdinalIgnoreCase.Compare(this.").AppendIdentifier(state.KeyMember.Name).Append(", obj.").AppendIdentifier(state.KeyMember.Name).Append(");");
       }
       else
       {
          if (state.KeyMember.MayBeNull())
          {
             sb.Append(@"
-      if(this.").Append(state.KeyMember.Name).Append(@" is null)
-         return obj.").Append(state.KeyMember.Name).Append(@" is null ? 0 : -1;
-      if(obj.").Append(state.KeyMember.Name).Append(@" is null)
+      if(this.").AppendIdentifier(state.KeyMember.Name).Append(@" is null)
+         return obj.").AppendIdentifier(state.KeyMember.Name).Append(@" is null ? 0 : -1;
+      if(obj.").AppendIdentifier(state.KeyMember.Name).Append(@" is null)
          return 1;
 ");
          }
@@ -83,13 +83,13 @@ public sealed class ComparableCodeGenerator : IInterfaceCodeGenerator
          if (_isKeyMemberGenericComparable)
          {
             sb.Append(@"
-      return ((global::System.IComparable<").AppendTypeFullyQualified(state.KeyMember).Append(">)this.").Append(state.KeyMember.Name).Append(").CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
+      return ((global::System.IComparable<").AppendTypeFullyQualified(state.KeyMember).Append(">)this.").AppendIdentifier(state.KeyMember.Name).Append(").CompareTo(obj.").AppendIdentifier(state.KeyMember.Name).Append(");");
          }
          else
          {
             // The key member type (e.g. an enum) implements only the non-generic System.IComparable.
             sb.Append(@"
-      return ((global::System.IComparable)this.").Append(state.KeyMember.Name).Append(").CompareTo(obj.").Append(state.KeyMember.Name).Append(");");
+      return ((global::System.IComparable)this.").AppendIdentifier(state.KeyMember.Name).Append(").CompareTo(obj.").AppendIdentifier(state.KeyMember.Name).Append(");");
          }
       }
 

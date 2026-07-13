@@ -178,7 +178,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").AppendTypeFullyQualified(_state.KeyMember).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(_state.KeyMember).Append(@">.ToValue()
       {
-         return this.").Append(_state.KeyMember.Name).Append(@";
+         return this.").AppendIdentifier(_state.KeyMember.Name).Append(@";
       }");
    }
 
@@ -212,12 +212,12 @@ namespace ").Append(_state.Namespace).Append(@"
          if (_state.IsValueType)
             _sb.Append("Value.");
 
-         _sb.Append(keyMember.Name);
+         _sb.AppendIdentifier(keyMember.Name);
       }
       else
       {
          _sb.Append(@"
-         return obj?.").Append(keyMember.Name);
+         return obj?.").AppendIdentifier(keyMember.Name);
       }
 
       _sb.Append(@";
@@ -239,7 +239,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
       {
-         return obj.").Append(keyMember.Name).Append(@";
+         return obj.").AppendIdentifier(keyMember.Name).Append(@";
       }");
    }
 
@@ -269,7 +269,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if(obj is null)
             throw new global::System.NullReferenceException();
 
-         return obj.").Append(keyMember.Name).Append(@";
+         return obj.").AppendIdentifier(keyMember.Name).Append(@";
       }");
    }
 
@@ -585,7 +585,7 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          ValidateConstructorArguments(").RenderArgument(_state.KeyMember, "ref ").Append(@");
 
-         this.").Append(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(@";
+         this.").AppendIdentifier(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(@";
       }
 
       static partial void ValidateConstructorArguments(").RenderArgumentWithType(_state.KeyMember, "ref ").Append(");");
@@ -639,19 +639,19 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (_state.Settings.KeyMemberEqualityComparerAccessor is not null)
       {
-         _sb.Append(_state.Settings.KeyMemberEqualityComparerAccessor).Append(".EqualityComparer.GetHashCode(this.").Append(_state.KeyMember.Name).Append(")");
+         _sb.Append(_state.Settings.KeyMemberEqualityComparerAccessor).Append(".EqualityComparer.GetHashCode(this.").AppendIdentifier(_state.KeyMember.Name).Append(")");
       }
       else if (_state.KeyMember.IsString())
       {
-         _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(this.").Append(_state.KeyMember.Name).Append(")");
+         _sb.Append("global::System.StringComparer.OrdinalIgnoreCase.GetHashCode(this.").AppendIdentifier(_state.KeyMember.Name).Append(")");
       }
       else if (_state.KeyMember.IsTypeParameter && !_state.KeyMember.IsValueType)
       {
-         _sb.Append("this.").Append(_state.KeyMember.Name).Append("?.GetHashCode() ?? 0");
+         _sb.Append("this.").AppendIdentifier(_state.KeyMember.Name).Append("?.GetHashCode() ?? 0");
       }
       else
       {
-         _sb.Append("this.").Append(_state.KeyMember.Name).Append(".GetHashCode()");
+         _sb.Append("this.").AppendIdentifier(_state.KeyMember.Name).Append(".GetHashCode()");
       }
 
       _sb.Append(@";
@@ -667,7 +667,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string").Append(_state.KeyMember.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
-         return this.").Append(_state.KeyMember.Name).Append(_state.KeyMember.IsTypeParameter && !_state.KeyMember.IsValueType ? "?" : null).Append(@".ToString();
+         return this.").AppendIdentifier(_state.KeyMember.Name).Append(_state.KeyMember.IsTypeParameter && !_state.KeyMember.IsValueType ? "?" : null).Append(@".ToString();
       }");
    }
 }

@@ -616,7 +616,7 @@ namespace ").Append(_state.Namespace).Append(@"
          foreach (var memberInfo in fieldsAndProperties)
          {
             _sb.Append(@"
-         this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
+         this.").AppendIdentifier(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
          }
       }
 
@@ -684,21 +684,21 @@ namespace ").Append(_state.Namespace).Append(@"
 
             if (equalityComparerAccessor != null)
             {
-               _sb.Append(equalityComparerAccessor).Append(".EqualityComparer.Equals(this.").Append(member.Name).Append(", other.").Append(member.Name).Append(")");
+               _sb.Append(equalityComparerAccessor).Append(".EqualityComparer.Equals(this.").AppendIdentifier(member.Name).Append(", other.").AppendIdentifier(member.Name).Append(")");
             }
             else if (member.IsString())
             {
-               _sb.Append("global::System.StringComparer.").Append(GetDefaultStringComparer()).Append(".Equals(this.").Append(member.Name).Append(", other.").Append(member.Name).Append(")");
+               _sb.Append("global::System.StringComparer.").Append(GetDefaultStringComparer()).Append(".Equals(this.").AppendIdentifier(member.Name).Append(", other.").AppendIdentifier(member.Name).Append(")");
             }
             else
             {
                if (member.IsReferenceType || member is { IsTypeParameter: true, IsValueType: false })
                {
-                  _sb.Append("(this.").Append(member.Name).Append(" is null ? other.").Append(member.Name).Append(" is null : this.").Append(member.Name).Append(".Equals(other.").Append(member.Name).Append("))");
+                  _sb.Append("(this.").AppendIdentifier(member.Name).Append(" is null ? other.").AppendIdentifier(member.Name).Append(" is null : this.").AppendIdentifier(member.Name).Append(".Equals(other.").AppendIdentifier(member.Name).Append("))");
                }
                else
                {
-                  _sb.Append("this.").Append(member.Name).Append(".Equals(other.").Append(member.Name).Append(")");
+                  _sb.Append("this.").AppendIdentifier(member.Name).Append(".Equals(other.").AppendIdentifier(member.Name).Append(")");
                }
             }
          }
@@ -765,12 +765,12 @@ namespace ").Append(_state.Namespace).Append(@"
                   _sb.Append(",");
 
                _sb.Append(@"
-            this.").Append(member.Name);
+            this.").AppendIdentifier(member.Name);
             }
             else
             {
                _sb.Append(@"
-         hashCode.Add(this.").Append(member.Name);
+         hashCode.Add(this.").AppendIdentifier(member.Name);
 
                if (equalityComparerAccessor is not null)
                {
@@ -833,7 +833,7 @@ namespace ").Append(_state.Namespace).Append(@"
             if (i > 0)
                _sb.Append(',');
 
-            _sb.Append(" ").Append(member.Name).Append(" = {this.").Append(member.Name).Append("}");
+            _sb.Append(" ").Append(member.Name).Append(" = {this.").AppendIdentifier(member.Name).Append("}");
          }
 
          _sb.Append(" }}\";");
@@ -861,7 +861,7 @@ file static class Extensions
             sb.Append(",");
 
          sb.Append(@"
-                                 o.").Append(member.Name);
+                                 o.").AppendIdentifier(member.Name);
       }
 
       return sb;

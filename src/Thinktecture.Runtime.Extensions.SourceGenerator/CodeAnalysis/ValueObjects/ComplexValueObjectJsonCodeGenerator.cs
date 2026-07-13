@@ -280,7 +280,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             continue;
 
          _sb.Append(@"
-         var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = value.").Append(memberInfo.Name).Append(@";
+         var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = value.").AppendIdentifier(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.JsonIgnoreCondition != JsonIgnoreCondition.Never)

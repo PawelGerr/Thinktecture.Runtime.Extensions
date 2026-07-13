@@ -366,7 +366,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
             var param = method.Parameters[j];
 
-            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").Append(param.Name);
+            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").AppendIdentifier(param.Name);
          }
 
          _sb.Append(");");
@@ -383,7 +383,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
 
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      ").AppendAccessibility(method.Accessibility).Append(" partial ").Append(method.ReturnType ?? "void").Append(" ").Append(method.MethodName).Append("(");
+      ").AppendAccessibility(method.Accessibility).Append(" partial ").Append(method.ReturnType ?? "void").Append(" ").AppendIdentifier(method.MethodName).Append("(");
 
          for (var i = 0; i < method.Parameters.Length; i++)
          {
@@ -391,7 +391,7 @@ namespace ").Append(_state.Namespace).Append(@"
                _sb.Append(", ");
 
             var param = method.Parameters[i];
-            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").Append(param.Name);
+            _sb.AppendRefKindParameterPrefix(param.RefKind).Append(param.Type).Append(" ").AppendIdentifier(param.Name);
          }
 
          _sb.Append(@")
@@ -409,7 +409,7 @@ namespace ").Append(_state.Namespace).Append(@"
                _sb.Append(", ");
 
             var param = method.Parameters[i];
-            _sb.AppendRefKindArgumentPrefix(param.RefKind).Append(param.Name);
+            _sb.AppendRefKindArgumentPrefix(param.RefKind).AppendIdentifier(param.Name);
          }
 
          _sb.Append(@");
@@ -426,7 +426,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override string").Append(keyProperty.IsToStringReturnTypeNullable ? "?" : null).Append(@" ToString()
       {
-         return this.").Append(keyProperty.Name).Append(@".ToString();
+         return this.").AppendIdentifier(keyProperty.Name).Append(@".ToString();
       }");
    }
 
@@ -832,16 +832,18 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateTryGet(KeyMemberState keyProperty)
    {
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
+
       _sb.Append(@"
 
       /// <summary>
       /// Gets a valid enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
+      /// <param name=""").Append(itemArgName).Append(@""">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
+      public static bool TryGet([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(" ").Append(itemArgName).Append(@")
       {");
 
       if (keyProperty.MayBeNull())
@@ -849,21 +851,34 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@"
          if (").AppendEscaped(keyProperty.ArgumentName).Append(@" is null)
          {
-            item = default;
+            ").Append(itemArgName).Append(@" = default;
             return false;
          }
 ");
       }
 
       _sb.Append(@"
-         return _lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out item);");
+         return _lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out ").Append(itemArgName).Append(");");
 
       _sb.Append(@"
       }");
    }
 
+   // The lookup methods use a fixed 'item' out-parameter/local. A user-configured KeyMemberName that renders
+   // to the same identifier (e.g. "Item") would collide with it (CS0100/CS0136), so the fixed identifier is
+   // renamed in that case, following the same approach as the 'provider' -> 'formatProvider' rename below.
+   // Compare the RENDERED identifier, not the raw name: AppendArgumentName drops a leading underscore before a
+   // letter, so a KeyMemberName like "_item" (the library's own private-field default naming) renders to "item"
+   // and would otherwise slip past a raw-name comparison.
+   private string GetNonCollidingItemArgumentName(KeyMemberState keyProperty)
+   {
+      return _sb.RendersToIdentifier(keyProperty.ArgumentName, "item") ? "resultItem" : "item";
+   }
+
    private void GenerateTryGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
+
       _sb.Append(@"
 
 #if NET9_0_OR_GREATER
@@ -883,7 +898,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidate(KeyMemberState keyProperty)
    {
-      var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
+      // Compare the RENDERED identifier, not the raw name: AppendArgumentName drops a leading underscore before a
+      // letter, so a KeyMemberName like "_provider" renders to "provider" and would otherwise slip past a raw-name comparison.
+      var providerArgumentName = _sb.RendersToIdentifier(keyProperty.ArgumentName, "provider") ? "formatProvider" : "provider";
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
 
       _sb.Append(@"
 
@@ -892,12 +910,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
-      /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
+      /// <param name=""").Append(itemArgName).Append(@""">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
+      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate([global::System.Diagnostics.CodeAnalysis.AllowNull] ").AppendTypeFullyQualified(keyProperty).Append(" ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(" ").Append(itemArgName).Append(@")
       {
-         if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
+         if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(", out ").Append(itemArgName).Append(@"))
          {
             return null;
          }
@@ -910,7 +928,10 @@ namespace ").Append(_state.Namespace).Append(@"
 
    private void GenerateValidateForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
-      var providerArgumentName = keyProperty.ArgumentName.Name.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
+      // Compare the RENDERED identifier, not the raw name: AppendArgumentName drops a leading underscore before a
+      // letter, so a KeyMemberName like "_provider" renders to "provider" and would otherwise slip past a raw-name comparison.
+      var providerArgumentName = _sb.RendersToIdentifier(keyProperty.ArgumentName, "provider") ? "formatProvider" : "provider";
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
 
       _sb.Append(@"
 
@@ -920,12 +941,12 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
       /// <param name=""").Append(providerArgumentName).Append(@""">An object that provides culture-specific formatting information.</param>
-      /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
+      /// <param name=""").Append(itemArgName).Append(@""">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>null</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" with an error message otherwise.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(@" item)
+      public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", global::System.IFormatProvider? ").AppendEscaped(providerArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNull] out ").AppendTypeFullyQualified(_state).Append(" ").Append(itemArgName).Append(@")
       {
-         if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item))
+         if(").AppendTypeFullyQualified(_state).Append(".TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(", out ").Append(itemArgName).Append(@"))
          {
             return null;
          }
@@ -956,7 +977,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""item"")]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualifiedNullAnnotated(keyProperty).Append("(").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" item)
       {
-         return item is null ? default : item.").Append(keyProperty.Name).Append(@";
+         return item is null ? default : item.").AppendIdentifier(keyProperty.Name).Append(@";
       }");
    }
 
@@ -1040,16 +1061,16 @@ namespace ").Append(_state.Namespace).Append(@"
          if (keyMember.MayBeNull())
          {
             _sb.Append(@"
-            if (item.").Append(keyMember.Name).Append(@" is null)
+            if (item.").AppendIdentifier(keyMember.Name).Append(@" is null)
                throw new global::System.ArgumentException($""The \""").Append(keyMember.Name).Append(@"\"" of the item \""{itemName}\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
 ");
          }
 
          _sb.Append(@"
-            if (lookup.ContainsKey(item.").Append(keyMember.Name).Append(@"))
-               throw new global::System.ArgumentException($""The type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" has multiple items with the identifier \""{item.").Append(keyMember.Name).Append(@"}\""."");
+            if (lookup.ContainsKey(item.").AppendIdentifier(keyMember.Name).Append(@"))
+               throw new global::System.ArgumentException($""The type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" has multiple items with the identifier \""{item.").AppendIdentifier(keyMember.Name).Append(@"}\""."");
 
-            lookup.Add(item.").Append(keyMember.Name).Append(@", item);
+            lookup.Add(item.").AppendIdentifier(keyMember.Name).Append(@", item);
             item._itemIndex.Set(list.Count);
             list.Add(item);
          }
@@ -1171,7 +1192,7 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       ").AppendTypeFullyQualified(keyProperty).Append(" global::Thinktecture.IConvertible<").AppendTypeFullyQualified(keyProperty).Append(@">.ToValue()
       {
-         return this.").Append(keyProperty.Name).Append(@";
+         return this.").AppendIdentifier(keyProperty.Name).Append(@";
       }");
    }
 
@@ -1188,13 +1209,15 @@ namespace ").Append(_state.Namespace).Append(@"
       [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
       global::System.ReadOnlySpan<char> global::Thinktecture.IConvertible<global::System.ReadOnlySpan<char>>.ToValue()
       {
-         return this.").Append(keyProperty.Name).Append(@";
+         return this.").AppendIdentifier(keyProperty.Name).Append(@";
       }
 #endif");
    }
 
    private void GenerateGet(KeyMemberState keyProperty)
    {
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
+
       _sb.Append(@"
 
       /// <summary>
@@ -1224,17 +1247,19 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-         if (!_lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
+         if (!_lookups.Value.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out var ").Append(itemArgName).Append(@"))
          {
             throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(@");
          }
 
-         return item;
+         return ").Append(itemArgName).Append(@";
       }");
    }
 
    private void GenerateGetForReadOnlySpanOfChar(KeyMemberState keyProperty)
    {
+      var itemArgName = GetNonCollidingItemArgumentName(keyProperty);
+
       _sb.Append(@"
 
 #if NET9_0_OR_GREATER
@@ -1396,13 +1421,13 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@"
-         this.").Append(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(";");
+         this.").AppendIdentifier(_state.KeyMember.Name).Append(" = ").AppendEscaped(_state.KeyMember.ArgumentName).Append(";");
       }
 
       foreach (var memberInfo in _state.AssignableInstanceFieldsAndProperties.Where(p => !p.IsAbstract))
       {
          _sb.Append(@"
-         this.").Append(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
+         this.").AppendIdentifier(memberInfo.Name).Append(" = ").AppendEscaped(memberInfo.ArgumentName).Append(";");
       }
 
       if (_state.DelegateMethods.Length > 0)

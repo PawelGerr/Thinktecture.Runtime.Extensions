@@ -81,7 +81,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").AppendIdentifier(state.KeyMember.Name).Append(" / right.").AppendIdentifier(state.KeyMember.Name).Append(@"));
    }");
       }
 
@@ -94,7 +94,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(" / right.").Append(state.KeyMember.Name).Append(@")));
+      ").Append(typeLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").AppendIdentifier(state.KeyMember.Name).Append(" / right.").AppendIdentifier(state.KeyMember.Name).Append(@")));
    }");
       }
 
@@ -121,7 +121,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(@" / right));
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").AppendIdentifier(state.KeyMember.Name).Append(@" / right));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
@@ -129,7 +129,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator /(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@"));
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").AppendIdentifier(state.KeyMember.Name).Append(@"));
    }");
       }
 
@@ -142,7 +142,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked /(").AppendTypeFullyQualified(state.Type).Append(" left, ").AppendTypeFullyQualified(state.KeyMember).Append(@" right)
    {
-      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").Append(state.KeyMember.Name).Append(@" / right)));
+      ").Append(typeLeftNullCheck).Append(memberRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left.").AppendIdentifier(state.KeyMember.Name).Append(@" / right)));
    }
 
    /// <inheritdoc cref=""global::System.Numerics.IDivisionOperators{TSelf, TOther, TResult}.op_Division(TSelf, TOther)"" />
@@ -150,7 +150,7 @@ public sealed class DivisionOperatorsCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public static ").AppendTypeFullyQualified(state.Type).Append(" operator checked /(").AppendTypeFullyQualified(state.KeyMember).Append(" left, ").AppendTypeFullyQualified(state.Type).Append(@" right)
    {
-      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").Append(state.KeyMember.Name).Append(@")));
+      ").Append(memberLeftNullCheck).Append(typeRightNullCheck).Append("return ").Append(state.CreateFactoryMethodName).Append("(checked(").AppendCast(state.KeyMember, needsCastToResultType).Append("(left / right.").AppendIdentifier(state.KeyMember.Name).Append(@")));
    }");
       }
    }

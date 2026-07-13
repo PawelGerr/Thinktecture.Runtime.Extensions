@@ -315,11 +315,11 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       if (command is not null)
       {
-         sb.Append("writer.").Append(command).Append("(value.").Append(memberInfo.Name).Append(")");
+         sb.Append("writer.").Append(command).Append("(value.").AppendIdentifier(memberInfo.Name).Append(")");
          return;
       }
 
-      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(resolver).Serialize(ref writer, value.").Append(memberInfo.Name).Append(", options)");
+      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(resolver).Serialize(ref writer, value.").AppendIdentifier(memberInfo.Name).Append(", options)");
    }
 
    private static void GenerateReadValue(StringBuilder sb, InstanceMemberInfo memberInfo)

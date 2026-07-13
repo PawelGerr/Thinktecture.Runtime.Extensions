@@ -24,7 +24,7 @@ public sealed class FormattableCodeGenerator : IInterfaceCodeGenerator
    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
    public string ToString(string? format, global::System.IFormatProvider? formatProvider = null)
    {
-      return ((global::System.IFormattable)this.").Append(state.KeyMember.Name).Append(@").ToString(format, formatProvider);
+      return ((global::System.IFormattable)this.").AppendIdentifier(state.KeyMember.Name).Append(@").ToString(format, formatProvider);
    }");
    }
 }

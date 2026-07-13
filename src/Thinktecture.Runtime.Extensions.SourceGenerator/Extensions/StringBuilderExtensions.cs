@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using Thinktecture.CodeAnalysis;
 
@@ -180,6 +181,23 @@ public static class StringBuilderExtensions
       string argName)
    {
       return sb.Append("@").Append(argName);
+   }
+
+   /// <summary>
+   /// Appends a user-declared identifier (a member name, key member name, or parameter name). The name is
+   /// prefixed with <c>@</c> when it is a C# reserved keyword, because Roslyn symbol names never carry the
+   /// <c>@</c> escape and a bare keyword identifier such as <c>default</c> or <c>class</c> does not compile.
+   /// Contextual keywords (for example <c>value</c>) are valid as bare identifiers and are therefore left
+   /// unescaped to avoid needless churn.
+   /// </summary>
+   public static StringBuilder AppendIdentifier(
+      this StringBuilder sb,
+      string name)
+   {
+      if (Microsoft.CodeAnalysis.CSharp.SyntaxFacts.GetKeywordKind(name) != Microsoft.CodeAnalysis.CSharp.SyntaxKind.None)
+         sb.Append('@');
+
+      return sb.Append(name);
    }
 
    /// <summary>
@@ -385,6 +403,57 @@ public static class StringBuilderExtensions
          sb.Append(name, runEnd, name.Length - runEnd);
 
       return sb;
+   }
+
+   /// <summary>
+   /// Indicates whether <paramref name="argName"/> renders to <paramref name="identifier"/>, ignoring case.
+   /// The identifier is the one that <see cref="AppendArgumentName"/> emits (without the <c>@</c> escape prefix).
+   /// Used to detect collisions between per-item/member parameters and the fixed generated parameters (for
+   /// example the <c>item</c> out-parameter or the <c>provider</c> parameter).
+   /// </summary>
+   /// <remarks>
+   /// The rendered name is appended to <paramref name="sb"/>, compared in place and then removed again, so no
+   /// intermediate string is allocated. The caller sees <paramref name="sb"/> unchanged.
+   /// </remarks>
+   public static bool RendersToIdentifier(
+      this StringBuilder sb,
+      ArgumentName argName,
+      string identifier)
+   {
+      var startIndex = sb.Length;
+
+      sb.AppendArgumentName(argName);
+
+      var isMatch = sb.Length - startIndex == identifier.Length;
+
+      for (var i = 0; isMatch && i < identifier.Length; i++)
+      {
+         isMatch = Char.ToLowerInvariant(sb[startIndex + i]) == Char.ToLowerInvariant(identifier[i]);
+      }
+
+      sb.Length = startIndex;
+
+      return isMatch;
+   }
+
+   /// <summary>
+   /// Returns <paramref name="preferredName"/> if it does not appear in <paramref name="takenNames"/>; otherwise
+   /// appends the smallest positive integer suffix that avoids every taken name. Keeps a fixed generated
+   /// parameter (for example the Switch/Map <c>default</c> callback or the state parameter) from colliding with a
+   /// per-item/member parameter whose name renders to the same identifier.
+   /// </summary>
+   public static string MakeNonCollidingParameterName(string preferredName, ISet<string> takenNames)
+   {
+      if (!takenNames.Contains(preferredName))
+         return preferredName;
+
+      for (var i = 1; ; i++)
+      {
+         var candidate = preferredName + i.ToString(CultureInfo.InvariantCulture);
+
+         if (!takenNames.Contains(candidate))
+            return candidate;
+      }
    }
 
    public static StringBuilder AppendBackingFieldName(
