@@ -114,6 +114,25 @@ public class KeywordIdentifierEscapingTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public void Should_escape_keyword_named_key_member_of_keyed_value_object() // finding 14
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(KeyMemberName = "class")]
+            public partial class TestValueObject
+            {
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source);
+   }
+
+   [Fact]
    public void Should_not_collide_when_key_member_is_named_Item() // finding 15
    {
       var source = """

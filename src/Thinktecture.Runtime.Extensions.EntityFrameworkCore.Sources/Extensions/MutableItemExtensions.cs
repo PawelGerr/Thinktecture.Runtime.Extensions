@@ -12,12 +12,17 @@ internal static class MutableItemExtensions
    {
       var metadata = MetadataLookup.Find(item.Type);
 
+      // The value converter stores the type reported by the conversion metadata, which may differ from the
+      // key type of the Smart Enum or keyed Value Object when an Entity-Framework-flagged object factory is used.
+      // The key-based max-length strategy only applies when the converter actually stores the key type.
+      var conversionMetadata = item.Type.FindMetadataForValueConverter();
+
       switch (metadata)
       {
-         case Metadata.Keyed.SmartEnum smartEnumMetadata:
+         case Metadata.Keyed.SmartEnum smartEnumMetadata when conversionMetadata?.KeyType == smartEnumMetadata.KeyType:
             ApplySmartEnumMaxLength(item, configuration.SmartEnums.MaxLengthStrategy, smartEnumMetadata);
             break;
-         case Metadata.Keyed.ValueObject keyedValueObjectMetadata:
+         case Metadata.Keyed.ValueObject keyedValueObjectMetadata when conversionMetadata?.KeyType == keyedValueObjectMetadata.KeyType:
             ApplyKeyedValueObjectMaxLength(item, configuration.KeyedValueObjects.MaxLengthStrategy, keyedValueObjectMetadata);
             break;
       }

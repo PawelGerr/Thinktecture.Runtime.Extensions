@@ -113,11 +113,11 @@ namespace ").Append(_state.Namespace).Append(@"
          {
             KeyType = typeof(").AppendTypeFullyQualified(_state.KeyMember).Append(@"),
             ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.ValidationError).Append(@"),
-            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
-            ConvertFromKey = ").GenerateDelegateConvertFromKey(_state).Append(@",
-            ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state).Append(@",
+            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").AppendIdentifier(_state.KeyMember.Name).Append(@",
+            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").AppendIdentifier(_state.KeyMember.Name).Append(@",
+            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").AppendIdentifier(_state.KeyMember.Name).Append(@",
+            ConvertFromKey = ").GenerateDelegateConvertFromKey(_state, emptyStringYieldsNull).Append(@",
+            ConvertFromKeyExpression = ").GenerateDelegateConvertFromKey(_state, emptyStringYieldsNull).Append(@",
             ConvertFromKeyExpressionViaConstructor = ").GenerateDelegateConvertFromKeyExpressionViaCtor(_state).Append(@",
             TryGetFromKey = ").GenerateDelegateTryGetFromKey(_state).Append(@"
          };");
@@ -688,7 +688,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
 file static class Extensions
 {
-   public static StringBuilder GenerateDelegateConvertFromKey(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state)
+   public static StringBuilder GenerateDelegateConvertFromKey(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state, bool emptyStringYieldsNull)
    {
       if (state.Settings.SkipFactoryMethods)
       {
@@ -697,7 +697,7 @@ file static class Extensions
       else
       {
          var keyMember = state.KeyMember;
-         sb.Append("static ").AppendTypeFullyQualified(state, nullable: state.Settings.EmptyStringInFactoryMethodsYieldsNull).Append(" (").AppendTypeFullyQualified(keyMember).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(") => ").AppendTypeFullyQualified(state).Append(".").Append(state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
+         sb.Append("static ").AppendTypeFullyQualified(state, nullable: emptyStringYieldsNull).Append(" (").AppendTypeFullyQualified(keyMember).Append(" ").AppendEscaped(keyMember.ArgumentName).Append(") => ").AppendTypeFullyQualified(state).Append(".").Append(state.Settings.CreateFactoryMethodName).Append("(").AppendEscaped(keyMember.ArgumentName).Append(")");
       }
 
       return sb;

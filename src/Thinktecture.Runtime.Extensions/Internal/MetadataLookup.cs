@@ -173,6 +173,6 @@ public static class MetadataLookup
          typeToCheck = typeToCheck.BaseType;
       }
 
-      throw new Exception($"Could not retries metadata for type '{type.FullName}'.");
+      throw new InvalidOperationException($"Could not retrieve metadata for type '{type.FullName}'.");
    }
 }

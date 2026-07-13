@@ -42,7 +42,7 @@ public sealed class SmartEnumAttribute<TKey> : Attribute
    /// <summary>
    /// The type of the key-property.
    /// </summary>
-   public Type KeyMemberType { get; set; }
+   public Type KeyMemberType { get; }
 
    /// <summary>
    /// Access modifier of the key member.
