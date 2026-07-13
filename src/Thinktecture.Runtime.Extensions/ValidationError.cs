@@ -36,7 +36,7 @@ public sealed class ValidationError : IValidationError<ValidationError>, IEquata
       if (ReferenceEquals(this, obj))
          return true;
 
-      return Equals((ValidationError)obj);
+      return obj is ValidationError other && Equals(other);
    }
 
    /// <inheritdoc />

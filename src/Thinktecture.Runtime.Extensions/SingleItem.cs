@@ -34,12 +34,15 @@ public static class SingleItem
    /// <typeparam name="TKey">Type of the key</typeparam>
    /// <typeparam name="TElement">Type of the elements.</typeparam>
    /// <returns>A lookup with 1 item.</returns>
+   /// <exception cref="ArgumentNullException"><paramref name="elements"/> is <c>null</c>.</exception>
    public static ILookup<TKey, TElement> Lookup<TKey, TElement>(
       TKey key,
       IEnumerable<TElement> elements,
       IEqualityComparer<TKey>? equalityComparer = null)
       where TKey : notnull
    {
+      ArgumentNullException.ThrowIfNull(elements);
+
       return new SingleItemLookup<TKey, TElement>(key, elements, equalityComparer);
    }
 

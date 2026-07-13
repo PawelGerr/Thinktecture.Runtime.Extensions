@@ -23,7 +23,7 @@ public sealed class UnionAttribute<T1, T2> : UnionAttributeBase
    /// </remarks>
    public bool T1IsNullableReferenceType
    {
-      get => field || (typeof(T1).IsClass && T1IsStateless);
+      get => field || (!typeof(T1).IsValueType && T1IsStateless);
       set;
    }
 
@@ -50,7 +50,7 @@ public sealed class UnionAttribute<T1, T2> : UnionAttributeBase
    /// </remarks>
    public bool T2IsNullableReferenceType
    {
-      get => field || (typeof(T2).IsClass && T2IsStateless);
+      get => field || (!typeof(T2).IsValueType && T2IsStateless);
       set;
    }
 
@@ -87,7 +87,7 @@ public sealed class UnionAttribute<T1, T2, T3> : UnionAttributeBase
    /// </remarks>
    public bool T1IsNullableReferenceType
    {
-      get => field || (typeof(T1).IsClass && T1IsStateless);
+      get => field || (!typeof(T1).IsValueType && T1IsStateless);
       set;
    }
 
@@ -114,7 +114,7 @@ public sealed class UnionAttribute<T1, T2, T3> : UnionAttributeBase
    /// </remarks>
    public bool T2IsNullableReferenceType
    {
-      get => field || (typeof(T2).IsClass && T2IsStateless);
+      get => field || (!typeof(T2).IsValueType && T2IsStateless);
       set;
    }
 
@@ -141,7 +141,7 @@ public sealed class UnionAttribute<T1, T2, T3> : UnionAttributeBase
    /// </remarks>
    public bool T3IsNullableReferenceType
    {
-      get => field || (typeof(T3).IsClass && T3IsStateless);
+      get => field || (!typeof(T3).IsValueType && T3IsStateless);
       set;
    }
 
@@ -179,7 +179,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
    /// </remarks>
    public bool T1IsNullableReferenceType
    {
-      get => field || (typeof(T1).IsClass && T1IsStateless);
+      get => field || (!typeof(T1).IsValueType && T1IsStateless);
       set;
    }
 
@@ -206,7 +206,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
    /// </remarks>
    public bool T2IsNullableReferenceType
    {
-      get => field || (typeof(T2).IsClass && T2IsStateless);
+      get => field || (!typeof(T2).IsValueType && T2IsStateless);
       set;
    }
 
@@ -233,7 +233,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
    /// </remarks>
    public bool T3IsNullableReferenceType
    {
-      get => field || (typeof(T3).IsClass && T3IsStateless);
+      get => field || (!typeof(T3).IsValueType && T3IsStateless);
       set;
    }
 
@@ -260,7 +260,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4> : UnionAttributeBase
    /// </remarks>
    public bool T4IsNullableReferenceType
    {
-      get => field || (typeof(T4).IsClass && T4IsStateless);
+      get => field || (!typeof(T4).IsValueType && T4IsStateless);
       set;
    }
 
@@ -299,7 +299,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
    /// </remarks>
    public bool T1IsNullableReferenceType
    {
-      get => field || (typeof(T1).IsClass && T1IsStateless);
+      get => field || (!typeof(T1).IsValueType && T1IsStateless);
       set;
    }
 
@@ -326,7 +326,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
    /// </remarks>
    public bool T2IsNullableReferenceType
    {
-      get => field || (typeof(T2).IsClass && T2IsStateless);
+      get => field || (!typeof(T2).IsValueType && T2IsStateless);
       set;
    }
 
@@ -353,7 +353,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
    /// </remarks>
    public bool T3IsNullableReferenceType
    {
-      get => field || (typeof(T3).IsClass && T3IsStateless);
+      get => field || (!typeof(T3).IsValueType && T3IsStateless);
       set;
    }
 
@@ -380,7 +380,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
    /// </remarks>
    public bool T4IsNullableReferenceType
    {
-      get => field || (typeof(T4).IsClass && T4IsStateless);
+      get => field || (!typeof(T4).IsValueType && T4IsStateless);
       set;
    }
 
@@ -407,7 +407,7 @@ public sealed class UnionAttribute<T1, T2, T3, T4, T5> : UnionAttributeBase
    /// </remarks>
    public bool T5IsNullableReferenceType
    {
-      get => field || (typeof(T5).IsClass && T5IsStateless);
+      get => field || (!typeof(T5).IsValueType && T5IsStateless);
       set;
    }
 

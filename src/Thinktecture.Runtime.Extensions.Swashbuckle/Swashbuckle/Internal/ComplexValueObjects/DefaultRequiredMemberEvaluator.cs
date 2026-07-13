@@ -14,15 +14,27 @@ public class DefaultRequiredMemberEvaluator : IRequiredMemberEvaluator
 {
    private readonly NullabilityInfoContext _nullabilityInfoContext = new();
 
+   // "NullabilityInfoContext" is not thread-safe: its "Create" methods use a non-concurrent
+   // internal cache and can throw when called concurrently. This evaluator is registered as a
+   // singleton and serves all (potentially parallel) swagger document generations, so access is
+   // serialized with a lock.
+   private readonly object _nullabilityInfoContextLock = new();
+
    /// <inheritdoc />
    public bool IsRequired(OpenApiSchema schema, SchemaFilterContext context, MemberInfo member)
    {
-      var (type, nullabilityInfo) = member switch
+      Type type;
+      NullabilityInfo nullabilityInfo;
+
+      lock (_nullabilityInfoContextLock)
       {
-         PropertyInfo propertyInfo => (propertyInfo.PropertyType, _nullabilityInfoContext.Create(propertyInfo)),
-         FieldInfo fieldInfo => (fieldInfo.FieldType, _nullabilityInfoContext.Create(fieldInfo)),
-         _ => throw new ArgumentException($"Assignable member of a complex value object must be a field or a property but found '{member.GetType().FullName}'.", nameof(member))
-      };
+         (type, nullabilityInfo) = member switch
+         {
+            PropertyInfo propertyInfo => (propertyInfo.PropertyType, _nullabilityInfoContext.Create(propertyInfo)),
+            FieldInfo fieldInfo => (fieldInfo.FieldType, _nullabilityInfoContext.Create(fieldInfo)),
+            _ => throw new ArgumentException($"Assignable member of a complex value object must be a field or a property but found '{member.GetType().FullName}'.", nameof(member))
+         };
+      }
 
       if (typeof(IDisallowDefaultValue).IsAssignableFrom(type))
          return true;

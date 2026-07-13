@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Thinktecture.Runtime.Tests.Collections;
@@ -5,6 +7,14 @@ namespace Thinktecture.Runtime.Tests.Collections;
 public class SingleItemLookupTests
 {
    private readonly ILookup<int, int> _sut = SingleItem.Lookup(42, [43, 44]);
+
+   [Fact]
+   public void Should_throw_ArgumentNullException_when_elements_is_null()
+   {
+      var act = () => SingleItem.Lookup(42, (IEnumerable<int>)null!);
+
+      act.Should().Throw<ArgumentNullException>().WithParameterName("elements");
+   }
 
    [Fact]
    public void Should_have_count_of_1()

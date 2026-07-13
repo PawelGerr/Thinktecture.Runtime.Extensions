@@ -46,7 +46,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
    /// </remarks>
    public bool T1IsNullableReferenceType
    {
-      get => field || (T1.IsClass && T1IsStateless);
+      get => field || (!T1.IsValueType && T1IsStateless);
       set;
    }
 
@@ -73,7 +73,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
    /// </remarks>
    public bool T2IsNullableReferenceType
    {
-      get => field || (T2.IsClass && T2IsStateless);
+      get => field || (!T2.IsValueType && T2IsStateless);
       set;
    }
 
@@ -100,7 +100,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
    /// </remarks>
    public bool T3IsNullableReferenceType
    {
-      get => field || ((T3?.IsClass ?? false) && T3IsStateless);
+      get => field || (T3 is not null && !T3.IsValueType && T3IsStateless);
       set;
    }
 
@@ -127,7 +127,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
    /// </remarks>
    public bool T4IsNullableReferenceType
    {
-      get => field || ((T4?.IsClass ?? false) && T4IsStateless);
+      get => field || (T4 is not null && !T4.IsValueType && T4IsStateless);
       set;
    }
 
@@ -154,7 +154,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
    /// </remarks>
    public bool T5IsNullableReferenceType
    {
-      get => field || ((T5?.IsClass ?? false) && T5IsStateless);
+      get => field || (T5 is not null && !T5.IsValueType && T5IsStateless);
       set;
    }
 
