@@ -1376,16 +1376,35 @@ namespace ").Append(_state.Namespace).Append(@"
                                   if (ctor.Arguments.Length == 0)
                                      return (IReadOnlyList<ConstructorArgument>)[];
 
+                                  // Compare RENDERED identifiers, not raw names. An own argument drops a leading
+                                  // underscore ("_value" renders to "value") while a base argument renders verbatim,
+                                  // so a raw-name comparison misses the collision and the generated constructor ends
+                                  // up with a duplicate parameter (CS0100).
+                                  var takenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                                  if (_state.KeyMember is not null)
+                                     takenNames.Add(StringBuilderExtensions.RenderArgumentName(_state.KeyMember.ArgumentName));
+
+                                  for (var i = 0; i < ownCtorArgs.Count; i++)
+                                     takenNames.Add(StringBuilderExtensions.RenderArgumentName(ownCtorArgs[i].ArgumentName));
+
+                                  // The delegate-method parameters are appended to the same constructor signature,
+                                  // so their rendered names must be reserved as well; otherwise a base argument that
+                                  // renders to the same identifier is not renamed and the constructor fails with CS0100.
+                                  for (var i = 0; i < _state.DelegateMethods.Length; i++)
+                                     takenNames.Add(StringBuilderExtensions.RenderArgumentName(_state.DelegateMethods[i].ArgumentName));
+
                                   return ctor.Arguments
                                              .Select(a =>
                                              {
                                                 var argName = a.ArgumentName;
                                                 var counter = 0;
 
-                                                while (_state.KeyMember?.ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase) == true || ContainsArgument(ownCtorArgs, argName))
+                                                // rename the argument name if its rendered form collides with another argument
+                                                while (!takenNames.Add(StringBuilderExtensions.RenderArgumentName(argName)))
                                                 {
                                                    counter++;
-                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString(CultureInfo.InvariantCulture)}", a.ArgumentName.RenderAsIs); // rename the argument name if it collides with another argument
+                                                   argName = ArgumentName.Create($"{a.ArgumentName.Name}{counter.ToString(CultureInfo.InvariantCulture)}", a.ArgumentName.RenderAsIs);
                                                 }
 
                                                 return new ConstructorArgument(a.TypeFullyQualified, argName);
@@ -1398,17 +1417,6 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          GenerateConstructor(ownCtorArgs.Concat(baseArgs).ToList(), baseArgs);
       }
-   }
-
-   private static bool ContainsArgument(List<ConstructorArgument> ownCtorArgs, ArgumentName argName)
-   {
-      for (var i = 0; i < ownCtorArgs.Count; i++)
-      {
-         if (ownCtorArgs[i].ArgumentName.Name.Equals(argName.Name, StringComparison.OrdinalIgnoreCase))
-            return true;
-      }
-
-      return false;
    }
 
    private void GenerateConstructor(

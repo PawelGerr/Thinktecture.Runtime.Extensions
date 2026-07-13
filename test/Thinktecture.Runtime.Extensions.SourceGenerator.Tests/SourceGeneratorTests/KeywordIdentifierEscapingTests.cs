@@ -253,6 +253,43 @@ public class KeywordIdentifierEscapingTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public void Should_not_collide_when_derived_field_renders_to_base_constructor_parameter() // finding: base-ctor argument collision
+   {
+      // The derived field '_value' renders to the identifier 'value' (leading underscore dropped), which is the
+      // same identifier the base constructor parameter 'value' renders to. A raw-name comparison ("_value" vs
+      // "value") missed the collision, so the generated constructor emitted '@value' twice (CS0100).
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            public class BaseClass
+            {
+               protected BaseClass(int value)
+               {
+               }
+            }
+
+            [SmartEnum<string>]
+            public partial class TestEnum : BaseClass
+            {
+               public static readonly TestEnum Item1 = default!;
+
+               private readonly int _value;
+
+               private TestEnum(int value)
+                  : base(value)
+               {
+               }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<SmartEnumSourceGenerator>(source);
+   }
+
+   [Fact]
    public void Should_not_collide_when_complex_value_object_members_are_named_like_the_factory_method_locals()
    {
       // The generated factory and validation methods declare fixed 'obj' and 'validationError' parameters and

@@ -60,19 +60,27 @@ public class ThinktectureParameterFilter : IParameterFilter
 
    private Type? GetModelBindingType(Type parameterType)
    {
-      // 1) Object factory with UseForModelBinding has precedence over metadata
+      // 1) Object factory with UseForModelBinding has precedence over metadata. This mirrors
+      // ThinktectureModelBinderProvider, which also excludes ReadOnlySpan<char>-based factories because a ref
+      // struct cannot be used as the generic key argument of the model binder.
       var metadataForModelBinding = MetadataLookup.FindMetadataForConversion(
          parameterType,
-         f => f.UseForModelBinding,
+         f => f.ValueType != typeof(ReadOnlySpan<char>) && f.UseForModelBinding,
          _ => false);
 
       if (metadataForModelBinding is not null)
          return metadataForModelBinding.Value.KeyType;
 
-      // 2) It is assumed that keyed objects are bindable by default
+      // 2) It is assumed that keyed objects are bindable by default via their key. The type's own schema normally
+      // represents that key (e.g. a Smart Enum documents its allowed key values), so returning the type keeps the
+      // richer schema. But when a serialization-only object factory makes the type serialize as a different wire
+      // type, the type's own schema would document that serialization format instead of the key. In that case
+      // return the key type, because ThinktectureModelBinderProvider falls back to the key for model binding.
       if (MetadataLookup.Find(parameterType) is Metadata.Keyed keyedMetadata)
       {
-         return keyedMetadata.Type;
+         return ThinktectureSchemaFilter.GetSerializationType(parameterType) == parameterType
+                   ? keyedMetadata.Type
+                   : keyedMetadata.KeyType;
       }
 
       // 3) IParsable is our last resort
