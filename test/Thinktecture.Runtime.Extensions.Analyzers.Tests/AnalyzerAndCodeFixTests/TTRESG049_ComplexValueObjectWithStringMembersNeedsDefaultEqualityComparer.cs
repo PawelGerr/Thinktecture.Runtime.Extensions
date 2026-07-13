@@ -46,6 +46,43 @@ public class TTRESG049_ComplexValueObjectWithStringMembersNeedsDefaultEqualityCo
    }
 
    [Fact]
+   public async Task Should_qualify_inserted_StringComparison_when_System_namespace_is_not_imported()
+   {
+      // The file does not import System (e.g. a project with ImplicitUsings disabled). The inserted
+      // 'StringComparison.OrdinalIgnoreCase' must therefore stay qualified so that the fixed code compiles.
+      var code = """
+
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ComplexValueObject]
+         	public partial class {|#0:TestValueObject|}
+         	{
+               public string Property { get; }
+            }
+         }
+         """;
+
+      var expectedCode = """
+
+         using Thinktecture;
+
+         namespace TestNamespace
+         {
+            [ComplexValueObject(DefaultStringComparison = System.StringComparison.OrdinalIgnoreCase)]
+         	public partial class TestValueObject
+         	{
+               public string Property { get; }
+            }
+         }
+         """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ComplexValueObjectAttribute).Assembly], expected);
+   }
+
+   [Fact]
    public async Task Should_not_trigger_when_DefaultStringComparison_present()
    {
       var code = """

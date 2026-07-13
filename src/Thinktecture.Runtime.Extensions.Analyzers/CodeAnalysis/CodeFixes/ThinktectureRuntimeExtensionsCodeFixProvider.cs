@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace Thinktecture.CodeAnalysis.CodeFixes;
 
@@ -151,18 +152,24 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
             var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 
-            if (semanticModel is not null
-                // Don't offer "state" overload if it already has a state (first parameter is a type parameter TState in the original definition)
-                && (semanticModel.GetSymbolInfo(invocation).Symbol is not IMethodSymbol { Parameters.Length: > 0 } methodSymbol
-                    || methodSymbol.OriginalDefinition.Parameters[0].Type.TypeKind != TypeKind.TypeParameter)
-                && TryGetCapturedVariables(semanticModel, invocation, out var captures)
-                && captures.Count > 0)
+            // Without a semantic model, or when the lambdas capture 'this', a ref local, or write to an outer
+            // variable (TryGetCapturedVariables returns false in these cases), neither adding 'static' nor the
+            // state overload produces compilable and behavior-preserving code, so no fix is offered.
+            if (semanticModel is null || !TryGetCapturedVariables(semanticModel, invocation, out var captures))
+               continue;
+
+            if (captures.Count == 0)
+            {
+               // The lambdas capture nothing, so adding the 'static' modifier alone produces compilable code.
+               context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, _ => MakeAllLambdasStaticAsync(context.Document, root, invocation), _MAKE_LAMBDA_STATIC), diagnostic);
+            }
+            // There are captures. Offer the state overload only if the method does not already have a state parameter
+            // (first parameter is a type parameter TState in the original definition). Otherwise no compilable fix
+            // exists, so none is offered.
+            else if (semanticModel.GetSymbolInfo(invocation).Symbol is not IMethodSymbol { Parameters.Length: > 0 } methodSymbol
+                     || methodSymbol.OriginalDefinition.Parameters[0].Type.TypeKind != TypeKind.TypeParameter)
             {
                context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, t => UseStateOverloadAsync(context.Document, invocation, captures, t), _MAKE_LAMBDA_STATIC), diagnostic);
-            }
-            else
-            {
-               context.RegisterCodeFix(CodeAction.Create(_MAKE_LAMBDA_STATIC, _ => MakeAllLambdasStaticAsync(context.Document, root, invocation), _MAKE_LAMBDA_STATIC), diagnostic);
             }
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint.Id)
@@ -436,7 +443,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       }
 
       var newAttribute = attributeSyntax.AddArgumentListArguments(
-         SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("StringComparison.OrdinalIgnoreCase"))
+         SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression("global::System.StringComparison.OrdinalIgnoreCase").WithAdditionalAnnotations(Simplifier.Annotation))
                       .WithNameEquals(SyntaxFactory.NameEquals("DefaultStringComparison")));
 
       var newDeclaration = declaration.ReplaceNode(attributeSyntax, newAttribute);
@@ -492,7 +499,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
                                            .WithType(valueTypeName);
 
          var providerParameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("provider"))
-                                              .WithType(SyntaxFactory.NullableType(SyntaxFactory.ParseTypeName("IFormatProvider")));
+                                              .WithType(SyntaxFactory.NullableType(SyntaxFactory.ParseTypeName("global::System.IFormatProvider").WithAdditionalAnnotations(Simplifier.Annotation)));
 
          var itemOutType = objectType.IsReferenceType
                               ? SyntaxFactory.NullableType(objectTypeName)
@@ -504,7 +511,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          var returnType = SyntaxFactory.NullableType(validationErrorTypeName);
 
-         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
+         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException());
 
          var validateMethod = SyntaxFactory.MethodDeclaration(returnType, Constants.Methods.VALIDATE)
                                            .WithModifiers(SyntaxFactory.TokenList(
@@ -560,7 +567,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
          var valueTypeName = SyntaxFactory.ParseTypeName(valueType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
 
-         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException(false));
+         var methodBody = SyntaxFactory.Block(BuildThrowNotImplementedException());
 
          var toValueMethod = SyntaxFactory.MethodDeclaration(valueTypeName, Constants.Methods.TO_VALUE)
                                           .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
@@ -577,9 +584,9 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       return newDoc;
    }
 
-   private static ThrowStatementSyntax BuildThrowNotImplementedException(bool fullyQualified = true)
+   private static ThrowStatementSyntax BuildThrowNotImplementedException()
    {
-      var notImplementedExceptionType = SyntaxFactory.ParseTypeName(fullyQualified ? $"global::System.{nameof(NotImplementedException)}" : nameof(NotImplementedException));
+      var notImplementedExceptionType = SyntaxFactory.ParseTypeName($"global::System.{nameof(NotImplementedException)}").WithAdditionalAnnotations(Simplifier.Annotation);
       var newNotImplementedException = SyntaxFactory.ObjectCreationExpression(notImplementedExceptionType, SyntaxFactory.ArgumentList(), null);
       var throwStatement = SyntaxFactory.ThrowStatement(newNotImplementedException);
       return throwStatement;
@@ -787,6 +794,20 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
             if (seenSymbols.Add(symbol))
                captures.Add(symbol);
+         }
+
+         // An outer variable that the lambda writes to cannot be supported: adding 'static' does not compile,
+         // and the state overload copies the value into the state argument, so the assignment would not reach
+         // the original variable. Write-only captures are not part of DataFlowsIn, so check WrittenInside.
+         foreach (var symbol in dataFlow.WrittenInside)
+         {
+            if (lambdaParams.Contains(symbol, SymbolEqualityComparer.Default))
+               continue;
+
+            if (dataFlow.VariablesDeclared.Contains(symbol, SymbolEqualityComparer.Default))
+               continue;
+
+            return false;
          }
       }
 

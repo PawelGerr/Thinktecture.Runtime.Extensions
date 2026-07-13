@@ -1304,6 +1304,75 @@ public class TTRESG1001_UseSwitchMapWithStaticLambda
             var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
             await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
          }
+
+         [Fact]
+         public async Task Should_not_offer_code_fix_when_capturing_this()
+         {
+            // When a lambda captures 'this' (via instance field access), no compilable fix exists: adding the
+            // 'static' modifier would produce CS8821. The code fix provider must therefore offer no fix, which
+            // means applying the fix leaves the code unchanged (the diagnostic remains).
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestEnums;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     private int _field = 42;
+
+                     public void Do()
+                     {
+                        var testEnum = SmartEnum_StringBased.Item1;
+
+                        testEnum.{|#0:Switch|}(item1: () => { _ = _field; }, item2: () => {});
+                     }
+                  }
+               }
+               """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
+            await Verifier.VerifyCodeFixAsync(code, code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+         }
+      }
+
+      public class ClosureWritingToOuterVariable
+      {
+         [Fact]
+         public async Task Should_not_offer_code_fix_when_lambda_writes_to_outer_variable()
+         {
+            // A lambda that writes to an outer variable has no compilable and behavior-preserving fix:
+            // adding the 'static' modifier would produce CS8820, and the state overload copies the value,
+            // so the assignment would not reach the original variable. The code fix provider must therefore
+            // offer no fix, which means applying the fix leaves the code unchanged (the diagnostic remains).
+            var code = """
+
+               using System;
+               using Thinktecture;
+               using Thinktecture.Runtime.Tests.TestEnums;
+
+               namespace TestNamespace
+               {
+                  public class Test
+                  {
+                     public void Do()
+                     {
+                        var testEnum = SmartEnum_StringBased.Item1;
+                        var x = 0;
+
+                        testEnum.{|#0:Switch|}(item1: () => { x = 5; }, item2: () => {});
+
+                        _ = x;
+                     }
+                  }
+               }
+               """;
+
+            var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Switch");
+            await Verifier.VerifyCodeFixAsync(code, code, [typeof(ComplexValueObjectAttribute).Assembly, typeof(SmartEnum_StringBased).Assembly], expected);
+         }
       }
 
       public class AlreadyUsingStateOverload

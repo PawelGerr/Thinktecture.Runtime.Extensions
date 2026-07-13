@@ -10,8 +10,6 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
    private const string _DIAGNOSTIC_ID = "TTRESG104";
 
    [Theory]
-   [InlineData("field", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member;")]                          // field: non-readonly VO
-   [InlineData("field", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member;")]                                                                          // field: non-readonly DU
    [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; set; }")]          // property: non-readonly VO
    [InlineData("property", "TestUnion_struct_string_int", "TestUnion_struct_string_int Member { get; set; }")]                                                          // property: non-readonly VO
    [InlineData("property", "IntBasedStructValueObjectDoesNotAllowDefaultStructs", "IntBasedStructValueObjectDoesNotAllowDefaultStructs Member { get; init; }")]         // property: non-readonly with init
@@ -63,6 +61,51 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
          """;
 
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments(memberKind, "Member", memberType);
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
+   }
+
+   [Theory]
+   [InlineData("IntBasedStructValueObjectDoesNotAllowDefaultStructs")] // field: non-readonly VO
+   [InlineData("TestUnion_struct_string_int")]                         // field: non-readonly DU
+   public async Task Should_trigger_on_field(string memberType)
+   {
+      // The diagnostic is anchored to the variable declarator, so the reported location is the field
+      // identifier rather than the whole field declaration.
+      var code = $$"""
+
+         using System;
+         using Thinktecture;
+         using Thinktecture.Runtime.Tests.TestValueObjects;
+         using Thinktecture.Runtime.Tests.TestEnums;
+         using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+         namespace TestNamespace
+         {
+         	public class TestClass
+         	{
+         	   public {{memberType}} {|#0:Member|};
+            }
+         }
+         """;
+
+      var expectedCode = $$"""
+
+         using System;
+         using Thinktecture;
+         using Thinktecture.Runtime.Tests.TestValueObjects;
+         using Thinktecture.Runtime.Tests.TestEnums;
+         using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+         namespace TestNamespace
+         {
+         	public class TestClass
+         	{
+         	   public required {{memberType}} {|#0:Member|};
+            }
+         }
+         """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "Member", memberType);
       await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
    }
 
@@ -414,6 +457,56 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
             """;
 
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_multi_declarator_field_when_all_variables_are_initialized()
+      {
+         // Every variable of the field carries an explicit initializer, so none of them can be
+         // default and `required` is not needed. Before the per-variable evaluation this reported
+         // TTRESG104 because the "already initialized" guard only applied to single-variable fields.
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public partial class TestClass
+               {
+                  public IntBasedStructValueObjectDoesNotAllowDefaultStructs a = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(1), b = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(2);
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_trigger_only_on_uninitialized_variable_of_multi_declarator_field()
+      {
+         // Only the second variable lacks an initializer, so exactly one diagnostic is reported and it
+         // is anchored to that variable's identifier with that variable's name.
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public partial class TestClass
+               {
+                  public IntBasedStructValueObjectDoesNotAllowDefaultStructs a = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(1), {|#0:b|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "b", "IntBasedStructValueObjectDoesNotAllowDefaultStructs");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
       }
    }
 

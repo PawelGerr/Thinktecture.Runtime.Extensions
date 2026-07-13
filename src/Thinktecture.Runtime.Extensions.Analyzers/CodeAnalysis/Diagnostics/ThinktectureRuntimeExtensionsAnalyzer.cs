@@ -181,6 +181,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          if (needsObjectFactoryHandling)
             ValidateObjectFactories(context, type, objectFactoryAttributes, false);
       }
+      catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+      {
+         throw;
+      }
       catch (Exception ex)
       {
          context.ReportDiagnostic(Diagnostic.Create(DiagnosticsDescriptors.ErrorDuringCodeAnalysis,
@@ -260,25 +264,41 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
           || propertySymbol.SetMethod.DeclaredAccessibility < propertySymbol.ContainingType.DeclaredAccessibility) // setter of required members must not be less visible than the containing type
          return;
 
-      MemberDisallowingDefaultValuesMustBeRequired(context, propertyDeclarationSyntax, propertySymbol.Type, "property", propertySymbol.Name);
+      MemberDisallowingDefaultValuesMustBeRequired(context, propertyDeclarationSyntax, propertyDeclarationSyntax.GetLocation(), propertySymbol.Type, "property", propertySymbol.Name);
    }
 
    private static void AnalyzeFieldDisallowingDefaultValues(SyntaxNodeAnalysisContext context)
    {
       if (context.Node is not FieldDeclarationSyntax fieldDeclarationSyntax
-          || (fieldDeclarationSyntax.Declaration.Variables.Count == 1 && fieldDeclarationSyntax.Declaration.Variables[0].Initializer is not null) // public MyStruct Member = ...;
           || context.ContainingSymbol is not IFieldSymbol fieldSymbol
           || fieldSymbol.IsReadOnly
           || fieldSymbol.IsStatic
           || fieldSymbol.DeclaredAccessibility < fieldSymbol.ContainingType.DeclaredAccessibility) // required members must not be less visible than the containing type
          return;
 
-      MemberDisallowingDefaultValuesMustBeRequired(context, fieldDeclarationSyntax, fieldSymbol.Type, "field", fieldSymbol.Name);
+      // A single field statement may declare several variables (e.g. `public MyStruct a = ..., b;`).
+      // The type and modifiers are shared, but each variable has its own initializer, so evaluate the
+      // initializer per variable and report only on variables that lack one. The location and name are
+      // taken from the specific variable, so a multi-declarator field reports precisely.
+      foreach (var variable in fieldDeclarationSyntax.Declaration.Variables)
+      {
+         if (variable.Initializer is not null) // public MyStruct Member = ...;
+            continue;
+
+         MemberDisallowingDefaultValuesMustBeRequired(
+            context,
+            fieldDeclarationSyntax,
+            variable.Identifier.GetLocation(),
+            fieldSymbol.Type,
+            "field",
+            variable.Identifier.Text);
+      }
    }
 
    private static void MemberDisallowingDefaultValuesMustBeRequired(
       SyntaxNodeAnalysisContext context,
       MemberDeclarationSyntax memberDeclarationSyntax,
+      Location location,
       ITypeSymbol memberType,
       string memberKind,
       string memberName)
@@ -294,7 +314,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       context.ReportDiagnostic(Diagnostic.Create(
                                   DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired,
-                                  context.Node.GetLocation(),
+                                  location,
                                   memberKind, memberName, BuildTypeName(memberType)));
    }
 
@@ -338,6 +358,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                   method.Name);
             }
          }
+      }
+      catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
+      {
+         throw;
       }
       catch (Exception ex)
       {
@@ -689,6 +713,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, type, tdsLocation))
          return;
+
+      // Resolve TypeParamRef markers to the actual type parameter before running the follow-up checks,
+      // mirroring the source generator (ValueObjectSourceGenerator). Otherwise the unresolved marker class
+      // (a reference type) causes false positives such as TTRESG057 and TTRESG045 for generic keyed types.
+      keyType = ResolveTypeParamRefKeyType(keyType, type, context.Compilation);
 
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
@@ -1246,6 +1275,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, enumType, tdsLocation))
          return;
 
+      // Resolve TypeParamRef markers to the actual type parameter before running the follow-up checks,
+      // mirroring the source generator (SmartEnumSourceGenerator). Otherwise the unresolved marker class
+      // is used as the key type in the comparer checks below.
+      keyType = ResolveTypeParamRefKeyType(keyType, enumType, context.Compilation);
+
       if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable, tdsLocation);
@@ -1563,6 +1597,17 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       return false;
+   }
+
+   private static ITypeSymbol ResolveTypeParamRefKeyType(ITypeSymbol keyType, INamedTypeSymbol type, Compilation compilation)
+   {
+      var maxTypeParamRefIndex = keyType.GetMaxTypeParamRefIndex();
+
+      if (maxTypeParamRefIndex <= 0 || type.Arity == 0 || maxTypeParamRefIndex > type.Arity)
+         return keyType;
+
+      var (resolved, _) = keyType.ResolveTypeParamRefs(type.TypeParameters, compilation);
+      return resolved;
    }
 
    private static bool HasNonNullableTypeConstraint(ITypeParameterSymbol typeParam)
