@@ -185,7 +185,7 @@ public static class AttributeDataExtensions
 
    public static bool HasDefaultStringComparison(this AttributeData attributeData)
    {
-      return GetEnumParameterValue<StringComparison>(attributeData, "DefaultStringComparison") is not null;
+      return GetEnumParameterValue<StringComparison>(attributeData, Constants.Attributes.Properties.DEFAULT_STRING_COMPARISON) is not null;
    }
 
    public static bool FindTxIsNullableReferenceType(this AttributeData attributeData, int index)

@@ -14,7 +14,7 @@ namespace Thinktecture.Internal;
 public static class MetadataLookup
 {
    private static readonly ConcurrentDictionary<Type, Metadata> _metadata = new();
-   private static readonly ConcurrentDictionary<Type, IReadOnlyList<ObjectFactoryMetadata>> _objectFactories = new();
+   private static readonly ConcurrentDictionary<Type, (Type OwningType, IReadOnlyList<ObjectFactoryMetadata> Factories)> _objectFactories = new();
 
    /// <summary>
    /// Searches for <see cref="Metadata"/> for provided <paramref name="type"/>.
@@ -60,16 +60,19 @@ public static class MetadataLookup
       type = UnwrapNullable(type);
       var metadata = Find(type);
 
-      // If the provided type equals the metadata type, then we can use it directly
-      if (metadata?.Type == type)
+      // If metadata was found, use it directly. The metadata may belong to a base type, for example when the
+      // provided type is the runtime type of an item of a derived (nested) Smart Enum. In that case the conversion
+      // metadata is built from the metadata's own type, because that is the type the converters are created for.
+      if (metadata is not null)
       {
+         var metadataType = metadata.Type;
          var keyedMetadata = metadata as Metadata.Keyed;
 
          if (keyedMetadata is not null && !metadataFilter(keyedMetadata))
             keyedMetadata = null;
 
          // Object factories have priority over metadata
-         var metadataFromFactory = GetConversionMetadata(type, keyedMetadata, metadata.ObjectFactories, objectFactoryFilter);
+         var metadataFromFactory = GetConversionMetadata(metadataType, keyedMetadata, metadata.ObjectFactories, objectFactoryFilter);
 
          if (metadataFromFactory is not null)
             return metadataFromFactory;
@@ -80,7 +83,7 @@ public static class MetadataLookup
          var (fromCtor, fromFactory) = GetFromExpressions(keyedMetadata);
 
          return new ConversionMetadata(
-            type,
+            metadataType,
             keyedMetadata.KeyType,
             keyedMetadata.ValidationErrorType,
             fromCtor,
@@ -90,15 +93,21 @@ public static class MetadataLookup
       // Otherwise, we search for object factories
       if (!_objectFactories.TryGetValue(type, out var objectFactories))
       {
-         objectFactories = type.FindObjectFactoryMetadata();
+         var (owningType, factories) = type.FindObjectFactoryMetadata();
 
-         if (objectFactories.Count == 0)
+         if (factories.Count == 0)
             return null;
 
+         objectFactories = (owningType!, factories);
          _objectFactories.TryAdd(type, objectFactories);
       }
 
-      return GetConversionMetadata(type, null, objectFactories, objectFactoryFilter);
+      // The conversion metadata must use the type that actually owns the object factories (and their generated
+      // IObjectFactory<T, ...> interface), not the requested type. For a derived class of a standalone [ObjectFactory]
+      // type the factories are declared on the base type, so consumers' MakeGenericType calls would otherwise violate
+      // the invariant IObjectFactory<T, ...> constraint and throw ArgumentException. This mirrors the keyed branch above,
+      // which builds the conversion metadata from metadata.Type.
+      return GetConversionMetadata(objectFactories.OwningType, null, objectFactories.Factories, objectFactoryFilter);
    }
 
    private static bool IsCandidate([NotNullWhen(true)] Type? type)

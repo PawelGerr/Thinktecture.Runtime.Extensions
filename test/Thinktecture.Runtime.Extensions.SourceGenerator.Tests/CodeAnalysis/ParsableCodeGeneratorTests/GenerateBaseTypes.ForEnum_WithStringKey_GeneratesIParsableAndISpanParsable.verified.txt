@@ -1,5 +1,0 @@
-﻿
-   global::System.IParsable<global::Thinktecture.Tests.TestEnum>
-#if NET9_0_OR_GREATER
-   , global::System.ISpanParsable<global::Thinktecture.Tests.TestEnum>
-#endif

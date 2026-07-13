@@ -153,6 +153,20 @@ public class Equals
    }
 
    [Fact]
+   public void Should_return_false_for_different_isInterface()
+   {
+      // Arrange
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", true, false, true, ImmutableArray<GenericTypeParameterState>.Empty);
+
+      // Act
+      var result = state1.Equals(state2);
+
+      // Assert
+      result.Should().BeFalse();
+   }
+
+   [Fact]
    public void Should_return_false_for_different_generic_parameters()
    {
       // Arrange

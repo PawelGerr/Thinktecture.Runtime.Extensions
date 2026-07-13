@@ -266,6 +266,45 @@ public class RoundTrip : JsonTestsBase
       obj.Should().BeEquivalentTo(deserializedObj);
    }
 
+   [Fact]
+   public void Should_serialize_item_of_derived_smart_enum_type_by_runtime_type()
+   {
+      // Regression coverage (mirrors the Newtonsoft test): FindMetadataForConversion resolves the base type's metadata
+      // for the runtime type of an item of a derived (nested) Smart Enum, so the factory returns a JsonConverter for the
+      // base type. System.Text.Json adapts it for the derived runtime type. Serializing through an object-typed value
+      // makes System.Text.Json resolve the converter by the runtime (derived) type.
+      var factory = new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var item = SmartEnum_DerivedTypes.ItemOfDerivedType;
+      item.GetType().Should().NotBe(typeof(SmartEnum_DerivedTypes));
+
+      factory.CanConvert(item.GetType()).Should().BeTrue();
+
+      var options = new JsonSerializerOptions { Converters = { factory } };
+
+      var json = JsonSerializer.Serialize<object>(item, options);
+      json.Should().Be("2");
+
+      var deserialized = JsonSerializer.Deserialize<SmartEnum_DerivedTypes>(json, options);
+      deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_serialize_derived_type_of_standalone_object_factory_class()
+   {
+      // Regression: the object-factory fallback of FindMetadataForConversion returned the derived requested type as
+      // ConversionMetadata.Type, so CreateConverter's MakeGenericType threw ArgumentException because the derived type
+      // does not implement IObjectFactory<TDerived, ...> (the interface is emitted only for the annotated base type).
+      var factory = new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var item = new DerivedClassWithStringObjectFactory("value");
+
+      factory.CanConvert(typeof(DerivedClassWithStringObjectFactory)).Should().BeTrue();
+
+      var options = new JsonSerializerOptions { Converters = { factory } };
+
+      var json = JsonSerializer.Serialize(item, options);
+      json.Should().Be("\"value\"");
+   }
+
    private struct TestStruct<T>
    {
       public T Prop { get; set; }

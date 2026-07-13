@@ -101,6 +101,21 @@ public class GetHashCode
    }
 
    [Fact]
+   public void Should_return_different_hash_code_for_different_isInterface()
+   {
+      // Arrange
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", true, false, true, ImmutableArray<GenericTypeParameterState>.Empty);
+
+      // Act
+      var hashCode1 = state1.GetHashCode();
+      var hashCode2 = state2.GetHashCode();
+
+      // Assert
+      hashCode1.Should().NotBe(hashCode2);
+   }
+
+   [Fact]
    public void Should_return_different_hash_code_for_different_generic_parameters()
    {
       // Arrange

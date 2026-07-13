@@ -26,7 +26,7 @@ public abstract partial class Metadata
    private Metadata(Type type)
    {
       Type = type;
-      _objectFactories = new(type.FindObjectFactoryMetadata);
+      _objectFactories = new(() => type.FindObjectFactoryMetadata().Factories);
    }
 
    /// <summary>
