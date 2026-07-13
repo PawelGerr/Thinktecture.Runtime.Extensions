@@ -297,7 +297,7 @@ ObjectFactoryAttribute()
 | Property                      | Type                      | Default     | Description                                                         |
 |-------------------------------|---------------------------|-------------|---------------------------------------------------------------------|
 | `Type`                        | `Type`                    | `typeof(T)` | Value type the factory accepts (readonly)                           |
-| `UseForSerialization`         | `SerializationFrameworks` | `All`       | Which serialization frameworks should use this factory/type         |
+| `UseForSerialization`         | `SerializationFrameworks` | `None`      | Which serialization frameworks should use this factory/type         |
 | `UseWithEntityFramework`      | `bool`                    | `false`     | Enable EF Core integration for this factory                         |
 | `UseForModelBinding`          | `bool` (init-only)        | `false`     | Enable ASP.NET Core model binding                                   |
 | `HasCorrespondingConstructor` | `bool` (init-only)        | `false`     | Indicates presence of a single-parameter constructor of type `Type`. Used **only by EF Core** to bypass validation when loading from DB. **Not allowed on Smart Enums** (TTRESG060) |

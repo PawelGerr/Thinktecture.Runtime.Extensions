@@ -21,7 +21,7 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
       ImmutableArray<DefaultMemberState> uniqueSingleArgumentConstructors)
    {
       if (type.BaseType is null)
-         throw new InvalidOperationException($"Inner union type ''{TypeFullyQualified} must have a base type.");
+         throw new InvalidOperationException($"Inner union type '{type.ToFullyQualifiedDisplayString()}' must have a base type.");
 
       Name = type.Name;
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();

@@ -85,7 +85,9 @@ span-based `Validate` — no intermediate `string`. Pattern-match the span again
 for known values to allocate nothing; fall back to `value.ToString()` only for unknown values. Use
 `SystemTextJson` specifically (only it supports span deserialization); the converter `stackalloc`s
 up to 128 chars and rents from `ArrayPool<char>.Shared` beyond that. `ToValue()` returns
-`ReadOnlySpan<char>`.
+`ReadOnlySpan<char>`. A `ReadOnlySpan<char>` factory must not enable `UseWithEntityFramework` or
+`UseForModelBinding` (TTRESG078), because a ref struct cannot be the generic value type of the
+EF Core value converter or the ASP.NET Core model binder.
 
 ## Type-specific notes
 

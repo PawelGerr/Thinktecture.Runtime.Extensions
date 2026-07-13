@@ -161,7 +161,7 @@ SyntaxProvider (filter by attribute via ForAttributeWithMetadataName)
 
 ### Analyzers & Refactorings
 
-1. `ThinktectureRuntimeExtensionsAnalyzer` -- 59 diagnostic rules (`TTRESG` prefix) for correct usage
+1. `ThinktectureRuntimeExtensionsAnalyzer` -- diagnostic rules (`TTRESG` prefix) for correct usage (the full set of 64 rules is documented in `docs/Analyzer-Diagnostics.md`; one, internal API usage, is reported by the separate `ThinktectureRuntimeExtensionsInternalUsageAnalyzer`)
 2. `ThinktectureRuntimeExtensionsInternalUsageAnalyzer` -- Prevents external use of internal APIs
 3. `SwitchMapCompletionRefactoringProvider` -- IDE refactoring (light bulb action) that auto-generates arguments for `Switch`/`Map`/`SwitchPartially`/`MapPartially` method calls on Smart Enums and Unions
 
