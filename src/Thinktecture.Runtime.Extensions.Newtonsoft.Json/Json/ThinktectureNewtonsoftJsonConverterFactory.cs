@@ -101,7 +101,10 @@ public class ThinktectureNewtonsoftJsonConverterFactory : JsonConverter
    {
       return MetadataLookup.FindMetadataForConversion(
          objectType,
-         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson),
+         // ReadOnlySpan<char>-based object factories are excluded because a ref struct cannot be used as the
+         // generic key argument of ThinktectureNewtonsoftJsonConverter, which mirrors the source generator and
+         // lets the conversion fall back to the key-based metadata.
+         f => f.ValueType != typeof(ReadOnlySpan<char>) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson),
          _ => true);
    }
 }

@@ -95,6 +95,9 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
    /// Optional callback to determine whether to skip zero-allocation span-based deserialization for a specific type.
    /// When this callback returns <c>true</c> for a type, the regular key-type-based converter will be used instead.
    /// This callback is only invoked for types that support span-based deserialization.
+   /// The callback is ignored for types whose only System.Text.Json conversion mechanism is a
+   /// <see cref="ReadOnlySpan{T}"/> of <see cref="char"/> object factory, because no regular key-type-based
+   /// converter can handle such a type; the span-based converter is kept for them even when the callback returns <c>true</c>.
    /// </param>
    public ThinktectureJsonConverterFactory(
       bool skipObjectsWithJsonConverterAttribute,
@@ -150,8 +153,11 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
 
 #if NET9_0_OR_GREATER
       // Use zero-allocation span-based converter if the type supports IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
-      // unless the user opted out via the skipSpanBasedDeserialization callback
-      if (CanUseSpanParsableConverter(metadata.Value.Type) && _skipSpanBasedDeserialization?.Invoke(metadata.Value.Type) != true)
+      // unless the user opted out via the skipSpanBasedDeserialization callback. The opt-out is ignored when the type
+      // cannot be handled by the regular converter (e.g. a type whose only mechanism is a ReadOnlySpan<char> object
+      // factory), because the span-based converter is then the only option.
+      if (CanUseSpanParsableConverter(metadata.Value)
+          && (_skipSpanBasedDeserialization?.Invoke(metadata.Value.Type) != true || !CanUseRegularConverter(metadata.Value)))
       {
          converterType = typeof(ThinktectureSpanParsableJsonConverter<,>).MakeGenericType(metadata.Value.Type, metadata.Value.ValidationErrorType);
       }
@@ -177,7 +183,7 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
    }
 
 #if NET9_0_OR_GREATER
-   private static bool CanUseSpanParsableConverter(Type type)
+   private static bool CanUseSpanParsableConverter(ConversionMetadata conversionMetadata)
    {
       // ThinktectureSpanParsableJsonConverter requires:
       // - IObjectFactory<T, ReadOnlySpan<char>, TValidationError>
@@ -187,10 +193,33 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       // 1. String-based Smart Enums - implement the interfaces directly (not tracked in metadata)
       // 2. Value Objects with [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)] - tracked in ObjectFactories metadata
 
-      var metadata = MetadataLookup.Find(type);
+      // FindMetadataForConversion already applied object-factory priority, so the resolved KeyType is the value type
+      // to serialize. If an object factory with a non-string value type has priority (e.g. a string-keyed Smart Enum
+      // with [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.SystemTextJson)]), the span-based
+      // converter must not be used, because it would serialize the string key instead of the object factory value.
+      if (conversionMetadata.KeyType != typeof(string) && conversionMetadata.KeyType != typeof(ReadOnlySpan<char>))
+         return false;
+
+      // The span interfaces are generated inside #if NET9_0_OR_GREATER using the target framework of the DEFINING
+      // assembly, but the metadata (e.g. DisableSpanBasedJsonConversion, object-factory value type) is emitted
+      // unconditionally. A type compiled for net8.0 but consumed by a net9.0+ application therefore reports span
+      // capability in its metadata without implementing the interfaces. Verify the concrete type actually implements
+      // IConvertible<ReadOnlySpan<char>> (emitted together with IObjectFactory<T, ReadOnlySpan<char>, TValidationError>),
+      // otherwise constructing the span-based converter would throw an ArgumentException.
+      if (!typeof(IConvertible<ReadOnlySpan<char>>).IsAssignableFrom(conversionMetadata.Type))
+         return false;
+
+      var metadata = MetadataLookup.Find(conversionMetadata.Type);
 
       if (metadata is null)
-         return false;
+      {
+         // The type has no IMetadataOwner metadata, so it is a standalone [ObjectFactory] type that was resolved
+         // through the object-factory fallback of FindMetadataForConversion. The resolved KeyType is the winning
+         // object factory's value type. A ReadOnlySpan<char> value type means a span-based System.Text.Json factory
+         // has priority, and the IConvertible<ReadOnlySpan<char>> check above already confirmed the type implements
+         // the required interface, so the span-based converter is the correct (and only) choice for it.
+         return conversionMetadata.KeyType == typeof(ReadOnlySpan<char>);
+      }
 
       // String-based Smart Enums (unless DisableSpanBasedJsonConversion is set)
       if (metadata is Metadata.Keyed.SmartEnum smartEnum && smartEnum.KeyType == typeof(string))
@@ -212,6 +241,18 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
       }
 
       return false;
+   }
+
+   private static bool CanUseRegularConverter(ConversionMetadata conversionMetadata)
+   {
+      // For a resolved KeyType of ReadOnlySpan<char>, CreateConverter selects ThinktectureJsonConverter<T, TValidationError>,
+      // which requires the type to implement IConvertible<string>. A type whose only System.Text.Json mechanism is a
+      // ReadOnlySpan<char> object factory (for example a complex Value Object with only [ObjectFactory<ReadOnlySpan<char>>])
+      // does not implement IConvertible<string>, so it cannot be handled by the regular converter.
+      if (conversionMetadata.KeyType == typeof(ReadOnlySpan<char>))
+         return typeof(IConvertible<string>).IsAssignableFrom(conversionMetadata.Type);
+
+      return true;
    }
 #endif
 }

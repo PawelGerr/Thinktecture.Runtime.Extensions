@@ -83,6 +83,40 @@ public class SpanParsableJsonConverterTests : JsonTestsBase
    }
 
    [Fact]
+   public void ThinktectureJsonConverterFactory_should_use_span_converter_for_plain_class_with_span_only_object_factory()
+   {
+      // Regression: a plain class (not IMetadataOwner) whose only System.Text.Json mechanism is a ReadOnlySpan<char>
+      // object factory is resolved through the object-factory fallback of FindMetadataForConversion. CanUseSpanParsableConverter
+      // returned false because MetadataLookup.Find returned null, so CreateConverter selected the regular converter
+      // ThinktectureJsonConverter<T, TValidationError>, whose IConvertible<string> constraint the type does not satisfy,
+      // and MakeGenericType threw an ArgumentException. The span-based converter must be selected instead.
+      var factory = new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var options = new JsonSerializerOptions();
+
+      factory.CanConvert(typeof(PlainClassWithSpanObjectFactoryForJson)).Should().BeTrue();
+
+      var converter = factory.CreateConverter(typeof(PlainClassWithSpanObjectFactoryForJson), options);
+
+      converter.Should().BeOfType<ThinktectureSpanParsableJsonConverter<PlainClassWithSpanObjectFactoryForJson, ValidationError>>();
+   }
+
+   [Fact]
+   public void Should_roundtrip_plain_class_with_span_only_object_factory()
+   {
+      var options = new JsonSerializerOptions
+                    {
+                       Converters = { new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false) }
+                    };
+
+      var deserialized = JsonSerializer.Deserialize<PlainClassWithSpanObjectFactoryForJson>("\"test-value\"", options);
+      deserialized.Should().NotBeNull();
+      deserialized!.Value.Should().Be("test-value");
+
+      var json = JsonSerializer.Serialize(deserialized, options);
+      json.Should().Be("\"test-value\"");
+   }
+
+   [Fact]
    public void Should_roundtrip_string_based_value_object_with_only_span_factory()
    {
       var original = StringBasedReferenceValueObject_With_ReadOnlyBasedObjectFactory.Create("roundtrip-test");
@@ -340,6 +374,39 @@ public class SpanParsableJsonConverterTests : JsonTestsBase
    }
 
    [Fact]
+   public void ThinktectureJsonConverterFactory_should_use_regular_converter_for_string_based_smart_enum_with_non_string_serialization_factory()
+   {
+      // Regression: a string-keyed Smart Enum with [ObjectFactory<int>(UseForSerialization = SystemTextJson)] must NOT
+      // use the span-based (string) converter. The int object factory has serialization priority (reflected in the
+      // resolved KeyType = int), so the runtime factory must select the int-based converter, matching the source generator.
+      var factory = new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+      var options = new JsonSerializerOptions();
+
+      var canConvert = factory.CanConvert(typeof(SmartEnum_StringBased_WithIntObjectFactoryForJson));
+      canConvert.Should().BeTrue();
+
+      var converter = factory.CreateConverter(typeof(SmartEnum_StringBased_WithIntObjectFactoryForJson), options);
+
+      converter.Should().BeOfType<ThinktectureJsonConverter<SmartEnum_StringBased_WithIntObjectFactoryForJson, int, ValidationError>>();
+   }
+
+   [Fact]
+   public void Should_serialize_string_based_smart_enum_using_non_string_serialization_factory()
+   {
+      // skipObjectsWithJsonConverterAttribute: false forces the runtime factory to handle the type instead of
+      // deferring to the class-level attribute, so this exercises the runtime converter selection.
+      // The int object factory value (2) must be written, not the string key.
+      var options = new JsonSerializerOptions
+                    {
+                       Converters = { new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false) }
+                    };
+
+      var json = JsonSerializer.Serialize(SmartEnum_StringBased_WithIntObjectFactoryForJson.Item2, options);
+
+      json.Should().Be("2");
+   }
+
+   [Fact]
    public void ThinktectureJsonConverterFactory_should_use_regular_converter_for_int_based_smart_enum_with_span_factory()
    {
       // Int-based smart enums use ThinktectureJsonConverter<T, TKey, TValidationError> even when they have
@@ -450,6 +517,24 @@ public class SpanParsableJsonConverterTests : JsonTestsBase
 
       // Must use span converter (same as source generator decision)
       converter.Should().BeOfType<ThinktectureSpanParsableJsonConverter<StringBasedReferenceValueObject_With_ReadOnlyBasedObjectFactory, ValidationError>>();
+   }
+
+   [Fact]
+   public void ThinktectureJsonConverterFactory_should_keep_span_converter_for_span_only_type_when_skipSpanBasedDeserialization_returns_true()
+   {
+      // Regression: for a type whose only System.Text.Json mechanism is a ReadOnlySpan<char> object factory, the
+      // regular converter cannot be built because it requires IConvertible<string>, which such a type does not
+      // implement. The skipSpanBasedDeserialization opt-out must therefore be ignored and the span-based converter
+      // kept. Before the fix, CreateConverter fell through to ThinktectureJsonConverter<,> and threw ArgumentException
+      // from MakeGenericType.
+      var factory = new ThinktectureJsonConverterFactory(
+         skipObjectsWithJsonConverterAttribute: false,
+         skipSpanBasedDeserialization: _ => true);
+      var options = new JsonSerializerOptions();
+
+      var converter = factory.CreateConverter(typeof(ComplexValueObjectWithReadOnlySpanBasedObjectFactoryForJson), options);
+
+      converter.Should().BeOfType<ThinktectureSpanParsableJsonConverter<ComplexValueObjectWithReadOnlySpanBasedObjectFactoryForJson, ValidationError>>();
    }
 
    [Fact]

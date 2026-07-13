@@ -67,10 +67,25 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
       {
          var metadata = MetadataLookup.FindMetadataForConversion(
             typeof(T),
-            f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack),
+            // ReadOnlySpan<char>-based object factories are excluded because a ref struct cannot be used as the
+            // generic key argument of ThinktectureMessagePackFormatter, which mirrors the source generator and
+            // lets the conversion fall back to the key-based metadata.
+            f => f.ValueType != typeof(ReadOnlySpan<char>) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack),
             _ => true);
 
          if (metadata is null)
+            return;
+
+         // FindMetadataForConversion may return metadata that belongs to a base type, for example when T is the
+         // runtime type of an item of a derived (nested) Smart Enum. The formatter is created for metadata.Value.Type
+         // (the base type) and, because IMessagePackFormatter<T> is invariant, cannot be cast to IMessagePackFormatter<T>
+         // for the derived T. Return null (no formatter) so MessagePack continues with the next resolver, which is the
+         // behavior before conversion metadata resolved base types. Nullable value types share the formatter of their
+         // underlying type (ThinktectureStructMessagePackFormatter implements both IMessagePackFormatter<T> and
+         // IMessagePackFormatter<T?>), so the underlying type is compared here.
+         var underlyingType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+         if (metadata.Value.Type != underlyingType)
             return;
 
          var formatterTypeDefinition = metadata.Value.Type.IsClass

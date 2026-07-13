@@ -122,6 +122,27 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
+   public void Should_return_null_formatter_for_runtime_type_of_derived_smart_enum_item()
+   {
+      // Regression: FindMetadataForConversion returns the BASE type's metadata for the runtime type of an item of a
+      // derived (nested) Smart Enum. The resolver created the formatter for the base type but cast it to
+      // IMessagePackFormatter<derived>. Because IMessagePackFormatter<T> is invariant, the cast threw an
+      // InvalidCastException inside the static Cache<T> constructor, which the runtime then cached permanently as a
+      // TypeInitializationException. The resolver must detect the type mismatch and return null instead, so that
+      // MessagePack can continue with the next resolver, as it did before the metadata change.
+      var runtimeType = SmartEnum_DerivedTypes.ItemOfDerivedType.GetType();
+      runtimeType.Should().NotBe(typeof(SmartEnum_DerivedTypes));
+
+      var getFormatter = typeof(ThinktectureMessageFormatterResolver)
+                         .GetMethod(nameof(IFormatterResolver.GetFormatter))!
+                         .MakeGenericMethod(runtimeType);
+
+      var formatter = getFormatter.Invoke(ThinktectureMessageFormatterResolver.Instance, null);
+
+      formatter.Should().BeNull();
+   }
+
+   [Fact]
    public void Should_roundtrip_serialize_string_based_enum_having_formatter()
    {
       var bytes = MessagePackSerializer.Serialize(StringBasedEnumWithFormatter.ValueA, StandardResolver.Options, TestContext.Current.CancellationToken);
@@ -194,6 +215,23 @@ public partial class RoundTripSerialize
           .Subject.Should().Contain("Test", (byte)1);
       });
    }
+
+#if NET9_0_OR_GREATER
+   [Fact]
+   public void Should_fall_back_to_key_based_conversion_for_span_object_factory_flagged_for_messagepack()
+   {
+      // Regression: a ReadOnlySpan<char> object factory flagged for MessagePack must be ignored by the resolver,
+      // which must fall back to the string key. Before the fix, the static Cache<T> constructor built the formatter
+      // with ReadOnlySpan<char> as the generic key argument, throwing inside the static constructor (a ref struct
+      // cannot be a generic type argument); the CLR then cached that failure as a permanent TypeInitializationException.
+      var original = StringValueObjectWithSpanFactoryForMessagePack.Create("test-value");
+
+      var bytes = MessagePackSerializer.Serialize(original, _options, TestContext.Current.CancellationToken);
+      var deserialized = MessagePackSerializer.Deserialize<StringValueObjectWithSpanFactoryForMessagePack>(bytes, _options, TestContext.Current.CancellationToken);
+
+      deserialized.Should().Be(original);
+   }
+#endif
 
    private void RoundTrip<T>(
       T value)
