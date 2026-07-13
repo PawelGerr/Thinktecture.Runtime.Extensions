@@ -13,7 +13,8 @@ public sealed class TypeInformationComparer : IEqualityComparer<ITypeInformation
          return false;
 
       return x.TypeFullyQualified == y.TypeFullyQualified
-             && x.IsReferenceType == y.IsReferenceType;
+             && x.IsReferenceType == y.IsReferenceType
+             && x.ContainingTypes.SequenceEqual(y.ContainingTypes);
    }
 
    public int GetHashCode(ITypeInformation obj)
@@ -22,6 +23,7 @@ public sealed class TypeInformationComparer : IEqualityComparer<ITypeInformation
       {
          var hashCode = obj.TypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ obj.IsReferenceType.GetHashCode();
+         hashCode = (hashCode * 397) ^ obj.ContainingTypes.ComputeHashCode();
 
          return hashCode;
       }

@@ -67,6 +67,7 @@ public sealed class ObjectFactorySourceGeneratorState :
              && NullableAnnotation == other.NullableAnnotation
              && HasParsableKeyMember == other.HasParsableKeyMember
              && SkipIParsable == other.SkipIParsable
+             && SkipISpanParsable == other.SkipISpanParsable
              && AttributeInfo.Equals(other.AttributeInfo)
              && GenericParameters.SequenceEqual(other.GenericParameters)
              && ContainingTypes.SequenceEqual(other.ContainingTypes);
@@ -84,6 +85,7 @@ public sealed class ObjectFactorySourceGeneratorState :
          hashCode = (hashCode * 397) ^ (int)NullableAnnotation;
          hashCode = (hashCode * 397) ^ HasParsableKeyMember.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
+         hashCode = (hashCode * 397) ^ SkipISpanParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ AttributeInfo.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
          hashCode = (hashCode * 397) ^ ContainingTypes.ComputeHashCode();

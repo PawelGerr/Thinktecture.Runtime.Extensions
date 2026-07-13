@@ -178,6 +178,54 @@ public abstract class SourceGeneratorTestsBase
       return RunGenerator<T>(source, null, furtherAssemblies, [], assertNoUnexpectedGeneratorErrors: false);
    }
 
+   /// <summary>
+   /// Runs the generator twice on the same driver instance: first on <paramref name="initialSource"/>,
+   /// then on <paramref name="editedSource"/> after replacing the syntax tree. Reusing the driver is what
+   /// exercises the incremental cache: if a state object compares equal despite a relevant change, the
+   /// driver keeps the stale output from the first run instead of regenerating it. Returns the generated
+   /// outputs of the second (post-edit) run, filtered by <paramref name="generatedFileNameFragment"/>.
+   /// </summary>
+   protected static Dictionary<string, string> GetGeneratedOutputsAfterEdit<T>(
+      string initialSource,
+      string editedSource,
+      string generatedFileNameFragment,
+      params Assembly[] furtherAssemblies)
+      where T : IIncrementalGenerator, new()
+   {
+      var initialTree = CSharpSyntaxTree.ParseText(initialSource);
+      var editedTree = CSharpSyntaxTree.ParseText(editedSource);
+
+      var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
+                       {
+                          typeof(T).Assembly
+                       };
+
+      foreach (var furtherAssembly in furtherAssemblies)
+      {
+         assemblies.Add(furtherAssembly);
+      }
+
+      var references = assemblies.Where(assembly => !assembly.IsDynamic)
+                                 .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
+                                 .Cast<MetadataReference>();
+
+      var compilation = CSharpCompilation.Create("SourceGeneratorTests",
+                                                 [initialTree],
+                                                 references,
+                                                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
+
+      GeneratorDriver driver = CSharpGeneratorDriver.Create(new T());
+      driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out _, out _);
+
+      var editedCompilation = compilation.ReplaceSyntaxTree(initialTree, editedTree);
+      driver.RunGeneratorsAndUpdateCompilation(editedCompilation, out var outputCompilation, out _);
+
+      return outputCompilation.SyntaxTrees
+                              .Skip(1)
+                              .Where(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))
+                              .ToDictionary(t => t.FilePath, t => t.ToString());
+   }
+
    private static GeneratorResult RunGenerator<T>(
       string source,
       string generatedFileNameFragment,
