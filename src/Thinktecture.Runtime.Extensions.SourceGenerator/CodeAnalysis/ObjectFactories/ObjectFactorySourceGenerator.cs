@@ -192,7 +192,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
                                                  state.AttributeInfo,
                                                  SerializationFrameworks.All,
                                                  state.GenericParameters,
-                                                 state.AttributeInfo.ObjectFactories.Any(f => f.IsReadOnlySpanOfChar)))
+                                                 state.AttributeInfo.ObjectFactories.Any(f => f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson))))
                                       .Combine(serializerGeneratorFactories)
                                       .SelectMany((tuple, _) => ImmutableArray.CreateRange(tuple.Right, (factory, state) => (State: state, Factory: factory), tuple.Left))
                                       .Where(tuple => tuple.Factory.MustGenerateCode(tuple.State));

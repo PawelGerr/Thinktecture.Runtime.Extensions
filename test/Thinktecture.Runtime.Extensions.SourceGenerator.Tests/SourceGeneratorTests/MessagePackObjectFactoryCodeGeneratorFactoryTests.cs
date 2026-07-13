@@ -476,4 +476,44 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
 
       await VerifyAsync(output);
    }
+
+#if NET9_0_OR_GREATER
+   // A ReadOnlySpan<char> object factory has no MessagePack converter path. Even when it is flagged
+   // for MessagePack serialization, the generator must fall back to the key member instead of emitting
+   // ReadOnlySpan<char> as the formatter's key type argument, which cannot compile.
+   [Fact]
+   public async Task Should_fall_back_to_key_member_when_span_ObjectFactory_is_flagged_for_MessagePack()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+            [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<char> ToValue() => default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<Thinktecture.CodeAnalysis.ValueObjects.ValueObjectSourceGenerator>(source,
+                                                                    ".MessagePack",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureMessagePackFormatter<,,>).Assembly,
+                                                                    typeof(MessagePackFormatterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+#endif
 }

@@ -20,7 +20,7 @@ public sealed class KeyedNewtonsoftJsonCodeGenerator : CodeGeneratorBase
    {
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
+                                .FirstOrDefault(f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
       if (keyType is null)

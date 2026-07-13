@@ -815,6 +815,47 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
       await VerifyAsync(output);
    }
 
+   [Fact]
+   public async Task Should_not_use_span_based_Json_converter_when_span_ObjectFactory_is_not_for_serialization()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
+            [ObjectFactory<ReadOnlySpan<char>>(UseForModelBinding = true)]
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
+                                                                    ".Json",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                                    typeof(JsonConverterAttribute).Assembly);
+
+      await VerifyAsync(output);
+   }
+
 #endif
 
 #if NET9_0_OR_GREATER

@@ -826,4 +826,44 @@ public class NewtonsoftJsonObjectFactoryCodeGeneratorFactoryTests : SourceGenera
 
       await VerifyAsync(output);
    }
+
+#if NET9_0_OR_GREATER
+   // A ReadOnlySpan<char> object factory has no Newtonsoft.Json converter path. Even when it is flagged
+   // for Newtonsoft.Json serialization, the generator must fall back to the key member instead of emitting
+   // ReadOnlySpan<char> as the converter's key type argument, which cannot compile.
+   [Fact]
+   public async Task Should_fall_back_to_key_member_when_span_ObjectFactory_is_flagged_for_NewtonsoftJson()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+            [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<char> ToValue() => default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<Thinktecture.CodeAnalysis.ValueObjects.ValueObjectSourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureNewtonsoftJsonConverterFactory).Assembly,
+                                                                    typeof(JsonConverter).Assembly);
+
+      await VerifyAsync(output);
+   }
+#endif
 }

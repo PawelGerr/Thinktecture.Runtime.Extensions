@@ -21,7 +21,7 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson)
-             && !state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
+             && !state.AttributeInfo.ObjectFactories.Any(static f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)
