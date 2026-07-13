@@ -65,6 +65,50 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       }
 
       [Fact]
+      public async Task Should_trigger_on_field_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private TestUnion_struct_string_int _field = {|#0:default|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_property_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public TestUnion_struct_string_int Property { get; } = {|#0:default|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
       public async Task Should_trigger_on_property_assignment_with_default()
       {
          var code = """

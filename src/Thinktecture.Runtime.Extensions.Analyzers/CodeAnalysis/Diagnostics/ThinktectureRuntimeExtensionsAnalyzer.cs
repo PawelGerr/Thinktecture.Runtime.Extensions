@@ -416,6 +416,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
             case OperationKind.VariableInitializer:
             case OperationKind.ParameterInitializer: // void MyMethod(MyUnion u = default)
+            case OperationKind.FieldInitializer:     // private MyUnion _f = default;
+            case OperationKind.PropertyInitializer:  // public MyUnion P { get; } = default;
             case OperationKind.SimpleAssignment:
             case OperationKind.CoalesceAssignment:
             case OperationKind.CompoundAssignment:
