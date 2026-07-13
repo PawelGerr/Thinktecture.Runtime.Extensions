@@ -512,6 +512,43 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_object_factory_with_UseForSerialization_unnamed_flag_combination()
+   {
+      // Regression: SystemTextJson | MessagePack (value 5) has no single enum member name, so rendering it via
+      // the [Flags] enum's ToString() would emit "SystemTextJson, MessagePack", which is invalid C# inside the
+      // object initializer. The metadata must render the combination as "SystemTextJson | MessagePack".
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson | SerializationFrameworks.MessagePack)]
+         	public partial class TestEnum
+         	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_object_factory_with_UseForSerialization_None()
    {
       var source = """

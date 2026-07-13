@@ -14,6 +14,7 @@ namespace Thinktecture.Swashbuckle.Internal;
 public class ThinktectureParameterFilter : IParameterFilter
 {
    private readonly bool _createExtraSchemasForParameters;
+   private readonly bool _documentNewtonsoftJsonSerialization;
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -22,9 +23,11 @@ public class ThinktectureParameterFilter : IParameterFilter
    /// doing so can result in application failures when updating to a new Thinktecture.Runtime.Extensions release.
    /// </summary>
    public ThinktectureParameterFilter(
+      IServiceProvider serviceProvider,
       IOptions<ThinktectureSchemaFilterOptions> options)
    {
       _createExtraSchemasForParameters = options.Value.CreateExtraSchemasForParameters;
+      _documentNewtonsoftJsonSerialization = ThinktectureSchemaFilter.IsNewtonsoftDataContractResolverRegistered(serviceProvider);
    }
 
    /// <inheritdoc />
@@ -41,7 +44,7 @@ public class ThinktectureParameterFilter : IParameterFilter
          return;
 
       modelBindingType = context.ParameterInfo.ParameterType.NormalizeStructType(modelBindingType);
-      var serializationType = ThinktectureSchemaFilter.GetSerializationType(context.ParameterInfo.ParameterType);
+      var serializationType = ThinktectureSchemaFilter.GetSerializationType(context.ParameterInfo.ParameterType, _documentNewtonsoftJsonSerialization);
 
       if (parameter is not OpenApiParameter openApiParameter
           || (parameter.Schema?.AllOf?.Count > 0         // Wrapper made by UseAllOfToExtendReferenceSchemas.
@@ -78,7 +81,7 @@ public class ThinktectureParameterFilter : IParameterFilter
       // return the key type, because ThinktectureModelBinderProvider falls back to the key for model binding.
       if (MetadataLookup.Find(parameterType) is Metadata.Keyed keyedMetadata)
       {
-         return ThinktectureSchemaFilter.GetSerializationType(parameterType) == parameterType
+         return ThinktectureSchemaFilter.GetSerializationType(parameterType, _documentNewtonsoftJsonSerialization) == parameterType
                    ? keyedMetadata.Type
                    : keyedMetadata.KeyType;
       }

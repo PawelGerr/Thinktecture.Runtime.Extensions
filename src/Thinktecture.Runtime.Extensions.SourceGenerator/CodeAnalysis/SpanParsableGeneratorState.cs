@@ -61,7 +61,7 @@ public readonly struct SpanParsableGeneratorState
       unchecked
       {
          var hashCode = Type.GetHashCode();
-         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : MemberInformationComparer.Instance.GetHashCode(KeyMember));
+         hashCode = (hashCode * 397) ^ (KeyMember is null ? 0 : ParsableMemberInformationComparer.Instance.GetHashCode(KeyMember));
          hashCode = (hashCode * 397) ^ ValidationError.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipIParsable.GetHashCode();
          hashCode = (hashCode * 397) ^ SkipISpanParsable.GetHashCode();

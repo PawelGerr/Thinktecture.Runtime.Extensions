@@ -104,35 +104,6 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
 
 file static class StringBuilderExtensions
 {
-   /// <summary>
-   /// Renders the flags one by one and combines them with '|'. Calling <c>ToString</c> on the enum value is
-   /// not enough, because a combination without a named alias renders as "SystemTextJson, MessagePack",
-   /// and the comma ends the object initializer member.
-   /// </summary>
-   public static StringBuilder AppendSerializationFrameworks(
-      this StringBuilder sb,
-      SerializationFrameworks frameworks)
-   {
-      if (frameworks == SerializationFrameworks.None)
-         return sb.Append("global::Thinktecture.SerializationFrameworks.None");
-
-      var isFirst = true;
-
-      foreach (var flag in new[] { SerializationFrameworks.SystemTextJson, SerializationFrameworks.NewtonsoftJson, SerializationFrameworks.MessagePack })
-      {
-         if ((frameworks & flag) != flag)
-            continue;
-
-         if (!isFirst)
-            sb.Append(" | ");
-
-         sb.Append("global::Thinktecture.SerializationFrameworks.").Append(flag);
-         isFirst = false;
-      }
-
-      return sb;
-   }
-
    public static StringBuilder AppendConvertFromKeyExpressionViaConstructor(
       this StringBuilder sb,
       ObjectFactorySourceGeneratorState state,
@@ -145,5 +116,46 @@ file static class StringBuilderExtensions
       }
 
       return sb.Append("static ").AppendTypeFullyQualified(state).Append(" (").AppendTypeFullyQualified(factoryState).Append(" @value) => new ").AppendTypeFullyQualified(state).Append("(@value)");
+   }
+
+   public static StringBuilder AppendSerializationFrameworks(
+      this StringBuilder sb,
+      SerializationFrameworks frameworks)
+   {
+      const string prefix = "global::Thinktecture.SerializationFrameworks.";
+
+      // A value that matches a defined member (including the composite aliases None, Json and All)
+      // renders as that single member name. An unnamed combination (for example SystemTextJson | MessagePack)
+      // must be composed from its individual flags with " | ", because the [Flags] enum's ToString()
+      // would emit a comma-separated list that is not valid C# inside the object initializer.
+      if (Enum.IsDefined(typeof(SerializationFrameworks), frameworks))
+         return sb.Append(prefix).Append(frameworks.ToString());
+
+      var first = true;
+
+      if ((frameworks & SerializationFrameworks.SystemTextJson) != 0)
+      {
+         sb.Append(prefix).Append(nameof(SerializationFrameworks.SystemTextJson));
+         first = false;
+      }
+
+      if ((frameworks & SerializationFrameworks.NewtonsoftJson) != 0)
+      {
+         if (!first)
+            sb.Append(" | ");
+
+         sb.Append(prefix).Append(nameof(SerializationFrameworks.NewtonsoftJson));
+         first = false;
+      }
+
+      if ((frameworks & SerializationFrameworks.MessagePack) != 0)
+      {
+         if (!first)
+            sb.Append(" | ");
+
+         sb.Append(prefix).Append(nameof(SerializationFrameworks.MessagePack));
+      }
+
+      return sb;
    }
 }

@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -25,6 +26,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    private readonly IAdHocUnionSchemaFilter _adHocUnionSchemaFilter;
    private readonly IRegularUnionSchemaFilter _regularUnionSchemaFilter;
    private readonly SwaggerGenOptions _swaggerGenOptions;
+   private readonly bool _documentNewtonsoftJsonSerialization;
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -49,6 +51,21 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       _adHocUnionSchemaFilter = adHocUnionSchemaFilter;
       _regularUnionSchemaFilter = regularUnionSchemaFilter;
       _swaggerGenOptions = swaggerGenOptions;
+      _documentNewtonsoftJsonSerialization = IsNewtonsoftDataContractResolverRegistered(serviceProvider);
+   }
+
+   internal static bool IsNewtonsoftDataContractResolverRegistered(IServiceProvider serviceProvider)
+   {
+      // Swashbuckle.AspNetCore.Newtonsoft (services.AddSwaggerGenNewtonsoftSupport()) replaces the default
+      // System.Text.Json-based ISerializerDataContractResolver with its NewtonsoftDataContractResolver.
+      // The type is matched by name (including base types) because this project does not reference that package.
+      for (var type = serviceProvider.GetService<ISerializerDataContractResolver>()?.GetType(); type is not null; type = type.BaseType)
+      {
+         if (type.FullName == "Swashbuckle.AspNetCore.Newtonsoft.NewtonsoftDataContractResolver")
+            return true;
+      }
+
+      return false;
    }
 
    /// <inheritdoc />
@@ -79,21 +96,44 @@ public class ThinktectureSchemaFilter : ISchemaFilter
          regularUnion: static (state, regularUnionMetadata) => state.Filter.Apply(state.openApiSchema, state.context, regularUnionMetadata));
    }
 
-   internal static Type GetSerializationType(Type type)
+   internal static Type GetSerializationType(Type type, bool documentNewtonsoftJsonSerialization)
    {
+      // Swashbuckle documents the System.Text.Json wire format by default. Prefer an object factory flagged for
+      // System.Text.Json so the documented schema matches the actual payload. A Newtonsoft.Json factory is only
+      // consulted when Swashbuckle.AspNetCore.Newtonsoft is registered (see IsNewtonsoftDataContractResolverRegistered),
+      // because only then does the documented pipeline actually serialize with Newtonsoft.Json. The Newtonsoft.Json
+      // lookup excludes ReadOnlySpan<char>-based factories, mirroring ThinktectureNewtonsoftJsonConverterFactory,
+      // which cannot use a ref struct as the generic key argument and serializes via the key instead.
       var metadata = MetadataLookup.FindMetadataForConversion(
          type,
-         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.Json),
+         f => (f.UseForSerialization & SerializationFrameworks.SystemTextJson) != 0,
          _ => false);
 
-      return metadata is null ? type : type.NormalizeStructType(metadata.Value.KeyType);
+      if (metadata is null && documentNewtonsoftJsonSerialization)
+      {
+         metadata = MetadataLookup.FindMetadataForConversion(
+            type,
+            f => f.ValueType != typeof(ReadOnlySpan<char>) && (f.UseForSerialization & SerializationFrameworks.NewtonsoftJson) != 0,
+            _ => false);
+      }
+
+      if (metadata is null)
+         return type;
+
+      // A ReadOnlySpan<char>-based object factory serializes as a JSON string, so use "string" as the schema type.
+      // ReadOnlySpan<char> itself is a ref struct and cannot be handed to the Swashbuckle schema generator.
+      var serializationType = metadata.Value.KeyType == typeof(ReadOnlySpan<char>)
+                                 ? typeof(string)
+                                 : metadata.Value.KeyType;
+
+      return type.NormalizeStructType(serializationType);
    }
 
    private bool TryHandleTypeWithObjectFactory(
       OpenApiSchema schema,
       SchemaFilterContext context)
    {
-      var serializationType = GetSerializationType(context.Type);
+      var serializationType = GetSerializationType(context.Type, _documentNewtonsoftJsonSerialization);
 
       // Return to prevent infinite recursion
       if (context.Type == serializationType)
