@@ -3,11 +3,10 @@
 
 namespace Thinktecture.Tests
 {
-   [global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]
    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("ThinktectureRuntimeExtensionsAnalyzer", "TTRESG1000:Internal Thinktecture.Runtime.Extensions API usage")]
-   readonly partial struct TestUnion<T> :
-      global::System.IEquatable<global::Thinktecture.Tests.TestUnion<T>>,
-      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestUnion<T>, global::Thinktecture.Tests.TestUnion<T>, bool>,
+   sealed partial class TestUnion :
+      global::System.IEquatable<global::Thinktecture.Tests.TestUnion>,
+      global::System.Numerics.IEqualityOperators<global::Thinktecture.Tests.TestUnion, global::Thinktecture.Tests.TestUnion, bool>,
       global::Thinktecture.IDisallowDefaultValue,
       global::Thinktecture.Internal.IMetadataOwner
    {
@@ -15,28 +14,30 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
       static global::Thinktecture.Internal.Metadata global::Thinktecture.Internal.IMetadataOwner.Metadata { get; }
-         = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(global::Thinktecture.Tests.TestUnion<T>))
+         = new global::Thinktecture.Internal.Metadata.AdHocUnion(typeof(global::Thinktecture.Tests.TestUnion))
       {
          MemberTypes = new global::System.Collections.Generic.List<global::System.Type>
                        {
-                           typeof(T?[]),
+                           typeof(global::Thinktecture.Tests.EmptyState),
                            typeof(string)
                        }
                        .AsReadOnly(),
-         ConvertToValue = static object (global::Thinktecture.Tests.TestUnion<T> item) => item.Value,
-         ConvertToValueExpression = static object (global::Thinktecture.Tests.TestUnion<T> item) => item.Value,
-         GetValue = static object? (object item) => ((global::Thinktecture.Tests.TestUnion<T>)item).Value
+         ConvertToValue = static object (global::Thinktecture.Tests.TestUnion item) => item.Value,
+         ConvertToValueExpression = static object (global::Thinktecture.Tests.TestUnion item) => item.Value,
+         GetValue = static object? (object item) => ((global::Thinktecture.Tests.TestUnion)item).Value
       };
 
       private readonly int _valueIndex;
 
+      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
+      private static readonly object _cachedBoxedEmptyState = default(global::Thinktecture.Tests.EmptyState);
       private readonly object? _obj;
 
       /// <summary>
-      /// Indication whether the current value is of type <c>T?[]</c>.
+      /// Indication whether the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public bool IsTArray => this._valueIndex == 1;
+      public bool IsEmptyState => this._valueIndex == 1;
 
       /// <summary>
       /// Indication whether the current value is of type <see cref="string"/>.
@@ -45,18 +46,18 @@ namespace Thinktecture.Tests
       public bool IsString => this._valueIndex == 2;
 
       /// <summary>
-      /// Gets the current value as <c>T?[]</c>.
+      /// Gets the current value as <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
-      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <c>T?[]</c>.</exception>
+      /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public T?[] AsTArray => IsTArray ? ((T?[]?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion<T>)}' is not of type 'T?[]' but of type '{GetMemberTypeName()}'.");
+      public global::Thinktecture.Tests.EmptyState AsEmptyState => IsEmptyState ? default(global::Thinktecture.Tests.EmptyState) : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'EmptyState' but of type '{GetMemberTypeName()}'.");
 
       /// <summary>
       /// Gets the current value as <see cref="string"/>.
       /// </summary>
       /// <exception cref="global::System.InvalidOperationException">If the current value is not of type <see cref="string"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion<T>)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
+      public string AsString => IsString ? ((string?)this._obj)! : throw new global::System.InvalidOperationException($"'{nameof(global::Thinktecture.Tests.TestUnion)}' is not of type 'string' but of type '{GetMemberTypeName()}'.");
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -65,7 +66,7 @@ namespace Thinktecture.Tests
          return this._valueIndex switch
          {
             0 => "<uninitialized>",
-            1 => "T?[]",
+            1 => "EmptyState",
             2 => "string",
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
@@ -74,21 +75,17 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Gets the current value as <see cref="object"/>.
       /// </summary>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public object Value => this._valueIndex == 0
-         ? throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.")
-         : this._obj!;
+      public object Value => this._obj!;
 
       /// <summary>
-      /// Initializes new instance with <paramref name="tArray"/>.
+      /// Initializes new instance with <paramref name="emptyState"/>.
       /// </summary>
-      /// <param name="tArray">Value to create a new instance for.</param>
+      /// <param name="emptyState">Value to create a new instance for.</param>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public TestUnion(T?[] @tArray)
+      public TestUnion(global::Thinktecture.Tests.EmptyState @emptyState)
       {
-         NormalizeTArray(ref @tArray);
-         this._obj = @tArray;
+         this._obj = _cachedBoxedEmptyState;
          this._valueIndex = 1;
       }
 
@@ -108,21 +105,18 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes an action depending on the current value.
       /// </summary>
-      /// <param name="tArray">The action to execute if the current value is of type <c>T?[]</c>.</param>
+      /// <param name="emptyState">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<T?[]> @tArray,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.EmptyState> @emptyState,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<string> @string)
       {
          switch (this._valueIndex)
          {
-            case 0:
-               throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               @tArray(((T?[]?)this._obj)!);
+               @emptyState(default(global::Thinktecture.Tests.EmptyState));
                return;
             case 2:
                @string(((string?)this._obj)!);
@@ -138,14 +132,13 @@ namespace Thinktecture.Tests
       /// Executes an action depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="tArray">The action to execute if the current value is of type <c>T?[]</c>.</param>
+      /// <param name="emptyState">The action to execute if the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</param>
       /// <param name="string">The action to execute if the current value is of type <see cref="string"/>.</param>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public void Switch<TState>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, T?[]> @tArray,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.EmptyState> @emptyState,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, string> @string)
 #if NET9_0_OR_GREATER
 		where TState : allows ref struct
@@ -153,10 +146,8 @@ namespace Thinktecture.Tests
       {
          switch (this._valueIndex)
          {
-            case 0:
-               throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               @tArray(@state, ((T?[]?)this._obj)!);
+               @emptyState(@state, default(global::Thinktecture.Tests.EmptyState));
                return;
             case 2:
                @string(@state, ((string?)this._obj)!);
@@ -171,13 +162,12 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Executes a function depending on the current value.
       /// </summary>
-      /// <param name="tArray">The function to execute if the current value is of type <c>T?[]</c>.</param>
+      /// <param name="emptyState">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TResult>(
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<T?[], TResult> @tArray,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.EmptyState, TResult> @emptyState,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<string, TResult> @string)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -185,10 +175,8 @@ namespace Thinktecture.Tests
       {
          switch (this._valueIndex)
          {
-            case 0:
-               throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               return @tArray(((T?[]?)this._obj)!);
+               return @emptyState(default(global::Thinktecture.Tests.EmptyState));
             case 2:
                return @string(((string?)this._obj)!);
             default:
@@ -202,14 +190,13 @@ namespace Thinktecture.Tests
       /// Executes a function depending on the current value.
       /// </summary>
       /// <param name="state">State to be passed to the callbacks.</param>
-      /// <param name="tArray">The function to execute if the current value is of type <c>T?[]</c>.</param>
+      /// <param name="emptyState">The function to execute if the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</param>
       /// <param name="string">The function to execute if the current value is of type <see cref="string"/>.</param>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Switch<TState, TResult>(
          TState @state,
-         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, T?[], TResult> @tArray,
+         [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.EmptyState, TResult> @emptyState,
          [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, string, TResult> @string)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -218,10 +205,8 @@ namespace Thinktecture.Tests
       {
          switch (this._valueIndex)
          {
-            case 0:
-               throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               return @tArray(@state, ((T?[]?)this._obj)!);
+               return @emptyState(@state, default(global::Thinktecture.Tests.EmptyState));
             case 2:
                return @string(@state, ((string?)this._obj)!);
             default:
@@ -233,13 +218,12 @@ namespace Thinktecture.Tests
       /// <summary>
       /// Maps current value to an instance of type <typeparamref name="TResult"/>.
       /// </summary>
-      /// <param name="tArray">The instance to return if the current value is of type <c>T?[]</c>.</param>
+      /// <param name="emptyState">The instance to return if the current value is of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</param>
       /// <param name="string">The instance to return if the current value is of type <see cref="string"/>.</param>
-      /// <exception cref="System.InvalidOperationException">If the union (struct) is not initialized or initialized with default value.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerStepThroughAttribute]
       public TResult Map<TResult>(
-         TResult @tArray,
+         TResult @emptyState,
          TResult @string)
 #if NET9_0_OR_GREATER
 		   where TResult : allows ref struct
@@ -247,10 +231,8 @@ namespace Thinktecture.Tests
       {
          switch (this._valueIndex)
          {
-            case 0:
-               throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.");
             case 1:
-               return @tArray;
+               return @emptyState;
             case 2:
                return @string;
             default:
@@ -259,40 +241,40 @@ namespace Thinktecture.Tests
       }
 
       /// <summary>
-      /// Implicit conversion from type <c>T?[]</c>.
+      /// Implicit conversion from type <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
-      /// <param name="tArray">Value to convert from.</param>
-      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c> converted from <paramref name="tArray"/>.</returns>
+      /// <param name="emptyState">Value to convert from.</param>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="emptyState"/>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static implicit operator global::Thinktecture.Tests.TestUnion<T>(T?[] @tArray)
+      public static implicit operator global::Thinktecture.Tests.TestUnion(global::Thinktecture.Tests.EmptyState @emptyState)
       {
-         return new global::Thinktecture.Tests.TestUnion<T>(@tArray);
+         return new global::Thinktecture.Tests.TestUnion(@emptyState);
       }
 
       /// <summary>
       /// Implicit conversion from type <see cref="string"/>.
       /// </summary>
       /// <param name="string">Value to convert from.</param>
-      /// <returns>A new instance of <c>TestUnion&lt;T&gt;</c> converted from <paramref name="string"/>.</returns>
+      /// <returns>A new instance of <see cref="TestUnion"/> converted from <paramref name="string"/>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static implicit operator global::Thinktecture.Tests.TestUnion<T>(string @string)
+      public static implicit operator global::Thinktecture.Tests.TestUnion(string @string)
       {
-         return new global::Thinktecture.Tests.TestUnion<T>(@string);
+         return new global::Thinktecture.Tests.TestUnion(@string);
       }
 
       /// <summary>
-      /// Explicit conversion to type <c>T?[]</c>.
+      /// Explicit conversion to type <see cref="global::Thinktecture.Tests.EmptyState"/>.
       /// </summary>
       /// <param name="obj">Object to convert.</param>
-      /// <returns>Inner value of type <c>T?[]</c>.</returns>
-      /// <exception cref="System.InvalidOperationException">If the inner value is not a <c>T?[]</c>.</exception>
+      /// <returns>Inner value of type <see cref="global::Thinktecture.Tests.EmptyState"/>.</returns>
+      /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="global::Thinktecture.Tests.EmptyState"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static explicit operator T?[](global::Thinktecture.Tests.TestUnion<T> obj)
+      public static explicit operator global::Thinktecture.Tests.EmptyState(global::Thinktecture.Tests.TestUnion obj)
       {
-         return obj.AsTArray;
+         return obj.AsEmptyState;
       }
 
       /// <summary>
@@ -303,33 +285,36 @@ namespace Thinktecture.Tests
       /// <exception cref="System.InvalidOperationException">If the inner value is not a <see cref="string"/>.</exception>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static explicit operator string(global::Thinktecture.Tests.TestUnion<T> obj)
+      public static explicit operator string(global::Thinktecture.Tests.TestUnion obj)
       {
          return obj.AsString;
       }
 
       /// <summary>
-      /// Compares two instances of <c>TestUnion&lt;T&gt;</c>.
+      /// Compares two instances of <see cref="TestUnion"/>.
       /// </summary>
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>true</c> if objects are equal; otherwise <c>false</c>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static bool operator ==(global::Thinktecture.Tests.TestUnion<T> obj, global::Thinktecture.Tests.TestUnion<T> other)
+      public static bool operator ==(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
       {
+         if (obj is null)
+            return other is null;
+
          return obj.Equals(other);
       }
 
       /// <summary>
-      /// Compares two instances of <c>TestUnion&lt;T&gt;</c>.
+      /// Compares two instances of <see cref="TestUnion"/>.
       /// </summary>
       /// <param name="obj">Instance to compare.</param>
       /// <param name="other">Another instance to compare.</param>
       /// <returns><c>false</c> if objects are equal; otherwise <c>true</c>.</returns>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public static bool operator !=(global::Thinktecture.Tests.TestUnion<T> obj, global::Thinktecture.Tests.TestUnion<T> other)
+      public static bool operator !=(global::Thinktecture.Tests.TestUnion? obj, global::Thinktecture.Tests.TestUnion? other)
       {
          return !(obj == other);
       }
@@ -339,21 +324,26 @@ namespace Thinktecture.Tests
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public override bool Equals(object? other)
       {
-         return other is global::Thinktecture.Tests.TestUnion<T> obj && Equals(obj);
+         return other is global::Thinktecture.Tests.TestUnion obj && Equals(obj);
       }
 
       /// <inheritdoc />
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-      public bool Equals(global::Thinktecture.Tests.TestUnion<T> other)
+      public bool Equals(global::Thinktecture.Tests.TestUnion? other)
       {
+         if (other is null)
+            return false;
+
+         if (ReferenceEquals(this, other))
+            return true;
+
          if (this._valueIndex != other._valueIndex)
             return false;
 
          return this._valueIndex switch
          {
-            0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
-            1 => this._obj is null ? other._obj is null : ((T?[])this._obj!).Equals(((T?[]?)other._obj)),
+            1 => true,
             2 => this._obj is null ? other._obj is null : ((string)this._obj!).Equals(((string?)other._obj), global::System.StringComparison.OrdinalIgnoreCase),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
@@ -366,8 +356,7 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
-            1 => ((T?[]?)this._obj)?.GetHashCode() ?? 0,
+            1 => typeof(global::Thinktecture.Tests.EmptyState).GetHashCode(),
             2 => ((string?)this._obj)?.GetHashCode(global::System.StringComparison.OrdinalIgnoreCase) ?? 0,
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
@@ -380,15 +369,11 @@ namespace Thinktecture.Tests
       {
          return this._valueIndex switch
          {
-            0 => throw new global::System.InvalidOperationException($"This struct of type 'TestUnion' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."),
-            1 => ((T?[]?)this._obj)?.ToString(),
+            1 => default(global::Thinktecture.Tests.EmptyState).ToString(),
             2 => ((string?)this._obj),
             _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
          };
       }
-
-      [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      static partial void NormalizeTArray(ref T?[] @tArray);
 
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
       static partial void NormalizeString(ref string @string);

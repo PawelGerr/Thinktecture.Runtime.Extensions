@@ -1133,11 +1133,10 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(@"
          ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(";");
          }
-         else if (_state.Settings.SingleBackingFieldType is not null
-                  && memberType.IsValueType
-                  && !memberType.IsTypeParameter)
+         else if (_state.Settings.UseSingleBackingField && memberType.HasCachedBoxedDefault())
          {
-            // Stateless struct member with a typed single backing field: assign the cached boxed default.
+            // Stateless struct member stored in the shared single backing field: assign the cached boxed
+            // default so the collapsed Value getter returns default(T) boxed instead of null.
             _sb.Append(@"
          this._obj = _cachedBoxed").Append(memberType.Name).Append(";");
          }
@@ -1163,24 +1162,24 @@ namespace ").Append(_state.Namespace).Append(@"
    {
       var singleBackingFieldType = _state.Settings.SingleBackingFieldType?.FullyQualified;
       var singleBackingFieldIsNullable = _state.SingleBackingFieldNeedsNullableAnnotation();
+      // With UseSingleBackingField a stateless struct member is stored boxed in the shared field.
+      // The legacy path (no SingleBackingFieldType) boxes into `object`; the typed path into the base type.
+      var boxedFieldType = singleBackingFieldType ?? "object";
 
       // Pass 1: emit `private static readonly` cached boxed defaults for stateless struct members.
       // Static fields are emitted before any instance fields per project convention.
-      if (singleBackingFieldType is not null)
+      if (_state.Settings.UseSingleBackingField)
       {
          for (var i = 0; i < _state.MemberTypes.Length; i++)
          {
             var memberType = _state.MemberTypes[i];
 
-            if (!memberType.Setting.IsStateless || !memberType.IsValueType || memberType.IsTypeParameter)
-               continue;
-
-            if (memberType.TypeDuplicateCounter > 1)
+            if (!memberType.HasCachedBoxedDefault())
                continue;
 
             _sb.Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      private static readonly ").Append(singleBackingFieldType).Append(" _cachedBoxed").Append(memberType.Name).Append(" = default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(");");
+      private static readonly ").Append(boxedFieldType).Append(" _cachedBoxed").Append(memberType.Name).Append(" = default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(");");
          }
       }
 
@@ -1470,8 +1469,10 @@ file static class Extensions
 
    /// <summary>
    /// Whether the union declares the shared <c>_obj</c> field. The field is declared when at least one
-   /// non-duplicate, non-stateless member uses it, or when a typed single backing field is configured,
-   /// which forces the declaration even for a union whose members are all stateless.
+   /// non-duplicate, non-stateless member uses it, or when a stateless struct member stores its cached
+   /// boxed default in the field. The latter forces the declaration even for a union whose members are
+   /// all stateless. A union whose members are all stateless reference types stores nothing, so it
+   /// declares no field at all.
    /// <c>GenerateMemberTypeFieldsAndProps</c> emits the field from this predicate, and the collapsed
    /// raw value getter reads the field only when this predicate holds. Other generated members decide
    /// per member through <see cref="UseSharedObjectBackingField"/>, which is a separate condition.
@@ -1480,7 +1481,7 @@ file static class Extensions
       this AdHocUnionSourceGenState state,
       bool useSharedObjectForRefTypes)
    {
-      if (state.Settings.SingleBackingFieldType is not null && state.Settings.UseSingleBackingField)
+      if (state.Settings.UseSingleBackingField && state.MemberTypes.Any(m => m.HasCachedBoxedDefault()))
          return true;
 
       return state.MemberTypes.Any(m => !m.Setting.IsStateless
@@ -1521,7 +1522,22 @@ file static class Extensions
       if (memberType.IsReferenceType)
          return true;
 
-      return state.Settings.SingleBackingFieldType is not null;
+      return state.Settings.UseSingleBackingField && memberType.HasCachedBoxedDefault();
+   }
+
+   /// <summary>
+   /// Whether a <c>private static readonly</c> cached boxed default is emitted for the member, which the
+   /// constructor then assigns to the shared <c>_obj</c> field. Only a stateless struct member needs it,
+   /// because a stateless reference type leaves the field null, which is its <c>default(T)</c> anyway.
+   /// A type parameter is excluded because its <c>default(T)</c> is not known at generation time.
+   /// Only the first member of a duplicated type declares the field.
+   /// </summary>
+   public static bool HasCachedBoxedDefault(this AdHocUnionMemberTypeState memberType)
+   {
+      return memberType.Setting.IsStateless
+             && memberType.IsValueType
+             && !memberType.IsTypeParameter
+             && memberType.TypeDuplicateCounter <= 1;
    }
 
    /// <summary>

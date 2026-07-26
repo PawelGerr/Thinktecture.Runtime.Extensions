@@ -549,6 +549,57 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_box_default_for_stateless_struct_member_with_legacy_UseSingleBackingField()
+   {
+      // Regression: with legacy UseSingleBackingField = true (no SingleBackingFieldType) a stateless
+      // struct member previously left _obj unassigned, so the collapsed Value getter returned null
+      // instead of the boxed default(EmptyState). The generator must now emit an "object" cached boxed
+      // default, assign it in the constructor, and return it via _obj.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct EmptyState { }
+
+         	[Union<EmptyState, string>(T1IsStateless = true, UseSingleBackingField = true)]
+            public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_not_declare_backing_field_for_all_stateless_reference_members_with_SingleBackingFieldType()
+   {
+      // Regression: a typed single backing field on a union whose members are ALL stateless
+      // reference types previously declared an "_obj" field that no code ever assigned or read,
+      // which produced CS0649 in the generated code. Such a union stores only the discriminator,
+      // so no backing field must be declared.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { string Bar { get; } }
+         	public class Foo1 : IFoo { public string Bar => "foo1"; }
+         	public class Foo2 : IFoo { public string Bar => "foo2"; }
+
+         	[Union<Foo1, Foo2>(
+         	   SingleBackingFieldType = typeof(IFoo),
+         	   T1IsStateless = true,
+         	   T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_skip_equals_method_with_SkipEqualityComparison()
    {
       var source = """
@@ -2179,11 +2230,11 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
-   public async Task Should_keep_Value_switch_for_stateless_struct_member_without_SingleBackingFieldType()
+   public async Task Should_collapse_Value_getter_for_stateless_struct_member_without_SingleBackingFieldType()
    {
-      // UseSingleBackingField alone does not assign the shared field for a stateless struct member;
-      // only a typed SingleBackingFieldType emits the cached boxed default. The Value getter must
-      // therefore keep the switch so that the stateless member returns its boxed default.
+      // UseSingleBackingField alone already emits the cached boxed default for a stateless struct
+      // member and assigns it to the shared field, so every arm of the discriminator switch reads
+      // the same field. The Value getter must therefore read the field directly.
       var source = """
          using System;
 
