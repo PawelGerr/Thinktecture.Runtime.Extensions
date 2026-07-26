@@ -2035,4 +2035,237 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_class_with_all_reference_type_members_stateless()
+   {
+      // No member stores anything, so no shared backing field is emitted. The Value getter
+      // must keep the discriminator switch with `default(T)` arms; there is nothing to collapse to.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class NullValue { }
+         	public class EmptyState { }
+
+         	[Union<NullValue, EmptyState>(T1IsStateless = true, T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public void Should_not_reference_shared_backing_field_when_all_members_are_stateless_in_class_union()
+   {
+      // No member stores anything, so no shared field is declared. Referencing it would be CS0103.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class NullValue { }
+         	public class EmptyState { }
+
+         	[Union<NullValue, EmptyState>(UseSingleBackingField = true, T1IsStateless = true, T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+
+      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs", typeof(UnionAttribute<,>).Assembly);
+
+      output.Should().Contain("public object? Value => this._valueIndex switch");
+      output.Should().NotContain("_obj");
+   }
+
+   [Fact]
+   public void Should_not_reference_shared_backing_field_when_all_members_are_stateless_in_struct_union()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class NullValue { }
+         	public class EmptyState { }
+
+         	[Union<NullValue, EmptyState>(UseSingleBackingField = true, T1IsStateless = true, T2IsStateless = true)]
+         	public partial struct TestUnion;
+         }
+         """;
+
+      var output = GetGeneratedOutput<AdHocUnionSourceGenerator>(source, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs", typeof(UnionAttribute<,>).Assembly);
+
+      output.Should().Contain("public object? Value => this._valueIndex switch");
+      output.Should().NotContain("_obj");
+   }
+
+   [Fact]
+   public async Task Should_keep_Value_switch_for_stateless_struct_member_without_SingleBackingFieldType()
+   {
+      // UseSingleBackingField alone does not assign the shared field for a stateless struct member;
+      // only a typed SingleBackingFieldType emits the cached boxed default. The Value getter must
+      // therefore keep the switch so that the stateless member returns its boxed default.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct NullValue { }
+
+         	[Union<string, NullValue>(UseSingleBackingField = true, T2IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_Value_getter_when_all_members_share_the_backing_field()
+   {
+      // Two reference type members share `_obj` without any opt-in setting, so every arm of the
+      // discriminator switch would be the same expression. The getter must read the field directly.
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, List<int>>]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_Value_getter_of_struct_union_when_all_members_share_the_backing_field()
+   {
+      // Struct unions keep the index check, because `default(TestUnion).Value` must throw.
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, List<int>>]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_Value_getter_when_a_stateless_reference_type_member_is_present()
+   {
+      // The stateless member leaves `_obj` null, which is exactly the `default(T)` its switch arm
+      // returned. It forces Value to be nullable, so no null-suppression is emitted.
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+         	public class NullValue { }
+
+         	[Union<NullValue, string, List<int>>(T1IsStateless = true)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_keep_Value_switch_for_stateless_unconstrained_type_parameter_member()
+   {
+      // An unconstrained type parameter may be a struct at runtime, so the boxed `default(T)` does
+      // not match the shared field, which stays null for a stateless member. The switch must stay.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<TypeParamRef1, string>(UseSingleBackingField = true, T1IsStateless = true)]
+         	public partial class TestUnion<T>;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_Value_getter_for_stateless_class_constrained_type_parameter_member()
+   {
+      // A type parameter constrained to a reference type has a null `default(T)`, which is what the
+      // shared field holds for a stateless member, so the getter may read the field directly.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<TypeParamRef1, string>(UseSingleBackingField = true, T1IsStateless = true)]
+         	public partial class TestUnion<T> where T : class;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_cast_stateless_type_parameter_member_to_the_typed_single_backing_field()
+   {
+      // `default(T)` of an unconstrained type parameter is not convertible to the typed backing
+      // field, so the switch arm routes the value through `object` to keep the code compiling.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { }
+         	public class Foo : IFoo { }
+
+         	[Union<TypeParamRef1, Foo>(SingleBackingFieldType = typeof(IFoo), T1IsStateless = true)]
+         	public partial class TestUnion<T>;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_Value_getter_for_stateless_class_constrained_type_parameter_member_with_typed_single_backing_field()
+   {
+      // The class constraint makes `default(T)` null, so the collapsed getter returns the same value
+      // the switch arm would return. Before the collapse condition knew about the class constraint,
+      // this configuration emitted a `default(T)` arm that did not compile.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { }
+         	public class Foo : IFoo { }
+
+         	[Union<TypeParamRef1, Foo>(SingleBackingFieldType = typeof(IFoo), T1IsStateless = true)]
+         	public partial class TestUnion<T> where T : class;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
 }

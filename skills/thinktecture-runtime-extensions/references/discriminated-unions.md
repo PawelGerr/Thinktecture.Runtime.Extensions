@@ -89,8 +89,10 @@ value. Optional; erased by the compiler if you don't implement it.
 By default the generator merges **2+ reference-type members** into one `object? _obj` field (value
 types stay typed). Override with `UseSingleBackingField` (force all members in, boxing value types),
 `SingleBackingFieldType` (type `_obj`/`Value` as a base), or **stateless members**
-(`TXIsStateless = true`, discriminator-only — prefer structs). See *Setting interactions* below for
-the forcing rules and `TTRESG075`.
+(`TXIsStateless = true`, discriminator-only — prefer structs). When no member keeps its own typed
+field, `Value` returns `_obj` directly instead of selecting by discriminator; this changes the
+generated code only, not the behaviour. See *Setting interactions* below for the forcing rules and
+`TTRESG075`.
 
 ### Serialization
 

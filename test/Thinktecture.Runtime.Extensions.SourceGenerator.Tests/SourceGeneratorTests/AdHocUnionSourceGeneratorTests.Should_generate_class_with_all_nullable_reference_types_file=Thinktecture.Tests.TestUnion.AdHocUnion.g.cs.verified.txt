@@ -89,13 +89,7 @@ namespace Thinktecture.Tests
       /// Gets the current value as <see cref="object"/>.
       /// </summary>
       [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-      public object? Value => this._valueIndex switch
-      {
-         1 => this._obj,
-         2 => this._obj,
-         3 => this._obj,
-         _ => throw new global::System.IndexOutOfRangeException($"Unexpected value index '{this._valueIndex}'.")
-      };
+      public object? Value => this._obj;
 
       /// <summary>
       /// Initializes new instance with <paramref name="string"/>.

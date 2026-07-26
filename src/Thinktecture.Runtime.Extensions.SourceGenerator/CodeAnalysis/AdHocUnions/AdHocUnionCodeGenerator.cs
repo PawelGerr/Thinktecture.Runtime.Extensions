@@ -1166,26 +1166,11 @@ namespace ").Append(_state.Namespace).Append(@"
          }
       }
 
-      // Pass 2: emit the shared non-static `_obj` field (if any non-stateless member needs it,
-      // OR -- when SingleBackingFieldType is set -- as a force-emit for all-stateless unions
-      // so the cached-boxed assignments and Value getter have a target).
-      var objBackingFieldWritten = false;
-
-      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      // Pass 2: emit the shared non-static `_obj` field. The condition lives in
+      // HasSharedObjectBackingField so that the field emission and the Value getter, which reads
+      // the field, cannot drift apart.
+      if (_state.HasSharedObjectBackingField(_useSharedObjectForRefTypes))
       {
-         var memberType = _state.MemberTypes[i];
-
-         if (memberType.Setting.IsStateless)
-            continue;
-
-         if (memberType.TypeDuplicateCounter > 1)
-            continue;
-
-         if (!_state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType))
-            continue;
-
-         objBackingFieldWritten = true;
-
          if (singleBackingFieldType is not null)
          {
             _sb.Append(@"
@@ -1196,16 +1181,6 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(@"
       private readonly object? _obj;");
          }
-
-         break;
-      }
-
-      // All-stateless force-emit: with a typed SingleBackingFieldType, the cached-boxed assignments
-      // and Value getter still reference `_obj`, so we declare it here when the regular pass did not.
-      if (!objBackingFieldWritten && singleBackingFieldType is not null && _state.Settings.UseSingleBackingField)
-      {
-         _sb.Append(@"
-      private readonly ").Append(singleBackingFieldType).Append(singleBackingFieldIsNullable ? "?" : null).Append(" _obj;");
       }
 
       // Pass 3: emit per-member non-shared instance fields.
@@ -1348,24 +1323,34 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(" Value => ");
 
-      // Class unions with UseSingleBackingField=true keep the short-circuit: class instances cannot
-      // be uninitialized via `default(...)`, so no discriminator throw is needed.
-      if (_state.Settings.UseSingleBackingField && _state.IsReferenceType)
+      // The short-circuit is only valid when the shared field exists and every member really reads
+      // it. A union whose members are all stateless has no shared field at all, and a stateless
+      // struct member without a typed single backing field never gets a value assigned.
+      // The auto-sharing path reaches this point as well: with 2 or more distinct non-stateless
+      // reference type members the generator merges them into `_obj` without any opt-in setting,
+      // and then every arm of the discriminator switch is the same expression.
+      var collapseToSharedField = _state.HasSharedObjectBackingField(_useSharedObjectForRefTypes)
+                                  && _state.AllMembersReadSharedObjectField(_useSharedObjectForRefTypes);
+
+      // The legacy UseSingleBackingField path emits "!" unconditionally to keep its snapshots
+      // byte-for-byte stable. The auto-sharing path follows the rule of the switch arms it
+      // replaces: suppress only when Value is declared non-nullable.
+      var emitSuppression = singleBackingFieldType is null
+                            && (_state.Settings.UseSingleBackingField || !hasNullableTypes);
+
+      // Class unions: a class instance cannot be uninitialized via `default(...)`, so no
+      // discriminator throw is needed.
+      if (collapseToSharedField && _state.IsReferenceType)
       {
-         // Legacy object? path: always emit "!" to preserve byte-for-byte snapshot compatibility.
-         // Typed-field path: Value's nullability matches the field's, so no suppression needed.
-         var emitSuppression = singleBackingFieldType is null;
          _sb.Append("this._obj").Append(emitSuppression ? "!" : null).Append(";");
          return;
       }
 
-      // Struct unions with UseSingleBackingField=true: every arm of a full discriminator switch
-      // would collapse to the same `this._obj`. Emit a single index check + return instead.
-      // A `default(StructUnion).Value` must throw to match the contract documented above and
-      // emitted by IsTx/AsTx/Switch/Map.
-      if (_state.Settings.UseSingleBackingField)
+      // Struct unions: every arm of a full discriminator switch would collapse to the same
+      // `this._obj`. Emit a single index check + return instead. A `default(StructUnion).Value`
+      // must throw to match the contract documented above and emitted by IsTx/AsTx/Switch/Map.
+      if (collapseToSharedField)
       {
-         var emitSuppression = singleBackingFieldType is null;
          _sb.Append($@"this._valueIndex == 0
          ? throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values."")
          : this._obj").Append(emitSuppression ? "!" : null).Append(";");
@@ -1390,7 +1375,24 @@ namespace ").Append(_state.Namespace).Append(@"
 
          if (memberType.Setting.IsStateless)
          {
-            _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")");
+            // A type parameter carries no constraint that makes `default(T)` convertible to a typed
+            // single backing field, so the value is routed through `object` to keep the generated
+            // code compiling for every type argument. The suppression sits on `default(T)` so that
+            // the cast never produces a nullability warning.
+            if (singleBackingFieldType is not null && memberType.IsTypeParameter)
+            {
+               _sb.Append("(").Append(singleBackingFieldType).Append(singleBackingFieldNeedsNullable ? "?" : null)
+                  .Append(")(object?)default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")!");
+            }
+            else
+            {
+               // `default(T)` of a type parameter that is not known to be a value type may be null,
+               // so it needs the same suppression the non-stateless arms below use when Value is
+               // declared non-nullable.
+               var suppressNull = memberType is { IsTypeParameter: true, IsValueType: false } && !hasNullableTypes;
+
+               _sb.Append("default(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberType).Append(")").Append(suppressNull ? "!" : null);
+            }
          }
          else
          {
@@ -1427,6 +1429,62 @@ file static class Extensions
    public static bool HasNullableMemberTypes(this AdHocUnionSourceGenState state)
    {
       return state.MemberTypes.Any(t => t.IsNullableStruct || t.NullableAnnotation == NullableAnnotation.Annotated);
+   }
+
+   /// <summary>
+   /// Whether the union declares the shared <c>_obj</c> field. The field is declared when at least one
+   /// non-duplicate, non-stateless member uses it, or when a typed single backing field is configured,
+   /// which forces the declaration even for a union whose members are all stateless.
+   /// <c>GenerateMemberTypeFieldsAndProps</c> emits the field from this predicate, and the collapsed
+   /// raw value getter reads the field only when this predicate holds. Other generated members decide
+   /// per member through <see cref="UseSharedObjectBackingField"/>, which is a separate condition.
+   /// </summary>
+   public static bool HasSharedObjectBackingField(
+      this AdHocUnionSourceGenState state,
+      bool useSharedObjectForRefTypes)
+   {
+      if (state.Settings.SingleBackingFieldType is not null && state.Settings.UseSingleBackingField)
+         return true;
+
+      return state.MemberTypes.Any(m => !m.Setting.IsStateless
+                                        && m.TypeDuplicateCounter <= 1
+                                        && state.UseSharedObjectBackingField(useSharedObjectForRefTypes, m));
+   }
+
+   /// <summary>
+   /// Whether every member's raw value reads the shared <c>_obj</c> field, so that the discriminator
+   /// switch of the raw value getter would collapse into arms that are all identical.
+   /// </summary>
+   public static bool AllMembersReadSharedObjectField(
+      this AdHocUnionSourceGenState state,
+      bool useSharedObjectForRefTypes)
+   {
+      return state.MemberTypes.All(m => m.Setting.IsStateless
+                                           ? StatelessMemberReadsSharedObjectField(state, m)
+                                           : state.UseSharedObjectBackingField(useSharedObjectForRefTypes, m));
+   }
+
+   /// <summary>
+   /// A stateless member has no assignment of its own, so it only reads the same value from the
+   /// shared field that the <c>default(T)</c> switch arm would return when:
+   ///  - it is a reference type, because the field stays null and <c>default(T)</c> is null as well, or
+   ///  - it is a struct and a typed single backing field is set, because then the constructor assigns
+   ///    the cached boxed default.
+   /// A stateless type parameter gets no assignment at all, not even the cached boxed default, so it
+   /// qualifies only when the type parameter is known to be a reference type. For a struct or an
+   /// unconstrained type parameter the field stays null while <c>default(T)</c> is a boxed zero value.
+   /// </summary>
+   private static bool StatelessMemberReadsSharedObjectField(
+      AdHocUnionSourceGenState state,
+      AdHocUnionMemberTypeState memberType)
+   {
+      if (memberType.IsTypeParameter)
+         return memberType.IsReferenceType;
+
+      if (memberType.IsReferenceType)
+         return true;
+
+      return state.Settings.SingleBackingFieldType is not null;
    }
 
    /// <summary>
