@@ -32,10 +32,18 @@ namespace Thinktecture.Tests
                 out object? obj,
                 [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out object? error) =>
                {
-                  error = global::Thinktecture.Tests.GenericValueObject<T>.Validate(key is int typedKey ? typedKey : default, null, out var item);
-                  obj = item;
+                  if (key is int typedKey)
+                  {
+                     error = global::Thinktecture.Tests.GenericValueObject<T>.Validate(typedKey, null, out var item);
+                     obj = item;
 
-                  return error is null;
+                     return error is null;
+                  }
+
+                  obj = null;
+                  error = global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.ValidationError>($"There is no value object of type 'GenericValueObject<T>' with the key '{key}'.");
+
+                  return false;
                }
          };
 

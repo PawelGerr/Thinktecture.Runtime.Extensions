@@ -152,14 +152,14 @@ namespace ").Append(_state.Namespace).Append(@"
 
                            return new global::Thinktecture.Internal.SmartEnumItemMetadata
                            {
-                              Key = item.").Append(_state.KeyMember.Name).Append(@",
+                              Key = item.").AppendIdentifier(_state.KeyMember.Name).Append(@",
                               Item = item,
                               Identifier = identifier
                            };
                         })).AsReadOnly()),
-            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").Append(_state.KeyMember.Name).Append(@",
-            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").Append(_state.KeyMember.Name).Append(@",
+            ConvertToKey = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").AppendIdentifier(_state.KeyMember.Name).Append(@",
+            ConvertToKeyExpression = static ").AppendTypeFullyQualified(_state.KeyMember).Append(" (").AppendTypeFullyQualified(_state).Append(" item) => item.").AppendIdentifier(_state.KeyMember.Name).Append(@",
+            GetKey = static object (object item) => ((").AppendTypeFullyQualified(_state).Append(")item).").AppendIdentifier(_state.KeyMember.Name).Append(@",
             ConvertFromKey = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
             ConvertFromKeyExpression = static ").AppendTypeFullyQualified(_state).Append(" (").AppendTypeFullyQualified(_state.KeyMember).Append(" key) => ").AppendTypeFullyQualified(_state).Append(@".Get(key),
             TryGetFromKey =
@@ -167,10 +167,18 @@ namespace ").Append(_state.Namespace).Append(@"
                 out object? obj,
                 [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
                {
-                  error = ").AppendTypeFullyQualified(_state).Append(".Validate(key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item)!;
-                  obj = item;
+                  if (key is ").AppendTypeFullyQualified(_state.KeyMember).Append(@" typedKey)
+                  {
+                     error = ").AppendTypeFullyQualified(_state).Append(@".Validate(typedKey, null, out var item)!;
+                     obj = item;
 
-                  return error is null;
+                     return error is null;
+                  }
+
+                  obj = null;
+                  error = global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(_state.ValidationError).Append(@">($""There is no item of type '").AppendTypeMinimallyQualified(_state).Append(@"' with the key '{key}'."");
+
+                  return false;
                }
          };
 

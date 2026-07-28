@@ -51,10 +51,18 @@ namespace Thinktecture.Tests
                 out object? obj,
                 [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(true)] out object error) =>
                {
-                  error = global::Thinktecture.Tests.TestEnum.Validate(key is string typedKey ? typedKey : default, null, out var item)!;
-                  obj = item;
+                  if (key is string typedKey)
+                  {
+                     error = global::Thinktecture.Tests.TestEnum.Validate(typedKey, null, out var item)!;
+                     obj = item;
 
-                  return error is null;
+                     return error is null;
+                  }
+
+                  obj = null;
+                  error = global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<global::Thinktecture.Tests.TestEnumValidationError>($"There is no item of type 'TestEnum' with the key '{key}'.");
+
+                  return false;
                }
          };
 

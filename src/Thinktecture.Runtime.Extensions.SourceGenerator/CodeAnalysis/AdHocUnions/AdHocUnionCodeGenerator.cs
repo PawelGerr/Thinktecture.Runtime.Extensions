@@ -1505,7 +1505,7 @@ file static class Extensions
    /// A stateless member has no assignment of its own, so it only reads the same value from the
    /// shared field that the <c>default(T)</c> switch arm would return when:
    ///  - it is a reference type, because the field stays null and <c>default(T)</c> is null as well, or
-   ///  - it is a struct and a typed single backing field is set, because then the constructor assigns
+   ///  - it is a struct and a single backing field is used, because then the constructor assigns
    ///    the cached boxed default.
    /// A stateless type parameter gets no assignment at all, not even the cached boxed default, so it
    /// qualifies only when the type parameter is known to be a reference type. For a struct or an

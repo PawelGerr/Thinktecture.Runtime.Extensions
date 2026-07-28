@@ -716,10 +716,18 @@ file static class Extensions
                 out object? obj,
                 [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out object? error) =>
                {
-                  error = ").AppendTypeFullyQualified(state).Append(".Validate(key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey ? typedKey : default, null, out var item);
-                  obj = item;
+                  if (key is ").AppendTypeFullyQualified(state.KeyMember).Append(@" typedKey)
+                  {
+                     error = ").AppendTypeFullyQualified(state).Append(@".Validate(typedKey, null, out var item);
+                     obj = item;
 
-                  return error is null;
+                     return error is null;
+                  }
+
+                  obj = null;
+                  error = global::Thinktecture.Internal.ValidationErrorCreator.CreateValidationError<").AppendTypeFullyQualified(state.ValidationError).Append(@">($""There is no value object of type '").AppendTypeMinimallyQualified(state).Append(@"' with the key '{key}'."");
+
+                  return false;
                }");
       }
 
