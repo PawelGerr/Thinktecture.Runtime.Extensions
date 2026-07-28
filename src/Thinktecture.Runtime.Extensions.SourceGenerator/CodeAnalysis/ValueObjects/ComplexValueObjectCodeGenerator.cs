@@ -7,6 +7,17 @@ public sealed class ComplexValueObjectCodeGenerator : SmartEnumAndValueObjectCod
    private readonly ComplexValueObjectSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
+   // The generated factory and validation methods declare fixed 'obj', 'validationError' and
+   // 'factoryArgumentsValidationError' parameters and locals in the same scope as the members' parameters
+   // (for example the partial ValidateFactoryArguments declares 'validationError' and every member as parameters).
+   // A member name that renders to one of these identifiers would otherwise collide (CS0100/CS0128/CS0136).
+   // These names are part of the user-visible signatures, so they keep their friendly form and are renamed only
+   // on collision. The comparison uses the RENDERED identifier, not the raw member name, because
+   // AppendArgumentName drops a leading underscore before a letter (so "_Obj" renders to "obj").
+   private readonly string _objArgumentName;
+   private readonly string _validationErrorArgumentName;
+   private readonly string _factoryArgumentsValidationErrorArgumentName;
+
    public override string CodeGeneratorName => "ValueObject-CodeGenerator";
    public override string FileNameSuffix => ".ComplexValueObject";
 
@@ -14,6 +25,34 @@ public sealed class ComplexValueObjectCodeGenerator : SmartEnumAndValueObjectCod
    {
       _state = state ?? throw new ArgumentNullException(nameof(state));
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
+
+      var members = _state.AssignableInstanceFieldsAndProperties;
+      var renderedMemberNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+      for (var i = 0; i < members.Length; i++)
+      {
+         renderedMemberNames.Add(StringBuilderExtensions.RenderArgumentName(members[i].ArgumentName));
+      }
+
+      _objArgumentName = GetNonCollidingName(renderedMemberNames, "obj", "resultObj");
+      _validationErrorArgumentName = GetNonCollidingName(renderedMemberNames, "validationError", "resultValidationError");
+      _factoryArgumentsValidationErrorArgumentName = GetNonCollidingName(renderedMemberNames, Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR, "resultFactoryArgumentsValidationError");
+   }
+
+   /// <summary>
+   /// Returns <paramref name="preferredName"/> when no member renders to it. Otherwise falls back to
+   /// <paramref name="alternativeName"/>, and appends the smallest integer suffix when that alternative is taken
+   /// as well (a type with both an <c>Obj</c> and a <c>ResultObj</c> member).
+   /// </summary>
+   private static string GetNonCollidingName(
+      HashSet<string> renderedMemberNames,
+      string preferredName,
+      string alternativeName)
+   {
+      if (!renderedMemberNames.Contains(preferredName))
+         return preferredName;
+
+      return StringBuilderExtensions.MakeNonCollidingParameterName(alternativeName, renderedMemberNames);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -161,7 +200,7 @@ namespace ").Append(_state.Namespace).Append(@"
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(_state.Settings.CreateFactoryMethodName).Append("(").RenderArgumentsWithType(fieldsAndProperties, prefix: @"
          ", comma: ",").Append(@")
       {
-         var validationError = Validate(");
+         var ").Append(_validationErrorArgumentName).Append(" = Validate(");
 
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
@@ -170,12 +209,12 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(",");
 
       _sb.Append(@"
-            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
+            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@");
 
-         if (validationError is not null)
-            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
+         if (").Append(_validationErrorArgumentName).Append(@" is not null)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(").Append(_validationErrorArgumentName).Append(@".ToString() ?? ""Validation failed."");
 
-         return obj!;
+         return ").Append(_objArgumentName).Append(@"!;
       }");
    }
 
@@ -199,7 +238,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      /// <param name=""obj"">
+      /// <param name=""").Append(_objArgumentName).Append(@""">
       /// When this method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@"
       /// if the operation is successful; otherwise, <c>null</c>.
       /// </param>
@@ -213,7 +252,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
       {
          return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(");
 
@@ -224,7 +263,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(",");
 
       _sb.Append(@"
-            out obj,
+            out ").Append(_objArgumentName).Append(@",
             out _);
       }");
 
@@ -244,11 +283,11 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      /// <param name=""obj"">
+      /// <param name=""").Append(_objArgumentName).Append(@""">
       /// When this method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@"
       /// if the operation is successful; otherwise, <c>null</c>.
       /// </param>
-      /// <param name=""validationError"">
+      /// <param name=""").Append(_validationErrorArgumentName).Append(@""">
       /// When this method returns, contains the ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@"
       /// describing why validation failed, if the operation fails; otherwise, <c>null</c>.
       /// </param>
@@ -262,10 +301,10 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj,
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError)
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@",
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName).Append(@")
       {
-         validationError = Validate(");
+         ").Append(_validationErrorArgumentName).Append(" = Validate(");
 
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
@@ -274,9 +313,9 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(",");
 
       _sb.Append(@"
-            out obj);
+            out ").Append(_objArgumentName).Append(@");
 
-         return validationError is null;
+         return ").Append(_validationErrorArgumentName).Append(@" is null;
       }");
    }
 
@@ -299,7 +338,7 @@ namespace ").Append(_state.Namespace).Append(@"
       }
 
       _sb.Append(@"
-      /// <param name=""obj"">The created object if validation is successful, otherwise <c>null</c>.</param>
+      /// <param name=""").Append(_objArgumentName).Append(@""">The created object if validation is successful, otherwise <c>null</c>.</param>
       /// <returns>A validation error if validation fails; otherwise, <c>null</c>.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state.ValidationError).Append("? Validate(");
@@ -308,7 +347,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ", ",", trailingComma: true);
 
       _sb.Append(@"
-         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
       {");
 
       for (var i = 0; i < fieldsAndProperties.Length; i++)
@@ -320,7 +359,7 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.Append(@"
          if (").AppendEscaped(memberInfo.ArgumentName).Append(@" is null)
          {
-            obj = default;
+            ").Append(_objArgumentName).Append(@" = default;
             return ").AppendTypeFullyQualified(_state.ValidationError).Append(@".Create(""The member \""").Append(memberInfo.Name).Append(@"\"" of type \""").AppendTypeMinimallyQualified(_state).Append(@"\"" must not be null."");
          }
 ");
@@ -347,13 +386,13 @@ namespace ").Append(_state.Namespace).Append(@"
             ");
 
          _sb.Append(@",
-            out obj);
+            out ").Append(_objArgumentName).Append(@");
       }");
          return;
       }
 
       _sb.Append(@"
-         ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
+         ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName).Append(@" = null;
 
          ");
 
@@ -361,7 +400,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-         return validationError;
+         return ").Append(_validationErrorArgumentName).Append(@";
       }");
    }
 
@@ -387,9 +426,9 @@ namespace ").Append(_state.Namespace).Append(@"
          ");
 
       _sb.Append(@",
-         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+         out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
       {
-         ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError = null;
+         ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName).Append(@" = null;
 
          ");
 
@@ -397,7 +436,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
 
-         return validationError;
+         return ").Append(_validationErrorArgumentName).Append(@";
       }");
    }
 
@@ -406,10 +445,10 @@ namespace ").Append(_state.Namespace).Append(@"
       var fieldsAndProperties = _state.AssignableInstanceFieldsAndProperties;
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append("var ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR).Append(" = ");
+         _sb.Append("var ").Append(_factoryArgumentsValidationErrorArgumentName).Append(" = ");
 
       _sb.Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
-            ref validationError").RenderArguments(fieldsAndProperties, @"
+            ref ").Append(_validationErrorArgumentName).RenderArguments(fieldsAndProperties, @"
             ref ", comma: ",", leadingComma: true);
 
       if (renderAdditionalParametersAsArguments)
@@ -426,23 +465,23 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@");
 
-         if (validationError is null)
+         if (").Append(_validationErrorArgumentName).Append(@" is null)
          {
-            obj = ");
+            ").Append(_objArgumentName).Append(" = ");
 
       GenerateConstructCall();
 
       _sb.Append(@";
-            obj.").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
+            ").Append(_objArgumentName).Append(".").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(_factoryArgumentsValidationErrorArgumentName);
 
       _sb.Append(@");
          }
          else
          {
-            obj = default;
+            ").Append(_objArgumentName).Append(@" = default;
          }");
    }
 
@@ -469,7 +508,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@")
       {
-         var validationError = ").Append(Constants.Methods.VALIDATE).Append("Core(");
+         var ").Append(_validationErrorArgumentName).Append(" = ").Append(Constants.Methods.VALIDATE).Append("Core(");
 
       _sb.RenderArguments(fieldsAndProperties, prefix: @"
             ", comma: ",");
@@ -483,12 +522,12 @@ namespace ").Append(_state.Namespace).Append(@"
             ");
 
       _sb.Append(@",
-            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj);
+            out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@");
 
-         if (validationError is not null)
-            throw new global::System.ComponentModel.DataAnnotations.ValidationException(validationError.ToString() ?? ""Validation failed."");
+         if (").Append(_validationErrorArgumentName).Append(@" is not null)
+            throw new global::System.ComponentModel.DataAnnotations.ValidationException(").Append(_validationErrorArgumentName).Append(@".ToString() ?? ""Validation failed."");
 
-         return obj!;
+         return ").Append(_objArgumentName).Append(@"!;
       }");
    }
 
@@ -504,7 +543,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("private ");
 
       _sb.Append("static partial ").Append(_state.FactoryValidationReturnType ?? "void").Append(" ").Append(Constants.Methods.VALIDATE_FACTORY_ARGUMENTS).Append(@"(
-         ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? validationError");
+         ref ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName);
 
       _sb.RenderArgumentsWithType(fieldsAndProperties, "ref ", comma: @",
          ", leadingComma: true);
@@ -522,7 +561,7 @@ namespace ").Append(_state.Namespace).Append(@"
       partial void ").Append(Constants.Methods.FACTORY_POST_INIT).Append("(");
 
       if (_state.FactoryValidationReturnType is not null)
-         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR);
+         _sb.Append(_state.FactoryValidationReturnType).Append(" ").Append(_factoryArgumentsValidationErrorArgumentName);
 
       _sb.Append(");");
    }

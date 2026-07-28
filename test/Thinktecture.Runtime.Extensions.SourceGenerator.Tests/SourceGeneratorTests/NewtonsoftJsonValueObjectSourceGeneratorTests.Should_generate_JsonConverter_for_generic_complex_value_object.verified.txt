@@ -22,32 +22,32 @@ partial class ComplexValueObject<T1, T2, T3>
       }
 
       /// <inheritdoc />
-      public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
+      public override object? ReadJson(global::Newtonsoft.Json.JsonReader __reader, global::System.Type __objectType, object? __existingValue, global::Newtonsoft.Json.JsonSerializer __serializer)
       {
-         if (reader is null)
-            throw new global::System.ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new global::System.ArgumentNullException(nameof(serializer));
+         if (__reader is null)
+            throw new global::System.ArgumentNullException("reader");
+         if (__serializer is null)
+            throw new global::System.ArgumentNullException("serializer");
 
-         if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
+         if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(__objectType) == _type)
                return null;
 
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             return default(global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>);
          }
 
-         if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
+         if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
-               $"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.StartObject)}\".",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               $"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.StartObject)}\".",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
@@ -56,88 +56,94 @@ partial class ComplexValueObject<T1, T2, T3>
          T3 @structProperty = default;
          T3? @nullableStructProperty = default;
 
-         var comparer = global::System.StringComparer.OrdinalIgnoreCase;
+         var __resolver = __serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
+         var __propertyPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("Property") : "Property";
+         var __nullablePropertyPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("NullableProperty") : "NullableProperty";
+         var __structPropertyPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("StructProperty") : "StructProperty";
+         var __nullableStructPropertyPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("NullableStructProperty") : "NullableStructProperty";
 
-         while (reader.Read())
+         var __comparer = global::System.StringComparer.OrdinalIgnoreCase;
+
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
+            if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
                break;
 
-            if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
+            if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.PropertyName)}\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.PropertyName)}\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 
-            var propName = reader.Value!.ToString();
+            var __propName = __reader.Value!.ToString();
 
-            if(!reader.Read())
+            if(!__reader.Read())
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"ComplexValueObject<T1, T2, T3>\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"ComplexValueObject<T1, T2, T3>\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 
-            if (comparer.Equals(propName, "property"))
+            if (__comparer.Equals(__propName, __propertyPropertyName))
             {
-               @property = serializer.Deserialize<T1>(reader);
+               @property = __serializer.Deserialize<T1>(__reader);
             }
-            else if (comparer.Equals(propName, "nullableProperty"))
+            else if (__comparer.Equals(__propName, __nullablePropertyPropertyName))
             {
-               @nullableProperty = serializer.Deserialize<T2?>(reader);
+               @nullableProperty = __serializer.Deserialize<T2?>(__reader);
             }
-            else if (comparer.Equals(propName, "structProperty"))
+            else if (__comparer.Equals(__propName, __structPropertyPropertyName))
             {
-               @structProperty = serializer.Deserialize<T3>(reader);
+               @structProperty = __serializer.Deserialize<T3>(__reader);
             }
-            else if (comparer.Equals(propName, "nullableStructProperty"))
+            else if (__comparer.Equals(__propName, __nullableStructPropertyPropertyName))
             {
-               @nullableStructProperty = serializer.Deserialize<T3?>(reader);
+               @nullableStructProperty = __serializer.Deserialize<T3?>(__reader);
             }
             else
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unknown member \"{propName}\" encountered when trying to deserialize \"ComplexValueObject<T1, T2, T3>\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unknown member \"{__propName}\" encountered when trying to deserialize \"ComplexValueObject<T1, T2, T3>\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
          }
 
-         var validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
+         var __validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
                                     @property!,
                                     @nullableProperty!,
                                     @structProperty!,
                                     @nullableStructProperty!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
+         if (__validationError is not null)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonSerializationException(
-               validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject<T1, T2, T3>\".",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject<T1, T2, T3>\".",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

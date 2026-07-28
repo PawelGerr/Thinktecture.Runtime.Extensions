@@ -43,70 +43,70 @@ partial class TestValueObject
       }
 
       /// <inheritdoc />
-      public override global::Thinktecture.Tests.TestValueObject? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override global::Thinktecture.Tests.TestValueObject? Read(ref global::System.Text.Json.Utf8JsonReader __reader, global::System.Type __typeToConvert, global::System.Text.Json.JsonSerializerOptions __options)
       {
-         if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+         if (__reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
 
-         if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
+         if (__reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+            throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
          global::Thinktecture.Tests.ClassDisallowingDefaultValues? @nonNullableReferenceType = default;
          global::Thinktecture.Tests.ClassDisallowingDefaultValues? @nullableReferenceType = default;
          global::Thinktecture.Argument<global::Thinktecture.Tests.StructDisallowingDefaultValues> @nonNullableStruct = default;
          global::Thinktecture.Tests.StructDisallowingDefaultValues? @nullableStruct = default;
 
-         var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
+         var __comparer = __options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
-         while (reader.Read())
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
+            if (__reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
-            if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
+            if (__reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+               throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
 
-            var propName = reader.GetString();
+            var __propName = __reader.GetString();
 
-            if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"TestValueObject\".");
+            if(!__reader.Read())
+               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"TestValueObject\".");
 
-            if (comparer.Equals(propName, this._nonNullableReferenceTypePropertyName))
+            if (__comparer.Equals(__propName, this._nonNullableReferenceTypePropertyName))
             {
-               @nonNullableReferenceType = this._nonNullableReferenceTypeConverter.Read(ref reader, typeof(global::Thinktecture.Tests.ClassDisallowingDefaultValues), options);
+               @nonNullableReferenceType = this._nonNullableReferenceTypeConverter.Read(ref __reader, typeof(global::Thinktecture.Tests.ClassDisallowingDefaultValues), __options);
             }
-            else if (comparer.Equals(propName, this._nullableReferenceTypePropertyName))
+            else if (__comparer.Equals(__propName, this._nullableReferenceTypePropertyName))
             {
-               @nullableReferenceType = this._nullableReferenceTypeConverter.Read(ref reader, typeof(global::Thinktecture.Tests.ClassDisallowingDefaultValues), options);
+               @nullableReferenceType = this._nullableReferenceTypeConverter.Read(ref __reader, typeof(global::Thinktecture.Tests.ClassDisallowingDefaultValues), __options);
             }
-            else if (comparer.Equals(propName, this._nonNullableStructPropertyName))
+            else if (__comparer.Equals(__propName, this._nonNullableStructPropertyName))
             {
-               @nonNullableStruct = this._nonNullableStructConverter.Read(ref reader, typeof(global::Thinktecture.Tests.StructDisallowingDefaultValues), options);
+               @nonNullableStruct = this._nonNullableStructConverter.Read(ref __reader, typeof(global::Thinktecture.Tests.StructDisallowingDefaultValues), __options);
             }
-            else if (comparer.Equals(propName, this._nullableStructPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableStructPropertyName))
             {
-               @nullableStruct = this._nullableStructConverter.Read(ref reader, typeof(global::Thinktecture.Tests.StructDisallowingDefaultValues?), options);
+               @nullableStruct = this._nullableStructConverter.Read(ref __reader, typeof(global::Thinktecture.Tests.StructDisallowingDefaultValues?), __options);
             }
             else
             {
-               throw new global::System.Text.Json.JsonException($"Unknown member \"{propName}\" encountered when trying to deserialize \"TestValueObject\".");
+               throw new global::System.Text.Json.JsonException($"Unknown member \"{__propName}\" encountered when trying to deserialize \"TestValueObject\".");
             }
          }
 
          if (!@nonNullableStruct.IsSet)
             throw new global::System.Text.Json.JsonException($"Cannot deserialize type \"TestValueObject\" because the member \"_nonNullableStruct\" of type \"global::Thinktecture.Tests.StructDisallowingDefaultValues\" is missing and does not allow default values.");
 
-         var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
+         var __validationError = global::Thinktecture.Tests.TestValueObject.Validate(
                                     @nonNullableReferenceType!,
                                     @nullableReferenceType!,
                                     @nonNullableStruct.Value,
                                     @nullableStruct!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
-            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
+         if (__validationError is not null)
+            throw new global::System.Text.Json.JsonException(__validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

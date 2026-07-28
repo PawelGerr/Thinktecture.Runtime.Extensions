@@ -110,9 +110,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       }
 
       /// <inheritdoc />
-      public override ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Read(ref global::System.Text.Json.Utf8JsonReader __reader, global::System.Type __typeToConvert, global::System.Text.Json.JsonSerializerOptions __options)
       {
-         if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+         if (__reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             ");
 
       if (_type.DisallowsDefaultValue)
@@ -126,8 +126,8 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
 
-         if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
+         if (__reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+            throw new global::System.Text.Json.JsonException($""Unexpected token \""{__reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.StartObject)}\""."");
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -150,22 +150,29 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          }
       }
 
+      // The fixed parameters and locals of this method share their scope with one local per member, named after
+      // the member's argument name. They all carry a double-underscore prefix to prevent a collision
+      // (CS0128/CS0136, or CS0841 when a member local shadows a parameter that is used before the local's
+      // declaration). The prefix is safe by construction: AppendArgumentName strips a leading run of underscores
+      // only when the next character is a letter, so a member-derived identifier can never start with "__"
+      // followed by a letter. That invariant additionally depends on ArgumentName.RenderAsIs being false, which
+      // holds here because InstanceMemberInfo always creates its ArgumentName with the default renderAsIs: false.
       _sb.Append(@"
 
-         var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
+         var __comparer = __options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
-         while (reader.Read())
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
+            if (__reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
-            if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.PropertyName)}\""."");
+            if (__reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+               throw new global::System.Text.Json.JsonException($""Unexpected token \""{__reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::System.Text.Json.JsonTokenType.PropertyName)}\""."");
 
-            var propName = reader.GetString();
+            var __propName = __reader.GetString();
 
-            if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
+            if(!__reader.Read())
+               throw new global::System.Text.Json.JsonException($""Unexpected end of the JSON message when trying the read the value of \""{__propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
 ");
 
       cancellationToken.ThrowIfCancellationRequested();
@@ -185,7 +192,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             else if ");
          }
 
-         _sb.Append("(comparer.Equals(propName, this._").AppendArgumentName(memberInfo.ArgumentName).Append(@"PropertyName))
+         _sb.Append("(__comparer.Equals(__propName, this._").AppendArgumentName(memberInfo.ArgumentName).Append(@"PropertyName))
             {");
 
          // Although empty, keep the condition; otherwise we end up in "else" and throw an exception
@@ -196,17 +203,20 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
             if (memberInfo.SpecialType == SpecialType.System_Object)
             {
-               _sb.Append("global::System.Text.Json.JsonSerializer.Deserialize<object>(ref reader, options);");
+               _sb.Append("global::System.Text.Json.JsonSerializer.Deserialize<object>(ref __reader, __options);");
             }
             else
             {
-               _sb.Append("this._").AppendArgumentName(memberInfo.ArgumentName).Append("Converter.Read(ref reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), options);");
+               _sb.Append("this._").AppendArgumentName(memberInfo.ArgumentName).Append("Converter.Read(ref __reader, typeof(").AppendTypeFullyQualifiedWithoutNullAnnotation(memberInfo).Append(@"), __options);");
             }
          }
          else
          {
+            // The reader is positioned on the first token of the value. Skip the whole value (including
+            // nested objects/arrays) so the loop advances to the next property instead of descending into it.
             _sb.Append(@"
-               // ").Append(memberInfo.Name).Append(" has JsonIgnoreCondition.Always, so we do not deserialize it.");
+               // ").Append(memberInfo.Name).Append(@" has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();");
          }
 
          _sb.Append(@"
@@ -218,7 +228,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          _sb.Append(@"
             else
             {
-               throw new global::System.Text.Json.JsonException($""Unknown member \""{propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
+               throw new global::System.Text.Json.JsonException($""Unknown member \""{__propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
             }");
       }
 
@@ -240,7 +250,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
 
-         var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
+         var __validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -253,12 +263,12 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       }
 
       _sb.Append(@"
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
-            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.Name).Append(@"\""."");
+         if (__validationError is not null)
+            throw new global::System.Text.Json.JsonException(__validationError.ToString() ?? ""Unable to deserialize \""").Append(_type.Name).Append(@"\""."");
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

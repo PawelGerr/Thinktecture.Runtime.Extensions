@@ -83,13 +83,13 @@ partial class ComplexValueObjectWithJsonIgnore
       }
 
       /// <inheritdoc />
-      public override global::Thinktecture.Tests.ComplexValueObjectWithJsonIgnore? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override global::Thinktecture.Tests.ComplexValueObjectWithJsonIgnore? Read(ref global::System.Text.Json.Utf8JsonReader __reader, global::System.Type __typeToConvert, global::System.Text.Json.JsonSerializerOptions __options)
       {
-         if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+         if (__reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
 
-         if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObjectWithJsonIgnore\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
+         if (__reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+            throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObjectWithJsonIgnore\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
          string? @stringProperty_Ignore = default;
          string? @stringProperty_Ignore_Always = default;
@@ -109,96 +109,102 @@ partial class ComplexValueObjectWithJsonIgnore
          int? @nullableIntProperty_Ignore_Never = default;
          int? @nullableIntProperty = default;
 
-         var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
+         var __comparer = __options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
-         while (reader.Read())
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
+            if (__reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
-            if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObjectWithJsonIgnore\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
+            if (__reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+               throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObjectWithJsonIgnore\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
 
-            var propName = reader.GetString();
+            var __propName = __reader.GetString();
 
-            if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"ComplexValueObjectWithJsonIgnore\".");
+            if(!__reader.Read())
+               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"ComplexValueObjectWithJsonIgnore\".");
 
-            if (comparer.Equals(propName, this._stringProperty_IgnorePropertyName))
+            if (__comparer.Equals(__propName, this._stringProperty_IgnorePropertyName))
             {
                // StringProperty_Ignore has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._stringProperty_Ignore_AlwaysPropertyName))
+            else if (__comparer.Equals(__propName, this._stringProperty_Ignore_AlwaysPropertyName))
             {
                // StringProperty_Ignore_Always has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._stringProperty_Ignore_WhenWritingDefaultPropertyName))
+            else if (__comparer.Equals(__propName, this._stringProperty_Ignore_WhenWritingDefaultPropertyName))
             {
-               @stringProperty_Ignore_WhenWritingDefault = this._stringProperty_Ignore_WhenWritingDefaultConverter.Read(ref reader, typeof(string), options);
+               @stringProperty_Ignore_WhenWritingDefault = this._stringProperty_Ignore_WhenWritingDefaultConverter.Read(ref __reader, typeof(string), __options);
             }
-            else if (comparer.Equals(propName, this._stringProperty_Ignore_WhenWritingNullPropertyName))
+            else if (__comparer.Equals(__propName, this._stringProperty_Ignore_WhenWritingNullPropertyName))
             {
-               @stringProperty_Ignore_WhenWritingNull = this._stringProperty_Ignore_WhenWritingNullConverter.Read(ref reader, typeof(string), options);
+               @stringProperty_Ignore_WhenWritingNull = this._stringProperty_Ignore_WhenWritingNullConverter.Read(ref __reader, typeof(string), __options);
             }
-            else if (comparer.Equals(propName, this._stringProperty_Ignore_NeverPropertyName))
+            else if (__comparer.Equals(__propName, this._stringProperty_Ignore_NeverPropertyName))
             {
-               @stringProperty_Ignore_Never = this._stringProperty_Ignore_NeverConverter.Read(ref reader, typeof(string), options);
+               @stringProperty_Ignore_Never = this._stringProperty_Ignore_NeverConverter.Read(ref __reader, typeof(string), __options);
             }
-            else if (comparer.Equals(propName, this._stringPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._stringPropertyPropertyName))
             {
-               @stringProperty = this._stringPropertyConverter.Read(ref reader, typeof(string), options);
+               @stringProperty = this._stringPropertyConverter.Read(ref __reader, typeof(string), __options);
             }
-            else if (comparer.Equals(propName, this._intProperty_IgnorePropertyName))
+            else if (__comparer.Equals(__propName, this._intProperty_IgnorePropertyName))
             {
                // IntProperty_Ignore has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._intProperty_Ignore_AlwaysPropertyName))
+            else if (__comparer.Equals(__propName, this._intProperty_Ignore_AlwaysPropertyName))
             {
                // IntProperty_Ignore_Always has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._intProperty_Ignore_WhenWritingDefaultPropertyName))
+            else if (__comparer.Equals(__propName, this._intProperty_Ignore_WhenWritingDefaultPropertyName))
             {
-               @intProperty_Ignore_WhenWritingDefault = this._intProperty_Ignore_WhenWritingDefaultConverter.Read(ref reader, typeof(int), options);
+               @intProperty_Ignore_WhenWritingDefault = this._intProperty_Ignore_WhenWritingDefaultConverter.Read(ref __reader, typeof(int), __options);
             }
-            else if (comparer.Equals(propName, this._intProperty_Ignore_NeverPropertyName))
+            else if (__comparer.Equals(__propName, this._intProperty_Ignore_NeverPropertyName))
             {
-               @intProperty_Ignore_Never = this._intProperty_Ignore_NeverConverter.Read(ref reader, typeof(int), options);
+               @intProperty_Ignore_Never = this._intProperty_Ignore_NeverConverter.Read(ref __reader, typeof(int), __options);
             }
-            else if (comparer.Equals(propName, this._intPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._intPropertyPropertyName))
             {
-               @intProperty = this._intPropertyConverter.Read(ref reader, typeof(int), options);
+               @intProperty = this._intPropertyConverter.Read(ref __reader, typeof(int), __options);
             }
-            else if (comparer.Equals(propName, this._nullableIntProperty_IgnorePropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntProperty_IgnorePropertyName))
             {
                // NullableIntProperty_Ignore has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._nullableIntProperty_Ignore_AlwaysPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntProperty_Ignore_AlwaysPropertyName))
             {
                // NullableIntProperty_Ignore_Always has JsonIgnoreCondition.Always, so we do not deserialize it.
+               __reader.Skip();
             }
-            else if (comparer.Equals(propName, this._nullableIntProperty_Ignore_WhenWritingDefaultPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntProperty_Ignore_WhenWritingDefaultPropertyName))
             {
-               @nullableIntProperty_Ignore_WhenWritingDefault = this._nullableIntProperty_Ignore_WhenWritingDefaultConverter.Read(ref reader, typeof(int?), options);
+               @nullableIntProperty_Ignore_WhenWritingDefault = this._nullableIntProperty_Ignore_WhenWritingDefaultConverter.Read(ref __reader, typeof(int?), __options);
             }
-            else if (comparer.Equals(propName, this._nullableIntProperty_Ignore_WhenWritingNullPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntProperty_Ignore_WhenWritingNullPropertyName))
             {
-               @nullableIntProperty_Ignore_WhenWritingNull = this._nullableIntProperty_Ignore_WhenWritingNullConverter.Read(ref reader, typeof(int?), options);
+               @nullableIntProperty_Ignore_WhenWritingNull = this._nullableIntProperty_Ignore_WhenWritingNullConverter.Read(ref __reader, typeof(int?), __options);
             }
-            else if (comparer.Equals(propName, this._nullableIntProperty_Ignore_NeverPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntProperty_Ignore_NeverPropertyName))
             {
-               @nullableIntProperty_Ignore_Never = this._nullableIntProperty_Ignore_NeverConverter.Read(ref reader, typeof(int?), options);
+               @nullableIntProperty_Ignore_Never = this._nullableIntProperty_Ignore_NeverConverter.Read(ref __reader, typeof(int?), __options);
             }
-            else if (comparer.Equals(propName, this._nullableIntPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableIntPropertyPropertyName))
             {
-               @nullableIntProperty = this._nullableIntPropertyConverter.Read(ref reader, typeof(int?), options);
+               @nullableIntProperty = this._nullableIntPropertyConverter.Read(ref __reader, typeof(int?), __options);
             }
             else
             {
-               throw new global::System.Text.Json.JsonException($"Unknown member \"{propName}\" encountered when trying to deserialize \"ComplexValueObjectWithJsonIgnore\".");
+               throw new global::System.Text.Json.JsonException($"Unknown member \"{__propName}\" encountered when trying to deserialize \"ComplexValueObjectWithJsonIgnore\".");
             }
          }
 
-         var validationError = global::Thinktecture.Tests.ComplexValueObjectWithJsonIgnore.Validate(
+         var __validationError = global::Thinktecture.Tests.ComplexValueObjectWithJsonIgnore.Validate(
                                     @stringProperty_Ignore!,
                                     @stringProperty_Ignore_Always!,
                                     @stringProperty_Ignore_WhenWritingDefault!,
@@ -216,12 +222,12 @@ partial class ComplexValueObjectWithJsonIgnore
                                     @nullableIntProperty_Ignore_WhenWritingNull!,
                                     @nullableIntProperty_Ignore_Never!,
                                     @nullableIntProperty!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
-            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? "Unable to deserialize \"ComplexValueObjectWithJsonIgnore\".");
+         if (__validationError is not null)
+            throw new global::System.Text.Json.JsonException(__validationError.ToString() ?? "Unable to deserialize \"ComplexValueObjectWithJsonIgnore\".");
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

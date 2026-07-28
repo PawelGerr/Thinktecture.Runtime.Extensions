@@ -14,15 +14,15 @@ partial class TestValueObject
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.TestValueObject?>
    {
       /// <inheritdoc />
-      public global::Thinktecture.Tests.TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public global::Thinktecture.Tests.TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader __reader, global::MessagePack.MessagePackSerializerOptions __options)
       {
-         if (reader.TryReadNil())
+         if (__reader.TryReadNil())
             return default;
 
-         options.Security.DepthStep(ref reader);
+         __options.Security.DepthStep(ref __reader);
 
-         var count = reader.ReadArrayHeader();
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         var __count = __reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver __resolver = __options.Resolver;
 
          global::Thinktecture.Tests.ClassDisallowingDefaultValues? @nonNullableReferenceType = default;
          global::Thinktecture.Tests.ClassDisallowingDefaultValues? @nullableReferenceType = default;
@@ -31,32 +31,32 @@ partial class TestValueObject
 
          try
          {
-            for (int i = 0; i < count; i++)
+            for (int __i = 0; __i < __count; __i++)
             {
-               switch (i)
+               switch (__i)
                {
                   case 0:
                   {
-                     @nonNullableReferenceType = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.ClassDisallowingDefaultValues>(resolver).Deserialize(ref reader, options)!;
+                     @nonNullableReferenceType = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.ClassDisallowingDefaultValues>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 1:
                   {
-                     @nullableReferenceType = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.ClassDisallowingDefaultValues?>(resolver).Deserialize(ref reader, options)!;
+                     @nullableReferenceType = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.ClassDisallowingDefaultValues?>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 2:
                   {
-                     @nonNullableStruct = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.StructDisallowingDefaultValues>(resolver).Deserialize(ref reader, options)!;
+                     @nonNullableStruct = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.StructDisallowingDefaultValues>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 3:
                   {
-                     @nullableStruct = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.StructDisallowingDefaultValues?>(resolver).Deserialize(ref reader, options)!;
+                     @nullableStruct = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<global::Thinktecture.Tests.StructDisallowingDefaultValues?>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   default:
-                     reader.Skip();
+                     __reader.Skip();
                      break;
                }
             }
@@ -64,21 +64,21 @@ partial class TestValueObject
             if (!@nonNullableStruct.IsSet)
                throw new global::MessagePack.MessagePackSerializationException($"Cannot deserialize type \"TestValueObject\" because the member \"_nonNullableStruct\" of type \"global::Thinktecture.Tests.StructDisallowingDefaultValues\" is missing and does not allow default values.");
 
-            var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
+            var __validationError = global::Thinktecture.Tests.TestValueObject.Validate(
                                        @nonNullableReferenceType!,
                                        @nullableReferenceType!,
                                        @nonNullableStruct.Value,
                                        @nullableStruct!,
-                                       out var obj);
+                                       out var __obj);
 
-            if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
+            if (__validationError is not null)
+               throw new global::MessagePack.MessagePackSerializationException(__validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
 
-            return obj;
+            return __obj;
          }
          finally
          {
-           reader.Depth--;
+           __reader.Depth--;
          }
       }
 

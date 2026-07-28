@@ -380,16 +380,16 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Tries to create an instance of the type ").AppendTypeForXmlComment(_state).Append(@" based on provided value.
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
-      /// <param name=""obj"">
+      /// <param name=""").Append(_objArgumentName).Append(@""">
       /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
       /// </param>
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
       /// </returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj)
+      public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(emptyStringYieldsNull ? "," : ", [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)]").Append(" out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@")
       {
-         return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(@", out obj, out _);
+         return ").Append(_state.Settings.TryCreateFactoryMethodName).Append("(").RenderArgument(_state.KeyMember).Append(", out ").Append(_objArgumentName).Append(@", out _);
       }");
 
       _sb.Append(@"
@@ -398,10 +398,10 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Tries to create an instance of the type ").AppendTypeForXmlComment(_state).Append(@" based on provided value.
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
-      /// <param name=""obj"">
+      /// <param name=""").Append(_objArgumentName).Append(@""">
       /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
       /// </param>
-      /// <param name=""validationError"">
+      /// <param name=""").Append(_validationErrorArgumentName).Append(@""">
       /// When the method returns, contains the validation error if the creation or validation failed; otherwise, it will be <c>null</c>.
       /// </param>
       /// <returns>
@@ -410,12 +410,12 @@ namespace ").Append(_state.Namespace).Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static bool ").Append(_state.Settings.TryCreateFactoryMethodName).Append(@"(
          ").RenderArgumentWithType(_state.KeyMember, useNullableTypes: allowNullOutput).Append(@",
-         ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(@" obj,
-         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append(@"? validationError)
+         ").Append(emptyStringYieldsNull ? null : "[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ").Append("out ").AppendTypeFullyQualifiedNullAnnotated(_state).Append(" ").Append(_objArgumentName).Append(@",
+         [global::System.Diagnostics.CodeAnalysis.NotNullWhen(false)] out ").AppendTypeFullyQualified(_state.ValidationError).Append("? ").Append(_validationErrorArgumentName).Append(@")
       {
-         validationError = Validate(").RenderArgument(_state.KeyMember).Append(@", null, out obj);
+         ").Append(_validationErrorArgumentName).Append(" = Validate(").RenderArgument(_state.KeyMember).Append(", null, out ").Append(_objArgumentName).Append(@");
 
-         return validationError is null;
+         return ").Append(_validationErrorArgumentName).Append(@" is null;
       }");
    }
 

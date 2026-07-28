@@ -2,13 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using MessagePack;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Newtonsoft.Json;
 using Thinktecture.CodeAnalysis.AdHocUnions;
 using Thinktecture.CodeAnalysis.Annotations;
 using Thinktecture.CodeAnalysis.RegularUnions;
 using Thinktecture.CodeAnalysis.SmartEnums;
 using Thinktecture.CodeAnalysis.ValueObjects;
+using Thinktecture.Formatters;
+using Thinktecture.Json;
+using Thinktecture.Text.Json.Serialization;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
 
@@ -65,6 +72,40 @@ public class KeywordIdentifierEscapingTests : SourceGeneratorTestsBase
             {
                public string @default { get; }
                public int @class { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_value_object_key_member_renders_to_fixed_factory_identifier() // finding: keyed value object factory-parameter collision
+   {
+      // The generated factory/validation methods declare fixed 'obj', 'validationError' and 'provider' parameters
+      // and locals in the same scope as the user's key-member parameter (for example the partial
+      // ValidateFactoryArguments declares both 'validationError' and the key member). A KeyMemberName that renders
+      // to one of these identifiers (leading underscore dropped before a letter) collided with them
+      // (CS0100/CS0136). A raw-name comparison also missed the underscore-prefixed variants.
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<int>(KeyMemberName = "_obj")]
+            public partial class ValueObjectWithObjKey
+            {
+            }
+
+            [ValueObject<int>(KeyMemberName = "_validationError")]
+            public partial class ValueObjectWithValidationErrorKey
+            {
+            }
+
+            [ValueObject<int>(KeyMemberName = "_provider")]
+            public partial class ValueObjectWithProviderKey
+            {
             }
          }
          """;
@@ -211,18 +252,206 @@ public class KeywordIdentifierEscapingTests : SourceGeneratorTestsBase
       AssertGeneratedCodeCompiles<RegularUnionSourceGenerator>(source);
    }
 
-   private static void AssertGeneratedCodeCompiles<T>(string source)
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_members_are_named_like_the_factory_method_locals()
+   {
+      // The generated factory and validation methods declare fixed 'obj' and 'validationError' parameters and
+      // locals in the same scope as one parameter per member. Members rendering to these identifiers collided
+      // (CS0100/CS0128/CS0136), so the fixed names are renamed to 'resultObj' and 'resultValidationError'.
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public string Obj { get; }
+               public string ValidationError { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_has_members_named_Obj_and_ResultObj()
+   {
+      // 'Obj' pushes the fixed parameter name to the alternative 'resultObj', which the member 'ResultObj' takes as
+      // well. The alternative therefore needs a numeric suffix ('resultObj1'); without it the generated factory
+      // methods declared 'obj' and 'resultObj' twice (CS0100/CS0128). The same applies to 'ValidationError' and
+      // 'ResultValidationError'.
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public string Obj { get; }
+               public string ResultObj { get; }
+               public string ValidationError { get; }
+               public string ResultValidationError { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_member_is_named_FactoryArgumentsValidationError()
+   {
+      // A non-void 'ValidateFactoryArguments' makes the generator declare a local named
+      // 'factoryArgumentsValidationError' in the same scope as the members' parameters, and a 'FactoryPostInit'
+      // parameter with the same name. A member rendering to that identifier collided (CS0100/CS0128).
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public int FactoryArgumentsValidationError { get; }
+
+               private static partial int ValidateFactoryArguments(
+                  ref ValidationError validationError,
+                  ref int factoryArgumentsValidationError)
+               {
+                  return 42;
+               }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_members_are_named_like_the_MessagePack_locals()
+   {
+      // The generated 'Deserialize' declares the fixed locals '__count', '__resolver', '__validationError',
+      // '__obj' and the loop variable '__i' in the same scope as one local per member, and its parameters
+      // '__reader' and '__options' share that scope too. Before the double-underscore prefix these were plain
+      // identifiers and collided with members named 'Count', 'Resolver', 'ValidationError', 'Obj', 'I', 'Reader'
+      // and 'Options' (CS0128/CS0136/CS0841).
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public int Count { get; }
+               public string Resolver { get; }
+               public string ValidationError { get; }
+               public string Obj { get; }
+               public int I { get; }
+               public string Reader { get; }
+               public string Options { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source,
+                                                              typeof(ThinktectureMessagePackFormatter<,,>).Assembly,
+                                                              typeof(MessagePackFormatterAttribute).Assembly,
+                                                              typeof(MessagePackSerializerOptions).Assembly);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_members_are_named_like_the_Json_locals()
+   {
+      // The generated 'Read' declares the fixed locals '__comparer', '__propName', '__validationError' and '__obj'
+      // in the same scope as one local per member, and its parameters '__reader', '__typeToConvert' and '__options'
+      // share that scope too. Before the double-underscore prefix these were plain identifiers and collided with
+      // members named 'Comparer', 'PropName', 'ValidationError', 'Obj', 'Reader', 'TypeToConvert' and 'Options'
+      // (CS0128/CS0136/CS0841).
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public string Comparer { get; }
+               public string PropName { get; }
+               public string ValidationError { get; }
+               public string Obj { get; }
+               public string Reader { get; }
+               public string TypeToConvert { get; }
+               public string Options { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source,
+                                                              typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                              typeof(JsonDocument).Assembly);
+   }
+
+   [Fact]
+   public void Should_not_collide_when_complex_value_object_members_are_named_like_the_NewtonsoftJson_locals()
+   {
+      // The generated 'ReadJson' declares the fixed locals '__comparer', '__propName', '__validationError', '__obj'
+      // and the deconstruction variables '__lineNumber' and '__linePosition' in scopes shared with one local per
+      // member, and its parameters '__reader', '__objectType', '__existingValue' and '__serializer' share that
+      // scope too. Before the double-underscore prefix these were plain identifiers and collided with members named
+      // 'Comparer', 'PropName', 'ValidationError', 'Obj', 'LineNumber', 'LinePosition', 'Reader', 'ObjectType',
+      // 'ExistingValue' and 'Serializer' (CS0128/CS0136/CS0841).
+      var source = """
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+            [ComplexValueObject]
+            public partial class TestValueObject
+            {
+               public string Comparer { get; }
+               public string PropName { get; }
+               public string ValidationError { get; }
+               public string Obj { get; }
+               public int LineNumber { get; }
+               public int LinePosition { get; }
+               public string Reader { get; }
+               public string ObjectType { get; }
+               public string ExistingValue { get; }
+               public string Serializer { get; }
+            }
+         }
+         """;
+
+      AssertGeneratedCodeCompiles<ValueObjectSourceGenerator>(source,
+                                                              typeof(ThinktectureNewtonsoftJsonConverterFactory).Assembly,
+                                                              typeof(JsonToken).Assembly);
+   }
+
+   private static void AssertGeneratedCodeCompiles<T>(string source, params Assembly[] furtherAssemblies)
       where T : IIncrementalGenerator, new()
    {
       var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
       // Reference the full framework closure from the trusted platform assemblies so that the generated code
-      // (which uses e.g. System.Linq.Expressions) compiles, then add the Thinktecture runtime library.
+      // (which uses e.g. System.Linq.Expressions) compiles, then add the Thinktecture runtime library. The
+      // Thinktecture assemblies are excluded from the closure and added back explicitly, so that a test decides
+      // which serializer integration - and therefore which additional code generator - takes part.
       var references = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!)
                        .Split(Path.PathSeparator)
                        .Where(p => !string.IsNullOrEmpty(p) && !p.Contains("Thinktecture"))
                        .Select(p => (MetadataReference)MetadataReference.CreateFromFile(p))
                        .Append(MetadataReference.CreateFromFile(typeof(ISmartEnum<>).Assembly.Location))
+                       .Concat(furtherAssemblies.Select(a => (MetadataReference)MetadataReference.CreateFromFile(a.Location)))
                        .ToList();
 
       var compilation = CSharpCompilation.Create("SourceGeneratorTests",
@@ -231,9 +460,11 @@ public class KeywordIdentifierEscapingTests : SourceGeneratorTestsBase
                                                  new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 
       // Precondition: the user-written source itself is valid. The partial delegate methods have no defining
-      // declaration in this isolated compilation, so CS8795 is expected before the generator runs.
+      // declaration in this isolated compilation, so CS8795 is expected before the generator runs. For the same
+      // reason a user-written 'ValidateFactoryArguments' implementation reports CS0759 until the generator emits
+      // the matching defining declaration.
       compilation.GetDiagnostics()
-                 .Where(d => d.Severity == DiagnosticSeverity.Error && d.Id != "CS8795")
+                 .Where(d => d.Severity == DiagnosticSeverity.Error && d.Id != "CS8795" && d.Id != "CS0759")
                  .Should().BeEmpty();
 
       // The Annotations generator emits the JetBrains 'InstantHandleAttribute' into the compiled assembly; the

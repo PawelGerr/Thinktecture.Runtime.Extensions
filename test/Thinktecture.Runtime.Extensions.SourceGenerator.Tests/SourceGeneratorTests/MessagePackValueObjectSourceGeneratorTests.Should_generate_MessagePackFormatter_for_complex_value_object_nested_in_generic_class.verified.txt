@@ -16,47 +16,47 @@ partial class TestValueObject
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.Outer<T>.TestValueObject?>
    {
       /// <inheritdoc />
-      public global::Thinktecture.Tests.Outer<T>.TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public global::Thinktecture.Tests.Outer<T>.TestValueObject? Deserialize(ref global::MessagePack.MessagePackReader __reader, global::MessagePack.MessagePackSerializerOptions __options)
       {
-         if (reader.TryReadNil())
+         if (__reader.TryReadNil())
             return default;
 
-         options.Security.DepthStep(ref reader);
+         __options.Security.DepthStep(ref __reader);
 
-         var count = reader.ReadArrayHeader();
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         var __count = __reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver __resolver = __options.Resolver;
 
          int @value = default;
 
          try
          {
-            for (int i = 0; i < count; i++)
+            for (int __i = 0; __i < __count; __i++)
             {
-               switch (i)
+               switch (__i)
                {
                   case 0:
                   {
-                     @value = reader.ReadInt32()!;
+                     @value = __reader.ReadInt32()!;
                      break;
                   }
                   default:
-                     reader.Skip();
+                     __reader.Skip();
                      break;
                }
             }
 
-            var validationError = global::Thinktecture.Tests.Outer<T>.TestValueObject.Validate(
+            var __validationError = global::Thinktecture.Tests.Outer<T>.TestValueObject.Validate(
                                        @value!,
-                                       out var obj);
+                                       out var __obj);
 
-            if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
+            if (__validationError is not null)
+               throw new global::MessagePack.MessagePackSerializationException(__validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
 
-            return obj;
+            return __obj;
          }
          finally
          {
-           reader.Depth--;
+           __reader.Depth--;
          }
       }
 

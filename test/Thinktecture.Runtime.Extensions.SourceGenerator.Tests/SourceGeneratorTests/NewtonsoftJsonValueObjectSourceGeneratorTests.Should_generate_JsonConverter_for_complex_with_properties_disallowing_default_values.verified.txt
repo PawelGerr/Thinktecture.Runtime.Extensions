@@ -22,32 +22,32 @@ partial class TestValueObject
       }
 
       /// <inheritdoc />
-      public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
+      public override object? ReadJson(global::Newtonsoft.Json.JsonReader __reader, global::System.Type __objectType, object? __existingValue, global::Newtonsoft.Json.JsonSerializer __serializer)
       {
-         if (reader is null)
-            throw new global::System.ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new global::System.ArgumentNullException(nameof(serializer));
+         if (__reader is null)
+            throw new global::System.ArgumentNullException("reader");
+         if (__serializer is null)
+            throw new global::System.ArgumentNullException("serializer");
 
-         if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
+         if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(__objectType) == _type)
                return null;
 
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             return default(global::Thinktecture.Tests.TestValueObject);
          }
 
-         if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
+         if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
-               $"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.StartObject)}\".",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               $"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.StartObject)}\".",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
@@ -56,100 +56,106 @@ partial class TestValueObject
          global::Thinktecture.Argument<global::Thinktecture.Tests.StructDisallowingDefaultValues> @nonNullableStruct = default;
          global::Thinktecture.Tests.StructDisallowingDefaultValues? @nullableStruct = default;
 
-         var comparer = global::System.StringComparer.OrdinalIgnoreCase;
+         var __resolver = __serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;
+         var __nonNullableReferenceTypePropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("_nonNullableReferenceType") : "_nonNullableReferenceType";
+         var __nullableReferenceTypePropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("_nullableReferenceType") : "_nullableReferenceType";
+         var __nonNullableStructPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("_nonNullableStruct") : "_nonNullableStruct";
+         var __nullableStructPropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName("_nullableStruct") : "_nullableStruct";
 
-         while (reader.Read())
+         var __comparer = global::System.StringComparer.OrdinalIgnoreCase;
+
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
+            if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
                break;
 
-            if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
+            if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.PropertyName)}\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::Newtonsoft.Json.JsonToken.PropertyName)}\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 
-            var propName = reader.Value!.ToString();
+            var __propName = __reader.Value!.ToString();
 
-            if(!reader.Read())
+            if(!__reader.Read())
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"TestValueObject\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"TestValueObject\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 
-            if (comparer.Equals(propName, "nonNullableReferenceType"))
+            if (__comparer.Equals(__propName, __nonNullableReferenceTypePropertyName))
             {
-               @nonNullableReferenceType = serializer.Deserialize<global::Thinktecture.Tests.ClassDisallowingDefaultValues>(reader);
+               @nonNullableReferenceType = __serializer.Deserialize<global::Thinktecture.Tests.ClassDisallowingDefaultValues>(__reader);
             }
-            else if (comparer.Equals(propName, "nullableReferenceType"))
+            else if (__comparer.Equals(__propName, __nullableReferenceTypePropertyName))
             {
-               @nullableReferenceType = serializer.Deserialize<global::Thinktecture.Tests.ClassDisallowingDefaultValues?>(reader);
+               @nullableReferenceType = __serializer.Deserialize<global::Thinktecture.Tests.ClassDisallowingDefaultValues?>(__reader);
             }
-            else if (comparer.Equals(propName, "nonNullableStruct"))
+            else if (__comparer.Equals(__propName, __nonNullableStructPropertyName))
             {
-               @nonNullableStruct = serializer.Deserialize<global::Thinktecture.Tests.StructDisallowingDefaultValues>(reader);
+               @nonNullableStruct = __serializer.Deserialize<global::Thinktecture.Tests.StructDisallowingDefaultValues>(__reader);
             }
-            else if (comparer.Equals(propName, "nullableStruct"))
+            else if (__comparer.Equals(__propName, __nullableStructPropertyName))
             {
-               @nullableStruct = serializer.Deserialize<global::Thinktecture.Tests.StructDisallowingDefaultValues?>(reader);
+               @nullableStruct = __serializer.Deserialize<global::Thinktecture.Tests.StructDisallowingDefaultValues?>(__reader);
             }
             else
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $"Unknown member \"{propName}\" encountered when trying to deserialize \"TestValueObject\".",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $"Unknown member \"{__propName}\" encountered when trying to deserialize \"TestValueObject\".",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
          }
 
          if (!@nonNullableStruct.IsSet)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
                $"Cannot deserialize type \"TestValueObject\" because the member \"_nonNullableStruct\" of type \"global::Thinktecture.Tests.StructDisallowingDefaultValues\" is missing and does not allow default values.",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
-         var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
+         var __validationError = global::Thinktecture.Tests.TestValueObject.Validate(
                                     @nonNullableReferenceType!,
                                     @nullableReferenceType!,
                                     @nonNullableStruct.Value,
                                     @nullableStruct!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
+         if (__validationError is not null)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonSerializationException(
-               validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

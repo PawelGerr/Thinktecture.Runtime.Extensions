@@ -14,15 +14,15 @@ partial class ComplexValueObject<T1, T2, T3>
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>?>
    {
       /// <inheritdoc />
-      public global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>? Deserialize(ref global::MessagePack.MessagePackReader __reader, global::MessagePack.MessagePackSerializerOptions __options)
       {
-         if (reader.TryReadNil())
+         if (__reader.TryReadNil())
             return default;
 
-         options.Security.DepthStep(ref reader);
+         __options.Security.DepthStep(ref __reader);
 
-         var count = reader.ReadArrayHeader();
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         var __count = __reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver __resolver = __options.Resolver;
 
          T1? @property = default;
          T2? @nullableProperty = default;
@@ -31,51 +31,51 @@ partial class ComplexValueObject<T1, T2, T3>
 
          try
          {
-            for (int i = 0; i < count; i++)
+            for (int __i = 0; __i < __count; __i++)
             {
-               switch (i)
+               switch (__i)
                {
                   case 0:
                   {
-                     @property = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T1>(resolver).Deserialize(ref reader, options)!;
+                     @property = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T1>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 1:
                   {
-                     @nullableProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T2?>(resolver).Deserialize(ref reader, options)!;
+                     @nullableProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T2?>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 2:
                   {
-                     @structProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T3>(resolver).Deserialize(ref reader, options)!;
+                     @structProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T3>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 3:
                   {
-                     @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T3?>(resolver).Deserialize(ref reader, options)!;
+                     @nullableStructProperty = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<T3?>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   default:
-                     reader.Skip();
+                     __reader.Skip();
                      break;
                }
             }
 
-            var validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
+            var __validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
                                        @property!,
                                        @nullableProperty!,
                                        @structProperty!,
                                        @nullableStructProperty!,
-                                       out var obj);
+                                       out var __obj);
 
-            if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject<T1, T2, T3>\".");
+            if (__validationError is not null)
+               throw new global::MessagePack.MessagePackSerializationException(__validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject<T1, T2, T3>\".");
 
-            return obj;
+            return __obj;
          }
          finally
          {
-           reader.Depth--;
+           __reader.Depth--;
          }
       }
 

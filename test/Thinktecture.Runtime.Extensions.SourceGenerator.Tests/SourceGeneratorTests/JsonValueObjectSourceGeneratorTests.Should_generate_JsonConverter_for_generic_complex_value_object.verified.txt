@@ -43,67 +43,67 @@ partial class ComplexValueObject<T1, T2, T3>
       }
 
       /// <inheritdoc />
-      public override global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>? Read(ref global::System.Text.Json.Utf8JsonReader __reader, global::System.Type __typeToConvert, global::System.Text.Json.JsonSerializerOptions __options)
       {
-         if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+         if (__reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
 
-         if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
+         if (__reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+            throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
          T1? @property = default;
          T2? @nullableProperty = default;
          T3 @structProperty = default;
          T3? @nullableStructProperty = default;
 
-         var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
+         var __comparer = __options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
-         while (reader.Read())
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
+            if (__reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
-            if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
+            if (__reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+               throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"ComplexValueObject<T1, T2, T3>\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
 
-            var propName = reader.GetString();
+            var __propName = __reader.GetString();
 
-            if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"ComplexValueObject<T1, T2, T3>\".");
+            if(!__reader.Read())
+               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"ComplexValueObject<T1, T2, T3>\".");
 
-            if (comparer.Equals(propName, this._propertyPropertyName))
+            if (__comparer.Equals(__propName, this._propertyPropertyName))
             {
-               @property = this._propertyConverter.Read(ref reader, typeof(T1), options);
+               @property = this._propertyConverter.Read(ref __reader, typeof(T1), __options);
             }
-            else if (comparer.Equals(propName, this._nullablePropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._nullablePropertyPropertyName))
             {
-               @nullableProperty = this._nullablePropertyConverter.Read(ref reader, typeof(T2?), options);
+               @nullableProperty = this._nullablePropertyConverter.Read(ref __reader, typeof(T2?), __options);
             }
-            else if (comparer.Equals(propName, this._structPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._structPropertyPropertyName))
             {
-               @structProperty = this._structPropertyConverter.Read(ref reader, typeof(T3), options);
+               @structProperty = this._structPropertyConverter.Read(ref __reader, typeof(T3), __options);
             }
-            else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableStructPropertyPropertyName))
             {
-               @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(T3?), options);
+               @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref __reader, typeof(T3?), __options);
             }
             else
             {
-               throw new global::System.Text.Json.JsonException($"Unknown member \"{propName}\" encountered when trying to deserialize \"ComplexValueObject<T1, T2, T3>\".");
+               throw new global::System.Text.Json.JsonException($"Unknown member \"{__propName}\" encountered when trying to deserialize \"ComplexValueObject<T1, T2, T3>\".");
             }
          }
 
-         var validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
+         var __validationError = global::Thinktecture.Tests.ComplexValueObject<T1, T2, T3>.Validate(
                                     @property!,
                                     @nullableProperty!,
                                     @structProperty!,
                                     @nullableStructProperty!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
-            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject\".");
+         if (__validationError is not null)
+            throw new global::System.Text.Json.JsonException(__validationError.ToString() ?? "Unable to deserialize \"ComplexValueObject\".");
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

@@ -70,35 +70,35 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       }
 
       /// <inheritdoc />
-      public override object? ReadJson(global::Newtonsoft.Json.JsonReader reader, global::System.Type objectType, object? existingValue, global::Newtonsoft.Json.JsonSerializer serializer)
+      public override object? ReadJson(global::Newtonsoft.Json.JsonReader __reader, global::System.Type __objectType, object? __existingValue, global::Newtonsoft.Json.JsonSerializer __serializer)
       {
-         if (reader is null)
-            throw new global::System.ArgumentNullException(nameof(reader));
-         if (serializer is null)
-            throw new global::System.ArgumentNullException(nameof(serializer));
+         if (__reader is null)
+            throw new global::System.ArgumentNullException(""reader"");
+         if (__serializer is null)
+            throw new global::System.ArgumentNullException(""serializer"");
 
-         if (reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
+         if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.Null)
          {
-            if(global::System.Nullable.GetUnderlyingType(objectType) == _type)
+            if(global::System.Nullable.GetUnderlyingType(__objectType) == _type)
                return null;
 ");
 
       if (_type.DisallowsDefaultValue)
       {
          _sb.Append(@"
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
                $""Cannot convert null to type \""").AppendTypeMinimallyQualified(_type).Append(@"\"" because it doesn't allow default values."",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);");
       }
       else
       {
          _sb.Append(@"
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             return default(").AppendTypeFullyQualified(_type).Append(");");
       }
@@ -106,15 +106,15 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       _sb.Append(@"
          }
 
-         if (reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
+         if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.StartObject)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
-               $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               $""Unexpected token \""{__reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.StartObject)}\""."",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 ");
@@ -135,38 +135,62 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          }
       }
 
+      // Resolve the expected property names through the same contract resolver used on the write path, so that
+      // a non-default naming strategy (e.g. SnakeCaseNamingStrategy) round-trips instead of failing the read.
+      //
+      // The fixed parameters and locals of this method share their scope with one local per member, named after
+      // the member's argument name. They all carry a double-underscore prefix to prevent a collision
+      // (CS0128/CS0136, or CS0841 when a member local shadows a parameter that is used before the local's
+      // declaration). The prefix is safe by construction: AppendArgumentName strips a leading run of underscores
+      // only when the next character is a letter, so a member-derived identifier can never start with "__"
+      // followed by a letter. That invariant additionally depends on ArgumentName.RenderAsIs being false, which
+      // holds here because InstanceMemberInfo always creates its ArgumentName with the default renderAsIs: false.
+      // The two ArgumentNullException calls pass a string literal instead of nameof, so that the reported
+      // parameter name stays the friendly one declared by the overridden base method.
       _sb.Append(@"
 
-         var comparer = global::System.StringComparer.OrdinalIgnoreCase;
+         var __resolver = __serializer.ContractResolver as global::Newtonsoft.Json.Serialization.DefaultContractResolver;");
 
-         while (reader.Read())
+      for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
+      {
+         var memberInfo = _assignableInstanceFieldsAndProperties[i];
+
+         _sb.Append(@"
+         var __").AppendArgumentName(memberInfo.ArgumentName).Append("PropertyName = (__resolver != null) ? __resolver.GetResolvedPropertyName(\"").Append(memberInfo.Name).Append("\") : \"").Append(memberInfo.Name).Append("\";");
+      }
+
+      _sb.Append(@"
+
+         var __comparer = global::System.StringComparer.OrdinalIgnoreCase;
+
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
+            if (__reader.TokenType == global::Newtonsoft.Json.JsonToken.EndObject)
                break;
 
-            if (reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
+            if (__reader.TokenType != global::Newtonsoft.Json.JsonToken.PropertyName)
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unexpected token \""{reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $""Unexpected token \""{__reader.TokenType}\"" when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\"". Expected token: \""{(global::Newtonsoft.Json.JsonToken.PropertyName)}\""."",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 
-            var propName = reader.Value!.ToString();
+            var __propName = __reader.Value!.ToString();
 
-            if(!reader.Read())
+            if(!__reader.Read())
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unexpected end of the JSON message when trying the read the value of \""{propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $""Unexpected end of the JSON message when trying the read the value of \""{__propName}\"" during deserialization of \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }
 ");
@@ -188,9 +212,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
             else if ");
          }
 
-         _sb.Append(@"(comparer.Equals(propName, """).AppendArgumentName(memberInfo.ArgumentName).Append(@"""))
+         _sb.Append(@"(__comparer.Equals(__propName, __").AppendArgumentName(memberInfo.ArgumentName).Append(@"PropertyName))
             {
-               ").AppendEscaped(memberInfo.ArgumentName).Append(" = serializer.Deserialize<").AppendTypeFullyQualified(memberInfo).Append(@">(reader);
+               ").AppendEscaped(memberInfo.ArgumentName).Append(" = __serializer.Deserialize<").AppendTypeFullyQualified(memberInfo).Append(@">(__reader);
             }");
       }
 
@@ -199,13 +223,13 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          _sb.Append(@"
             else
             {
-               var (lineNumber, linePosition) = GetLineInfo(reader);
+               var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
                throw new global::Newtonsoft.Json.JsonReaderException(
-                  $""Unknown member \""{propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
-                  reader.Path,
-                  lineNumber,
-                  linePosition,
+                  $""Unknown member \""{__propName}\"" encountered when trying to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
+                  __reader.Path,
+                  __lineNumber,
+                  __linePosition,
                   null);
             }");
       }
@@ -223,13 +247,13 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
          if (!").AppendEscaped(memberInfo.ArgumentName).Append(@".IsSet)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonReaderException(
                $""Cannot deserialize type \""").AppendTypeMinimallyQualified(_type).Append("\\\" because the member \\\"").Append(memberInfo.Name).Append("\\\" of type \\\"").AppendTypeFullyQualified(memberInfo).Append(@"\"" is missing and does not allow default values."",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }");
          }
@@ -237,7 +261,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
 
-         var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
+         var __validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -250,21 +274,21 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       }
 
       _sb.Append(@"
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
+         if (__validationError is not null)
          {
-            var (lineNumber, linePosition) = GetLineInfo(reader);
+            var (__lineNumber, __linePosition) = GetLineInfo(__reader);
 
             throw new global::Newtonsoft.Json.JsonSerializationException(
-               validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
-               reader.Path,
-               lineNumber,
-               linePosition,
+               __validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."",
+               __reader.Path,
+               __lineNumber,
+               __linePosition,
                null);
          }
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />
@@ -288,7 +312,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          var memberInfo = _assignableInstanceFieldsAndProperties[i];
 
          _sb.Append(@"
-         var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = obj.").Append(memberInfo.Name).Append(@";
+         var ").AppendEscaped(memberInfo.ArgumentName).Append("PropertyValue = obj.").AppendIdentifier(memberInfo.Name).Append(@";
 ");
 
          if (memberInfo.IsReferenceTypeOrNullableStruct)

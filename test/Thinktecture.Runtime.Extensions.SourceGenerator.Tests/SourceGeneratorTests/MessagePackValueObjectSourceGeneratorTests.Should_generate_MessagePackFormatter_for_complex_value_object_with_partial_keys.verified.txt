@@ -14,15 +14,15 @@ partial class ComplexValueObjectWithPartialKeys
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys?>
    {
       /// <inheritdoc />
-      public global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys? Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys? Deserialize(ref global::MessagePack.MessagePackReader __reader, global::MessagePack.MessagePackSerializerOptions __options)
       {
-         if (reader.TryReadNil())
+         if (__reader.TryReadNil())
             return default;
 
-         options.Security.DepthStep(ref reader);
+         __options.Security.DepthStep(ref __reader);
 
-         var count = reader.ReadArrayHeader();
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         var __count = __reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver __resolver = __options.Resolver;
 
          decimal @property1 = default;
          string? @property2 = default;
@@ -30,45 +30,45 @@ partial class ComplexValueObjectWithPartialKeys
 
          try
          {
-            for (int i = 0; i < count; i++)
+            for (int __i = 0; __i < __count; __i++)
             {
-               switch (i)
+               switch (__i)
                {
                   case 6:
                   {
-                     @property1 = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal>(resolver).Deserialize(ref reader, options)!;
+                     @property1 = global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<decimal>(__resolver).Deserialize(ref __reader, __options)!;
                      break;
                   }
                   case 5:
                   {
-                     @property2 = reader.ReadString()!;
+                     @property2 = __reader.ReadString()!;
                      break;
                   }
                   case 7:
                   {
-                     @property3 = reader.ReadInt32()!;
+                     @property3 = __reader.ReadInt32()!;
                      break;
                   }
                   default:
-                     reader.Skip();
+                     __reader.Skip();
                      break;
                }
             }
 
-            var validationError = global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys.Validate(
+            var __validationError = global::Thinktecture.Tests.ComplexValueObjectWithPartialKeys.Validate(
                                        @property1!,
                                        @property2!,
                                        @property3!,
-                                       out var obj);
+                                       out var __obj);
 
-            if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? "Unable to deserialize \"ComplexValueObjectWithPartialKeys\".");
+            if (__validationError is not null)
+               throw new global::MessagePack.MessagePackSerializationException(__validationError.ToString() ?? "Unable to deserialize \"ComplexValueObjectWithPartialKeys\".");
 
-            return obj;
+            return __obj;
          }
          finally
          {
-           reader.Depth--;
+           __reader.Depth--;
          }
       }
 

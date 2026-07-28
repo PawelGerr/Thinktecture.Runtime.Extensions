@@ -39,61 +39,61 @@ partial class TestValueObject
       }
 
       /// <inheritdoc />
-      public override global::Thinktecture.Tests.TestValueObject? Read(ref global::System.Text.Json.Utf8JsonReader reader, global::System.Type typeToConvert, global::System.Text.Json.JsonSerializerOptions options)
+      public override global::Thinktecture.Tests.TestValueObject? Read(ref global::System.Text.Json.Utf8JsonReader __reader, global::System.Type __typeToConvert, global::System.Text.Json.JsonSerializerOptions __options)
       {
-         if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+         if (__reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
             return default;
 
-         if (reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
-            throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
+         if (__reader.TokenType != global::System.Text.Json.JsonTokenType.StartObject)
+            throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.StartObject)}\".");
 
          string? @referenceField = default;
          int @structProperty = default;
          decimal? @nullableStructProperty = default;
 
-         var comparer = options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
+         var __comparer = __options.PropertyNameCaseInsensitive ? global::System.StringComparer.OrdinalIgnoreCase : global::System.StringComparer.Ordinal;
 
-         while (reader.Read())
+         while (__reader.Read())
          {
-            if (reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
+            if (__reader.TokenType == global::System.Text.Json.JsonTokenType.EndObject)
                break;
 
-            if (reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
-               throw new global::System.Text.Json.JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
+            if (__reader.TokenType != global::System.Text.Json.JsonTokenType.PropertyName)
+               throw new global::System.Text.Json.JsonException($"Unexpected token \"{__reader.TokenType}\" when trying to deserialize \"TestValueObject\". Expected token: \"{(global::System.Text.Json.JsonTokenType.PropertyName)}\".");
 
-            var propName = reader.GetString();
+            var __propName = __reader.GetString();
 
-            if(!reader.Read())
-               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{propName}\" during deserialization of \"TestValueObject\".");
+            if(!__reader.Read())
+               throw new global::System.Text.Json.JsonException($"Unexpected end of the JSON message when trying the read the value of \"{__propName}\" during deserialization of \"TestValueObject\".");
 
-            if (comparer.Equals(propName, this._referenceFieldPropertyName))
+            if (__comparer.Equals(__propName, this._referenceFieldPropertyName))
             {
-               @referenceField = this._referenceFieldConverter.Read(ref reader, typeof(string), options);
+               @referenceField = this._referenceFieldConverter.Read(ref __reader, typeof(string), __options);
             }
-            else if (comparer.Equals(propName, this._structPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._structPropertyPropertyName))
             {
-               @structProperty = this._structPropertyConverter.Read(ref reader, typeof(int), options);
+               @structProperty = this._structPropertyConverter.Read(ref __reader, typeof(int), __options);
             }
-            else if (comparer.Equals(propName, this._nullableStructPropertyPropertyName))
+            else if (__comparer.Equals(__propName, this._nullableStructPropertyPropertyName))
             {
-               @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref reader, typeof(decimal?), options);
+               @nullableStructProperty = this._nullableStructPropertyConverter.Read(ref __reader, typeof(decimal?), __options);
             }
             else
             {
-               throw new global::System.Text.Json.JsonException($"Unknown member \"{propName}\" encountered when trying to deserialize \"TestValueObject\".");
+               throw new global::System.Text.Json.JsonException($"Unknown member \"{__propName}\" encountered when trying to deserialize \"TestValueObject\".");
             }
          }
 
-         var validationError = global::Thinktecture.Tests.TestValueObject.Validate(
+         var __validationError = global::Thinktecture.Tests.TestValueObject.Validate(
                                     @referenceField!,
                                     @structProperty!,
                                     @nullableStructProperty!,
-                                    out var obj);
+                                    out var __obj);
 
-         if (validationError is not null)
-            throw new global::System.Text.Json.JsonException(validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
+         if (__validationError is not null)
+            throw new global::System.Text.Json.JsonException(__validationError.ToString() ?? "Unable to deserialize \"TestValueObject\".");
 
-         return obj;
+         return __obj;
       }
 
       /// <inheritdoc />

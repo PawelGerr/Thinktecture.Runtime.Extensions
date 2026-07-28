@@ -94,9 +94,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
    public sealed class ValueObjectMessagePackFormatter : global::MessagePack.Formatters.IMessagePackFormatter<").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@">
    {
       /// <inheritdoc />
-      public ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Deserialize(ref global::MessagePack.MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+      public ").AppendTypeFullyQualifiedNullAnnotated(_type).Append(@" Deserialize(ref global::MessagePack.MessagePackReader __reader, global::MessagePack.MessagePackSerializerOptions __options)
       {
-         if (reader.TryReadNil())
+         if (__reader.TryReadNil())
             ");
 
       if (_type.DisallowsDefaultValue)
@@ -108,12 +108,19 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
          _sb.Append("return default;");
       }
 
+      // The fixed parameters and locals of this method share their scope with one local per member, named after
+      // the member's argument name. They all carry a double-underscore prefix to prevent a collision
+      // (CS0128/CS0136, or CS0841 when a member local shadows a parameter that is used before the local's
+      // declaration). The prefix is safe by construction: AppendArgumentName strips a leading run of underscores
+      // only when the next character is a letter, so a member-derived identifier can never start with "__"
+      // followed by a letter. That invariant additionally depends on ArgumentName.RenderAsIs being false, which
+      // holds here because InstanceMemberInfo always creates its ArgumentName with the default renderAsIs: false.
       _sb.Append(@"
 
-         options.Security.DepthStep(ref reader);
+         __options.Security.DepthStep(ref __reader);
 
-         var count = reader.ReadArrayHeader();
-         global::MessagePack.IFormatterResolver resolver = options.Resolver;
+         var __count = __reader.ReadArrayHeader();
+         global::MessagePack.IFormatterResolver __resolver = __options.Resolver;
 ");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
@@ -140,9 +147,9 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       var nextFreeKey = _nextFreeKey;
 
       _sb.Append(@"
-            for (int i = 0; i < count; i++)
+            for (int __i = 0; __i < __count; __i++)
             {
-               switch (i)
+               switch (__i)
                {");
 
       for (var i = 0; i < _assignableInstanceFieldsAndProperties.Length; i++)
@@ -166,7 +173,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
                   default:
-                     reader.Skip();
+                     __reader.Skip();
                      break;
                }
             }");
@@ -186,7 +193,7 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       _sb.Append(@"
 
-            var validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
+            var __validationError = ").AppendTypeFullyQualified(_type).Append(".Validate(");
 
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -199,16 +206,16 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
       }
 
       _sb.Append(@"
-                                       out var obj);
+                                       out var __obj);
 
-            if (validationError is not null)
-               throw new global::MessagePack.MessagePackSerializationException(validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
+            if (__validationError is not null)
+               throw new global::MessagePack.MessagePackSerializationException(__validationError.ToString() ?? ""Unable to deserialize \""").AppendTypeMinimallyQualified(_type).Append(@"\""."");
 
-            return obj;
+            return __obj;
          }
          finally
          {
-           reader.Depth--;
+           __reader.Depth--;
          }
       }
 
@@ -352,10 +359,10 @@ partial ").AppendTypeKind(_type).Append(" ").Append(_type.Name).AppendGenericTyp
 
       if (command is not null)
       {
-         sb.Append("reader.").Append(command).Append("()");
+         sb.Append("__reader.").Append(command).Append("()");
          return;
       }
 
-      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(resolver).Deserialize(ref reader, options)");
+      sb.Append("global::MessagePack.FormatterResolverExtensions.GetFormatterWithVerify<").AppendTypeFullyQualified(memberInfo).Append(">(__resolver).Deserialize(ref __reader, __options)");
    }
 }
