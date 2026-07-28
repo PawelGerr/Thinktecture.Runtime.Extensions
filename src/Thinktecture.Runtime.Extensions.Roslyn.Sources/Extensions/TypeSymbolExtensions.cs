@@ -95,4 +95,53 @@ public static partial class TypeSymbolExtensions
          }
       };
    }
+
+   /// <summary>
+   /// Computes the accessibility that is actually visible for the provided <paramref name="type"/>.
+   /// A public type nested in an internal type is effectively internal, and a constructed generic type
+   /// is at most as accessible as its least accessible type argument.
+   /// </summary>
+   public static Accessibility GetEffectiveAccessibility(this ITypeSymbol type)
+   {
+      if (type.TypeKind == TypeKind.Error)
+         return Accessibility.Public;
+
+      switch (type)
+      {
+         case ITypeParameterSymbol:
+            return Accessibility.Public;
+
+         case IArrayTypeSymbol arrayType:
+            return arrayType.ElementType.GetEffectiveAccessibility();
+
+         case IPointerTypeSymbol pointerType:
+            return pointerType.PointedAtType.GetEffectiveAccessibility();
+
+         case INamedTypeSymbol namedType:
+         {
+            var accessibility = Accessibility.Public;
+
+            for (INamedTypeSymbol? containingType = namedType; containingType is not null; containingType = containingType.ContainingType)
+            {
+               if (containingType.DeclaredAccessibility < accessibility)
+                  accessibility = containingType.DeclaredAccessibility;
+            }
+
+            var typeArguments = namedType.TypeArguments;
+
+            for (var i = 0; i < typeArguments.Length; i++)
+            {
+               var typeArgumentAccessibility = typeArguments[i].GetEffectiveAccessibility();
+
+               if (typeArgumentAccessibility < accessibility)
+                  accessibility = typeArgumentAccessibility;
+            }
+
+            return accessibility;
+         }
+
+         default:
+            return Accessibility.Public;
+      }
+   }
 }

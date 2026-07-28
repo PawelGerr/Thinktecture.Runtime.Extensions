@@ -66,6 +66,7 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.TypeParamRefRequiresNotnullConstraint,
       DiagnosticsDescriptors.SingleBackingFieldTypeConflictsWithUseSingleBackingField,
       DiagnosticsDescriptors.ValidateFactoryArgumentsAdditionalParameterMustNotHaveDefaultOrBeByRef,
+      DiagnosticsDescriptors.AdHocUnionMemberTypeIsLessAccessibleThanUnion,
    ];
 
    /// <inheritdoc />
@@ -580,6 +581,64 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             location,
             BuildTypeName(type));
       }
+
+      CheckAdHocUnionMemberTypeAccessibility(context, type, adHocUnionAttribute);
+   }
+
+   private static void CheckAdHocUnionMemberTypeAccessibility(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      AttributeData adHocUnionAttribute)
+   {
+      var unionAccessibility = type.GetEffectiveAccessibility();
+      var memberTypes = GetAdHocUnionMemberTypes(adHocUnionAttribute);
+
+      for (var i = 0; i < memberTypes.Length; i++)
+      {
+         var memberType = memberTypes[i];
+
+         if (memberType.TypeKind == TypeKind.Error)
+            continue;
+
+         if (memberType.GetEffectiveAccessibility() >= unionAccessibility)
+            continue;
+
+         var location = adHocUnionAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation()
+                        ?? type.GetTypeIdentifierLocation(context.CancellationToken);
+
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.AdHocUnionMemberTypeIsLessAccessibleThanUnion,
+            location,
+            memberType,
+            type);
+      }
+   }
+
+   private static ImmutableArray<ITypeSymbol> GetAdHocUnionMemberTypes(AttributeData adHocUnionAttribute)
+   {
+      var attributeClass = adHocUnionAttribute.AttributeClass;
+
+      if (attributeClass is null)
+         return ImmutableArray<ITypeSymbol>.Empty;
+
+      if (!attributeClass.TypeArguments.IsDefaultOrEmpty)
+         return attributeClass.TypeArguments;
+
+      var constructorArguments = adHocUnionAttribute.ConstructorArguments;
+
+      if (constructorArguments.IsDefaultOrEmpty)
+         return ImmutableArray<ITypeSymbol>.Empty;
+
+      var memberTypes = ImmutableArray.CreateBuilder<ITypeSymbol>(constructorArguments.Length);
+
+      for (var i = 0; i < constructorArguments.Length; i++)
+      {
+         if (constructorArguments[i].Value is ITypeSymbol memberType)
+            memberTypes.Add(memberType);
+      }
+
+      return memberTypes.DrainToImmutable();
    }
 
    private static void ValidateRegularUnion(

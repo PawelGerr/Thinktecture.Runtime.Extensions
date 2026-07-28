@@ -32,6 +32,9 @@ string txt = (string)u;         // explicit cast
 
 - **No conversion operator** is generated for `object`, interface, or type-parameter members
   (C# forbids it) — use the constructor or a factory method for those.
+- **Member types must not be less accessible than the union** (TTRESG077) — a `public` union with an
+  `internal` member type cannot compile, because the operators, `AsX`, `Switch`/`Map`, the constructor
+  and `CreateX` all expose that type and operators must be `public`.
 - Member names default to the member's type name; rename with `T1Name`/`T2Name`/… (drives `IsX`/`AsX`/
   `CreateX`/`NormalizeX`). A **passed (concrete) type** is named after the type itself — `string` gives
   `IsString`/`AsString`/`CreateString`. A **type-reference** member (`TypeParamRef1`–`TypeParamRef5`) is
