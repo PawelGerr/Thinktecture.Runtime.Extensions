@@ -47,7 +47,7 @@ public class AppendTypeForXmlComment
    public void Should_use_fully_qualified_if_has_containing_types()
    {
       var sb = new StringBuilder();
-      var containing = ImmutableArray.Create(new ContainingTypeState("Outer", isReferenceType: true, isRecord: false, genericParameters: []));
+      var containing = ImmutableArray.Create(new ContainingTypeState("Outer", isReferenceType: true, isRecord: false, isInterface: false, genericParameters: []));
       var t = new StringBuilderTestHelpers.FakeTypeInfo("global::MyNs.Outer.Inner", "Inner", "MyNs", "Inner", containingTypes: containing);
       sb.AppendTypeForXmlComment(t);
       sb.ToString().Should().Be("<see cref=\"global::MyNs.Outer.Inner\"/>");

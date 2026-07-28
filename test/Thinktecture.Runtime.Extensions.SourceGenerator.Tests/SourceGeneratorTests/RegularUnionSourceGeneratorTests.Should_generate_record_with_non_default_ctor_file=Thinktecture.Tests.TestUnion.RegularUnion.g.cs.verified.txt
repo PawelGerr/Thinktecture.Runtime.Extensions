@@ -42,7 +42,7 @@ abstract partial record TestUnion :
             @child2(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -73,7 +73,7 @@ abstract partial record TestUnion :
             @child2(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -100,7 +100,7 @@ abstract partial record TestUnion :
          case global::Thinktecture.Tests.TestUnion.Child2 value:
             return @child2(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -130,7 +130,7 @@ abstract partial record TestUnion :
          case global::Thinktecture.Tests.TestUnion.Child2 value:
             return @child2(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -152,12 +152,12 @@ abstract partial record TestUnion :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.TestUnion.Child1 value:
+         case global::Thinktecture.Tests.TestUnion.Child1:
                return @child1;
-         case global::Thinktecture.Tests.TestUnion.Child2 value:
+         case global::Thinktecture.Tests.TestUnion.Child2:
                return @child2;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

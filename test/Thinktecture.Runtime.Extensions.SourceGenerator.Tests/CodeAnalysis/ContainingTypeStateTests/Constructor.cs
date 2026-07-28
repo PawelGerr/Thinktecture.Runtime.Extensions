@@ -9,7 +9,7 @@ public class Constructor
    public void Should_initialize_name_property()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.Name.Should().Be("MyClass");
@@ -19,7 +19,7 @@ public class Constructor
    public void Should_initialize_isReferenceType_property()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeTrue();
@@ -29,7 +29,7 @@ public class Constructor
    public void Should_initialize_isRecord_property()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsRecord.Should().BeTrue();
@@ -44,7 +44,7 @@ public class Constructor
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty));
 
       // Act
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Assert
       state.GenericParameters.Should().Equal(genericParams);
@@ -54,7 +54,7 @@ public class Constructor
    public void Should_handle_empty_name()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.Name.Should().Be("");
@@ -64,7 +64,7 @@ public class Constructor
    public void Should_handle_empty_generic_parameters()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.GenericParameters.Should().BeEmpty();
@@ -74,7 +74,7 @@ public class Constructor
    public void Should_handle_value_type()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeFalse();
@@ -84,7 +84,7 @@ public class Constructor
    public void Should_handle_reference_type_record()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeTrue();
@@ -95,7 +95,7 @@ public class Constructor
    public void Should_handle_value_type_record()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyRecordStruct", false, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyRecordStruct", false, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeFalse();
@@ -110,7 +110,7 @@ public class Constructor
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
 
       // Act
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Assert
       state.GenericParameters.Should().HaveCount(1);
@@ -127,7 +127,7 @@ public class Constructor
          new GenericTypeParameterState("TValue", ImmutableArray<string>.Empty));
 
       // Act
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Assert
       state.GenericParameters.Should().HaveCount(3);
@@ -144,7 +144,7 @@ public class Constructor
          new GenericTypeParameterState("T", ["class", "IDisposable"]));
 
       // Act
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Assert
       state.GenericParameters[0].Constraints.Should().Equal("class", "IDisposable");
@@ -160,7 +160,7 @@ public class Constructor
          new GenericTypeParameterState("TValue", ImmutableArray<string>.Empty));
 
       // Act
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Assert
       state.GenericParameters[0].Name.Should().Be("TKey");
@@ -172,7 +172,7 @@ public class Constructor
    public void Should_handle_name_with_special_characters()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyClass_123", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass_123", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.Name.Should().Be("MyClass_123");
@@ -182,7 +182,7 @@ public class Constructor
    public void Should_handle_name_with_generic_syntax()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyClass<T>", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass<T>", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.Name.Should().Be("MyClass<T>");
@@ -192,7 +192,7 @@ public class Constructor
    public void Should_handle_all_false_boolean_flags()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeFalse();
@@ -203,7 +203,7 @@ public class Constructor
    public void Should_handle_all_true_boolean_flags()
    {
       // Arrange & Act
-      var state = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Assert
       state.IsReferenceType.Should().BeTrue();

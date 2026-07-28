@@ -67,7 +67,7 @@ abstract partial class MixedResponse :
             @cancelled(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -113,7 +113,7 @@ abstract partial class MixedResponse :
             @cancelled(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -152,7 +152,7 @@ abstract partial class MixedResponse :
          case global::Thinktecture.Tests.MixedResponse.Cancelled value:
             return @cancelled(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -194,7 +194,7 @@ abstract partial class MixedResponse :
          case global::Thinktecture.Tests.MixedResponse.Cancelled value:
             return @cancelled(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -222,18 +222,18 @@ abstract partial class MixedResponse :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.MixedResponse.Error.Timeout value:
+         case global::Thinktecture.Tests.MixedResponse.Error.Timeout:
                return @errorTimeout;
-         case global::Thinktecture.Tests.MixedResponse.Error.NotFound value:
+         case global::Thinktecture.Tests.MixedResponse.Error.NotFound:
                return @errorNotFound;
-         case global::Thinktecture.Tests.MixedResponse.Success value:
+         case global::Thinktecture.Tests.MixedResponse.Success:
                return @success;
-         case global::Thinktecture.Tests.MixedResponse.Pending value:
+         case global::Thinktecture.Tests.MixedResponse.Pending:
                return @pending;
-         case global::Thinktecture.Tests.MixedResponse.Cancelled value:
+         case global::Thinktecture.Tests.MixedResponse.Cancelled:
                return @cancelled;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

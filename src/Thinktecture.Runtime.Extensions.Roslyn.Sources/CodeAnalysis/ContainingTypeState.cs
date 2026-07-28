@@ -8,17 +8,20 @@ public sealed class ContainingTypeState
    public string Name { get; }
    public bool IsReferenceType { get; }
    public bool IsRecord { get; }
+   public bool IsInterface { get; }
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public ContainingTypeState(
       string name,
       bool isReferenceType,
       bool isRecord,
+      bool isInterface,
       ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Name = name;
       IsReferenceType = isReferenceType;
       IsRecord = isRecord;
+      IsInterface = isInterface;
       GenericParameters = genericParameters;
    }
 
@@ -33,6 +36,7 @@ public sealed class ContainingTypeState
       return Name == other.Name
              && IsReferenceType == other.IsReferenceType
              && IsRecord == other.IsRecord
+             && IsInterface == other.IsInterface
              && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
@@ -48,6 +52,7 @@ public sealed class ContainingTypeState
          var hashCode = Name.GetHashCode();
          hashCode = (hashCode * 397) ^ IsReferenceType.GetHashCode();
          hashCode = (hashCode * 397) ^ IsRecord.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;

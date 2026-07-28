@@ -9,7 +9,7 @@ public class GetHashCode
    public void Should_return_same_hash_code_for_same_instance()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state.GetHashCode();
@@ -25,8 +25,8 @@ public class GetHashCode
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -44,8 +44,8 @@ public class GetHashCode
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -59,8 +59,8 @@ public class GetHashCode
    public void Should_return_different_hash_code_for_different_names()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("OtherClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("OtherClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -74,8 +74,8 @@ public class GetHashCode
    public void Should_return_different_hash_code_for_different_isReferenceType()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -89,8 +89,8 @@ public class GetHashCode
    public void Should_return_different_hash_code_for_different_isRecord()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -108,8 +108,8 @@ public class GetHashCode
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -129,8 +129,8 @@ public class GetHashCode
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty),
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -144,7 +144,7 @@ public class GetHashCode
    public void Should_handle_empty_name()
    {
       // Arrange
-      var state = new ContainingTypeState("", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode = state.GetHashCode();
@@ -157,7 +157,7 @@ public class GetHashCode
    public void Should_handle_empty_generic_parameters()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode = state.GetHashCode();
@@ -172,7 +172,7 @@ public class GetHashCode
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var hashCode = state.GetHashCode();
@@ -189,7 +189,7 @@ public class GetHashCode
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty),
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty),
          new GenericTypeParameterState("TValue", ImmutableArray<string>.Empty));
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var hashCode = state.GetHashCode();
@@ -204,7 +204,7 @@ public class GetHashCode
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var hashCode1 = state.GetHashCode();
@@ -221,8 +221,8 @@ public class GetHashCode
    {
       // Arrange
       var genericParams = ImmutableArray.Create(new GenericTypeParameterState("T", ["class", "IDisposable"]));
-      var state1 = new ContainingTypeState("MyClass", true, true, genericParams);
-      var state2 = new ContainingTypeState("MyClass", true, true, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, true, false, genericParams);
+      var state2 = new ContainingTypeState("MyClass", true, true, false, genericParams);
 
       // Act & Assert
       state1.GetHashCode().Should().Be(state2.GetHashCode());
@@ -232,8 +232,8 @@ public class GetHashCode
    public void Should_handle_value_type_instances()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -247,8 +247,8 @@ public class GetHashCode
    public void Should_handle_record_instances()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -264,8 +264,8 @@ public class GetHashCode
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -279,8 +279,8 @@ public class GetHashCode
    public void Should_handle_all_boolean_flags_true()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -294,8 +294,8 @@ public class GetHashCode
    public void Should_handle_all_boolean_flags_false()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -309,8 +309,8 @@ public class GetHashCode
    public void Should_return_different_hash_code_when_all_boolean_flags_differ()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -330,8 +330,8 @@ public class GetHashCode
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ["class"]),
          new GenericTypeParameterState("TKey", ["struct"]));
-      var state1 = new ContainingTypeState("MyClass", true, true, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, true, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, true, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, true, false, genericParams2);
 
       // Act
       var hashCode1 = state1.GetHashCode();
@@ -349,8 +349,8 @@ public class GetHashCode
          new GenericTypeParameterState("T", ["class"]));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ["struct"]));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var hashCode1 = state1.GetHashCode();

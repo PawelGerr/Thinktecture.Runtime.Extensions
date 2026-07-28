@@ -29,7 +29,7 @@
                            {
                               0 => "Item1", 
                               1 => "Item2", 
-                              _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $"Unknown item at index {index}.")
                            };
 
                            return new global::Thinktecture.Internal.SmartEnumItemMetadata
@@ -322,7 +322,7 @@
                @item2();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -356,7 +356,7 @@
                @item2();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          @default?.Invoke(this);
@@ -389,7 +389,7 @@
                @item2(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -428,7 +428,7 @@
                @item2(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          @default?.Invoke(@state, this);
@@ -457,7 +457,7 @@
             case 1:
                return @item2();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -492,7 +492,7 @@
 
                return @item2();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default(this);
@@ -524,7 +524,7 @@
             case 1:
                return @item2(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -562,7 +562,7 @@
 
                return @item2(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default(@state, this);
@@ -590,7 +590,7 @@
             case 1:
                return @item2;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 
@@ -623,7 +623,7 @@
 
                return @item2.Value;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default;

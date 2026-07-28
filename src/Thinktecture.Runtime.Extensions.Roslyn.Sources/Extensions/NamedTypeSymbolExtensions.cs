@@ -96,6 +96,7 @@ public static class NamedTypeSymbolExtensions
             containingType.Name,
             containingType.IsReferenceType,
             containingType.IsRecord,
+            containingType.TypeKind == TypeKind.Interface,
             containingType.GetGenericTypeParameters());
          types.Add(typeState);
          containingType = containingType.ContainingType;

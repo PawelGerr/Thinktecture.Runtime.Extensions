@@ -73,7 +73,7 @@ abstract partial class PlaceId :
             @regionIdInnerPlaceId(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -156,7 +156,7 @@ abstract partial class PlaceId :
 
             break;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
 
       @default?.Invoke(this);
@@ -209,7 +209,7 @@ abstract partial class PlaceId :
             @regionIdInnerPlaceId(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -297,7 +297,7 @@ abstract partial class PlaceId :
 
             break;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
 
       @default?.Invoke(@state, this);
@@ -342,7 +342,7 @@ abstract partial class PlaceId :
          case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId value:
             return @regionIdInnerPlaceId(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -421,7 +421,7 @@ abstract partial class PlaceId :
 
             break;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
 
       return @default(this);
@@ -469,7 +469,7 @@ abstract partial class PlaceId :
          case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId value:
             return @regionIdInnerPlaceId(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -551,7 +551,7 @@ abstract partial class PlaceId :
 
             break;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
 
       return @default(@state, this);
@@ -583,20 +583,20 @@ abstract partial class PlaceId :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId:
                return @regionIdInnerRegionId;
-         case global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId value:
+         case global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId:
                return @abstractRegionIdSpecialRegionId;
-         case global::Thinktecture.Tests.PlaceId.Unknown value:
+         case global::Thinktecture.Tests.PlaceId.Unknown:
                return @unknown;
-         case global::Thinktecture.Tests.PlaceId.CountryId value:
+         case global::Thinktecture.Tests.PlaceId.CountryId:
                return @countryId;
-         case global::Thinktecture.Tests.PlaceId.RegionId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId:
                return @regionId;
-         case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId:
                return @regionIdInnerPlaceId;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class
@@ -628,7 +628,7 @@ abstract partial class PlaceId :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId.InnerRegionId:
                if (@regionIdInnerRegionId.IsSet)
                {
                   return @regionIdInnerRegionId.Value;
@@ -639,35 +639,35 @@ abstract partial class PlaceId :
                   return @regionId.Value;
                }
                break;
-         case global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId value:
+         case global::Thinktecture.Tests.PlaceId.AbstractRegionId.SpecialRegionId:
                if (@abstractRegionIdSpecialRegionId.IsSet)
                {
                   return @abstractRegionIdSpecialRegionId.Value;
                }
 
                break;
-         case global::Thinktecture.Tests.PlaceId.Unknown value:
+         case global::Thinktecture.Tests.PlaceId.Unknown:
                if (@unknown.IsSet)
                {
                   return @unknown.Value;
                }
 
                break;
-         case global::Thinktecture.Tests.PlaceId.CountryId value:
+         case global::Thinktecture.Tests.PlaceId.CountryId:
                if (@countryId.IsSet)
                {
                   return @countryId.Value;
                }
 
                break;
-         case global::Thinktecture.Tests.PlaceId.RegionId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId:
                if (@regionId.IsSet)
                {
                   return @regionId.Value;
                }
 
                break;
-         case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId value:
+         case global::Thinktecture.Tests.PlaceId.RegionId.InnerPlaceId:
                if (@regionIdInnerPlaceId.IsSet)
                {
                   return @regionIdInnerPlaceId.Value;
@@ -675,7 +675,7 @@ abstract partial class PlaceId :
 
                break;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
 
          return @default;

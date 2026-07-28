@@ -7,6 +7,7 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
    public string Name { get; }
    public bool IsAbstract { get; }
    public bool IsInterface { get; }
+   public Accessibility DeclaredAccessibility { get; }
    public SpecialType SpecialType { get; }
    public bool HasRequiredMembers { get; }
    public string BaseTypeFullyQualified { get; }
@@ -29,6 +30,7 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
       BaseTypeDefinitionFullyQualified = type.BaseType.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
       IsAbstract = type.IsAbstract;
       IsInterface = type.TypeKind == TypeKind.Interface;
+      DeclaredAccessibility = type.DeclaredAccessibility;
       SpecialType = type.SpecialType;
       UniqueSingleArgumentConstructors = uniqueSingleArgumentConstructors;
       HasRequiredMembers = type.HasRequiredMembers();
@@ -52,6 +54,7 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
              && BaseTypeFullyQualified == other.BaseTypeFullyQualified
              && IsAbstract == other.IsAbstract
              && IsInterface == other.IsInterface
+             && DeclaredAccessibility == other.DeclaredAccessibility
              && SpecialType == other.SpecialType
              && HasRequiredMembers == other.HasRequiredMembers
              && UniqueSingleArgumentConstructors.SequenceEqual(other.UniqueSingleArgumentConstructors)
@@ -66,6 +69,7 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
          hashCode = (hashCode * 397) ^ BaseTypeFullyQualified.GetHashCode();
          hashCode = (hashCode * 397) ^ IsAbstract.GetHashCode();
          hashCode = (hashCode * 397) ^ IsInterface.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)DeclaredAccessibility;
          hashCode = (hashCode * 397) ^ (int)SpecialType;
          hashCode = (hashCode * 397) ^ HasRequiredMembers.GetHashCode();
          hashCode = (hashCode * 397) ^ UniqueSingleArgumentConstructors.ComputeHashCode();

@@ -62,6 +62,48 @@ public static class StringBuilderExtensions
       return sb;
    }
 
+   /// <summary>
+   /// Renders the least accessibility found in <paramref name="accessibilities"/>. A generated Switch or Map takes
+   /// every member type as a delegate parameter, so the method must not be more accessible than the least accessible
+   /// of those types. Otherwise the generated code does not compile (CS0051).
+   /// </summary>
+   public static StringBuilder RenderLeastAccessibility(
+      this StringBuilder sb,
+      IEnumerable<Accessibility> accessibilities)
+   {
+      var least = Accessibility.Public;
+      var hasProtected = false;
+      var hasInternal = false;
+
+      foreach (var accessibility in accessibilities)
+      {
+         // Type parameters and similar members carry no accessibility of their own.
+         if (accessibility == Accessibility.NotApplicable)
+            continue;
+
+         hasProtected |= accessibility == Accessibility.Protected;
+         hasInternal |= accessibility == Accessibility.Internal;
+
+         if (accessibility < least)
+            least = accessibility;
+      }
+
+      // 'protected' and 'internal' are not ordered relative to each other, so the loop above cannot find their
+      // intersection. That intersection is 'private protected'.
+      if (hasProtected && hasInternal && least > Accessibility.ProtectedAndInternal)
+         least = Accessibility.ProtectedAndInternal;
+
+      return sb.Append(least switch
+                       {
+                          Accessibility.Private => "private",
+                          Accessibility.ProtectedAndInternal => "private protected",
+                          Accessibility.Protected => "protected",
+                          Accessibility.Internal => "internal",
+                          Accessibility.ProtectedOrInternal => "protected internal",
+                          _ => "public"
+                       });
+   }
+
    public static StringBuilder AppendAccessModifier(
       this StringBuilder sb,
       UnionConstructorAccessModifier accessModifier)
@@ -434,6 +476,19 @@ public static class StringBuilderExtensions
       sb.Length = startIndex;
 
       return isMatch;
+   }
+
+   /// <summary>
+   /// Returns the identifier that <see cref="AppendArgumentName"/> emits for <paramref name="argName"/>, without
+   /// the <c>@</c> escape prefix. Used to collect the rendered per-item/member parameter names that a fixed
+   /// generated parameter must avoid.
+   /// </summary>
+   public static string RenderArgumentName(ArgumentName argName)
+   {
+      var sb = new StringBuilder();
+      sb.AppendArgumentName(argName);
+
+      return sb.ToString();
    }
 
    /// <summary>
@@ -819,9 +874,11 @@ public static class StringBuilderExtensions
       for (var i = 0; i < containingTypes.Length; i++)
       {
          var containingType = containingTypes[i];
-         var typeKind = containingType.IsRecord
-                           ? containingType.IsReferenceType ? "record " : "record struct "
-                           : containingType.IsReferenceType ? "class " : "struct ";
+         var typeKind = containingType.IsInterface
+                           ? "interface "
+                           : containingType.IsRecord
+                              ? containingType.IsReferenceType ? "record " : "record struct "
+                              : containingType.IsReferenceType ? "class " : "struct ";
 
          sb.Append("\npartial ").Append(typeKind).Append(containingType.Name).AppendGenericTypeParameters(containingType).Append("\n{");
       }

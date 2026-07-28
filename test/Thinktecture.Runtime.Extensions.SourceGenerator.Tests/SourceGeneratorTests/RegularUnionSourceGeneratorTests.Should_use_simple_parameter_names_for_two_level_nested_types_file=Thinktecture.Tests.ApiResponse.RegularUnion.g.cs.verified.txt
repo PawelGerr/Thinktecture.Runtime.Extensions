@@ -55,7 +55,7 @@ abstract partial class ApiResponse :
             @success(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -91,7 +91,7 @@ abstract partial class ApiResponse :
             @success(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -122,7 +122,7 @@ abstract partial class ApiResponse :
          case global::Thinktecture.Tests.ApiResponse.Success value:
             return @success(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -156,7 +156,7 @@ abstract partial class ApiResponse :
          case global::Thinktecture.Tests.ApiResponse.Success value:
             return @success(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -180,14 +180,14 @@ abstract partial class ApiResponse :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized value:
+         case global::Thinktecture.Tests.ApiResponse.Failure.Unauthorized:
                return @unauthorized;
-         case global::Thinktecture.Tests.ApiResponse.Failure.NotFound value:
+         case global::Thinktecture.Tests.ApiResponse.Failure.NotFound:
                return @notFound;
-         case global::Thinktecture.Tests.ApiResponse.Success value:
+         case global::Thinktecture.Tests.ApiResponse.Success:
                return @success;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

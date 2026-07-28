@@ -10,8 +10,8 @@ public class RenderContainingTypesEnd
    {
       var sb = new StringBuilder();
       sb.RenderContainingTypesEnd([
-         new ContainingTypeState("A", true, false, []),
-         new ContainingTypeState("B", true, false, []),
+         new ContainingTypeState("A", true, false, false, []),
+         new ContainingTypeState("B", true, false, false, []),
       ]);
 
       var s = sb.ToString();

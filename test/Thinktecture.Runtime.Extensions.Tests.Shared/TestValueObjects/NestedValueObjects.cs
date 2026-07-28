@@ -119,3 +119,15 @@ public partial record ParentRecord
       public readonly partial struct NestedStructComplexValueObject2;
    }
 }
+
+// An interface as containing type is the fifth kind next to class, struct, record struct and record. It exists so
+// that a type nested in an interface is rendered by the real generator pipeline on every build. Rendering the
+// containing type as "partial class" instead of "partial interface" would not compile.
+public partial interface IParentInterface
+{
+   [ValueObject<int>]
+   public sealed partial class NestedClassTestValueObject;
+
+   [ComplexValueObject]
+   public sealed partial class NestedClassComplexValueObject;
+}

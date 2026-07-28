@@ -22,7 +22,7 @@ namespace Thinktecture.Tests
                            {
                               0 => "Item1", 
                               1 => "Item2", 
-                              _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $"Unknown item at index {index}.")
                            };
 
                            return new global::Thinktecture.Internal.KeylessSmartEnumItemMetadata
@@ -115,7 +115,7 @@ namespace Thinktecture.Tests
                @item2();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -149,7 +149,7 @@ namespace Thinktecture.Tests
                @item2();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          @default?.Invoke(this);
@@ -182,7 +182,7 @@ namespace Thinktecture.Tests
                @item2(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -221,7 +221,7 @@ namespace Thinktecture.Tests
                @item2(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          @default?.Invoke(@state, this);
@@ -250,7 +250,7 @@ namespace Thinktecture.Tests
             case 1:
                return @item2();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -285,7 +285,7 @@ namespace Thinktecture.Tests
 
                return @item2();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default(this);
@@ -317,7 +317,7 @@ namespace Thinktecture.Tests
             case 1:
                return @item2(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -355,7 +355,7 @@ namespace Thinktecture.Tests
 
                return @item2(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default(@state, this);
@@ -383,7 +383,7 @@ namespace Thinktecture.Tests
             case 1:
                return @item2;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 
@@ -416,7 +416,7 @@ namespace Thinktecture.Tests
 
                return @item2.Value;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
 
          return @default;

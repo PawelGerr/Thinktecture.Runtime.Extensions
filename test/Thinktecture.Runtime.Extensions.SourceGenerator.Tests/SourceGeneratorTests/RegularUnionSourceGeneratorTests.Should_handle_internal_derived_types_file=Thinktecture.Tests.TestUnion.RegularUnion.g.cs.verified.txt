@@ -35,7 +35,7 @@ abstract partial class TestUnion :
    /// <param name="publicChild">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.PublicChild"/>.</param>
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public void Switch(
+   internal void Switch(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.InternalChild> @internalChild,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<global::Thinktecture.Tests.TestUnion.PublicChild> @publicChild)
    {
@@ -48,7 +48,7 @@ abstract partial class TestUnion :
             @publicChild(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -62,7 +62,7 @@ abstract partial class TestUnion :
    /// <param name="publicChild">The action to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.PublicChild"/>.</param>
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public void Switch<TState>(
+   internal void Switch<TState>(
       TState @state,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.InternalChild> @internalChild,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Action<TState, global::Thinktecture.Tests.TestUnion.PublicChild> @publicChild)
@@ -79,7 +79,7 @@ abstract partial class TestUnion :
             @publicChild(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -92,7 +92,7 @@ abstract partial class TestUnion :
    /// <param name="publicChild">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.PublicChild"/>.</param>
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public TResult Switch<TResult>(
+   internal TResult Switch<TResult>(
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.InternalChild, TResult> @internalChild,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<global::Thinktecture.Tests.TestUnion.PublicChild, TResult> @publicChild)
 #if NET9_0_OR_GREATER
@@ -106,7 +106,7 @@ abstract partial class TestUnion :
          case global::Thinktecture.Tests.TestUnion.PublicChild value:
             return @publicChild(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -120,7 +120,7 @@ abstract partial class TestUnion :
    /// <param name="publicChild">The function to execute if the current type is <see cref="global::Thinktecture.Tests.TestUnion.PublicChild"/>.</param>
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public TResult Switch<TState, TResult>(
+   internal TResult Switch<TState, TResult>(
       TState @state,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.InternalChild, TResult> @internalChild,
       [global::JetBrains.Annotations.InstantHandleAttribute] global::System.Func<TState, global::Thinktecture.Tests.TestUnion.PublicChild, TResult> @publicChild)
@@ -136,7 +136,7 @@ abstract partial class TestUnion :
          case global::Thinktecture.Tests.TestUnion.PublicChild value:
             return @publicChild(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -149,7 +149,7 @@ abstract partial class TestUnion :
    /// <param name="publicChild">The instance to return if the current type is <see cref="global::Thinktecture.Tests.TestUnion.PublicChild"/>.</param>
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public TResult Map<TResult>(
+   internal TResult Map<TResult>(
       TResult @internalChild,
       TResult @publicChild)
 #if NET9_0_OR_GREATER
@@ -158,12 +158,12 @@ abstract partial class TestUnion :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.TestUnion.InternalChild value:
+         case global::Thinktecture.Tests.TestUnion.InternalChild:
                return @internalChild;
-         case global::Thinktecture.Tests.TestUnion.PublicChild value:
+         case global::Thinktecture.Tests.TestUnion.PublicChild:
                return @publicChild;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

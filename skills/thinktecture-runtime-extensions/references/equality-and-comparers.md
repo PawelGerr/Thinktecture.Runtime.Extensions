@@ -36,7 +36,8 @@ without comparer). Complex VOs have **no** key-level ordering comparer — equal
 
 ## Predefined `ComparerAccessors` (namespace `Thinktecture`)
 
-Verified set (each supports both equality and ordering for `string`):
+Verified set (each supports both equality and ordering for `string`; used for a `string` key, each also
+supports the NET9+ alternate lookup that the span-based Smart Enum lookups need):
 
 - `ComparerAccessors.StringOrdinal`
 - `ComparerAccessors.StringOrdinalIgnoreCase`
@@ -88,6 +89,10 @@ public partial class Account
   (silenced by adding the comparer; **TTRESG048**/**049**).
 - Setting only an equality comparer **or** only an ordering comparer (**TTRESG102**/**103**).
 - Accessor generic argument not matching the member type (**TTRESG041**).
+- Writing a custom `string` comparer without `IAlternateEqualityComparer<ReadOnlySpan<char>, string>`. On NET9+
+  the generated span-based `Get`/`TryGet` and the span-based JSON deserialization path then fall back to the string lookup
+  and allocate one string per call. No diagnostic can catch this, because the accessor only exposes
+  `IEqualityComparer<string>` and the runtime type is invisible to the analyzer.
 
 ## Worked examples in this repo
 

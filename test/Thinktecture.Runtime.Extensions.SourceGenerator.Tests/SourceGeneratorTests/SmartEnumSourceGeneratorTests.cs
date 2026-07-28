@@ -1824,6 +1824,40 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_span_lookup_fallback_when_KeyMemberEqualityComparer_is_user_defined()
+   {
+      var source = """
+         using System;
+         using System.Collections.Generic;
+
+         namespace Thinktecture.Tests
+         {
+            public class MyStringComparerAccessor : IEqualityComparerAccessor<string>
+            {
+               public static IEqualityComparer<string> EqualityComparer => StringComparer.Ordinal;
+            }
+
+            [SmartEnum<string>]
+            [KeyMemberEqualityComparer<MyStringComparerAccessor, string>]
+            public partial class TestEnum
+            {
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+      var outputs = GetGeneratedOutputs<SmartEnumSourceGenerator>(source, typeof(ISmartEnum<>).Assembly);
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.SmartEnum.g.cs",
+                        "Thinktecture.Tests.TestEnum.Comparable.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.SpanParsable.g.cs",
+                        "Thinktecture.Tests.TestEnum.ComparisonOperators.g.cs",
+                        "Thinktecture.Tests.TestEnum.EqualityComparisonOperators.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_with_KeyMemberComparer()
    {
       var source = """

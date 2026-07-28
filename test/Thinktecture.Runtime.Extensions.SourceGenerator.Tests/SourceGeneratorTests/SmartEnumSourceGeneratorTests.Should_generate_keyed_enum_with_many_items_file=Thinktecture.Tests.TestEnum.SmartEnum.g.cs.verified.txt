@@ -35,7 +35,7 @@ namespace Thinktecture.Tests
                               7 => "Item8", 
                               8 => "Item9", 
                               9 => "Item10", 
-                              _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $"Unknown item at index {index}.")
                            };
 
                            return new global::Thinktecture.Internal.SmartEnumItemMetadata
@@ -286,7 +286,7 @@ namespace Thinktecture.Tests
                @item10();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -357,7 +357,7 @@ namespace Thinktecture.Tests
                @item10(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -416,7 +416,7 @@ namespace Thinktecture.Tests
             case 9:
                return @item10();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -478,7 +478,7 @@ namespace Thinktecture.Tests
             case 9:
                return @item10(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -536,7 +536,7 @@ namespace Thinktecture.Tests
             case 9:
                return @item10;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 

@@ -13,8 +13,8 @@ public class AppendTypeFullyQualified
       var sb = new StringBuilder();
       var type = new StringBuilderTestHelpers.FakeNamespaceAndName("MyNs", "MyType");
       var containing = ImmutableArray.CreateRange([
-         new ContainingTypeState("Outer", true, false, []),
-         new ContainingTypeState("Inner", true, false, [])
+         new ContainingTypeState("Outer", true, false, false, []),
+         new ContainingTypeState("Inner", true, false, false, [])
       ]);
 
       sb.AppendTypeFullyQualifiedWithoutGenerics(type, containing);

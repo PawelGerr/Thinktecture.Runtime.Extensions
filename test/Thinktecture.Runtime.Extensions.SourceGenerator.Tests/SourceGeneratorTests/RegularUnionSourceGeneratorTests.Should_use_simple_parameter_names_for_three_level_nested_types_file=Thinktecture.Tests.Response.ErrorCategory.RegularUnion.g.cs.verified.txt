@@ -58,7 +58,7 @@ abstract partial class ErrorCategory :
             @clientErrorBadRequest(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -99,7 +99,7 @@ abstract partial class ErrorCategory :
             @clientErrorBadRequest(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -134,7 +134,7 @@ abstract partial class ErrorCategory :
          case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest value:
             return @clientErrorBadRequest(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -172,7 +172,7 @@ abstract partial class ErrorCategory :
          case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest value:
             return @clientErrorBadRequest(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -198,16 +198,16 @@ abstract partial class ErrorCategory :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable:
                return @serverErrorServiceUnavailable;
-         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError:
                return @serverErrorInternalError;
-         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound:
                return @clientErrorNotFound;
-         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest:
                return @clientErrorBadRequest;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

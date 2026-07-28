@@ -241,7 +241,7 @@ namespace Thinktecture.Tests
             case 2:
                return @_1test;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected value index '{this._valueIndex}'.");
+               throw new global::System.InvalidOperationException($"Unexpected value index '{this._valueIndex}'.");
          }
       }
 

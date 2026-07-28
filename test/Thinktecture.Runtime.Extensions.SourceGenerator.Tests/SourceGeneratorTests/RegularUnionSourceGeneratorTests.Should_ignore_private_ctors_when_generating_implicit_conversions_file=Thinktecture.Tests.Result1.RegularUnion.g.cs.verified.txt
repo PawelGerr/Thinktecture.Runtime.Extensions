@@ -48,7 +48,7 @@ abstract partial record Result<T> :
             @failure(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -79,7 +79,7 @@ abstract partial record Result<T> :
             @failure(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -106,7 +106,7 @@ abstract partial record Result<T> :
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -136,7 +136,7 @@ abstract partial record Result<T> :
          case global::Thinktecture.Tests.Result<T>.Failure value:
             return @failure(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -158,12 +158,12 @@ abstract partial record Result<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Result<T>.Success value:
+         case global::Thinktecture.Tests.Result<T>.Success:
                return @success;
-         case global::Thinktecture.Tests.Result<T>.Failure value:
+         case global::Thinktecture.Tests.Result<T>.Failure:
                return @failure;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

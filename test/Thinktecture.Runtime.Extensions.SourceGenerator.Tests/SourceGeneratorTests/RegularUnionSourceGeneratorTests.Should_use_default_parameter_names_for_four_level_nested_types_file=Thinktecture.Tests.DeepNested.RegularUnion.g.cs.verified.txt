@@ -66,7 +66,7 @@ abstract partial class DeepNested :
             @topLevel(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -112,7 +112,7 @@ abstract partial class DeepNested :
             @topLevel(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -151,7 +151,7 @@ abstract partial class DeepNested :
          case global::Thinktecture.Tests.DeepNested.TopLevel value:
             return @topLevel(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -193,7 +193,7 @@ abstract partial class DeepNested :
          case global::Thinktecture.Tests.DeepNested.TopLevel value:
             return @topLevel(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -221,18 +221,18 @@ abstract partial class DeepNested :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.DeepNested.Level1.Level2.Level3.Level4 value:
+         case global::Thinktecture.Tests.DeepNested.Level1.Level2.Level3.Level4:
                return @level1Level2Level3Level4;
-         case global::Thinktecture.Tests.DeepNested.Level1.Level2.Level3 value:
+         case global::Thinktecture.Tests.DeepNested.Level1.Level2.Level3:
                return @level1Level2Level3;
-         case global::Thinktecture.Tests.DeepNested.Level1.Level2 value:
+         case global::Thinktecture.Tests.DeepNested.Level1.Level2:
                return @level1Level2;
-         case global::Thinktecture.Tests.DeepNested.Level1 value:
+         case global::Thinktecture.Tests.DeepNested.Level1:
                return @level1;
-         case global::Thinktecture.Tests.DeepNested.TopLevel value:
+         case global::Thinktecture.Tests.DeepNested.TopLevel:
                return @topLevel;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

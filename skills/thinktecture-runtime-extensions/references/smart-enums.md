@@ -187,7 +187,9 @@ the surrounding code (e.g. exposing the key as `Code` instead of the default).
 - **Generic key** (`Foo<T>`): use the `TypeParamRef` placeholder and a `notnull` constraint — see
   `references/generic-types.md` (the mechanism is shared with Value Objects and unions).
 - **String key**: comparison defaults to `OrdinalIgnoreCase`. To override (e.g. case-sensitive codes)
-  or to add ordering, see `references/equality-and-comparers.md`.
+  or to add ordering, see `references/equality-and-comparers.md`. On NET9+ a hand-written comparer without
+  `IAlternateEqualityComparer<ReadOnlySpan<char>, string>` makes the span-based `Get`/`TryGet` fall back to the
+  string lookup, which allocates one string per call.
 
 ## Common pitfalls
 

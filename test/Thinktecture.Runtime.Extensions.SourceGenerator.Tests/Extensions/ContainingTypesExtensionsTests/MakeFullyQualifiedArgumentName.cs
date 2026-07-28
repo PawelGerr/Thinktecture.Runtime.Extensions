@@ -24,7 +24,7 @@ public class MakeFullyQualifiedArgumentName
    [InlineData(new[] { "Outer" }, "Value", true, "value")]
    public void MakeFullyQualifiedArgumentName_Works(string[] types, string member, bool skipRoot, string expected)
    {
-      var list = types.Select(n => new ContainingTypeState(n, true, false, [])).ToImmutableArray();
+      var list = types.Select(n => new ContainingTypeState(n, true, false, false, [])).ToImmutableArray();
       var sb = new StringBuilder("prefix"); // ensure restoration works
       var result = ContainingTypesExtensions.MakeFullyQualifiedArgumentName(list, member, skipLevels: skipRoot ? 1 : 0, sb);
 

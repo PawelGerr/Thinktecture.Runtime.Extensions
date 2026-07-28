@@ -12,6 +12,12 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
    private readonly bool _useSharedObjectForRefTypes;
    private readonly bool _needsFactoryMethods;
 
+   // The fixed Switch/Map parameters ('default' for partial overloads and the state parameter for with-state
+   // overloads) must not collide with a per-member parameter whose name renders to the same identifier (e.g. a
+   // member named "Default" or "State"), which would otherwise produce CS0100 in the generated signature.
+   private readonly string _switchMapStateArgumentName;
+   private readonly string _switchMapDefaultArgumentName;
+
    public AdHocUnionCodeGenerator(
       AdHocUnionSourceGenState state,
       StringBuilder sb)
@@ -29,6 +35,18 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
                                          || m.IsInterface
                                          || m.SpecialType == SpecialType.System_Object)
       };
+
+      var memberArgumentNames = new HashSet<string>(StringComparer.Ordinal);
+
+      foreach (var member in _state.MemberTypes)
+      {
+         memberArgumentNames.Add(StringBuilderExtensions.RenderArgumentName(member.ArgumentName));
+      }
+
+      _switchMapStateArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName(_state.Settings.SwitchMapStateParameterName, memberArgumentNames);
+
+      var namesTakenByDefault = new HashSet<string>(memberArgumentNames, StringComparer.Ordinal) { _switchMapStateArgumentName };
+      _switchMapDefaultArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName("default", namesTakenByDefault);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -600,13 +618,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The action to execute if no value-specific action is provided.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The action to execute if no value-specific action is provided.</param>");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -631,7 +649,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"<TState>(
-         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+         TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -646,7 +664,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.Append("object?>? @default = null,");
+         _sb.Append("object?>? @").Append(_switchMapDefaultArgumentName).Append(" = null,");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -725,7 +743,7 @@ namespace ").Append(_state.Namespace).Append(@"
                ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -749,10 +767,10 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
-         @default?.Invoke(");
+         @").Append(_switchMapDefaultArgumentName).Append("?.Invoke(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this.Value);");
       }
@@ -770,13 +788,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The function to execute if no value-specific action is provided.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The function to execute if no value-specific action is provided.</param>");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -801,7 +819,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"<TState, TResult>(
-         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+         TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -816,7 +834,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.Append("object?, TResult> @default,");
+         _sb.Append("object?, TResult> @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -898,7 +916,7 @@ namespace ").Append(_state.Namespace).Append(@"
                return ").AppendEscaped(memberType.ArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -921,10 +939,10 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 
-         return @default(");
+         return @").Append(_switchMapDefaultArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this.Value);");
       }
@@ -941,7 +959,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The instance to return if no value is provided for the current value.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The instance to return if no value is provided for the current value.</param>");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -966,7 +984,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-         TResult @default,");
+         TResult @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -1042,14 +1060,14 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.ArgumentOutOfRangeException($""Unexpected value index '{this._valueIndex}'."");
+               throw new global::System.InvalidOperationException($""Unexpected value index '{this._valueIndex}'."");
          }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-         return @default;");
+         return @").Append(_switchMapDefaultArgumentName).Append(";");
       }
    }
 

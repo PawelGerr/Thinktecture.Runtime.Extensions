@@ -23,7 +23,7 @@ partial class Outer<T>
                            string identifier = index switch
                            {
                               0 => "Item1", 
-                              _ => throw new global::System.ArgumentOutOfRangeException($"Unknown item at index {index}.")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $"Unknown item at index {index}.")
                            };
 
                            return new global::Thinktecture.Internal.KeylessSmartEnumItemMetadata
@@ -111,7 +111,7 @@ partial class Outer<T>
                @item1();
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -137,7 +137,7 @@ partial class Outer<T>
                @item1(@state);
                return;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -160,7 +160,7 @@ partial class Outer<T>
             case 0:
                return @item1();
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -186,7 +186,7 @@ partial class Outer<T>
             case 0:
                return @item1(@state);
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -208,7 +208,7 @@ partial class Outer<T>
             case 0:
                return @item1;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
          }
       }
 

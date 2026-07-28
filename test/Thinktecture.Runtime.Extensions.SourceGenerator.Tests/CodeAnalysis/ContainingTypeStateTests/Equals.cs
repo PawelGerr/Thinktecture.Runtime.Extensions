@@ -11,7 +11,7 @@ public class Equals
    public void Should_return_true_for_same_instance()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state.Equals(state);
@@ -24,7 +24,7 @@ public class Equals
    public void Should_return_true_for_reference_equal_instances()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
       ContainingTypeState sameReference = state;
 
       // Act
@@ -38,8 +38,8 @@ public class Equals
    public void Should_return_true_for_equal_instances_with_empty_generic_parameters()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -54,8 +54,8 @@ public class Equals
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var result = state1.Equals(state2);
@@ -72,8 +72,8 @@ public class Equals
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);
@@ -86,8 +86,8 @@ public class Equals
    public void Should_return_true_for_equal_value_type_instances()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyStruct", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyStruct", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -100,8 +100,8 @@ public class Equals
    public void Should_return_true_for_equal_record_instances()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyRecord", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyRecord", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -114,8 +114,8 @@ public class Equals
    public void Should_return_false_for_different_names()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("OtherClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("OtherClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -128,8 +128,8 @@ public class Equals
    public void Should_return_false_for_different_isReferenceType()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -142,8 +142,8 @@ public class Equals
    public void Should_return_false_for_different_isRecord()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -160,8 +160,8 @@ public class Equals
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);
@@ -179,8 +179,8 @@ public class Equals
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty),
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);
@@ -199,8 +199,8 @@ public class Equals
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("TKey", ImmutableArray<string>.Empty),
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);
@@ -215,8 +215,8 @@ public class Equals
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var result = state1.Equals(state2);
@@ -229,7 +229,7 @@ public class Equals
    public void Should_return_false_for_null_typed_parameter()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state.Equals(null);
@@ -242,7 +242,7 @@ public class Equals
    public void Should_return_false_for_different_type_object()
    {
       // Arrange
-      var state = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
       var differentType = new object();
 
       // Act
@@ -258,8 +258,8 @@ public class Equals
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams);
-      object state2 = new ContainingTypeState("MyClass", true, false, genericParams);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams);
+      object state2 = new ContainingTypeState("MyClass", true, false, false, genericParams);
 
       // Act
       var result = state1.Equals(state2);
@@ -272,8 +272,8 @@ public class Equals
    public void Should_handle_empty_name_equality()
    {
       // Arrange
-      var state1 = new ContainingTypeState("", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -286,8 +286,8 @@ public class Equals
    public void Should_be_case_sensitive_for_name_comparison()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyClass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("myclass", true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("myclass", true, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -300,8 +300,8 @@ public class Equals
    public void Should_return_false_when_all_boolean_flags_differ()
    {
       // Arrange
-      var state1 = new ContainingTypeState("MyType", true, true, ImmutableArray<GenericTypeParameterState>.Empty);
-      var state2 = new ContainingTypeState("MyType", false, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state1 = new ContainingTypeState("MyType", true, true, false, ImmutableArray<GenericTypeParameterState>.Empty);
+      var state2 = new ContainingTypeState("MyType", false, false, false, ImmutableArray<GenericTypeParameterState>.Empty);
 
       // Act
       var result = state1.Equals(state2);
@@ -316,8 +316,8 @@ public class Equals
       // Arrange
       var genericParams = ImmutableArray.Create(
          new GenericTypeParameterState("T", ImmutableArray<string>.Empty));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams);
-      var state2 = new ContainingTypeState("MyClass", true, true, genericParams); // Only IsRecord differs
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams);
+      var state2 = new ContainingTypeState("MyClass", true, true, false, genericParams); // Only IsRecord differs
 
       // Act
       var result = state1.Equals(state2);
@@ -336,8 +336,8 @@ public class Equals
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ["class"]),
          new GenericTypeParameterState("TKey", ["struct"]));
-      var state1 = new ContainingTypeState("MyClass", true, true, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, true, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, true, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, true, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);
@@ -354,8 +354,8 @@ public class Equals
          new GenericTypeParameterState("T", ["class"]));
       var genericParams2 = ImmutableArray.Create(
          new GenericTypeParameterState("T", ["struct"]));
-      var state1 = new ContainingTypeState("MyClass", true, false, genericParams1);
-      var state2 = new ContainingTypeState("MyClass", true, false, genericParams2);
+      var state1 = new ContainingTypeState("MyClass", true, false, false, genericParams1);
+      var state2 = new ContainingTypeState("MyClass", true, false, false, genericParams2);
 
       // Act
       var result = state1.Equals(state2);

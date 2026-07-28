@@ -92,6 +92,9 @@ Rider and Visual Studio. After adding a new item/case, re-invoking it fills in t
 - Using `SwitchPartially`/`MapPartially` (with a fallback) where the exhaustive form was intended.
 - Allocating closures in hot paths instead of passing state + `static` lambdas.
 - A value-returning `Map`/`Switch` that won't infer a common arm type — specify `TResult` explicitly.
+- Catching `ArgumentOutOfRangeException` around a `Switch`/`Map` call. Since 10.5.0 the unreachable default
+  arm throws `InvalidOperationException` for all three families (it used to differ). That arm is only reached
+  when the internal discriminator is corrupted, e.g. after deserializing a manipulated payload.
 
 ## Worked examples in this repo
 

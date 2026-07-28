@@ -12,6 +12,21 @@ public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
    private readonly IReadOnlyList<TypeMember> _typeMembers;
    private readonly IReadOnlyList<TypeMember> _allOrderedTypeMembers;
 
+   // The fixed Switch/Map parameters ('default' for partial overloads and the state parameter for with-state
+   // overloads) must not collide with a per-type parameter whose name renders to the same identifier (e.g. a
+   // derived type whose argument name renders to "default" or "state"), which would otherwise produce CS0100.
+   private readonly string _switchMapStateArgumentName;
+   private readonly string _switchMapDefaultArgumentName;
+
+   // The switch bodies declare a pattern local ('case <Type> value:') that is forwarded to the callbacks. It must
+   // not collide with a per-type callback parameter whose name renders to "value" (e.g. a derived type named 'Value'
+   // whose argument name renders to "value"), which would otherwise produce CS0136.
+   private readonly string _switchMapValueLocalName;
+
+   // Switch and Map take every derived type as a delegate parameter, so they must not be more accessible than the
+   // least accessible derived type. A public method with an internal parameter type produces CS0051.
+   private readonly IReadOnlyList<Accessibility> _memberAccessibilities;
+
    public RegularUnionCodeGenerator(
       RegularUnionSourceGenState state,
       StringBuilder sb)
@@ -23,6 +38,24 @@ public sealed class RegularUnionCodeGenerator : CodeGeneratorBase
       allTypeMembers.Reverse();
       _allOrderedTypeMembers = allTypeMembers;
       _typeMembers = allTypeMembers.Where(t => !t.State.IsAbstract).ToList();
+      _memberAccessibilities = _typeMembers.Select(t => t.State.DeclaredAccessibility).ToList();
+
+      // TypeMember.ArgumentName is the raw identifier that is emitted verbatim (escaped with '@'), so it is
+      // already the effective parameter name; no additional rendering is required.
+      var memberArgumentNames = new HashSet<string>(StringComparer.Ordinal);
+
+      foreach (var member in _allOrderedTypeMembers)
+      {
+         memberArgumentNames.Add(member.ArgumentName);
+      }
+
+      _switchMapStateArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName(_state.Settings.SwitchMapStateParameterName, memberArgumentNames);
+
+      var namesTakenByDefault = new HashSet<string>(memberArgumentNames, StringComparer.Ordinal) { _switchMapStateArgumentName };
+      _switchMapDefaultArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName("default", namesTakenByDefault);
+
+      var namesTakenByValue = new HashSet<string>(memberArgumentNames, StringComparer.Ordinal) { _switchMapStateArgumentName, _switchMapDefaultArgumentName };
+      _switchMapValueLocalName = StringBuilderExtensions.MakeNonCollidingParameterName("value", namesTakenByValue);
    }
 
    private List<TypeMember> OrderTypeMembers(
@@ -244,13 +277,13 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (withState)
       {
          _sb.Append(@"
-   /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+   /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-   /// <param name=""default"">The action to execute if no type-specific action is provided.</param>");
+   /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The action to execute if no type-specific action is provided.</param>");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -264,12 +297,12 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       _sb.Append(@"
    ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
+   ").RenderLeastAccessibility(_memberAccessibilities).Append(" void ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
       if (withState)
       {
          _sb.Append(@"<TState>(
-      TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+      TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -284,7 +317,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.AppendTypeFullyQualified(_state).Append(">? @default = null,");
+         _sb.AppendTypeFullyQualified(_state).Append(">? @").Append(_switchMapDefaultArgumentName).Append(" = null,");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -342,7 +375,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-         case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
+         case ").AppendTypeFullyQualified(typeMember.State).Append(' ').Append(_switchMapValueLocalName).Append(":");
 
          if (isPartially)
          {
@@ -352,9 +385,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
                ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
             if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-            _sb.Append(@"value);
+            _sb.Append(_switchMapValueLocalName).Append(@");
                return;
             }
 ");
@@ -369,26 +402,26 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
             ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
             if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-            _sb.Append(@"value);
+            _sb.Append(_switchMapValueLocalName).Append(@");
             return;");
          }
       }
 
       _sb.Append(@"
          default:
-            throw new global::System.ArgumentOutOfRangeException($""Unexpected type '{this.GetType().FullName}'."");
+            throw new global::System.InvalidOperationException($""Unexpected type '{this.GetType().FullName}'."");
       }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-      @default?.Invoke(");
+      @").Append(_switchMapDefaultArgumentName).Append("?.Invoke(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this);");
       }
@@ -406,13 +439,13 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (withState)
       {
          _sb.Append(@"
-   /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+   /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-   /// <param name=""default"">The function to execute if no type-specific action is provided.</param>");
+   /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The function to execute if no type-specific action is provided.</param>");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -426,12 +459,12 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       _sb.Append(@"
    ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
+   ").RenderLeastAccessibility(_memberAccessibilities).Append(" TResult ").Append(isPartially ? Constants.Methods.SWITCH_PARTIALLY : Constants.Methods.SWITCH);
 
       if (withState)
       {
          _sb.Append(@"<TState, TResult>(
-      TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+      TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -446,7 +479,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.AppendTypeFullyQualified(_state).Append(", TResult> @default,");
+         _sb.AppendTypeFullyQualified(_state).Append(", TResult> @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -505,7 +538,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-         case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
+         case ").AppendTypeFullyQualified(typeMember.State).Append(' ').Append(_switchMapValueLocalName).Append(":");
 
          if (isPartially)
          {
@@ -515,9 +548,9 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
                return ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
             if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-            _sb.Append(@"value);
+            _sb.Append(_switchMapValueLocalName).Append(@");
             }
 ");
 
@@ -532,25 +565,25 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
             return ").AppendEscaped(typeMember.ArgumentName).Append("(");
 
             if (withState)
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-            _sb.Append("value);");
+            _sb.Append(_switchMapValueLocalName).Append(");");
          }
       }
 
       _sb.Append(@"
          default:
-            throw new global::System.ArgumentOutOfRangeException($""Unexpected type '{this.GetType().FullName}'."");
+            throw new global::System.InvalidOperationException($""Unexpected type '{this.GetType().FullName}'."");
       }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-      return @default(");
+      return @").Append(_switchMapDefaultArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this);");
       }
@@ -568,7 +601,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       if (isPartially)
       {
          _sb.Append(@"
-   /// <param name=""default"">The instance to return if no value is provided for the current type.</param>");
+   /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The instance to return if no value is provided for the current type.</param>");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -582,12 +615,12 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
       _sb.Append(@"
    ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
    [global::System.Diagnostics.DebuggerStepThroughAttribute]
-   public TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
+   ").RenderLeastAccessibility(_memberAccessibilities).Append(" TResult ").Append(isPartially ? Constants.Methods.MAP_PARTIALLY : Constants.Methods.MAP).Append("<TResult>(");
 
       if (isPartially)
       {
          _sb.Append(@"
-      TResult @default,");
+      TResult @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < typeMembers.Count; i++)
@@ -636,7 +669,7 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
          var typeMember = typeMembers[i];
 
          _sb.Append(@"
-         case ").AppendTypeFullyQualified(typeMember.State).Append(" value:");
+         case ").AppendTypeFullyQualified(typeMember.State).Append(":");
 
          if (isPartially)
          {
@@ -661,14 +694,14 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
       _sb.Append(@"
             default:
-               throw new global::System.ArgumentOutOfRangeException($""Unexpected type '{this.GetType().FullName}'."");
+               throw new global::System.InvalidOperationException($""Unexpected type '{this.GetType().FullName}'."");
          }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-         return @default;");
+         return @").Append(_switchMapDefaultArgumentName).Append(";");
       }
    }
 
@@ -719,10 +752,10 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
             if (withState)
             {
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
             }
 
-            _sb.Append(@"value);
+            _sb.Append(_switchMapValueLocalName).Append(@");
                return;
             }");
          }
@@ -746,10 +779,10 @@ abstract partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).Appen
 
             if (withState)
             {
-               _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+               _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
             }
 
-            _sb.Append(@"value);
+            _sb.Append(_switchMapValueLocalName).Append(@");
             }");
          }
 

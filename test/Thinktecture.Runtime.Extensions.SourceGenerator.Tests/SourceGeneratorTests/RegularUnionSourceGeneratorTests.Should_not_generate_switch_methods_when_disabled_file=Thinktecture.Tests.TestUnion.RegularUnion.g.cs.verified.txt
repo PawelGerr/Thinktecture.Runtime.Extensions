@@ -44,12 +44,12 @@ abstract partial class TestUnion :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.TestUnion.Child1 value:
+         case global::Thinktecture.Tests.TestUnion.Child1:
                return @child1;
-         case global::Thinktecture.Tests.TestUnion.Child2 value:
+         case global::Thinktecture.Tests.TestUnion.Child2:
                return @child2;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

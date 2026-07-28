@@ -44,17 +44,17 @@ abstract partial class Container<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value:
-            @inner(value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value1:
+            @inner(value1);
             return;
-         case global::Thinktecture.Tests.Container<T>.Value value:
-            @value(value);
+         case global::Thinktecture.Tests.Container<T>.Value value1:
+            @value(value1);
             return;
-         case global::Thinktecture.Tests.Container<T>.Wrapper value:
-            @wrapper(value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper value1:
+            @wrapper(value1);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -80,17 +80,17 @@ abstract partial class Container<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value:
-            @inner(@state, value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value1:
+            @inner(@state, value1);
             return;
-         case global::Thinktecture.Tests.Container<T>.Value value:
-            @value(@state, value);
+         case global::Thinktecture.Tests.Container<T>.Value value1:
+            @value(@state, value1);
             return;
-         case global::Thinktecture.Tests.Container<T>.Wrapper value:
-            @wrapper(@state, value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper value1:
+            @wrapper(@state, value1);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -114,14 +114,14 @@ abstract partial class Container<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value:
-            return @inner(value);
-         case global::Thinktecture.Tests.Container<T>.Value value:
-            return @value(value);
-         case global::Thinktecture.Tests.Container<T>.Wrapper value:
-            return @wrapper(value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value1:
+            return @inner(value1);
+         case global::Thinktecture.Tests.Container<T>.Value value1:
+            return @value(value1);
+         case global::Thinktecture.Tests.Container<T>.Wrapper value1:
+            return @wrapper(value1);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -148,14 +148,14 @@ abstract partial class Container<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value:
-            return @inner(@state, value);
-         case global::Thinktecture.Tests.Container<T>.Value value:
-            return @value(@state, value);
-         case global::Thinktecture.Tests.Container<T>.Wrapper value:
-            return @wrapper(@state, value);
+         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value1:
+            return @inner(@state, value1);
+         case global::Thinktecture.Tests.Container<T>.Value value1:
+            return @value(@state, value1);
+         case global::Thinktecture.Tests.Container<T>.Wrapper value1:
+            return @wrapper(@state, value1);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -179,14 +179,14 @@ abstract partial class Container<T> :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner value:
+         case global::Thinktecture.Tests.Container<T>.Wrapper.Inner:
                return @inner;
-         case global::Thinktecture.Tests.Container<T>.Value value:
+         case global::Thinktecture.Tests.Container<T>.Value:
                return @value;
-         case global::Thinktecture.Tests.Container<T>.Wrapper value:
+         case global::Thinktecture.Tests.Container<T>.Wrapper:
                return @wrapper;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

@@ -46,7 +46,7 @@ abstract partial class ServerError :
             @serviceUnavailable(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -77,7 +77,7 @@ abstract partial class ServerError :
             @serviceUnavailable(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -104,7 +104,7 @@ abstract partial class ServerError :
          case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable value:
             return @serviceUnavailable(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -134,7 +134,7 @@ abstract partial class ServerError :
          case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable value:
             return @serviceUnavailable(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -156,12 +156,12 @@ abstract partial class ServerError :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.InternalError:
                return @internalError;
-         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ServerError.ServiceUnavailable:
                return @serviceUnavailable;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

@@ -34,7 +34,12 @@ public static class Constants
 
    public static class ComparerAccessor
    {
-      public const string ORDINAL_IGNORE_CASE = "global::Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase";
+      // The prefix of every accessor declared in the library's own Thinktecture.ComparerAccessors class.
+      // For a string key member, each of those accessors returns a BCL comparer that supports the alternate
+      // lookup of FrozenDictionary, so the generated span-based lookup can use it without a capability check.
+      public const string NAMESPACE_PREFIX = "global::Thinktecture.ComparerAccessors.";
+
+      public const string ORDINAL_IGNORE_CASE = $"{NAMESPACE_PREFIX}StringOrdinalIgnoreCase";
    }
 
    public static class Methods

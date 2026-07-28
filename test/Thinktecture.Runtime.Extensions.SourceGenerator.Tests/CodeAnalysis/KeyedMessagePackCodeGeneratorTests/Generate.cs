@@ -289,7 +289,7 @@ public class Generate
    public void Should_handle_nested_types()
    {
       // Arrange
-      var containingType = new ContainingTypeState("OuterClass", true, false, default);
+      var containingType = new ContainingTypeState("OuterClass", true, false, false, default);
       var state = new KeyedMessagePackCodeGeneratorStateBuilder()
                   .WithNestedType(
                      typeFullyQualified: "global::Thinktecture.Tests.OuterClass.TestType",
@@ -316,8 +316,8 @@ public class Generate
    public void Should_handle_multiple_nesting_levels()
    {
       // Arrange
-      var outerType = new ContainingTypeState("OuterClass", true, false, default);
-      var middleType = new ContainingTypeState("MiddleClass", true, false, default);
+      var outerType = new ContainingTypeState("OuterClass", true, false, false, default);
+      var middleType = new ContainingTypeState("MiddleClass", true, false, false, default);
       var state = new KeyedMessagePackCodeGeneratorStateBuilder()
                   .WithNestedType(
                      typeFullyQualified: "global::Thinktecture.Tests.OuterClass.MiddleClass.TestType",
@@ -425,7 +425,7 @@ public class Generate
    public void Should_handle_struct_with_nested_type()
    {
       // Arrange
-      var containingType = new ContainingTypeState("Container", true, false, default);
+      var containingType = new ContainingTypeState("Container", true, false, false, default);
       var state = new KeyedMessagePackCodeGeneratorStateBuilder()
                   .AsStruct()
                   .WithNestedType(
@@ -576,7 +576,7 @@ public class Generate
    public async Task Snapshot_NestedTypeInSingleContainer()
    {
       // Arrange
-      var containingType = new ContainingTypeState("ProductModule", true, false, default);
+      var containingType = new ContainingTypeState("ProductModule", true, false, false, default);
       var state = new KeyedMessagePackCodeGeneratorStateBuilder()
                   .WithNestedType(
                      typeFullyQualified: "global::Thinktecture.Tests.ProductModule.ProductStatus",
@@ -601,9 +601,9 @@ public class Generate
    public async Task Snapshot_DeeplyNestedType()
    {
       // Arrange
-      var level1 = new ContainingTypeState("Level1", true, false, default);
-      var level2 = new ContainingTypeState("Level2", true, false, default);
-      var level3 = new ContainingTypeState("Level3", true, false, default);
+      var level1 = new ContainingTypeState("Level1", true, false, false, default);
+      var level2 = new ContainingTypeState("Level2", true, false, false, default);
+      var level3 = new ContainingTypeState("Level3", true, false, false, default);
       var state = new KeyedMessagePackCodeGeneratorStateBuilder()
                   .WithNestedType(
                      typeFullyQualified: "global::Thinktecture.Tests.Level1.Level2.Level3.DeepType",

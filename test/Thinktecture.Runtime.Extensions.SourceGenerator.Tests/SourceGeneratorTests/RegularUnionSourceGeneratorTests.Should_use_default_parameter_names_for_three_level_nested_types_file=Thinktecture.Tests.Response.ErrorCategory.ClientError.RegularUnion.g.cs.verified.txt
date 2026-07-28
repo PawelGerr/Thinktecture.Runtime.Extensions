@@ -46,7 +46,7 @@ abstract partial class ClientError :
             @notFound(value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -77,7 +77,7 @@ abstract partial class ClientError :
             @notFound(@state, value);
             return;
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -104,7 +104,7 @@ abstract partial class ClientError :
          case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound value:
             return @notFound(value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -134,7 +134,7 @@ abstract partial class ClientError :
          case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound value:
             return @notFound(@state, value);
          default:
-            throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+            throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
       }
    }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -156,12 +156,12 @@ abstract partial class ClientError :
    {
       switch (this)
       {
-         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.BadRequest:
                return @badRequest;
-         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound value:
+         case global::Thinktecture.Tests.Response.ErrorCategory.ClientError.NotFound:
                return @notFound;
             default:
-               throw new global::System.ArgumentOutOfRangeException($"Unexpected type '{this.GetType().FullName}'.");
+               throw new global::System.InvalidOperationException($"Unexpected type '{this.GetType().FullName}'.");
          }
    }
 #pragma warning restore CS0108 // Map in nested union hides Map from base class

@@ -8,6 +8,21 @@ public sealed class SmartEnumCodeGenerator : SmartEnumAndValueObjectCodeGenerato
    private readonly SmartEnumSourceGeneratorState _state;
    private readonly StringBuilder _sb;
 
+   // The fixed Switch/Map parameters ('default' for partial overloads and the state parameter for with-state
+   // overloads) must not collide with a per-item parameter whose name renders to the same identifier (e.g. an
+   // item named "Default" or "State"), which would otherwise produce CS0100 in the generated signature.
+   private readonly string _switchMapStateArgumentName;
+   private readonly string _switchMapDefaultArgumentName;
+
+   // The generated span-based lookup uses the alternate lookup of FrozenDictionary, which exists only when the
+   // key equality comparer implements IAlternateEqualityComparer<ReadOnlySpan<char>, string>. Every accessor of
+   // the library's own ComparerAccessors returns a BCL comparer that does, and so does the comparer used when no
+   // accessor is configured. The decision below is therefore not a capability check on the comparer type: it only
+   // tests whether the configured accessor lives in the namespace of ComparerAccessors. A user-written accessor
+   // outside that namespace may return a comparer without that capability, so only then the generated code needs
+   // the nullable field and the string-allocating fallback.
+   private readonly bool _keyComparerIsKnownToSupportAlternateLookup;
+
    public override string CodeGeneratorName => "SmartEnum-CodeGenerator";
    public override string FileNameSuffix => ".SmartEnum";
 
@@ -15,6 +30,23 @@ public sealed class SmartEnumCodeGenerator : SmartEnumAndValueObjectCodeGenerato
    {
       _state = state ?? throw new ArgumentNullException(nameof(state));
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
+
+      var itemArgumentNames = new HashSet<string>(StringComparer.Ordinal);
+
+      for (var i = 0; i < _state.Items.Count; i++)
+      {
+         itemArgumentNames.Add(StringBuilderExtensions.RenderArgumentName(_state.Items[i].ArgumentName));
+      }
+
+      _switchMapStateArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName(_state.Settings.SwitchMapStateParameterName, itemArgumentNames);
+
+      // The with-state partial overloads carry both the state parameter and the 'default' callback, so 'default'
+      // must also avoid the (possibly renamed) state parameter name.
+      var namesTakenByDefault = new HashSet<string>(itemArgumentNames, StringComparer.Ordinal) { _switchMapStateArgumentName };
+      _switchMapDefaultArgumentName = StringBuilderExtensions.MakeNonCollidingParameterName("default", namesTakenByDefault);
+
+      _keyComparerIsKnownToSupportAlternateLookup = _state.Settings.KeyMemberEqualityComparerAccessor is not { } keyComparerAccessor
+                                                   || keyComparerAccessor.StartsWith(Constants.ComparerAccessor.NAMESPACE_PREFIX, StringComparison.Ordinal);
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -115,7 +147,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@"
-                              _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $""Unknown item at index {index}."")
                            };
 
                            return new global::Thinktecture.Internal.SmartEnumItemMetadata
@@ -177,7 +209,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
 
          _sb.Append(@"
-                              _ => throw new global::System.ArgumentOutOfRangeException($""Unknown item at index {index}."")
+                              _ => throw new global::System.ArgumentOutOfRangeException(nameof(index), $""Unknown item at index {index}."")
                            };
 
                            return new global::Thinktecture.Internal.KeylessSmartEnumItemMetadata
@@ -442,13 +474,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The action to execute if no item-specific action is provided.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The action to execute if no item-specific action is provided.</param>");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -469,7 +501,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"<TState>(
-         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+         TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -484,7 +516,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.AppendTypeFullyQualified(_state).Append(">? @default = null,");
+         _sb.AppendTypeFullyQualified(_state).Append(">? @").Append(_switchMapDefaultArgumentName).Append(" = null,");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -550,7 +582,7 @@ namespace ").Append(_state.Namespace).Append(@"
                ").AppendEscaped(_state.Items[i].ArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName);
+            _sb.AppendEscaped(_switchMapStateArgumentName);
 
          _sb.Append(@");
                return;");
@@ -558,17 +590,17 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
          }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-         @default?.Invoke(");
+         @").Append(_switchMapDefaultArgumentName).Append("?.Invoke(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this);");
       }
@@ -586,13 +618,13 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"
-      /// <param name=""").Append(_state.Settings.SwitchMapStateParameterName).Append(@""">State to be passed to the callbacks.</param>");
+      /// <param name=""").Append(_switchMapStateArgumentName).Append(@""">State to be passed to the callbacks.</param>");
       }
 
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The function to execute if no item-specific action is provided.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The function to execute if no item-specific action is provided.</param>");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -613,7 +645,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (withState)
       {
          _sb.Append(@"<TState, TResult>(
-         TState ").AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(",");
+         TState ").AppendEscaped(_switchMapStateArgumentName).Append(",");
       }
       else
       {
@@ -628,7 +660,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.Append("TState, ");
 
-         _sb.AppendTypeFullyQualified(_state).Append(", TResult> @default,");
+         _sb.AppendTypeFullyQualified(_state).Append(", TResult> @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -699,24 +731,24 @@ namespace ").Append(_state.Namespace).Append(@"
                return ").AppendEscaped(_state.Items[i].ArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName);
+            _sb.AppendEscaped(_switchMapStateArgumentName);
 
          _sb.Append(");");
       }
 
       _sb.Append(@"
             default:
-               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
          }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-         return @default(");
+         return @").Append(_switchMapDefaultArgumentName).Append("(");
 
          if (withState)
-            _sb.AppendEscaped(_state.Settings.SwitchMapStateParameterName).Append(", ");
+            _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
          _sb.Append("this);");
       }
@@ -733,7 +765,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-      /// <param name=""default"">The instance to return if no value is provided for current item.</param>");
+      /// <param name=""").Append(_switchMapDefaultArgumentName).Append(@""">The instance to return if no value is provided for current item.</param>");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -752,7 +784,7 @@ namespace ").Append(_state.Namespace).Append(@"
       if (isPartially)
       {
          _sb.Append(@"
-         TResult @default,");
+         TResult @").Append(_switchMapDefaultArgumentName).Append(",");
       }
 
       for (var i = 0; i < _state.Items.Count; i++)
@@ -819,14 +851,14 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.ArgumentOutOfRangeException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
          }");
 
       if (isPartially)
       {
          _sb.Append(@"
 
-         return @default;");
+         return @").Append(_switchMapDefaultArgumentName).Append(";");
       }
    }
 
@@ -886,12 +918,32 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Gets a valid enumeration item for provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> if a valid item exists.
       /// </summary>
       /// <param name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@""">The identifier to return an enumeration item for.</param>
-      /// <param name=""item"">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
+      /// <param name=""").Append(itemArgName).Append(@""">An instance of ").AppendTypeForXmlComment(_state).Append(@".</param>
       /// <returns><c>true</c> if a valid item with provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/> exists; <c>false</c> otherwise.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public static bool TryGet(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(@" item)
+      public static bool TryGet(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(", [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(_state).Append(" ").Append(itemArgName).Append(@")
+      {");
+
+      if (_keyComparerIsKnownToSupportAlternateLookup)
       {
-         return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out item);
+         _sb.Append(@"
+         return _lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out ").Append(itemArgName).Append(@");");
+      }
+      else
+      {
+         _sb.Append(@"
+         var lookups = _lookups.Value;
+
+         // The alternate lookup is available only when the key equality comparer implements
+         // IAlternateEqualityComparer<ReadOnlySpan<char>, string>. For a hand-written comparer that does not,
+         // fall back to the string-keyed lookup (allocating a string) so the type stays usable.
+         if (lookups.AlternateLookup is { } alternateLookup)
+            return alternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out ").Append(itemArgName).Append(@");
+
+         return lookups.Lookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(".ToString(), out ").Append(itemArgName).Append(@");");
+      }
+
+      _sb.Append(@"
       }
 #endif");
    }
@@ -1105,7 +1157,13 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 #if NET9_0_OR_GREATER
-         return new Lookups(frozenDictionary, frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>(), list.AsReadOnly());
+         return new Lookups(frozenDictionary, ");
+
+         _sb.Append(_keyComparerIsKnownToSupportAlternateLookup
+                       ? "frozenDictionary.GetAlternateLookup<global::System.ReadOnlySpan<char>>()"
+                       : "frozenDictionary.TryGetAlternateLookup<global::System.ReadOnlySpan<char>>(out var alternateLookup) ? alternateLookup : null");
+
+         _sb.Append(@", list.AsReadOnly());
 #else
          return new Lookups(frozenDictionary, list.AsReadOnly());
 #endif");
@@ -1131,7 +1189,12 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          _sb.Append(@"
 #if NET9_0_OR_GREATER
-         global::System.Collections.Frozen.FrozenDictionary<string, ").AppendTypeFullyQualified(_state).Append(">.AlternateLookup<global::System.ReadOnlySpan<char>>").Append(@" AlternateLookup,
+         global::System.Collections.Frozen.FrozenDictionary<string, ").AppendTypeFullyQualified(_state).Append(">.AlternateLookup<global::System.ReadOnlySpan<char>>");
+
+         if (!_keyComparerIsKnownToSupportAlternateLookup)
+            _sb.Append("?");
+
+         _sb.Append(@" AlternateLookup,
 #endif");
       }
 
@@ -1271,13 +1334,25 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <exception cref=""Thinktecture.UnknownSmartEnumIdentifierException"">If there is no item with the provided <paramref name=""").AppendArgumentName(keyProperty.ArgumentName).Append(@"""/>.</exception>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       public static ").AppendTypeFullyQualified(_state).Append(" ").Append(Constants.Methods.GET).Append("(global::System.ReadOnlySpan<char> ").AppendEscaped(keyProperty.ArgumentName).Append(@")
+      {");
+
+      if (_keyComparerIsKnownToSupportAlternateLookup)
       {
-         if (!_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(@", out var item))
+         _sb.Append(@"
+         if (!_lookups.Value.AlternateLookup.TryGetValue(").AppendEscaped(keyProperty.ArgumentName).Append(", out var ").Append(itemArgName).Append(@"))");
+      }
+      else
+      {
+         _sb.Append(@"
+         if (!TryGet(").AppendEscaped(keyProperty.ArgumentName).Append(", out var ").Append(itemArgName).Append(@"))");
+      }
+
+      _sb.Append(@"
          {
             throw new global::Thinktecture.UnknownSmartEnumIdentifierException(typeof(").AppendTypeFullyQualified(_state).Append("), ").AppendEscaped(keyProperty.ArgumentName).Append(@".ToString());
          }
 
-         return item;
+         return ").Append(itemArgName).Append(@";
       }
 #endif");
    }

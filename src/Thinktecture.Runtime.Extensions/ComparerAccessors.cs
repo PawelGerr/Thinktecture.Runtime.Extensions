@@ -3,6 +3,14 @@ namespace Thinktecture;
 /// <summary>
 /// Contains some predefined comparer accessors.
 /// </summary>
+/// <remarks>
+/// An accessor declared here that can be used for a <see cref="string"/> key member must return a comparer
+/// that implements <c>IAlternateEqualityComparer&lt;ReadOnlySpan&lt;char&gt;, string&gt;</c> on .NET 9 and
+/// higher. The reason is that the source generator recognizes accessors of this class by their namespace and
+/// then generates the allocation-free span-based lookup for string-keyed Smart Enums without checking the
+/// capability at runtime. An accessor that breaks this rule would make the generated lookup throw. Key types
+/// other than <see cref="string"/> are not affected, because no span-based lookup is generated for them.
+/// </remarks>
 public static class ComparerAccessors
 {
    /// <summary>

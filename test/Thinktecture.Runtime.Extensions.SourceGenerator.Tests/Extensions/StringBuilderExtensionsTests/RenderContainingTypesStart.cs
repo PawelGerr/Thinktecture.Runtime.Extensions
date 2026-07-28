@@ -21,9 +21,18 @@ public class RenderContainingTypesStart
    public void Should_render_type_kinds_and_names(bool isReference, bool isRecord, string kind)
    {
       var sb = new StringBuilder();
-      var ct = new ContainingTypeState("Outer", isReference, isRecord, []);
+      var ct = new ContainingTypeState("Outer", isReference, isRecord, false, []);
       sb.RenderContainingTypesStart([ct]);
       sb.ToString().Should().Be($"\npartial {kind} Outer\n{{");
+   }
+
+   [Fact]
+   public void Should_render_interface_containing_type()
+   {
+      var sb = new StringBuilder();
+      var ct = new ContainingTypeState("IOuter", isReferenceType: true, isRecord: false, genericParameters: [], isInterface: true);
+      sb.RenderContainingTypesStart([ct]);
+      sb.ToString().Should().Be("\npartial interface IOuter\n{");
    }
 
    [Fact]
@@ -31,7 +40,7 @@ public class RenderContainingTypesStart
    {
       var sb = new StringBuilder();
       var gen = new GenericTypeParameterState("T", []);
-      var ct = new ContainingTypeState("Outer", isReferenceType: true, isRecord: false, genericParameters: [gen]);
+      var ct = new ContainingTypeState("Outer", isReferenceType: true, isRecord: false, isInterface: false, genericParameters: [gen]);
       sb.RenderContainingTypesStart([ct]);
       sb.ToString().Should().Be("\npartial class Outer<T>\n{");
    }
