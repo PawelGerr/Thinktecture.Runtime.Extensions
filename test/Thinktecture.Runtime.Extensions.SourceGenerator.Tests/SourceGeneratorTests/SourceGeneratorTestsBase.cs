@@ -3,9 +3,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Thinktecture.CodeAnalysis.AdHocUnions;
+using Thinktecture.CodeAnalysis.Annotations;
+using Thinktecture.CodeAnalysis.ObjectFactories;
+using Thinktecture.CodeAnalysis.RegularUnions;
+using Thinktecture.CodeAnalysis.SmartEnums;
+using Thinktecture.CodeAnalysis.ValueObjects;
 using VerifyXunit;
 
 namespace Thinktecture.Runtime.Tests.SourceGeneratorTests;
@@ -14,6 +21,28 @@ public abstract class SourceGeneratorTestsBase
 {
    private const string _GENERATION_ERROR = "CS8785";
    private const string _PARTIAL_METHOD_MUST_HAVE_IMPLEMENTATION = "CS8795";
+
+   // The input compilation is incomplete by definition: the constructor of a Smart Enum is generated, so a
+   // derived item calling ": base(key)" cannot bind before generation. Same category as CS8795.
+   private const string _CONSTRUCTOR_NOT_FOUND = "CS1729";
+
+   // The generated code branches on the target framework. Without these symbols only the pre-NET9 branch of
+   // every "#if NET9_0_OR_GREATER" would ever be compiled, so half of the generated code stays unchecked.
+   // The list is derived from the framework this test assembly was compiled for, so a new target framework
+   // needs no change here.
+   private static readonly CSharpParseOptions _parseOptions =
+      CSharpParseOptions.Default.WithPreprocessorSymbols(
+         Enumerable.Range(8, GetTargetFrameworkMajorVersion() - 7).Select(version => $"NET{version}_0_OR_GREATER"));
+
+   private static int GetTargetFrameworkMajorVersion()
+   {
+      var frameworkName = typeof(SourceGeneratorTestsBase).Assembly
+                                                          .GetCustomAttribute<TargetFrameworkAttribute>()
+                                                          ?.FrameworkName
+                          ?? throw new InvalidOperationException("The test assembly has no TargetFrameworkAttribute.");
+
+      return new FrameworkName(frameworkName).Version.Major;
+   }
 
    private readonly ITestOutputHelper _output;
    private readonly int _maxOutputSize;
@@ -226,6 +255,53 @@ public abstract class SourceGeneratorTestsBase
                               .ToDictionary(t => t.FilePath, t => t.ToString());
    }
 
+   /// <summary>
+   /// The generated code must compile. Without this check a snapshot test passes even when the generator
+   /// emits code that no user could ever build, which is how an incomplete Switch/Map rename once shipped.
+   /// Errors already present in <paramref name="input"/> are skipped, because the input compilation is
+   /// asserted separately and reports its own incompleteness.
+   /// </summary>
+   private static void AssertGeneratedCodeCompiles(
+      Compilation input,
+      Compilation output,
+      string[] expectedCompilerErrors)
+   {
+      var inputErrors = input.GetDiagnostics()
+                             .Where(d => d.Severity == DiagnosticSeverity.Error)
+                             .Select(d => d.Id + "|" + d.GetMessage())
+                             .ToHashSet();
+
+      var errors = output.GetDiagnostics()
+                         .Where(d => d.Severity == DiagnosticSeverity.Error)
+                         .Where(d => !inputErrors.Contains(d.Id + "|" + d.GetMessage()))
+                         .Where(d => !expectedCompilerErrors.Contains(d.GetMessage()))
+                         .ToList();
+
+      errors.Should().BeEmpty();
+   }
+
+   /// <summary>
+   /// Every generator except the one under test. A real build runs all of them, and their outputs depend on
+   /// each other: the <c>InstantHandleAttribute</c>, the <c>IParsable</c> members of a type with an
+   /// <c>[ObjectFactory&lt;T&gt;]</c>, and the <c>Validate</c> member the Smart Enum / Value Object
+   /// generator supplies. Leaving one out makes the compile gate report members that a real build has.
+   /// </summary>
+   private static IEnumerable<IIncrementalGenerator> CompanionGenerators<T>()
+      where T : IIncrementalGenerator, new()
+   {
+      IIncrementalGenerator[] companions =
+      [
+         new AnnotationsSourceGenerator(),
+         new ObjectFactorySourceGenerator(),
+         new AdHocUnionSourceGenerator(),
+         new RegularUnionSourceGenerator(),
+         new SmartEnumSourceGenerator(),
+         new ValueObjectSourceGenerator()
+      ];
+
+      return companions.Where(g => g.GetType() != typeof(T));
+   }
+
    private static GeneratorResult RunGenerator<T>(
       string source,
       string generatedFileNameFragment,
@@ -234,10 +310,13 @@ public abstract class SourceGeneratorTestsBase
       bool assertNoUnexpectedGeneratorErrors)
       where T : IIncrementalGenerator, new()
    {
-      var syntaxTree = CSharpSyntaxTree.ParseText(source);
+      var syntaxTree = CSharpSyntaxTree.ParseText(source, _parseOptions);
       var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName?.Contains("Thinktecture") != true))
                        {
-                          typeof(T).Assembly
+                          typeof(T).Assembly,
+                          typeof(System.ComponentModel.TypeConverterAttribute).Assembly,
+                          typeof(System.ComponentModel.DataAnnotations.ValidationAttribute).Assembly,
+                          typeof(System.Linq.Expressions.Expression).Assembly
                        };
 
       foreach (var furtherAssembly in furtherAssemblies)
@@ -254,11 +333,15 @@ public abstract class SourceGeneratorTestsBase
                                                  references,
                                                  new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 
-      var errors = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error && d.Id != _PARTIAL_METHOD_MUST_HAVE_IMPLEMENTATION).ToList();
+      var errors = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error && d.Id != _PARTIAL_METHOD_MUST_HAVE_IMPLEMENTATION && d.Id != _CONSTRUCTOR_NOT_FOUND).ToList();
       errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
 
       var generator = new T();
-      CSharpGeneratorDriver.Create(generator).RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
+
+      IIncrementalGenerator[] generators = [generator, .. CompanionGenerators<T>()];
+
+      var driver = CSharpGeneratorDriver.Create(generators.Select(g => g.AsSourceGenerator()), parseOptions: _parseOptions)
+                                        .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var generateDiagnostics);
 
       if (assertNoUnexpectedGeneratorErrors)
       {
@@ -266,10 +349,13 @@ public abstract class SourceGeneratorTestsBase
          errors.Where(e => !expectedCompilerErrors.Contains(e.GetMessage())).Should().BeEmpty();
       }
 
-      var outputs = outputCompilation.SyntaxTrees
-                                     .Skip(1)
-                                     .Where(t => generatedFileNameFragment is null || t.FilePath.Contains(generatedFileNameFragment))
-                                     .ToDictionary(t => t.FilePath, t => t.ToString());
+      AssertGeneratedCodeCompiles(compilation, outputCompilation, expectedCompilerErrors);
+
+      var outputs = driver.GetRunResult().Results
+                          .Where(r => r.Generator.GetGeneratorType() == typeof(T))
+                          .SelectMany(r => r.GeneratedSources)
+                          .Where(s => generatedFileNameFragment is null || s.SyntaxTree.FilePath.Contains(generatedFileNameFragment))
+                          .ToDictionary(s => s.SyntaxTree.FilePath, s => s.SyntaxTree.ToString());
 
       return new GeneratorResult(outputs, generateDiagnostics);
    }

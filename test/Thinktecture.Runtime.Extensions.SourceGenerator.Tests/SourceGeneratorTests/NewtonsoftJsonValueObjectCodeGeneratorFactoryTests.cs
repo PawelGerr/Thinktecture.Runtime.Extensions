@@ -225,7 +225,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -251,7 +260,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -277,7 +295,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -304,7 +331,24 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject : IConvertible<Guid>, IConvertible<string>
+            {
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+            }
          }
 
          """;
@@ -332,7 +376,32 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
             [ObjectFactory<double>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject : IConvertible<Guid>, IConvertible<double>, IConvertible<string>
+            {
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               double IConvertible<double>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+            }
          }
 
          """;
@@ -358,7 +427,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.NewtonsoftJson | SerializationFrameworks.MessagePack)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -384,7 +462,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack | SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -535,7 +622,16 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
             [ValueObject<int>]
             [JsonConverter(typeof(TestValueObjectJsonConverter))]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -643,7 +739,14 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.None)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -831,7 +934,24 @@ public class NewtonsoftJsonValueObjectCodeGeneratorFactoryTests : SourceGenerato
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson | SerializationFrameworks.MessagePack)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject : IConvertible<Guid>, IConvertible<string>
+            {
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+            }
          }
 
          """;

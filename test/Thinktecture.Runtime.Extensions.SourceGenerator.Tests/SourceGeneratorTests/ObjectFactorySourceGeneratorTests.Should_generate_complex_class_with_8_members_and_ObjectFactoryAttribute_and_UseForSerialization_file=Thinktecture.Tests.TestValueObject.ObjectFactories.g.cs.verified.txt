@@ -17,7 +17,7 @@ partial class TestValueObject : global::Thinktecture.Internal.IObjectFactoryOwne
          {
             ValueType = typeof(string),
             ValidationErrorType = typeof(global::Thinktecture.ValidationError),
-            UseForSerialization = global::Thinktecture.SerializationFrameworks.All,
+            UseForSerialization = global::Thinktecture.SerializationFrameworks.SystemTextJson | global::Thinktecture.SerializationFrameworks.NewtonsoftJson | global::Thinktecture.SerializationFrameworks.MessagePack,
             UseWithEntityFramework = false,
             UseForModelBinding = false,
             ConvertFromKeyExpressionViaConstructor = null,

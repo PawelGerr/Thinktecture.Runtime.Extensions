@@ -55,6 +55,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -82,7 +90,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -109,6 +126,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -138,6 +163,12 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.None)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -167,6 +198,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -212,6 +251,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [JsonConverter(typeof(TestEnumJsonConverter))]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -240,8 +287,24 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [SmartEnum<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         	public partial class TestEnum
+         	public partial class TestEnum : IConvertible<Guid>, IConvertible<string>
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -270,8 +333,24 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [SmartEnum<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
-         	public partial class TestEnum
+         	public partial class TestEnum : IConvertible<Guid>, IConvertible<string>
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -299,7 +378,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial struct TestValueObject;
+         	public partial struct TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -329,6 +417,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
@@ -358,7 +454,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [Union<string, int>]
             [ObjectFactory<double>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public double ToValue() => default!;
+            }
          }
 
          """;
@@ -385,6 +490,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -416,6 +529,26 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<double>(UseForSerialization = SerializationFrameworks.None)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public Guid ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -445,6 +578,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -472,7 +613,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [AdHocUnion(typeof(string), typeof(int))]
             [ObjectFactory<double>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public double ToValue() => default!;
+            }
          }
 
          """;
@@ -499,6 +649,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack | SerializationFrameworks.NewtonsoftJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -528,6 +686,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson | SerializationFrameworks.MessagePack)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -555,7 +721,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [ValueObject<Guid>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -581,7 +756,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ValueObject<string>]
             [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
             [ObjectFactory<int>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(int value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public int ToValue() => default!;
+            }
          }
 
          """;
@@ -608,7 +792,16 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ValueObject<string>]
             [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
             [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<char> ToValue() => default!;
+            }
          }
 
          """;
@@ -641,6 +834,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<ReadOnlySpan<char>>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestValueObject
          	{
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<char> ToValue() => default!;
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
@@ -673,6 +874,14 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public abstract partial class TestUnion
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public sealed partial class TypeA : TestUnion
                {
                   public string Value { get; }

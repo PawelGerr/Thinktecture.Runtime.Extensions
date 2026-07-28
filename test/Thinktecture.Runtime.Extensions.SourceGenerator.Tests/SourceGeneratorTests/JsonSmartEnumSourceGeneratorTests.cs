@@ -389,7 +389,7 @@ public class JsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
          namespace Thinktecture.Tests
          {
-            public class OuterClass
+            public partial class OuterClass
             {
                [SmartEnum<string>]
                public partial class TestEnum

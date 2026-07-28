@@ -24,6 +24,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -51,6 +57,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -75,7 +89,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [Union<string, int>]
             [ObjectFactory<string>]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -99,6 +120,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
             public partial record Result<T>
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out Result<T>? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public partial record Success(T Value) : Result<T>;
 
                public partial record Failure(string Error) : Result<T>;
@@ -123,7 +150,18 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [ObjectFactory<string>(HasCorrespondingConstructor = true)]
-         	public partial class TestClass;
+         	public partial class TestClass
+            {
+               private TestClass(string value)
+               {
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -150,6 +188,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
            [ObjectFactory<string>]
          	public partial class TestValueObject
          	{
+              public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+              {
+                 item = default;
+                 return null;
+              }
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
@@ -204,6 +248,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestValueObject
          	{
+              public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+              {
+                 item = default;
+                 return null;
+              }
+
+              public string ToValue() => default!;
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public readonly string _stringValue;
 
@@ -253,7 +305,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<string>]
-         	public partial struct TestValueObject;
+         	public partial struct TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -280,6 +339,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public int Value1 { get; }
                public string Value2 { get; }
             }
@@ -304,7 +369,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<string>]
-         	public partial record TestValueObject;
+         	public partial record TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -326,7 +398,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<string>]
-         	public partial record struct TestValueObject;
+         	public partial record struct TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -351,6 +430,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<int>]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -374,7 +459,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [ObjectFactory<string>(HasCorrespondingConstructor = false)]
-         	public partial class TestClass;
+         	public partial class TestClass
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -398,6 +490,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -424,6 +524,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.None)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -450,6 +556,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -473,7 +585,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<string>]
             [ObjectFactory<int>]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(int value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -493,7 +612,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<string>]
-         	public partial class TestValueObject<T>;
+         	public partial class TestValueObject<T>
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject<T>? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -523,6 +649,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestValueObject<T>
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject<T>? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public T Value { get; }
             }
          }
@@ -551,6 +683,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public int Value { get; }
 
                static partial void ValidateFactoryArguments(ref ValidationError? validationError, ref int value)
@@ -582,7 +720,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [ObjectFactory<string>]
-         	public partial class TestClass;
+         	public partial class TestClass
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -606,7 +751,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             {
                [ValueObject<int>]
                [ObjectFactory<string>]
-               public partial class TestValueObject;
+               public partial class TestValueObject
+               {
+                  public static ValidationError? Validate(string? value, IFormatProvider? provider, out OuterClass.TestValueObject? item)
+                  {
+                     item = default;
+                     return null;
+                  }
+               }
             }
          }
 
@@ -629,7 +781,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<string>]
-         	internal partial class TestValueObject;
+         	internal partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -651,7 +810,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<int>]
             [ObjectFactory<Guid>]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -671,7 +837,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [Union<string, int>]
             [ObjectFactory<double>]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -691,7 +864,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ValueObject<string>]
             [ObjectFactory<byte[]>]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(byte[]? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -710,7 +890,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
             [ObjectFactory<string>]
-         	public partial class TestClass : NonExistentType;
+         	public partial class TestClass : NonExistentType
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -736,7 +923,14 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
          {
             [ComplexValueObject]
             [ObjectFactory<string>]
-         	public partial record TestValueObject(int Value1, string Value2);
+         	public partial record TestValueObject(int Value1, string Value2)
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+            }
          }
 
          """;
@@ -759,8 +953,24 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [SmartEnum<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
-         	public partial class TestEnum
+         	public partial class TestEnum : IConvertible<Guid>, IConvertible<string>
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -813,6 +1023,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -839,10 +1055,6 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
             public partial class TestValueObject
             {
-               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
-               {
-                  throw new NotImplementedException();
-               }
             }
          }
 
@@ -950,6 +1162,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -977,6 +1195,18 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -1004,6 +1234,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestValueObject
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -1029,6 +1265,11 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestValueObject
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
             }
          }
 
@@ -1054,6 +1295,12 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestValueObject
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -1079,6 +1326,18 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestValueObject
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 

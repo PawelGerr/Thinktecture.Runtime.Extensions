@@ -23,6 +23,14 @@ public class JsonRegularUnionSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.Json)]
             public abstract partial record TestUnion
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
             }
          }
          """;

@@ -55,6 +55,14 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -82,7 +90,16 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         	public partial class TestValueObject;
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -109,6 +126,14 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -138,6 +163,12 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.None)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -167,6 +198,14 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -212,6 +251,14 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [MessagePackFormatter(typeof(TestEnumMessagePackFormatter))]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -240,8 +287,24 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [SmartEnum<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-         	public partial class TestEnum
+         	public partial class TestEnum : IConvertible<Guid>, IConvertible<string>
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -270,8 +333,24 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [SmartEnum<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
             [ObjectFactory<Guid>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
-         	public partial class TestEnum
+         	public partial class TestEnum : IConvertible<Guid>, IConvertible<string>
          	{
+               public static ValidationError? Validate(Guid value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               Guid IConvertible<Guid>.ToValue() => default!;
+
+               string IConvertible<string>.ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -299,7 +378,16 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         	public partial struct TestValueObject;
+         	public partial struct TestValueObject
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -329,6 +417,14 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
          	public partial class TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
@@ -358,7 +454,16 @@ public class MessagePackObjectFactoryCodeGeneratorFactoryTests : SourceGenerator
          {
             [Union<string, int>]
             [ObjectFactory<double>(UseForSerialization = SerializationFrameworks.MessagePack)]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(double value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public double ToValue() => default!;
+            }
          }
 
          """;

@@ -126,6 +126,12 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -337,28 +343,28 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                private class GenericEnum<T> : TestEnum
                {
-                  public GenericEnum(string key)
+                  public GenericEnum(string key) : base(key)
                   {
                   }
                }
 
                private class UnusedGenericEnum<T> : TestEnum
                {
-                  public UnusedGenericEnum(string key)
+                  public UnusedGenericEnum(string key) : base(key)
                   {
                   }
                }
 
                private class DerivedEnum : TestEnum
                {
-                  public DerivedEnum(string key)
+                  public DerivedEnum(string key) : base(key)
                   {
                   }
                }
 
                private class UnusedDerivedEnum : TestEnum
                {
-                  public UnusedDerivedEnum(string key)
+                  public UnusedDerivedEnum(string key) : base(key)
                   {
                   }
                }
@@ -449,6 +455,12 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -480,6 +492,14 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestEnum
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -517,7 +537,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
                {
                   public override int Value => 100;
 
-                  public ConcreteEnum(int key)
+                  public ConcreteEnum(string key) : base(key)
                   {
                   }
                }
@@ -545,7 +565,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -578,7 +598,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>(ConversionFromKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
             }
@@ -609,7 +629,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>(ConversionToKeyMemberType = ConversionOperatorsGeneration.{{operatorsGeneration}})]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
             }
@@ -637,7 +657,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -667,7 +687,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -697,13 +717,13 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
 
                [UseDelegateFromConstructor]
-               partial void Method1(string arg1, int arg2);
+               private partial void Method1(string arg1, int arg2);
             }
          }
          """;
@@ -727,7 +747,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -757,7 +777,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -787,7 +807,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -817,7 +837,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -847,7 +867,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -877,7 +897,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -907,7 +927,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -937,7 +957,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -967,7 +987,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -1004,7 +1024,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -1034,7 +1054,7 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
          namespace Thinktecture.Tests
          {
          	[SmartEnum<string>]
-         	public abstract partial class TestEnum
+         	public partial class TestEnum
          	{
                public static readonly TestEnum Item1 = null!;
                public static readonly TestEnum Item2 = null!;
@@ -1927,6 +1947,18 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<long>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(long value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -2470,14 +2502,14 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
 
                private sealed class DerivedEnum1 : TestEnum
                {
-                  public DerivedEnum1(string key)
+                  public DerivedEnum1(string key) : base(key)
                   {
                   }
                }
 
                private sealed class DerivedEnum2 : TestEnum
                {
-                  public DerivedEnum2(string key)
+                  public DerivedEnum2(string key) : base(key)
                   {
                   }
                }
@@ -2773,10 +2805,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             {
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
-
-               private TestEnum(string key)
-               {
-               }
             }
          }
          """;
@@ -2803,10 +2831,6 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             public abstract partial class TestEnum
             {
                public static readonly TestEnum Item1 = new DerivedEnum(1);
-
-               protected TestEnum(int key)
-               {
-               }
 
                private sealed class DerivedEnum : TestEnum
                {
@@ -3184,6 +3208,12 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -3213,6 +3243,12 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
 
@@ -3454,6 +3490,12 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }
@@ -3484,6 +3526,18 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
             public partial class TestEnum
             {
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
                public static readonly TestEnum Item1 = default!;
                public static readonly TestEnum Item2 = default!;
             }

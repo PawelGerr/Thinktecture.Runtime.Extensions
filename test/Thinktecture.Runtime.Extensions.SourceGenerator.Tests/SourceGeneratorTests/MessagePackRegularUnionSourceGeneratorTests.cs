@@ -23,6 +23,14 @@ public class MessagePackRegularUnionSourceGeneratorTests : SourceGeneratorTestsB
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
             public abstract partial record TestUnion
             {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
             }
          }
          """;

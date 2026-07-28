@@ -21,7 +21,16 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
          {
             [Union<string, int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -42,7 +51,16 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
 
          [Union<string, int>]
          [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
-         public partial class TestUnion;
+         public partial class TestUnion
+         {
+            public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+            {
+               item = default;
+               return null;
+            }
+
+            public string ToValue() => default!;
+         }
 
          """;
       var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
@@ -94,7 +112,16 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
             [Union<string, int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
             [JsonConverterAttribute(typeof(TestJsonConverter))]
-            public partial class TestUnion;
+            public partial class TestUnion
+            {
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+            }
          }
 
          """;
@@ -115,7 +142,16 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
 
          [Union<string, int>]
          [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.MessagePack)]
-         public partial class TestUnion;
+         public partial class TestUnion
+         {
+            public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+            {
+               item = default;
+               return null;
+            }
+
+            public string ToValue() => default!;
+         }
 
          """;
       var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,
@@ -135,7 +171,16 @@ public class NewtonsoftJsonAdHocUnionSourceGeneratorTests : SourceGeneratorTests
 
          [Union<string, int>]
          [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.NewtonsoftJson)]
-         public partial class TestUnion;
+         public partial class TestUnion
+         {
+            public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestUnion? item)
+            {
+               item = default;
+               return null;
+            }
+
+            public string ToValue() => default!;
+         }
 
          """;
       var output = GetGeneratedOutput<ObjectFactorySourceGenerator>(source,

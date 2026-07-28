@@ -28,6 +28,21 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_generate_class_without_namespace()
+   {
+      var source = """
+         using System;
+         using Thinktecture;
+
+         [Union<string, int>]
+         public partial class TestUnion;
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_class_with_string_and_int_for_AdHocUnionAttribute()
    {
       var source = """
@@ -1931,7 +1946,14 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
          	public partial class TestUnion;
          }
          """;
-      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+      // The union member 'Foo' cannot be stored in an 'int' backing field. That is the point of the test,
+      // so the generated code is expected not to compile.
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source,
+                                                                   [typeof(UnionAttribute<,>).Assembly],
+                                                                   [
+                                                                      "Cannot convert type 'int' to 'Thinktecture.Tests.Foo'",
+                                                                      "Cannot implicitly convert type 'Thinktecture.Tests.Foo' to 'int'"
+                                                                   ]);
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }

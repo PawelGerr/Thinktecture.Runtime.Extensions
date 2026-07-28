@@ -90,7 +90,7 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
          {
             ValueType = typeof(").AppendTypeFullyQualified(objectFactory).Append(@"),
             ValidationErrorType = typeof(").AppendTypeFullyQualified(_state.AttributeInfo.ValidationError).Append(@"),
-            UseForSerialization = global::Thinktecture.SerializationFrameworks.").Append(objectFactory.UseForSerialization).Append(@",
+            UseForSerialization = ").AppendSerializationFrameworks(objectFactory.UseForSerialization).Append(@",
             UseWithEntityFramework = ").Append(objectFactory.UseWithEntityFramework ? "true" : "false").Append(@",
             UseForModelBinding = ").Append(objectFactory.UseForModelBinding ? "true" : "false").Append(@",
             ConvertFromKeyExpressionViaConstructor = ").AppendConvertFromKeyExpressionViaConstructor(_state, objectFactory).Append(@",
@@ -104,6 +104,35 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
 
 file static class StringBuilderExtensions
 {
+   /// <summary>
+   /// Renders the flags one by one and combines them with '|'. Calling <c>ToString</c> on the enum value is
+   /// not enough, because a combination without a named alias renders as "SystemTextJson, MessagePack",
+   /// and the comma ends the object initializer member.
+   /// </summary>
+   public static StringBuilder AppendSerializationFrameworks(
+      this StringBuilder sb,
+      SerializationFrameworks frameworks)
+   {
+      if (frameworks == SerializationFrameworks.None)
+         return sb.Append("global::Thinktecture.SerializationFrameworks.None");
+
+      var isFirst = true;
+
+      foreach (var flag in new[] { SerializationFrameworks.SystemTextJson, SerializationFrameworks.NewtonsoftJson, SerializationFrameworks.MessagePack })
+      {
+         if ((frameworks & flag) != flag)
+            continue;
+
+         if (!isFirst)
+            sb.Append(" | ");
+
+         sb.Append("global::Thinktecture.SerializationFrameworks.").Append(flag);
+         isFirst = false;
+      }
+
+      return sb;
+   }
+
    public static StringBuilder AppendConvertFromKeyExpressionViaConstructor(
       this StringBuilder sb,
       ObjectFactorySourceGeneratorState state,

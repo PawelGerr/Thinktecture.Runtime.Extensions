@@ -245,7 +245,7 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
 
          namespace Thinktecture.Tests
          {
-            public class OuterClass
+            public partial class OuterClass
             {
                [SmartEnum<string>]
                public partial class NestedEnum
@@ -274,9 +274,9 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
 
          namespace Thinktecture.Tests
          {
-            public class Level1
+            public partial class Level1
             {
-               public class Level2
+               public partial class Level2
                {
                   [SmartEnum<int>]
                   public partial class DeeplyNestedEnum
@@ -309,16 +309,22 @@ public class NewtonsoftJsonSmartEnumSourceGeneratorTests : SourceGeneratorTestsB
             [SmartEnum<int>]
             public abstract partial class BaseEnum
             {
-               public static readonly DerivedEnum1 Item1 = default!;
-               public static readonly DerivedEnum2 Item2 = default!;
-            }
+               public static readonly BaseEnum Item1 = new DerivedEnum1(1);
+               public static readonly BaseEnum Item2 = new DerivedEnum2(2);
 
-            public partial class DerivedEnum1 : BaseEnum
-            {
-            }
+               private sealed class DerivedEnum1 : BaseEnum
+               {
+                  public DerivedEnum1(int key) : base(key)
+                  {
+                  }
+               }
 
-            public partial class DerivedEnum2 : BaseEnum
-            {
+               private sealed class DerivedEnum2 : BaseEnum
+               {
+                  public DerivedEnum2(int key) : base(key)
+                  {
+                  }
+               }
             }
          }
 

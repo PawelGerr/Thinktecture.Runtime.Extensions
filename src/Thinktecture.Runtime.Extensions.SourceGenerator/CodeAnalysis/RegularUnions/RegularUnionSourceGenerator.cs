@@ -215,6 +215,12 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
 
          var parameterCandidate = parameters[0];
 
+         // The conversion operator calls the constructor with a plain argument. 'ref' and 'out' require the
+         // keyword at the call site, so such a constructor cannot be used. 'in' and 'ref readonly' can be
+         // passed by value and stay eligible.
+         if (parameterCandidate.RefKind is RefKind.Ref or RefKind.Out)
+            continue;
+
          // Ignore copy/base/derived-type constructors
          if (SymbolEqualityComparer.Default.Equals(parameterCandidate.Type, derivedTypeInfo.Type)
              || IsBaseTypeOf(parameterCandidate.Type, derivedTypeInfo.Type)

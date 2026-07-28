@@ -169,18 +169,6 @@ abstract partial class TestUnion :
 #pragma warning restore CS0108 // Map in nested union hides Map from base class
 
    /// <summary>
-   /// Implicit conversion from type <see cref="int"/>.
-   /// </summary>
-   /// <param name="value">Value to convert from.</param>
-   /// <returns>A new instance of <see cref="global::Thinktecture.Tests.TestUnion.Child1"/> converted from <paramref name="value"/>.</returns>
-   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
-   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-   public static implicit operator global::Thinktecture.Tests.TestUnion(int @value)
-   {
-      return new global::Thinktecture.Tests.TestUnion.Child1(@value);
-   }
-
-   /// <summary>
    /// Implicit conversion from type <see cref="string"/>.
    /// </summary>
    /// <param name="value">Value to convert from.</param>

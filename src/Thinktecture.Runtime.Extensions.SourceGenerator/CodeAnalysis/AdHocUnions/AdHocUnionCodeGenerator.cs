@@ -1253,7 +1253,26 @@ namespace ").Append(_state.Namespace).Append(@"
             _sb.AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType).Append((memberType.IsReferenceType || memberType is { IsTypeParameter: true, IsValueType: false }) && memberType.NullableAnnotation != NullableAnnotation.Annotated ? "!" : null);
          }
 
-         _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(").AppendTypeFullyQualified(_state).Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("' but of type '{GetMemberTypeName()}'.\");");
+         _sb.Append(" : throw new global::System.InvalidOperationException($\"'{nameof(");
+         AppendUnionTypeNameForNameof();
+         _sb.Append(")}' is not of type '").AppendTypeMinimallyQualified(memberType).Append("' but of type '{GetMemberTypeName()}'.\");");
+      }
+   }
+
+   /// <summary>
+   /// "nameof(global::TestUnion)" does not compile (CS8083): an alias-qualified name is an expression only
+   /// when something follows the alias. A top-level type in the global namespace has nothing that could
+   /// follow it, so the alias has to be dropped. Every other type keeps the fully qualified name.
+   /// </summary>
+   private void AppendUnionTypeNameForNameof()
+   {
+      if (_state.Namespace is null && _state.ContainingTypes.IsEmpty)
+      {
+         _sb.AppendTypeMinimallyQualified(_state);
+      }
+      else
+      {
+         _sb.AppendTypeFullyQualified(_state);
       }
    }
 

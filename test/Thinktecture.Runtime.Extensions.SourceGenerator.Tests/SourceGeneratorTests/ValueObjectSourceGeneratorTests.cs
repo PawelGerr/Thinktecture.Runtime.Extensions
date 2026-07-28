@@ -73,7 +73,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   [typeof(ComplexValueObjectAttribute).Assembly],
                                                                   [
                                                                      "No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)'",
-                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type."
+                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type.",
+                                                                     "Both partial member declarations must have identical accessibility modifiers."
                                                                   ]);
 
       await VerifyAsync(output);
@@ -106,7 +107,8 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
                                                                   [typeof(ComplexValueObjectAttribute).Assembly],
                                                                   [
                                                                      "No defining declaration found for implementing declaration of partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)'",
-                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type."
+                                                                     "Partial method 'TestValueObject.ValidateFactoryArguments(ref ValidationError?)' must have accessibility modifiers because it has a non-void return type.",
+                                                                     "Both partial member declarations must have identical accessibility modifiers."
                                                                   ]);
 
       await VerifyAsync(output);
@@ -1145,6 +1147,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
            [ObjectFactory<string>]
          	public partial class TestValueObject
          	{
+              public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+              {
+                 item = default;
+                 return null;
+              }
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
                public readonly string _stringValue;
 
@@ -1198,6 +1206,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
            [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestValueObject
          	{
+              public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+              {
+                 item = default;
+                 return null;
+              }
+
+              public string ToValue() => default!;
+
                [MemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>]
                public readonly string _stringValue;
 
@@ -1902,7 +1918,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
          }
 
          """;
-      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, typeof(ComplexValueObjectAttribute).Assembly);
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source,
+                                                                  [typeof(ComplexValueObjectAttribute).Assembly],
+                                                                  [
+                                                                     "Required member 'TestValueObject.Property1' must be set in the object initializer or attribute constructor.",
+                                                                     "Required member 'TestValueObject.Property2' must be set in the object initializer or attribute constructor."
+                                                                  ]);
 
       await VerifyAsync(output);
    }
@@ -2795,6 +2816,14 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.All)]
          	public partial class TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
                public string Property { get; }
             }
          }
@@ -3117,6 +3146,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<string>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -3285,6 +3320,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -3316,6 +3357,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -3345,6 +3392,12 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
@@ -3381,6 +3434,18 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
             [ObjectFactory<ReadOnlySpan<char>>]
          	public partial struct TestValueObject
          	{
+               public static ValidationError? Validate(ReadOnlySpan<char> value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject item)
+               {
+                  item = default;
+                  return null;
+               }
+
             }
          }
 
