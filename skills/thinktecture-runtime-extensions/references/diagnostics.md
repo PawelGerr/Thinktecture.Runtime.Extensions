@@ -1,6 +1,6 @@
 # Analyzer Diagnostics (curated)
 
-The library ships ~60 `TTRESG####` rules across two analyzers
+The library ships its `TTRESG####` rules across two analyzers
 (`ThinktectureRuntimeExtensionsAnalyzer` for usage, `…InternalUsageAnalyzer` for internal-API misuse).
 **Treat an analyzer error as the authoritative instruction** — many have code fixes. The full,
 authoritative table is `docs/Analyzer-Diagnostics.md` (and the wiki). This file is a curated subset of

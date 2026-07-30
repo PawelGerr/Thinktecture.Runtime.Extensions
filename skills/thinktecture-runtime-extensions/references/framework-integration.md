@@ -116,7 +116,9 @@ services.AddEndpointsApiExplorer()
 ```
 
 - `SmartEnumSchemaFilter`: `Default` (`enum: [...]`), `OneOf`, `AnyOf`, `AllOf`,
-  `FromDependencyInjection`.
+  `FromDependencyInjection`. `AllOf` appends one combined `enum` subschema to `allOf` (a per-item
+  `const` conjunction would be unsatisfiable); pre-existing `allOf` entries such as a `$ref` are
+  preserved.
 - `SmartEnumSchemaExtension`: `None`, `VarNamesFromStringRepresentation`,
   `VarNamesFromDotnetIdentifiers`, `FromDependencyInjection` (controls `x-enum-varnames`).
 - `RequiredMemberEvaluator` (Value Objects): `Default` (struct VO without `AllowDefaultStructs` or a

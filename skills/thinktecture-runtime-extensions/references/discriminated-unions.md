@@ -131,6 +131,9 @@ public abstract partial record OrderState     // base is partial (abstract recom
   `Switch`/`Map`.
 - Conversion-operator generation is controlled by `ConversionFromValue` (`None`/`Implicit`/`Explicit`).
   Regular unions have **no** `ConstructorAccessModifier` — that is an *ad-hoc-union* setting.
+- For nested unions, `Switch`/`Map` parameter names include the intermediate type names by default
+  (`failureNotFound`). `[Union(NestedUnionParameterNames = NestedUnionParameterNameGeneration.Simple)]`
+  opts into short names that omit the intermediate names (`notFound`) — beware name conflicts.
 - Per-case behavior: either abstract methods on the base (when behavior is inherent, e.g.
   `CanCancel()`) or an external `Switch` (preferred for transitions / cross-cutting concerns).
 - **Serialization is polymorphic**: for System.Text.Json apply `[JsonDerivedType]` on the base ($type
