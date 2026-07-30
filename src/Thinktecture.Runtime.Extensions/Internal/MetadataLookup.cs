@@ -77,6 +77,9 @@ public static class MetadataLookup
          if (metadataFromFactory is not null)
             return metadataFromFactory;
 
+         // No fallback to the standalone object-factory search below: a type implementing IMetadataOwner
+         // surfaces all of its object factories via metadata.ObjectFactories, so the reflection-based
+         // search cannot find any additional factories.
          if (keyedMetadata is null)
             return null;
 
@@ -167,7 +170,7 @@ public static class MetadataLookup
          if (property is not null)
          {
             return (Metadata?)property.GetValue(null)
-                   ?? throw new InvalidOperationException($"Could not retrieve metadata for type '{type.FullName}'.");
+                   ?? throw new InvalidOperationException($"Could not retrieve metadata for type '{typeToCheck.FullName}'.");
          }
 
          typeToCheck = typeToCheck.BaseType;

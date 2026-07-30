@@ -30,7 +30,7 @@ internal static class TypeExtensions
          if (objectFactoriesProperty is not null)
          {
             var factories = (IReadOnlyList<ObjectFactoryMetadata>?)objectFactoriesProperty.GetValue(null)
-                            ?? throw new InvalidOperationException($"Could not retrieve object factories for type '{type.FullName}'.");
+                            ?? throw new InvalidOperationException($"Could not retrieve object factories for type '{typeToCheck.FullName}'.");
 
             return (typeToCheck, factories);
          }

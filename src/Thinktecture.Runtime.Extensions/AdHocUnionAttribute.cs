@@ -39,7 +39,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
 
    /// <summary>
    /// Makes the type argument <see name="T1"/> a nullable reference type.
-   /// This setting has no effect if <see name="T1"/> is a struct.
+   /// If <see cref="T1"/> is a struct, the generated code ignores this setting; the property still returns an explicitly assigned value.
    /// </summary>
    /// <remarks>
    /// Returns <c>true</c> when explicitly set to <c>true</c> or when <see cref="T1IsStateless"/> is <c>true</c> and T1 is a reference type (since <c>default(T)</c> for reference types equals <c>null</c>).
@@ -66,7 +66,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
 
    /// <summary>
    /// Makes the type argument <see name="T2"/> a nullable reference type.
-   /// This setting has no effect if <see name="T2"/> is a struct.
+   /// If <see cref="T2"/> is a struct, the generated code ignores this setting; the property still returns an explicitly assigned value.
    /// </summary>
    /// <remarks>
    /// Returns <c>true</c> when explicitly set to <c>true</c> or when <see cref="T2IsStateless"/> is <c>true</c> and T2 is a reference type (since <c>default(T)</c> for reference types equals <c>null</c>).
@@ -93,7 +93,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
 
    /// <summary>
    /// Makes the type argument <see name="T3"/> a nullable reference type.
-   /// This setting has no effect if <see name="T3"/> is a struct.
+   /// If <see cref="T3"/> is a struct, the generated code ignores this setting; the property still returns an explicitly assigned value.
    /// </summary>
    /// <remarks>
    /// Returns <c>true</c> when explicitly set to <c>true</c> or when <see cref="T3IsStateless"/> is <c>true</c> and T3 is a reference type (since <c>default(T)</c> for reference types equals <c>null</c>).
@@ -120,7 +120,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
 
    /// <summary>
    /// Makes the type argument <see name="T4"/> a nullable reference type.
-   /// This setting has no effect if <see name="T4"/> is a struct.
+   /// If <see cref="T4"/> is a struct, the generated code ignores this setting; the property still returns an explicitly assigned value.
    /// </summary>
    /// <remarks>
    /// Returns <c>true</c> when explicitly set to <c>true</c> or when <see cref="T4IsStateless"/> is <c>true</c> and T4 is a reference type (since <c>default(T)</c> for reference types equals <c>null</c>).
@@ -147,7 +147,7 @@ public sealed class AdHocUnionAttribute : UnionAttributeBase
 
    /// <summary>
    /// Makes the type argument <see name="T5"/> a nullable reference type.
-   /// This setting has no effect if <see name="T5"/> is a struct.
+   /// If <see cref="T5"/> is a struct, the generated code ignores this setting; the property still returns an explicitly assigned value.
    /// </summary>
    /// <remarks>
    /// Returns <c>true</c> when explicitly set to <c>true</c> or when <see cref="T5IsStateless"/> is <c>true</c> and T5 is a reference type (since <c>default(T)</c> for reference types equals <c>null</c>).

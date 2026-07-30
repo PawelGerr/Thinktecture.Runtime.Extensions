@@ -26,14 +26,30 @@ public class DefaultRequiredMemberEvaluator : IRequiredMemberEvaluator
       Type type;
       NullabilityInfo nullabilityInfo;
 
-      lock (_nullabilityInfoContextLock)
+      switch (member)
       {
-         (type, nullabilityInfo) = member switch
-         {
-            PropertyInfo propertyInfo => (propertyInfo.PropertyType, _nullabilityInfoContext.Create(propertyInfo)),
-            FieldInfo fieldInfo => (fieldInfo.FieldType, _nullabilityInfoContext.Create(fieldInfo)),
-            _ => throw new ArgumentException($"Assignable member of a complex value object must be a field or a property but found '{member.GetType().FullName}'.", nameof(member))
-         };
+         case PropertyInfo propertyInfo:
+            type = propertyInfo.PropertyType;
+
+            lock (_nullabilityInfoContextLock)
+            {
+               nullabilityInfo = _nullabilityInfoContext.Create(propertyInfo);
+            }
+
+            break;
+
+         case FieldInfo fieldInfo:
+            type = fieldInfo.FieldType;
+
+            lock (_nullabilityInfoContextLock)
+            {
+               nullabilityInfo = _nullabilityInfoContext.Create(fieldInfo);
+            }
+
+            break;
+
+         default:
+            throw new ArgumentException($"Assignable member of a complex value object must be a field or a property but found '{member.GetType().FullName}'.", nameof(member));
       }
 
       if (typeof(IDisallowDefaultValue).IsAssignableFrom(type))

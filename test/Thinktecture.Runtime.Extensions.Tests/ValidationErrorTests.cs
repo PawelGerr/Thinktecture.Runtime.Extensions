@@ -30,4 +30,42 @@ public class ValidationErrorTests
 
       error.Equals(other).Should().BeTrue();
    }
+
+   [Fact]
+   public void Should_return_true_when_comparing_equal_instances_via_equality_operator()
+   {
+      var left = new ValidationError("some message");
+      var right = new ValidationError("some message");
+
+      (left == right).Should().BeTrue();
+      (left != right).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_return_false_when_comparing_different_instances_via_equality_operator()
+   {
+      var left = new ValidationError("some message");
+      var right = new ValidationError("other message");
+
+      (left == right).Should().BeFalse();
+      (left != right).Should().BeTrue();
+   }
+
+   [Fact]
+   public void Should_return_true_when_comparing_nulls_via_equality_operator()
+   {
+      ((ValidationError?)null == null).Should().BeTrue();
+      ((ValidationError?)null != null).Should().BeFalse();
+   }
+
+   [Fact]
+   public void Should_return_false_when_comparing_instance_with_null_via_equality_operator()
+   {
+      var error = new ValidationError("some message");
+
+      (error == null).Should().BeFalse();
+      (null == error).Should().BeFalse();
+      (error != null).Should().BeTrue();
+      (null != error).Should().BeTrue();
+   }
 }

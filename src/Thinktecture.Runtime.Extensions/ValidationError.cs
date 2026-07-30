@@ -30,12 +30,6 @@ public sealed class ValidationError : IValidationError<ValidationError>, IEquata
    /// <inheritdoc />
    public override bool Equals(object? obj)
    {
-      if (ReferenceEquals(null, obj))
-         return false;
-
-      if (ReferenceEquals(this, obj))
-         return true;
-
       return obj is ValidationError other && Equals(other);
    }
 
@@ -55,6 +49,31 @@ public sealed class ValidationError : IValidationError<ValidationError>, IEquata
    public override int GetHashCode()
    {
       return Message.GetHashCode();
+   }
+
+   /// <summary>
+   /// Compares two instances of <see cref="ValidationError"/>.
+   /// </summary>
+   /// <param name="left">Instance to compare.</param>
+   /// <param name="right">Another instance to compare.</param>
+   /// <returns><c>true</c> if both instances are equal; otherwise <c>false</c>.</returns>
+   public static bool operator ==(ValidationError? left, ValidationError? right)
+   {
+      if (left is null)
+         return right is null;
+
+      return left.Equals(right);
+   }
+
+   /// <summary>
+   /// Compares two instances of <see cref="ValidationError"/>.
+   /// </summary>
+   /// <param name="left">Instance to compare.</param>
+   /// <param name="right">Another instance to compare.</param>
+   /// <returns><c>false</c> if both instances are equal; otherwise <c>true</c>.</returns>
+   public static bool operator !=(ValidationError? left, ValidationError? right)
+   {
+      return !(left == right);
    }
 
    /// <inheritdoc />

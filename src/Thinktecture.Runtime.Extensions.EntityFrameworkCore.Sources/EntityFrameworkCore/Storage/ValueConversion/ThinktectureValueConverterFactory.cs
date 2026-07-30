@@ -129,6 +129,14 @@ public class ThinktectureValueConverterFactory
             f => f.ValueType == typeof(TProvider),
             m => m.KeyType == typeof(TProvider));
 
+         // The conversion expressions in the metadata are typed for metadata.Type, which may be a base type
+         // of T (e.g. the runtime type of a derived nested Smart Enum item). The expression casts in the
+         // overload below would then throw, so fall back to the factory-based conversion. This is not expected
+         // to be reachable, because the generic Create methods constrain T to IObjectFactory<T, ...>, which
+         // derived types do not implement.
+         if (metadata?.Type != typeof(T))
+            metadata = null;
+
          return GetConverterFromProvider(metadata, useConstructorIfExists);
       }
 
