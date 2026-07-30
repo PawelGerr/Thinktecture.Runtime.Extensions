@@ -128,7 +128,11 @@ public class SingleItemReadOnlySetTests
    [Fact]
    public void Should_throw_ArgumentNullException_when_argument_is_null_like_HashSet()
    {
-      FluentActions.Invoking(() => _sut.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>();
-      FluentActions.Invoking(() => _sut.SetEquals(null!)).Should().Throw<ArgumentNullException>();
+      FluentActions.Invoking(() => _sut.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+      FluentActions.Invoking(() => _sut.IsSubsetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+      FluentActions.Invoking(() => _sut.IsProperSupersetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+      FluentActions.Invoking(() => _sut.IsSupersetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+      FluentActions.Invoking(() => _sut.Overlaps(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+      FluentActions.Invoking(() => _sut.SetEquals(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
    }
 }

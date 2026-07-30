@@ -60,21 +60,29 @@ internal sealed class SingleItemReadOnlySet<T> : IReadOnlySet<T>
 
    public bool IsProperSupersetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return !other.Any();
    }
 
    public bool IsSubsetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return other.Contains(_item, _comparer);
    }
 
    public bool IsSupersetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return other.All(item => _comparer.Equals(_item, item));
    }
 
    public bool Overlaps(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return other.Contains(_item, _comparer);
    }
 

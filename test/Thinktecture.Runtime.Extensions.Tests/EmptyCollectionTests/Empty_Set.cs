@@ -77,12 +77,12 @@ namespace Thinktecture.Runtime.Tests.EmptyCollectionTests
       [Fact]
       public void Should_throw_ArgumentNullException_when_argument_is_null_like_HashSet()
       {
-         FluentActions.Invoking(() => SUT.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>();
-         FluentActions.Invoking(() => SUT.IsSubsetOf(null!)).Should().Throw<ArgumentNullException>();
-         FluentActions.Invoking(() => SUT.IsProperSupersetOf(null!)).Should().Throw<ArgumentNullException>();
-         FluentActions.Invoking(() => SUT.IsSupersetOf(null!)).Should().Throw<ArgumentNullException>();
-         FluentActions.Invoking(() => SUT.Overlaps(null!)).Should().Throw<ArgumentNullException>();
-         FluentActions.Invoking(() => SUT.SetEquals(null!)).Should().Throw<ArgumentNullException>();
+         FluentActions.Invoking(() => SUT.IsProperSubsetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+         FluentActions.Invoking(() => SUT.IsSubsetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+         FluentActions.Invoking(() => SUT.IsProperSupersetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+         FluentActions.Invoking(() => SUT.IsSupersetOf(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+         FluentActions.Invoking(() => SUT.Overlaps(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
+         FluentActions.Invoking(() => SUT.SetEquals(null!)).Should().Throw<ArgumentNullException>().WithParameterName("other");
       }
    }
 }

@@ -46,6 +46,8 @@ internal sealed class EmptySet<T> : IReadOnlySet<T>
 
    public bool IsSupersetOf(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return !other.Any();
    }
 
@@ -58,6 +60,8 @@ internal sealed class EmptySet<T> : IReadOnlySet<T>
 
    public bool SetEquals(IEnumerable<T> other)
    {
+      ArgumentNullException.ThrowIfNull(other);
+
       return !other.Any();
    }
 }
