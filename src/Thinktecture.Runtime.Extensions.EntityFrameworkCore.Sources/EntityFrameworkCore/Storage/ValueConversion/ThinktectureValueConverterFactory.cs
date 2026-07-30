@@ -64,18 +64,13 @@ public class ThinktectureValueConverterFactory
    {
       ArgumentNullException.ThrowIfNull(type);
 
-      var metadata = MetadataLookup.FindMetadataForConversion(
-         type,
-         // ReadOnlySpan<char>-based object factories are excluded because a ref struct cannot be used as the
-         // generic provider-value argument of ThinktectureValueConverter, which mirrors the source generator and
-         // lets the conversion fall back to the key-based metadata.
-         f => f.ValueType != typeof(ReadOnlySpan<char>) && f.UseWithEntityFramework,
-         _ => true);
+      return Create(GetConversionMetadata(type), useConstructorForRead);
+   }
 
-      if (metadata is null)
-         throw new NotSupportedException($"The provided type '{type.FullName}' is not supported by {nameof(ThinktectureValueConverterFactory)}.");
-
-      return Create(metadata.Value, useConstructorForRead);
+   internal static ConversionMetadata GetConversionMetadata(Type type)
+   {
+      return type.FindMetadataForValueConverter()
+             ?? throw new NotSupportedException($"The provided type '{type.FullName}' is not supported by {nameof(ThinktectureValueConverterFactory)}.");
    }
 
    internal static ValueConverter Create(

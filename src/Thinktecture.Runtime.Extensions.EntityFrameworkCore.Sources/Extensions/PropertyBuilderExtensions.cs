@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore.Internal;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
-using Thinktecture.Internal;
 
 namespace Thinktecture;
 
@@ -51,9 +51,10 @@ public static class PropertyBuilderExtensions
       this PropertyBuilder<TProperty> propertyBuilder,
       Configuration configuration)
    {
-      var converter = ThinktectureValueConverterFactory.Create(typeof(TProperty), configuration.UseConstructorForRead);
+      var metadata = ThinktectureValueConverterFactory.GetConversionMetadata(typeof(TProperty));
+      var converter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       propertyBuilder.HasConversion(converter);
-      new MutableItem(typeof(TProperty), propertyBuilder.Metadata).ApplyMaxLengthFromStrategy(configuration);
+      new MaxLengthTarget(propertyBuilder.Metadata).ApplyMaxLengthFromStrategy(configuration, metadata);
 
       return propertyBuilder;
    }

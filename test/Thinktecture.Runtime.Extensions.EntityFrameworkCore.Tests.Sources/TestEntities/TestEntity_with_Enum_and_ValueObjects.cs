@@ -26,7 +26,9 @@ public class TestEntity_with_Enum_and_ValueObjects
    public StringBasedReferenceValueObject? StringBasedReferenceValueObject { get; set; }
    public required StringBasedStructValueObject StringBasedStructValueObject { get; set; }
    public StringBasedReferenceValueObjectWithCustomError? StringBasedReferenceValueObjectWithCustomError { get; set; }
+   public StringBasedStructValueObjectWithEmptyStringYieldsNull? StringBasedStructValueObjectWithEmptyStringYieldsNull { get; set; }
    public List<IntBasedReferenceValueObject> CollectionOfIntBasedReferenceValueObject { get; set; } = [];
+   public List<SmartEnum_StringBased> CollectionOfSmartEnum_StringBased { get; set; } = [];
    public Boundary? Boundary { get; set; }
    public BoundaryWithCustomError? BoundaryWithCustomError { get; set; }
    public BoundaryWithCustomFactoryNames? BoundaryWithCustomFactoryNames { get; set; }
@@ -51,6 +53,7 @@ public class TestEntity_with_Enum_and_ValueObjects
       modelBuilder.Entity<TestEntity_with_Enum_and_ValueObjects>(builder =>
       {
          var primitiveCollectionBuilder = builder.PrimitiveCollection(e => e.CollectionOfIntBasedReferenceValueObject);
+         var smartEnumCollectionBuilder = builder.PrimitiveCollection(e => e.CollectionOfSmartEnum_StringBased);
 
          if (valueConverterRegistration == ValueConverterRegistration.PropertyConfiguration)
          {
@@ -66,6 +69,7 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.StringBasedReferenceValueObject).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.StringBasedStructValueObject).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.StringBasedReferenceValueObjectWithCustomError).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.StringBasedStructValueObjectWithEmptyStringYieldsNull).HasThinktectureValueConverter(configuration);
 
             builder.Property(e => e.IntBasedReferenceValueObjectWitCustomFactoryName).HasThinktectureValueConverter(configuration);
 
@@ -77,6 +81,7 @@ public class TestEntity_with_Enum_and_ValueObjects
             builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter(configuration);
 
             primitiveCollectionBuilder.HasThinktectureValueConverter(configuration);
+            smartEnumCollectionBuilder.HasThinktectureValueConverter(configuration);
          }
 
          builder.OwnsOne(e => e.Boundary, navigationBuilder =>

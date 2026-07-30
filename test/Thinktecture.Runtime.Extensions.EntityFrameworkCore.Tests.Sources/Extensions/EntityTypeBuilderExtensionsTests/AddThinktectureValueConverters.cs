@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Thinktecture.EntityFrameworkCore;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
-using Thinktecture.Runtime.Tests.Extensions.DbContextOptionsBuilderExtensionsTests;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -225,6 +224,20 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
 
          // Int-based smart enums should not have max length
          property.GetMaxLength().Should().BeNull();
+      }
+
+      [Fact]
+      public void Should_not_apply_max_length_when_type_has_object_factory_for_entity_framework()
+      {
+         var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Types_having_ObjectFactories));
+         var intFactoryProperty = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithIntObjectFactory));
+         var stringFactoryProperty = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithStringObjectFactory));
+
+         // The object factories of both Smart Enums are flagged for Entity Framework Core, so the converters persist
+         // the factory value instead of the string key. The key-based max-length strategy must not be applied. This
+         // also holds for the second enum, whose factory value type is the key type itself.
+         intFactoryProperty.GetMaxLength().Should().BeNull();
+         stringFactoryProperty.GetMaxLength().Should().BeNull();
       }
 
       [Fact]
@@ -572,33 +585,23 @@ namespace Thinktecture.Runtime.Tests.Extensions.EntityTypeBuilderExtensionsTests
                        .EnableServiceProviderCaching(false)
                        .Options;
 
-         using var ctx = new PrimitiveCollectionDbContext(options);
-         var entityType = ctx.Model.FindEntityType(typeof(EntityWithStringSmartEnumCollection)) ?? throw new Exception("Entity not found");
-         var property = entityType.FindProperty(nameof(EntityWithStringSmartEnumCollection.Items)) ?? throw new Exception("Collection property not found");
+         using var ctx = new PrimitiveCollectionDbContext(options, addValueConvertersOnEntity: true);
+         var entityType = ctx.Model.FindEntityType(typeof(EntityWithStringSmartEnumCollection));
+         var property = entityType.FindProperty(nameof(EntityWithStringSmartEnumCollection.Items));
 
-         var elementType = property.GetElementType() ?? throw new Exception("Element type not found");
+         var elementType = property.GetElementType();
 
          // The element carries the max length ...
          elementType.GetMaxLength().Should().Be(10);
 
          // ... and the collection property must not be constrained to a single key length.
          property.GetMaxLength().Should().BeNull();
-      }
 
-      private class PrimitiveCollectionDbContext(DbContextOptions<PrimitiveCollectionDbContext> options) : DbContext(options)
-      {
-         protected override void OnModelCreating(ModelBuilder modelBuilder)
-         {
-            base.OnModelCreating(modelBuilder);
-
-            // The primitive collection must be declared explicitly, because EF Core does not map a collection of a type
-            // without a type mapping by convention. The converters are registered imperatively on the entity builder.
-            modelBuilder.Entity<EntityWithStringSmartEnumCollection>(builder =>
-            {
-               builder.PrimitiveCollection(e => e.Items);
-               builder.AddThinktectureValueConverters();
-            });
-         }
+         // The element is also the item that gets the value converter.
+         var valueConverter = elementType.GetValueConverter();
+         valueConverter.Should().NotBeNull();
+         valueConverter.ModelClrType.Should().Be(typeof(SmartEnum_StringBased));
+         valueConverter.ProviderClrType.Should().Be(typeof(string));
       }
 
       public void Dispose()

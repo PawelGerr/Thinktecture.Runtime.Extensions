@@ -13,6 +13,7 @@ public class TestEntity_with_Types_having_ObjectFactories
    public TestComplexValueObject_ObjectFactory_and_Constructor TestComplexValueObject_ObjectFactory_and_Constructor { get; set; }
    public CustomObject_ObjectFactory CustomObject_ObjectFactory { get; set; }
    public SmartEnum_StringBased_WithIntObjectFactoryForEntityFramework SmartEnum_StringBased_WithIntObjectFactory { get; set; }
+   public SmartEnum_StringBased_WithStringObjectFactoryForEntityFramework SmartEnum_StringBased_WithStringObjectFactory { get; set; }
 
    public static void Configure(
       ModelBuilder modelBuilder,
@@ -31,6 +32,7 @@ public class TestEntity_with_Types_having_ObjectFactories
             builder.Property(e => e.TestComplexValueObject_ObjectFactory_and_Constructor).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.CustomObject_ObjectFactory).HasThinktectureValueConverter(configuration);
             builder.Property(e => e.SmartEnum_StringBased_WithIntObjectFactory).HasThinktectureValueConverter(configuration);
+            builder.Property(e => e.SmartEnum_StringBased_WithStringObjectFactory).HasThinktectureValueConverter(configuration);
          }
 
          if (configureOnEntityTypeLevel)

@@ -148,7 +148,9 @@ services.AddDbContext<AppDbContext>(b => b
 
 - All levels except fully-manual converters accept an optional `Configuration` (max-length strategy
   etc.); the parameterless overloads use `Configuration.Default`, which auto-computes max length for
-  string-keyed Smart Enums.
+  string-keyed Smart Enums. No max-length strategy is applied to a type with an
+  `[ObjectFactory<T>(UseWithEntityFramework = true)]`, because the persisted value comes from the
+  factory and may differ from the key; use `HasMaxLength` explicitly for such types.
 - **Owned entities, complex types, and primitive collections** have their own overloads when the
   VOs/enums don't sit directly on the entity: `AddThinktectureValueConverters` on an
   `OwnedNavigationBuilder` or `ComplexPropertyBuilder`, and `HasThinktectureValueConverter` on a

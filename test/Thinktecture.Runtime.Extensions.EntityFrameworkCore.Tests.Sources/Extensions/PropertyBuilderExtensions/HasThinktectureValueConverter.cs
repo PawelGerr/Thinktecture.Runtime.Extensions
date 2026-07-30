@@ -211,6 +211,35 @@ namespace Thinktecture.Runtime.Tests.Extensions.ModelBuilderExtensionsTests
       }
 
       [Fact]
+      public void Should_not_apply_max_length_when_type_has_object_factory_for_entity_framework()
+      {
+         var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Types_having_ObjectFactories));
+         var intFactoryProperty = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithIntObjectFactory));
+         var stringFactoryProperty = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithStringObjectFactory));
+
+         // The object factories of both Smart Enums are flagged for Entity Framework Core, so the converters persist
+         // the factory value instead of the string key. The key-based max-length strategy must not be applied. This
+         // also holds for the second enum, whose factory value type is the key type itself.
+         intFactoryProperty.GetMaxLength().Should().BeNull();
+         stringFactoryProperty.GetMaxLength().Should().BeNull();
+      }
+
+      [Fact]
+      public void Should_apply_element_max_length_to_element_of_string_based_smart_enum_collection()
+      {
+         var entityType = _ctx.Model.FindEntityType(typeof(TestEntity_with_Enum_and_ValueObjects));
+         var property = entityType.FindProperty(nameof(TestEntity_with_Enum_and_ValueObjects.CollectionOfSmartEnum_StringBased));
+
+         var elementType = property.GetElementType();
+
+         // A primitive collection is persisted as a single JSON column, so the element carries the max length ...
+         elementType.GetMaxLength().Should().Be(10);
+
+         // ... and the collection property must not be constrained to a single key length.
+         property.GetMaxLength().Should().BeNull();
+      }
+
+      [Fact]
       public void Should_not_apply_max_length_when_using_NoMaxLength_configuration()
       {
          var options = new DbContextOptionsBuilder<TestDbContext>()

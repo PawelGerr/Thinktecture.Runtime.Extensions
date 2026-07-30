@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore.Internal;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
-using Thinktecture.Internal;
 
 namespace Thinktecture;
 
@@ -53,9 +53,10 @@ public static class PrimitiveCollectionBuilderExtensions
       Configuration configuration)
    {
       var elementType = primitiveCollectionBuilder.ElementType();
-      var converter = ThinktectureValueConverterFactory.Create(elementType.Metadata.ClrType, configuration.UseConstructorForRead);
+      var metadata = ThinktectureValueConverterFactory.GetConversionMetadata(elementType.Metadata.ClrType);
+      var converter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       elementType.HasConversion(converter);
-      new MutableItem(elementType.Metadata.ClrType, elementType.Metadata).ApplyMaxLengthFromStrategy(configuration);
+      new MaxLengthTarget(elementType.Metadata).ApplyMaxLengthFromStrategy(configuration, metadata);
 
       return primitiveCollectionBuilder;
    }

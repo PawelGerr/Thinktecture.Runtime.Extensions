@@ -3,6 +3,11 @@ namespace Thinktecture.EntityFrameworkCore;
 /// <summary>
 /// Strategy for calculating maximum length for smart enum key properties.
 /// </summary>
+/// <remarks>
+/// The strategy is not applied to types with an <see cref="ObjectFactoryAttribute{T}"/> that has
+/// <c>UseWithEntityFramework = true</c>, because the value converter then persists the value of the factory,
+/// which may differ from the key.
+/// </remarks>
 public interface ISmartEnumMaxLengthStrategy
 {
    /// <summary>

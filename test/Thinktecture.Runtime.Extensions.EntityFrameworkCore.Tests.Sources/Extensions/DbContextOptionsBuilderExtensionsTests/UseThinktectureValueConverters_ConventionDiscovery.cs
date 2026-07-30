@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 
 namespace Thinktecture.Runtime.Tests.Extensions.DbContextOptionsBuilderExtensionsTests;
@@ -26,33 +25,21 @@ public class UseThinktectureValueConverters_ConventionDiscovery
                     .Options;
 
       using var ctx = new PrimitiveCollectionDbContext(options);
-      var entityType = ctx.Model.FindEntityType(typeof(EntityWithStringSmartEnumCollection)) ?? throw new Exception("Entity not found");
-      var property = entityType.FindProperty(nameof(EntityWithStringSmartEnumCollection.Items)) ?? throw new Exception("Collection property not found");
+      var entityType = ctx.Model.FindEntityType(typeof(EntityWithStringSmartEnumCollection));
+      var property = entityType.FindProperty(nameof(EntityWithStringSmartEnumCollection.Items));
 
-      var elementType = property.GetElementType() ?? throw new Exception("Element type not found");
+      var elementType = property.GetElementType();
 
       // The element carries the max length ...
       elementType.GetMaxLength().Should().Be(10);
 
       // ... and the collection property must not be constrained to a single key length.
       property.GetMaxLength().Should().BeNull();
+
+      // The element is also the item that gets the value converter.
+      var valueConverter = elementType.GetValueConverter();
+      valueConverter.Should().NotBeNull();
+      valueConverter.ModelClrType.Should().Be(typeof(SmartEnum_StringBased));
+      valueConverter.ProviderClrType.Should().Be(typeof(string));
    }
-
-   private class PrimitiveCollectionDbContext(DbContextOptions<PrimitiveCollectionDbContext> options) : DbContext(options)
-   {
-      protected override void OnModelCreating(ModelBuilder modelBuilder)
-      {
-         base.OnModelCreating(modelBuilder);
-
-         // The primitive collection must be declared explicitly, because EF Core does not map a collection of a type
-         // without a type mapping by convention.
-         modelBuilder.Entity<EntityWithStringSmartEnumCollection>(builder => builder.PrimitiveCollection(e => e.Items));
-      }
-   }
-}
-
-public class EntityWithStringSmartEnumCollection
-{
-   public Guid Id { get; set; }
-   public List<SmartEnum_StringBased> Items { get; set; } = [];
 }

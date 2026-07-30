@@ -308,6 +308,24 @@ public class UseThinktectureValueConverters : IDisposable
    }
 
    [Fact]
+   public void Should_not_apply_max_length_when_object_factory_for_entity_framework_has_same_value_type_as_key()
+   {
+      var options = new DbContextOptionsBuilder<TestDbContext>()
+                    .UseSqlite("DataSource=:memory:")
+                    .EnableServiceProviderCaching(false)
+                    .UseThinktectureValueConverters() // Uses Configuration.Default
+                    .Options;
+
+      using var ctx = new TestDbContext(options);
+      var entityType = ctx.Model.FindEntityType(typeof(TestEntity_with_Types_having_ObjectFactories));
+      var property = entityType.FindProperty(nameof(TestEntity_with_Types_having_ObjectFactories.SmartEnum_StringBased_WithStringObjectFactory));
+
+      // The object factory controls the persisted value, which may differ from the item keys. Therefore the
+      // key-based max-length strategy must not be applied, even though the factory value type is the key type.
+      property.GetMaxLength().Should().BeNull();
+   }
+
+   [Fact]
    public void Should_not_apply_max_length_to_int_based_smart_enums()
    {
       var options = new DbContextOptionsBuilder<TestDbContext>()

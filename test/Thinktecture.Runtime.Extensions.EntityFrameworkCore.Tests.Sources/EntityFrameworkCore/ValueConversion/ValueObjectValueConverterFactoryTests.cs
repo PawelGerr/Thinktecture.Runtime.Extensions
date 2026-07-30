@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Runtime.Tests.TestEntities;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -35,6 +36,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                       IntBasedStructValueObject = IntBasedStructValueObject.Create(43),
                       StringBasedReferenceValueObject = StringBasedReferenceValueObject.Create("value 1"),
                       StringBasedStructValueObject = StringBasedStructValueObject.Create("value 2"),
+                      StringBasedStructValueObjectWithEmptyStringYieldsNull = StringBasedStructValueObjectWithEmptyStringYieldsNull.Create("struct-vo"),
                       StringBasedReferenceValueObjectWithCustomError = StringBasedReferenceValueObjectWithCustomError.Create("value 3"),
                       Boundary = Boundary.Create(10, 20),
                       BoundaryWithCustomError = BoundaryWithCustomError.Create(11, 21),
@@ -49,6 +51,7 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
                          IntBasedReferenceValueObject.Create(1),
                          IntBasedReferenceValueObject.Create(2)
                       ],
+                      CollectionOfSmartEnum_StringBased = [SmartEnum_StringBased.Item1, SmartEnum_StringBased.Item2],
                       TimeSpanBasedReferenceValueObject = TimeSpanBasedReferenceValueObject.Create(TimeSpan.FromHours(1.5)),
                       TimeSpanBasedStructValueObject = TimeSpanBasedStructValueObject.Create(TimeSpan.FromMinutes(30)),
                    };
@@ -58,6 +61,34 @@ public class ValueObjectValueConverterFactoryTests : IDisposable
       _ctx.ChangeTracker.Clear();
       (await _ctx.TestEntities_with_Enum_and_ValueObjects.SingleAsync(TestContext.Current.CancellationToken))
          .Should().BeEquivalentTo(entity);
+   }
+
+   // Regression test for a string-keyed STRUCT value object with EmptyStringInFactoryMethodsYieldsNull = true.
+   // The setting is ignored for structs, so the generated ConvertFromKeyExpression stays Func<string, T>. Only the
+   // factory read path casts that expression, therefore useConstructorForRead must be false here.
+   [Fact]
+   public void Should_create_converter_for_string_keyed_struct_with_empty_string_yields_null_when_factory_is_used_for_read()
+   {
+      var converter = ThinktectureValueConverterFactory.Create(
+         typeof(StringBasedStructValueObjectWithEmptyStringYieldsNull),
+         useConstructorForRead: false);
+
+      var value = converter.ConvertFromProvider("value");
+
+      value.Should().Be(StringBasedStructValueObjectWithEmptyStringYieldsNull.Create("value"));
+      converter.ConvertToProvider(value).Should().Be("value");
+   }
+
+   [Fact]
+   public void Should_convert_empty_string_to_value_object_because_empty_string_yields_null_is_ignored_for_structs()
+   {
+      var converter = ThinktectureValueConverterFactory.Create(
+         typeof(StringBasedStructValueObjectWithEmptyStringYieldsNull),
+         useConstructorForRead: false);
+
+      var value = converter.ConvertFromProvider(String.Empty);
+
+      value.Should().Be(StringBasedStructValueObjectWithEmptyStringYieldsNull.Create(String.Empty));
    }
 
    [Fact]

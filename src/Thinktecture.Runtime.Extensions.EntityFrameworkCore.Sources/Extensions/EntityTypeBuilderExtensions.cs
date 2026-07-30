@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thinktecture.EntityFrameworkCore;
+using Thinktecture.EntityFrameworkCore.Internal;
 using Thinktecture.EntityFrameworkCore.Storage.ValueConversion;
 using Thinktecture.Internal;
 
@@ -588,7 +589,7 @@ public static class EntityTypeBuilderExtensions
 
       var valueConverter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       elementType.SetValueConverter(valueConverter);
-      new MutableItem(metadata.Type, elementType).ApplyMaxLengthFromStrategy(configuration);
+      new MaxLengthTarget(elementType).ApplyMaxLengthFromStrategy(configuration, metadata);
       configure(property);
    }
 
@@ -660,7 +661,7 @@ public static class EntityTypeBuilderExtensions
    {
       var valueConverter = ThinktectureValueConverterFactory.Create(metadata, configuration.UseConstructorForRead);
       property.SetValueConverter(valueConverter);
-      new MutableItem(metadata.Type, property).ApplyMaxLengthFromStrategy(configuration);
+      new MaxLengthTarget(property).ApplyMaxLengthFromStrategy(configuration, metadata);
       configure(property);
    }
 }
