@@ -18,9 +18,11 @@ public sealed class KeyedJsonCodeGenerator : CodeGeneratorBase
 
    public override void Generate(CancellationToken cancellationToken)
    {
+      // A ref struct cannot be a generic argument of the generated converter. ReadOnlySpan<char> is the
+      // exception: the span-based JSON converter handles it. Every other ref struct is ignored here.
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
+                                .FirstOrDefault(f => (!f.IsRefLike || f.IsReadOnlySpanOfChar) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
 
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 

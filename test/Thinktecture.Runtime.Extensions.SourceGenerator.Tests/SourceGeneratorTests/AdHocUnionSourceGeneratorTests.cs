@@ -572,6 +572,52 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_box_default_for_stateless_struct_member_in_struct_union_with_legacy_UseSingleBackingField()
+   {
+      // Coverage gap: the legacy UseSingleBackingField case was only covered for a CLASS union. A STRUCT union
+      // additionally keeps the "_valueIndex == 0" check in the collapsed Value getter, so that default(TestUnion)
+      // throws instead of returning the boxed default of the stateless member.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct EmptyState { }
+
+         	[Union<EmptyState, string>(T1IsStateless = true, UseSingleBackingField = true)]
+            public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_collapse_value_getter_for_duplicated_stateless_struct_members_with_UseSingleBackingField()
+   {
+      // Regression: a duplicated stateless struct member is created through the single indexed constructor of the
+      // first member, which assigns the cached boxed default to _obj for every index. Both members therefore read
+      // the shared field. The read decision previously carried the duplicate-counter guard of the declaration site,
+      // so the second member was treated as not reading _obj. That left a dead cached-boxed-default field, a dead
+      // _obj field and a Value getter switching over two identical "default(EmptyState)" arms.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public readonly struct EmptyState { }
+
+         	[Union<EmptyState, EmptyState>(T1IsStateless = true, T2IsStateless = true, UseSingleBackingField = true)]
+            public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
    public async Task Should_not_declare_backing_field_for_all_stateless_reference_members_with_SingleBackingFieldType()
    {
       // Regression: a typed single backing field on a union whose members are ALL stateless

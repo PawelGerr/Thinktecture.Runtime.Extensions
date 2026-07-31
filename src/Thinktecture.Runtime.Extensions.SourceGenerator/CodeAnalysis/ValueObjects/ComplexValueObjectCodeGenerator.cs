@@ -34,25 +34,9 @@ public sealed class ComplexValueObjectCodeGenerator : SmartEnumAndValueObjectCod
          renderedMemberNames.Add(StringBuilderExtensions.RenderArgumentName(members[i].ArgumentName));
       }
 
-      _objArgumentName = GetNonCollidingName(renderedMemberNames, "obj", "resultObj");
-      _validationErrorArgumentName = GetNonCollidingName(renderedMemberNames, "validationError", "resultValidationError");
-      _factoryArgumentsValidationErrorArgumentName = GetNonCollidingName(renderedMemberNames, Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR, "resultFactoryArgumentsValidationError");
-   }
-
-   /// <summary>
-   /// Returns <paramref name="preferredName"/> when no member renders to it. Otherwise falls back to
-   /// <paramref name="alternativeName"/>, and appends the smallest integer suffix when that alternative is taken
-   /// as well (a type with both an <c>Obj</c> and a <c>ResultObj</c> member).
-   /// </summary>
-   private static string GetNonCollidingName(
-      HashSet<string> renderedMemberNames,
-      string preferredName,
-      string alternativeName)
-   {
-      if (!renderedMemberNames.Contains(preferredName))
-         return preferredName;
-
-      return StringBuilderExtensions.MakeNonCollidingParameterName(alternativeName, renderedMemberNames);
+      _objArgumentName = StringBuilderExtensions.GetNonCollidingName(renderedMemberNames, "obj", "resultObj");
+      _validationErrorArgumentName = StringBuilderExtensions.GetNonCollidingName(renderedMemberNames, "validationError", "resultValidationError");
+      _factoryArgumentsValidationErrorArgumentName = StringBuilderExtensions.GetNonCollidingName(renderedMemberNames, Constants.Variables.FACTORY_ARGUMENTS_VALIDATION_ERROR, "resultFactoryArgumentsValidationError");
    }
 
    public override void Generate(CancellationToken cancellationToken)

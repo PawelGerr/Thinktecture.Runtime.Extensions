@@ -112,6 +112,7 @@ public sealed class SmartEnumSourceGenerator()
                                  state.State.ValidationError,
                                  state.Settings.SkipIParsable,
                                  hasStringBasedValidateMethod: false,
+                                 emptyStringYieldsNull: false,
                                  state.State.GenericParameters));
       InitializeParsableCodeGenerator(context, parsables, options);
    }
@@ -131,6 +132,7 @@ public sealed class SmartEnumSourceGenerator()
                                  isEnum: true,
                                  hasStringBasedValidateMethod: false,
                                  hasReadOnlySpanOfCharBasedValidateMethod: false,
+                                 emptyStringYieldsNull: false,
                                  state.State.GenericParameters));
       InitializeSpanParsableCodeGenerator(context, parsables, options);
    }

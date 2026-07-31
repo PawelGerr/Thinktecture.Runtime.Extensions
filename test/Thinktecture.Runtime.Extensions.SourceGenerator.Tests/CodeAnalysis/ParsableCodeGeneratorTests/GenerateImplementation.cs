@@ -47,6 +47,53 @@ public class GenerateImplementation
    }
 
    [Fact]
+   public async Task ForValueObject_WithEmptyStringYieldsNull_GuardsAgainstEmptyAndWhitespaceInput()
+   {
+      // Arrange - a string-keyed reference value object whose Validate returns success with a null instance for
+      // empty or whitespace-only input. Parse cannot return that null (its return type is non-nullable) and
+      // TryParse cannot report it as success, so both must reject such input.
+      var state = new ParsableStateBuilder()
+                  .WithType("global::Thinktecture.Tests.TestType")
+                  .WithStringKeyMember()
+                  .WithEmptyStringYieldsNull()
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.Instance.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("if(global::System.String.IsNullOrWhiteSpace(s))");
+      result.Should().Contain("global::System.FormatException");
+      result.Should().Contain("Empty or whitespace input is not allowed because it would yield null.");
+      await Verifier.Verify(result);
+   }
+
+   [Fact]
+   public void ForValueObject_WithoutEmptyStringYieldsNull_GeneratesNoEmptyInputGuard()
+   {
+      // Arrange - the very same state with the flag turned off. The guard is emitted only for the flagged
+      // configuration, so every other type keeps its previous output byte for byte.
+      var state = new ParsableStateBuilder()
+                  .WithType("global::Thinktecture.Tests.TestType")
+                  .WithStringKeyMember()
+                  .WithEmptyStringYieldsNull(false)
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      // Act
+      ParsableCodeGenerator.Instance.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().NotContain("IsNullOrWhiteSpace");
+      result.Should().NotContain("Empty or whitespace input is not allowed because it would yield null.");
+   }
+
+   [Fact]
    public async Task ForValueObject_WithStringBasedValidateMethod_And_NonStringKey_UsesStringValidation()
    {
       // Arrange - Int key with string-based validate method

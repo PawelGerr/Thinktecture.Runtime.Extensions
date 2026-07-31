@@ -18,9 +18,11 @@ public sealed class KeyedNewtonsoftJsonCodeGenerator : CodeGeneratorBase
 
    public override void Generate(CancellationToken cancellationToken)
    {
+      // A ref struct cannot be a generic argument of the generated converter, so a ref-struct factory
+      // (for example ReadOnlySpan<char> or ReadOnlySpan<byte>) is ignored and the key type is used instead.
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
+                                .FirstOrDefault(f => !f.IsRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
       if (keyType is null)

@@ -20,14 +20,16 @@ public sealed class RegularUnionTypeMemberState : IEquatable<RegularUnionTypeMem
       INamedTypeSymbol typeDefinition,
       ImmutableArray<DefaultMemberState> uniqueSingleArgumentConstructors)
    {
-      if (type.BaseType is null)
-         throw new InvalidOperationException($"Inner union type '{type.ToFullyQualifiedDisplayString()}' must have a base type.");
-
       Name = type.Name;
       TypeFullyQualified = type.ToFullyQualifiedDisplayString();
       TypeDefinitionFullyQualified = typeDefinition.ToFullyQualifiedDisplayString();
-      BaseTypeFullyQualified = type.BaseType.ToFullyQualifiedDisplayString();
-      BaseTypeDefinitionFullyQualified = type.BaseType.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
+
+      // The base type is never null here: FindDerivedInnerTypes only returns types that are derived from
+      // the union, and the transform reports TTRESG098 before constructing this state if it ever were null.
+      var baseType = type.BaseType!;
+
+      BaseTypeFullyQualified = baseType.ToFullyQualifiedDisplayString();
+      BaseTypeDefinitionFullyQualified = baseType.GetGenericTypeDefinition().ToFullyQualifiedDisplayString();
       IsAbstract = type.IsAbstract;
       IsInterface = type.TypeKind == TypeKind.Interface;
       DeclaredAccessibility = type.DeclaredAccessibility;

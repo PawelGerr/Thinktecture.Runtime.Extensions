@@ -498,7 +498,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          var item = _state.Items[i];
          _sb.AppendArgumentName(item.ArgumentName);
-         _sb.Append(@""">The action to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+         _sb.Append(@""">The action to execute if the current item is equal to <see cref=""").AppendIdentifier(item.Name).Append(@"""/>.</param>");
       }
 
       _sb.Append(@"
@@ -642,7 +642,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
          var item = _state.Items[i];
          _sb.AppendArgumentName(item.ArgumentName);
-         _sb.Append(@""">The function to execute if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+         _sb.Append(@""">The function to execute if the current item is equal to <see cref=""").AppendIdentifier(item.Name).Append(@"""/>.</param>");
       }
 
       _sb.Append(@"
@@ -781,7 +781,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var item = _state.Items[i];
 
          _sb.Append(@"
-      /// <param name=""").AppendArgumentName(item.ArgumentName).Append(@""">The instance to return if the current item is equal to <see cref=""").Append(item.Name).Append(@"""/>.</param>");
+      /// <param name=""").AppendArgumentName(item.ArgumentName).Append(@""">The instance to return if the current item is equal to <see cref=""").AppendIdentifier(item.Name).Append(@"""/>.</param>");
       }
 
       _sb.Append(@"

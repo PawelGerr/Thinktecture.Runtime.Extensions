@@ -14,6 +14,13 @@ public readonly struct SpanParsableGeneratorState
    public bool IsEnum { get; }
    public bool HasStringBasedValidateMethod { get; }
    public bool HasReadOnlySpanOfCharBasedValidateMethod { get; }
+
+   /// <summary>
+   /// Whether empty or whitespace-only input yields a <c>null</c> instance in the generated <c>Validate</c>.
+   /// The generated Parse/TryParse then reject such input, because ISpanParsable cannot express null on success.
+   /// </summary>
+   public bool EmptyStringYieldsNull { get; }
+
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }
 
    public SpanParsableGeneratorState(
@@ -25,6 +32,7 @@ public readonly struct SpanParsableGeneratorState
       bool isEnum,
       bool hasStringBasedValidateMethod,
       bool hasReadOnlySpanOfCharBasedValidateMethod,
+      bool emptyStringYieldsNull,
       ImmutableArray<GenericTypeParameterState> genericParameters)
    {
       Type = type;
@@ -33,6 +41,7 @@ public readonly struct SpanParsableGeneratorState
       SkipISpanParsable = skipISpanParsable;
       IsEnum = isEnum;
       HasReadOnlySpanOfCharBasedValidateMethod = hasReadOnlySpanOfCharBasedValidateMethod;
+      EmptyStringYieldsNull = emptyStringYieldsNull;
       GenericParameters = genericParameters;
       SkipIParsable = skipIParsable;
       HasStringBasedValidateMethod = hasStringBasedValidateMethod;
@@ -48,6 +57,7 @@ public readonly struct SpanParsableGeneratorState
              && IsEnum == other.IsEnum
              && HasStringBasedValidateMethod == other.HasStringBasedValidateMethod
              && HasReadOnlySpanOfCharBasedValidateMethod == other.HasReadOnlySpanOfCharBasedValidateMethod
+             && EmptyStringYieldsNull == other.EmptyStringYieldsNull
              && GenericParameters.SequenceEqual(other.GenericParameters);
    }
 
@@ -68,6 +78,7 @@ public readonly struct SpanParsableGeneratorState
          hashCode = (hashCode * 397) ^ IsEnum.GetHashCode();
          hashCode = (hashCode * 397) ^ HasStringBasedValidateMethod.GetHashCode();
          hashCode = (hashCode * 397) ^ HasReadOnlySpanOfCharBasedValidateMethod.GetHashCode();
+         hashCode = (hashCode * 397) ^ EmptyStringYieldsNull.GetHashCode();
          hashCode = (hashCode * 397) ^ GenericParameters.ComputeHashCode();
 
          return hashCode;

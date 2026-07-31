@@ -19,7 +19,9 @@ public abstract class MessagePackKeyedSerializerCodeGeneratorFactoryBase : IKeye
           || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.MessagePack))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
+      // A ref struct cannot be a generic argument of the generated formatter/converter types, so a
+      // ref-struct factory (for example ReadOnlySpan<char> or ReadOnlySpan<byte>) is ignored here.
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => !f.IsRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
 
       if (_isForObjectFactories)
          return hasObjectFactory;

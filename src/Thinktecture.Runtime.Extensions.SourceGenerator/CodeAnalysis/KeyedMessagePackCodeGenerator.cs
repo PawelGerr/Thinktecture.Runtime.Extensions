@@ -18,9 +18,11 @@ public sealed class KeyedMessagePackCodeGenerator : CodeGeneratorBase
 
    public override void Generate(CancellationToken cancellationToken)
    {
+      // A ref struct cannot be a generic argument of the generated formatter, so a ref-struct factory
+      // (for example ReadOnlySpan<char> or ReadOnlySpan<byte>) is ignored and the key type is used instead.
       var customFactory = _state.AttributeInfo
                                 .ObjectFactories
-                                .FirstOrDefault(f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
+                                .FirstOrDefault(f => !f.IsRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
       var keyType = customFactory?.TypeFullyQualified ?? _state.KeyMember?.TypeFullyQualified;
 
       if (keyType is null)

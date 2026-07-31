@@ -549,6 +549,45 @@ public class ObjectFactorySourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_render_None_for_out_of_range_UseForSerialization_bits()
+   {
+      // Regression: a value whose bits are all outside the defined enum members matched neither Enum.IsDefined nor
+      // any of the known flags, so nothing at all was appended and the metadata contained "UseForSerialization = ,"
+      // which does not compile. Unknown bits are still dropped, but the output now degrades to "None".
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [SmartEnum<int>]
+            [ObjectFactory<string>(UseForSerialization = (SerializationFrameworks)8)]
+         	public partial class TestEnum
+         	{
+               public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestEnum? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public string ToValue() => default!;
+
+               public static readonly TestEnum Item1 = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+
+         """;
+      var outputs = GetGeneratedOutputs<ObjectFactorySourceGenerator>(source, typeof(ObjectFactoryAttribute).Assembly);
+
+      outputs.Values.Should().ContainSingle(o => o.Contains("UseForSerialization = global::Thinktecture.SerializationFrameworks.None,"));
+
+      await VerifyAsync(outputs,
+                        "Thinktecture.Tests.TestEnum.ObjectFactories.g.cs",
+                        "Thinktecture.Tests.TestEnum.Parsable.g.cs");
+   }
+
+   [Fact]
    public async Task Should_generate_object_factory_with_UseForSerialization_None()
    {
       var source = """

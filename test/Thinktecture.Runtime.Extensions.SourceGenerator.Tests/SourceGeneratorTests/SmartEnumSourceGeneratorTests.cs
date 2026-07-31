@@ -11,6 +11,35 @@ public class SmartEnumSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_escape_keyword_item_name_in_switch_map_xml_doc_cref()
+   {
+      // Regression: the XML documentation of the generated Switch/Map methods references each item with
+      // "<see cref="..."/>". Roslyn symbol names never carry the '@' escape, so an item named like a C# keyword
+      // produced "cref="default"", which is CS1584 + CS1658 in user code. The compile gate cannot catch this,
+      // because both diagnostics are warnings, so the snapshot is the regression net.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[SmartEnum<string>]
+            public partial class TestEnum
+         	{
+               public static readonly TestEnum @default = default!;
+               public static readonly TestEnum Item2 = default!;
+            }
+         }
+         """;
+
+      var output = GetGeneratedOutput<SmartEnumSourceGenerator>(source, "Thinktecture.Tests.TestEnum.SmartEnum.g.cs", typeof(ISmartEnum<>).Assembly);
+
+      output.Should().Contain("cref=\"@default\"");
+      output.Should().NotContain("cref=\"default\"");
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
    public async Task Should_generate_for_generic()
    {
       var source = """

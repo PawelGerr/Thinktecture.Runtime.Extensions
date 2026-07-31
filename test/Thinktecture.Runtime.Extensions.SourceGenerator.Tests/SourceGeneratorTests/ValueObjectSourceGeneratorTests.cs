@@ -853,6 +853,62 @@ public class ValueObjectSourceGeneratorTests : SourceGeneratorTestsBase
    }
 
    [Fact]
+   public async Task Should_escape_keyword_key_member_name_in_xml_doc_cref()
+   {
+      // Regression: the XML documentation of the generated conversion operators and factory methods references the
+      // key member with "<see cref="..."/>". Roslyn symbol names never carry the '@' escape, so a key member named
+      // like a C# keyword produced "cref="class"", which is CS1584 + CS1658 in user code. The compile gate cannot
+      // catch this, because both diagnostics are warnings, so the snapshot is the regression net.
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(KeyMemberName = "class")]
+         	public partial class TestValueObject
+         	{
+         	}
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, "Thinktecture.Tests.TestValueObject.ValueObject.g.cs", typeof(ComplexValueObjectAttribute).Assembly);
+
+      output.Should().Contain("cref=\"@class\"");
+      output.Should().NotContain("cref=\"class\"");
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
+   public async Task Should_escape_keyword_key_member_name_in_xml_doc_cref_of_struct()
+   {
+      // A struct value object with a non-nullable key member gets a second conversion operator to the key type,
+      // which is the only cref site the reference-type fixture above does not reach.
+      var source = """
+
+         using System;
+         using Thinktecture;
+
+         namespace Thinktecture.Tests
+         {
+           [ValueObject<int>(KeyMemberName = "class")]
+         	public partial struct TestValueObject
+         	{
+         	}
+         }
+
+         """;
+      var output = GetGeneratedOutput<ValueObjectSourceGenerator>(source, "Thinktecture.Tests.TestValueObject.ValueObject.g.cs", typeof(ComplexValueObjectAttribute).Assembly);
+
+      output.Should().Contain("cref=\"@class\"");
+      output.Should().NotContain("cref=\"class\"");
+
+      await VerifyAsync(output);
+   }
+
+   [Fact]
    public async Task Should_generate_string_based_keyed_class_with_EmptyStringInFactoryMethodsYieldsNull()
    {
       var source = """

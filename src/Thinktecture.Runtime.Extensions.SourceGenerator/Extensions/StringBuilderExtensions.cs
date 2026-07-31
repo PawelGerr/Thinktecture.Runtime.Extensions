@@ -511,6 +511,22 @@ public static class StringBuilderExtensions
       }
    }
 
+   /// <summary>
+   /// Returns <paramref name="preferredName"/> when no taken name renders to it. Otherwise falls back to
+   /// <paramref name="alternativeName"/>, and appends the smallest integer suffix when that alternative is taken
+   /// as well (a type with both an <c>Obj</c> and a <c>ResultObj</c> member).
+   /// </summary>
+   public static string GetNonCollidingName(
+      ISet<string> takenNames,
+      string preferredName,
+      string alternativeName)
+   {
+      if (!takenNames.Contains(preferredName))
+         return preferredName;
+
+      return MakeNonCollidingParameterName(alternativeName, takenNames);
+   }
+
    public static StringBuilder AppendBackingFieldName(
       this StringBuilder sb,
       BackingFieldName fieldName)

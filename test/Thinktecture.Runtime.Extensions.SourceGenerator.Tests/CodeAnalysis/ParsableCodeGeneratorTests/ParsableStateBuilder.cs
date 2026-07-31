@@ -20,6 +20,7 @@ public class ParsableStateBuilder
    private ValidationErrorState _validationError = ValidationErrorState.Default;
    private bool _skipIParsable;
    private bool _hasStringBasedValidateMethod;
+   private bool _emptyStringYieldsNull;
    private string? _genericTypeParameters; // e.g. "<T>" or "<TKey, TValue>"
    private string? _genericConstraints;    // e.g. "where T : IComparable<T>"
 
@@ -89,6 +90,12 @@ public class ParsableStateBuilder
       return this;
    }
 
+   public ParsableStateBuilder WithEmptyStringYieldsNull(bool emptyStringYieldsNull = true)
+   {
+      _emptyStringYieldsNull = emptyStringYieldsNull;
+      return this;
+   }
+
    public ParsableStateBuilder WithGenericType(string typeFullyQualified, string name, string genericParameters, string? genericConstraints = null)
    {
       _type = CreateType(typeFullyQualified + genericParameters, name + genericParameters);
@@ -109,6 +116,7 @@ public class ParsableStateBuilder
          _validationError,
          _skipIParsable,
          _hasStringBasedValidateMethod,
+         _emptyStringYieldsNull,
          genericParameters);
    }
 

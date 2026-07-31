@@ -815,6 +815,46 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
       await VerifyAsync(output);
    }
 
+   // System.Text.Json keeps an exception for ReadOnlySpan<char>, because the span-based JSON converter handles
+   // exactly that type. Every OTHER ref struct cannot be a generic argument of the generated converter, so a
+   // ReadOnlySpan<byte> factory flagged for System.Text.Json must fall back to the key member.
+   [Fact]
+   public async Task Should_fall_back_to_key_member_when_byte_span_ObjectFactory_is_flagged_for_SystemTextJson()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+            [ObjectFactory<ReadOnlySpan<byte>>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(ReadOnlySpan<byte> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<byte> ToValue() => default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<Thinktecture.CodeAnalysis.ValueObjects.ValueObjectSourceGenerator>(source,
+                                                                    ".Json",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureJsonConverter<,,>).Assembly,
+                                                                    typeof(JsonConverterAttribute).Assembly);
+
+      output.Should().NotContain("ReadOnlySpan<byte>");
+
+      await VerifyAsync(output);
+   }
+
    [Fact]
    public async Task Should_not_use_span_based_Json_converter_when_span_ObjectFactory_is_not_for_serialization()
    {

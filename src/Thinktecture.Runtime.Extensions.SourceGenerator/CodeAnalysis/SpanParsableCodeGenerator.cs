@@ -42,6 +42,17 @@ public sealed class SpanParsableCodeGenerator : IInterfaceCodeGenerator<SpanPars
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {");
 
+      // Validate returns success with a null instance for empty or whitespace-only input, but the return type
+      // of Parse is non-nullable, so such input must be rejected as a format error.
+      // IsWhiteSpace returns true for an empty span as well, so one call covers both cases.
+      if (state.EmptyStringYieldsNull)
+      {
+         sb.Append(@"
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+         throw new global::System.FormatException(""Unable to parse \""").Append(state.Type.Name).Append(@"\"". Empty or whitespace input is not allowed because it would yield null."");
+");
+      }
+
       if (state.IsEnum && state.KeyMember?.IsString() == true)
       {
          sb.Append(@"
@@ -81,6 +92,18 @@ public sealed class SpanParsableCodeGenerator : IInterfaceCodeGenerator<SpanPars
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out ").AppendTypeFullyQualified(state.Type).Append(@" result)
    {");
+
+      // Validate returns success with a null instance for empty or whitespace-only input, but TryParse
+      // promises a non-null result on true, so such input must return false.
+      if (state.EmptyStringYieldsNull)
+      {
+         sb.Append(@"
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+      {
+         result = default;
+         return false;
+      }");
+      }
 
       if (state.KeyMember?.IsString() == true && state.IsEnum)
       {

@@ -31,6 +31,16 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
    public static ").AppendTypeFullyQualified(state.Type).Append(@" Parse(string s, global::System.IFormatProvider? provider)
    {");
 
+      // Validate returns success with a null instance for empty or whitespace-only input, but the return type
+      // of Parse is non-nullable, so such input must be rejected as a format error.
+      if (state.EmptyStringYieldsNull)
+      {
+         sb.Append(@"
+      if(global::System.String.IsNullOrWhiteSpace(s))
+         throw new global::System.FormatException(""Unable to parse \""").Append(state.Type.Name).Append(@"\"". Empty or whitespace input is not allowed because it would yield null."");
+");
+      }
+
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {
          sb.Append(@"
@@ -68,6 +78,19 @@ public sealed class ParsableCodeGenerator : IInterfaceCodeGenerator<ParsableGene
          result = default;
          return false;
       }");
+
+      // Validate returns success with a null instance for empty or whitespace-only input, but TryParse
+      // promises a non-null result on true, so such input must return false.
+      if (state.EmptyStringYieldsNull)
+      {
+         sb.Append(@"
+
+      if(global::System.String.IsNullOrWhiteSpace(s))
+      {
+         result = default;
+         return false;
+      }");
+      }
 
       if (state.KeyMember?.IsString() == true || state.HasStringBasedValidateMethod)
       {

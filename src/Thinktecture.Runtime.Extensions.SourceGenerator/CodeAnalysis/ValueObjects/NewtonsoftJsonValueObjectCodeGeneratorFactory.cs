@@ -21,7 +21,9 @@ public sealed class NewtonsoftJsonValueObjectCodeGeneratorFactory
    {
       return !state.AttributeInfo.HasNewtonsoftJsonConverterAttribute
              && state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson)
-             && !state.AttributeInfo.ObjectFactories.Any(static f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
+             // A ref-struct factory cannot be used by the generated converter, so it does not suppress
+             // the generation of the type's own converter.
+             && !state.AttributeInfo.ObjectFactories.Any(static f => !f.IsRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)

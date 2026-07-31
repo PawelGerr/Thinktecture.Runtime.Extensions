@@ -335,6 +335,62 @@ public class Parse
       result.Should().BeNull();
    }
 
+   // Validate of a string-keyed reference value object with EmptyStringInFactoryMethodsYieldsNull = true returns
+   // success with a null instance for empty or whitespace-only input. The return type of Parse is non-nullable, so
+   // Parse must reject such input instead of returning null.
+   private const string _EMPTY_INPUT_PARSE_ERROR =
+      "Unable to parse \"StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull\". Empty or whitespace input is not allowed because it would yield null.";
+
+   [Theory]
+   [InlineData("")]
+   [InlineData(" ")]
+   [InlineData("   ")]
+   [InlineData("\t")]
+   public void Should_throw_FormatException_when_input_is_empty_or_whitespace_and_EmptyStringInFactoryMethodsYieldsNull(string input)
+   {
+      FluentActions.Invoking(() => StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Parse(input, null))
+                   .Should().Throw<FormatException>()
+                   .WithMessage(_EMPTY_INPUT_PARSE_ERROR);
+   }
+
+   [Fact]
+   public void Should_parse_non_empty_value_when_EmptyStringInFactoryMethodsYieldsNull()
+   {
+      StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Parse("value", null)
+                                                                             .Should().Be(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Create("value"));
+   }
+
+   [Fact]
+   public void Should_report_validation_error_for_empty_input_when_EmptyStringInFactoryMethodsYieldsNull_is_not_set()
+   {
+      // Without the setting the behavior is unchanged: the empty string reaches ValidateFactoryArguments and its
+      // validation error becomes the message of the FormatException.
+      FluentActions.Invoking(() => StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.Parse(String.Empty, null))
+                   .Should().Throw<FormatException>()
+                   .WithMessage("Property cannot be empty.");
+   }
+
+#if NET9_0_OR_GREATER
+   [Theory]
+   [InlineData("")]
+   [InlineData(" ")]
+   [InlineData("   ")]
+   [InlineData("\t")]
+   public void Should_throw_FormatException_when_span_is_empty_or_whitespace_and_EmptyStringInFactoryMethodsYieldsNull(string input)
+   {
+      FluentActions.Invoking(() => StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Parse(input.AsSpan(), null))
+                   .Should().Throw<FormatException>()
+                   .WithMessage(_EMPTY_INPUT_PARSE_ERROR);
+   }
+
+   [Fact]
+   public void Should_parse_non_empty_span_when_EmptyStringInFactoryMethodsYieldsNull()
+   {
+      StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Parse("value".AsSpan(), null)
+                                                                             .Should().Be(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Create("value"));
+   }
+#endif
+
    [Fact]
    public void Should_parse_timespan_from_string()
    {

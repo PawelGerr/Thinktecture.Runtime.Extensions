@@ -14,6 +14,9 @@ partial class TestValueObject
    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
    public static global::Thinktecture.Tests.TestValueObject Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
    {
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+         throw new global::System.FormatException("Unable to parse \"TestValueObject\". Empty or whitespace input is not allowed because it would yield null.");
+
       var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<string>(s, provider);
       var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestValueObject, string, global::Thinktecture.ValidationError>(key, provider, out var result);
 
@@ -32,6 +35,11 @@ partial class TestValueObject
       global::System.IFormatProvider? provider,
       [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestValueObject result)
    {
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+      {
+         result = default;
+         return false;
+      }
 
       if(!global::Thinktecture.Internal.StaticAbstractInvoker.TryParseValue<string>(s, provider, out var key))
       {

@@ -865,5 +865,45 @@ public class NewtonsoftJsonObjectFactoryCodeGeneratorFactoryTests : SourceGenera
 
       await VerifyAsync(output);
    }
+
+   // The exclusion covers every ref struct, not only ReadOnlySpan<char>: no ref struct can be a generic argument
+   // of the generated converter. A ReadOnlySpan<byte> factory flagged for Newtonsoft.Json must therefore fall back
+   // to the key member as well.
+   [Fact]
+   public async Task Should_fall_back_to_key_member_when_byte_span_ObjectFactory_is_flagged_for_NewtonsoftJson()
+   {
+      var source = """
+
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+            [ValueObject<string>]
+            [KeyMemberEqualityComparer<ComparerAccessors.StringOrdinal, string>]
+            [ObjectFactory<ReadOnlySpan<byte>>(UseForSerialization = SerializationFrameworks.All)]
+         	public partial class TestValueObject
+            {
+               public static ValidationError? Validate(ReadOnlySpan<byte> value, IFormatProvider? provider, out TestValueObject? item)
+               {
+                  item = default;
+                  return null;
+               }
+
+               public ReadOnlySpan<byte> ToValue() => default!;
+            }
+         }
+
+         """;
+      var output = GetGeneratedOutput<Thinktecture.CodeAnalysis.ValueObjects.ValueObjectSourceGenerator>(source,
+                                                                    ".NewtonsoftJson",
+                                                                    typeof(ValueObjectAttribute<>).Assembly,
+                                                                    typeof(ObjectFactoryAttribute).Assembly,
+                                                                    typeof(ThinktectureNewtonsoftJsonConverterFactory).Assembly,
+                                                                    typeof(JsonConverter).Assembly);
+
+      output.Should().NotContain("ReadOnlySpan<byte>");
+
+      await VerifyAsync(output);
+   }
 #endif
 }

@@ -17,7 +17,9 @@ public sealed class MessagePackValueObjectCodeGeneratorFactory : MessagePackKeye
    {
       return !state.AttributeInfo.HasMessagePackFormatterAttribute
              && state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.MessagePack)
-             && !state.AttributeInfo.ObjectFactories.Any(static f => !f.IsReadOnlySpanOfChar && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
+             // A ref-struct factory cannot be used by the generated formatter, so it does not suppress
+             // the generation of the type's own formatter.
+             && !state.AttributeInfo.ObjectFactories.Any(static f => !f.IsRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.MessagePack));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)

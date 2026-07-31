@@ -57,7 +57,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="value">The value to validate.</param>
       /// <param name="provider">The format provider for parsing or validation, if applicable.</param>
-      /// <param name="obj">When the method returns, contains the created instance of type <see cref="TestValueObject"/> if validation succeeds; otherwise, <c>null</c>.</param>
+      /// <param name="obj">When the method returns, contains the created instance of type <see cref="TestValueObject"/> if validation succeeds; otherwise, <c>null</c>. The value can also be <c>null</c> when validation succeeds, because <c>null</c> input yields <c>null</c>.</param>
       /// <returns>
       /// A <see cref="global::Thinktecture.ValidationError"/> representing the validation error if validation fails; otherwise, <c>null</c>.
       /// </returns>
@@ -111,7 +111,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="value">The value to be used for object creation.</param>
       /// <param name="obj">
-      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default. The value can also be <c>null</c> when the method returns <c>true</c>, because <c>null</c> input yields <c>null</c>.
       /// </param>
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
@@ -127,7 +127,7 @@ namespace Thinktecture.Tests
       /// </summary>
       /// <param name="value">The value to be used for object creation.</param>
       /// <param name="obj">
-      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default. The value can also be <c>null</c> when the method returns <c>true</c>, because <c>null</c> input yields <c>null</c>.
       /// </param>
       /// <param name="validationError">
       /// When the method returns, contains the validation error if the creation or validation failed; otherwise, it will be <c>null</c>.

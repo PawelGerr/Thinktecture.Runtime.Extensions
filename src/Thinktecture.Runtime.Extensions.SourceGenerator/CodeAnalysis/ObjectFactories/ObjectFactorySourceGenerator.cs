@@ -144,6 +144,8 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
                state.AttributeInfo.ValidationError,
                state.SkipIParsable,
                hasStringBasedValidateMethod: state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
+               // A user-written factory defines its own Validate semantics; the value-object setting does not apply.
+               emptyStringYieldsNull: false,
                state.GenericParameters);
          });
       base.InitializeParsableCodeGenerator(context, parsables, options);
@@ -166,6 +168,7 @@ public sealed class ObjectFactorySourceGenerator : ThinktectureSourceGeneratorBa
                isEnum: false,
                hasStringBasedValidateMethod: state.HasParsableKeyMember || state.AttributeInfo.ObjectFactories.Any(t => t.SpecialType == SpecialType.System_String),
                hasReadOnlySpanOfCharBasedValidateMethod: state.AttributeInfo.ObjectFactories.Any(t => t.IsReadOnlySpanOfChar),
+               emptyStringYieldsNull: false,
                state.GenericParameters);
          });
       base.InitializeSpanParsableCodeGenerator(context, parsables, options);

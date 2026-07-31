@@ -12,7 +12,9 @@ public abstract class JsonKeyedSerializerCodeGeneratorFactoryBase(bool isForObje
           || !state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.SystemTextJson))
          return false;
 
-      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
+      // A ref struct cannot be a generic argument of the generated converter. ReadOnlySpan<char> is the
+      // exception: the span-based JSON converter handles it. Every other ref struct is ignored here.
+      var hasObjectFactory = state.AttributeInfo.ObjectFactories.Any(static f => (!f.IsRefLike || f.IsReadOnlySpanOfChar) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
 
       if (isForObjectFactories)
          return hasObjectFactory;

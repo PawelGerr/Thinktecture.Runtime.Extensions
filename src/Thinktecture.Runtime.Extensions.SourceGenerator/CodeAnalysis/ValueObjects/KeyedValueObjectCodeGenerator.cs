@@ -13,6 +13,9 @@ public sealed class KeyedValueObjectCodeGenerator : SmartEnumAndValueObjectCodeG
    // identifiers would otherwise collide (CS0100/CS0136). The comparison uses the RENDERED identifier, not the raw name,
    // because AppendArgumentName drops a leading underscore before a letter (so "_obj" renders to "obj"), and the
    // library's own private-field defaults are underscore-prefixed.
+   // The provider parameter is rendered escaped ("@provider") to match SmartEnumCodeGenerator, which renders the
+   // same parameter that way. 'obj' and 'validationError' are rendered bare, like the enum generator's fixed
+   // 'item' parameter: none of these fixed names can ever be a C# keyword.
    private readonly string _objArgumentName;
    private readonly string _validationErrorArgumentName;
    private readonly string _providerArgumentName;
@@ -25,11 +28,14 @@ public sealed class KeyedValueObjectCodeGenerator : SmartEnumAndValueObjectCodeG
       _state = state ?? throw new ArgumentNullException(nameof(state));
       _sb = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
 
-      var keyMemberName = StringBuilderExtensions.RenderArgumentName(_state.KeyMember.ArgumentName);
+      var takenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                       {
+                          StringBuilderExtensions.RenderArgumentName(_state.KeyMember.ArgumentName)
+                       };
 
-      _objArgumentName = keyMemberName.Equals("obj", StringComparison.OrdinalIgnoreCase) ? "resultObj" : "obj";
-      _validationErrorArgumentName = keyMemberName.Equals("validationError", StringComparison.OrdinalIgnoreCase) ? "resultValidationError" : "validationError";
-      _providerArgumentName = keyMemberName.Equals("provider", StringComparison.OrdinalIgnoreCase) ? "formatProvider" : "provider";
+      _objArgumentName = StringBuilderExtensions.GetNonCollidingName(takenNames, "obj", "resultObj");
+      _validationErrorArgumentName = StringBuilderExtensions.GetNonCollidingName(takenNames, "validationError", "resultValidationError");
+      _providerArgumentName = StringBuilderExtensions.GetNonCollidingName(takenNames, "provider", "formatProvider");
    }
 
    public override void Generate(CancellationToken cancellationToken)
@@ -213,7 +219,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
-      /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
+      /// <returns>The <see cref=""").AppendIdentifier(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/> or <c>default</c> if <paramref name=""obj""/> is <c>null</c>.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       [return: global::System.Diagnostics.CodeAnalysis.NotNullIfNotNull(""obj"")]
@@ -250,7 +256,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.ConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
-      /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
+      /// <returns>The <see cref=""").AppendIdentifier(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
       public static ").AppendConversionOperator(_state.Settings.ConversionToKeyMemberType).Append(" operator ").AppendTypeFullyQualified(keyMember).Append("(").AppendTypeFullyQualified(_state).Append(@" obj)
@@ -276,7 +282,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// ").Append(_state.Settings.UnsafeConversionToKeyMemberType == ConversionOperatorsGeneration.Implicit ? "Implicit" : "Explicit").Append(" conversion to the type ").AppendMemberTypeForXmlComment(keyMember).Append(@".
       /// </summary>
       /// <param name=""obj"">Object to convert.</param>
-      /// <returns>The <see cref=""").Append(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
+      /// <returns>The <see cref=""").AppendIdentifier(keyMember.Name).Append(@"""/> of provided <paramref name=""obj""/>.</returns>
       /// <exception cref=""System.NullReferenceException"">If <paramref name=""obj""/> is <c>null</c>.</exception>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -378,6 +384,11 @@ namespace ").Append(_state.Namespace).Append(@"
       // or when an empty string yields null (emptyStringYieldsNull). In those cases the out value is not
       // guaranteed to be non-null on true, so the [NotNullWhen(true)] contract must be omitted. This matches
       // the null-success branch emitted by Validate.
+      // The first operand is redundant today, because EmptyStringInFactoryMethodsYieldsNull forces
+      // NullInFactoryMethodsYieldsNull (AllValueObjectSettings) and a string key member always satisfies
+      // MayBeNull(), so emptyStringYieldsNull implies allowNullOutput. It is kept as defense against a change
+      // in either fact (for example struct support for EmptyStringInFactoryMethodsYieldsNull), because losing
+      // it would silently emit a wrong [NotNullWhen(true)].
       var objMayBeNullOnSuccess = emptyStringYieldsNull || allowNullOutput;
 
       _sb.Append(@"
@@ -387,7 +398,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
       /// <param name=""").Append(_objArgumentName).Append(@""">
-      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.").AppendNullOnSuccessSentence(objMayBeNullOnSuccess, emptyStringYieldsNull, "when the method returns <c>true</c>").Append(@"
       /// </param>
       /// <returns>
       /// Returns <c>true</c> if the object was successfully created; otherwise, returns <c>false</c>.
@@ -405,7 +416,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to be used for object creation.</param>
       /// <param name=""").Append(_objArgumentName).Append(@""">
-      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.
+      /// When this method returns, contains the created object if the operation succeeded; otherwise, it will be <c>null</c> or default.").AppendNullOnSuccessSentence(objMayBeNullOnSuccess, emptyStringYieldsNull, "when the method returns <c>true</c>").Append(@"
       /// </param>
       /// <param name=""").Append(_validationErrorArgumentName).Append(@""">
       /// When the method returns, contains the validation error if the creation or validation failed; otherwise, it will be <c>null</c>.
@@ -434,7 +445,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// </summary>
       /// <param name=""").AppendArgumentName(_state.KeyMember.ArgumentName).Append(@""">The value to validate.</param>
       /// <param name=""").Append(_providerArgumentName).Append(@""">The format provider for parsing or validation, if applicable.</param>
-      /// <param name=""").Append(_objArgumentName).Append(@""">When the method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation succeeds; otherwise, <c>null</c>.</param>
+      /// <param name=""").Append(_objArgumentName).Append(@""">When the method returns, contains the created instance of type ").AppendTypeForXmlComment(_state).Append(@" if validation succeeds; otherwise, <c>null</c>.").AppendNullOnSuccessSentence(emptyStringYieldsNull || allowNullOutput, emptyStringYieldsNull, "when validation succeeds").Append(@"</param>
       /// <returns>
       /// A ").AppendTypeFullyQualifiedForXmlComment(_state.ValidationError).Append(@" representing the validation error if validation fails; otherwise, <c>null</c>.
       /// </returns>
@@ -694,6 +705,26 @@ namespace ").Append(_state.Namespace).Append(@"
 
 file static class Extensions
 {
+   /// <summary>
+   /// Appends a sentence to the XML doc of the out parameter stating that the value can be null even on
+   /// success. Without it the doc would imply that null means failure, which is wrong as soon as null input
+   /// (or empty input) yields a null instance.
+   /// </summary>
+   public static StringBuilder AppendNullOnSuccessSentence(
+      this StringBuilder sb,
+      bool objMayBeNullOnSuccess,
+      bool emptyStringYieldsNull,
+      string successPhrase)
+   {
+      if (!objMayBeNullOnSuccess)
+         return sb;
+
+      return sb.Append(" The value can also be <c>null</c> ").Append(successPhrase)
+               .Append(emptyStringYieldsNull
+                          ? ", because <c>null</c>, empty, or whitespace-only input yields <c>null</c>."
+                          : ", because <c>null</c> input yields <c>null</c>.");
+   }
+
    public static StringBuilder GenerateDelegateConvertFromKey(this StringBuilder sb, KeyedValueObjectSourceGeneratorState state, bool emptyStringYieldsNull)
    {
       if (state.Settings.SkipFactoryMethods)

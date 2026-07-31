@@ -98,6 +98,9 @@ public sealed class RegularUnionSourceGenerator() : ThinktectureSourceGeneratorB
             if (derivedTypeInfo.Type.Arity != 0)
                return null; // Analyzer emits DiagnosticsDescriptors.UnionDerivedTypesMustNotBeGeneric
 
+            if (derivedTypeInfo.Type.BaseType is null)
+               return new SourceGenDiagnostic(tds, DiagnosticsDescriptors.ErrorDuringCodeAnalysis, [type.ToMinimallyQualifiedDisplayString(), $"Inner union type '{derivedTypeInfo.Type.ToFullyQualifiedDisplayString()}' has no base type"]);
+
             derivedTypes.Add(new RegularUnionTypeMemberState(derivedTypeInfo.Type, derivedTypeInfo.TypeDef, singleArgCtorsPerType[i]));
          }
 

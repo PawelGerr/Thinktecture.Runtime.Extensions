@@ -1,0 +1,44 @@
+﻿
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
+   public static global::Thinktecture.Tests.TestType Parse(global::System.ReadOnlySpan<char> s, global::System.IFormatProvider? provider)
+   {
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+         throw new global::System.FormatException("Unable to parse \"TestType\". Empty or whitespace input is not allowed because it would yield null.");
+
+      var key = global::Thinktecture.Internal.StaticAbstractInvoker.ParseValue<global::System.String>(s, provider);
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestType, global::System.String, global::Thinktecture.ValidationError>(key, provider, out var result);
+
+      if(validationError is null)
+         return result!;
+
+      throw new global::System.FormatException(validationError.ToString() ?? "Unable to parse \"TestType\".");
+   }
+#endif
+
+#if NET9_0_OR_GREATER
+   /// <inheritdoc />
+   [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "10.5.0.0")]
+   public static bool TryParse(
+      global::System.ReadOnlySpan<char> s,
+      global::System.IFormatProvider? provider,
+      [global::System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out global::Thinktecture.Tests.TestType result)
+   {
+      if(global::System.MemoryExtensions.IsWhiteSpace(s))
+      {
+         result = default;
+         return false;
+      }
+
+      if(!global::Thinktecture.Internal.StaticAbstractInvoker.TryParseValue<global::System.String>(s, provider, out var key))
+      {
+         result = default;
+         return false;
+      }
+
+      var validationError = global::Thinktecture.Internal.StaticAbstractInvoker.Validate<global::Thinktecture.Tests.TestType, global::System.String, global::Thinktecture.ValidationError>(key, provider, out result!);
+      return validationError is null;
+   }
+#endif

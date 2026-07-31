@@ -12,6 +12,15 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
    public bool HasCorrespondingConstructor { get; }
    public bool IsReadOnlySpanOfChar { get; } // derived information from SpecialType, no need to add to Equals/GetHashCode
 
+   /// <summary>
+   /// Whether the factory's value type is a ref struct. A ref struct cannot be a generic argument of the
+   /// generated formatter and converter types, so such a factory is skipped for serializer generation.
+   /// Unlike <see cref="IsReadOnlySpanOfChar"/> this is NOT derivable from the name, because a user-defined
+   /// struct can gain or lose <c>ref</c> without changing its fully qualified name. It must therefore take
+   /// part in equality.
+   /// </summary>
+   public bool IsRefLike { get; }
+
    public ObjectFactoryState(
       ITypeSymbol type,
       SerializationFrameworks useForSerialization,
@@ -26,6 +35,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
       UseForModelBinding = useForModelBinding;
       HasCorrespondingConstructor = hasCorrespondingConstructor;
       IsReadOnlySpanOfChar = type.IsReadOnlySpanOfChar();
+      IsRefLike = type.IsRefLikeType;
    }
 
    public override bool Equals(object? obj)
@@ -40,7 +50,8 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
              && UseForSerialization == other.UseForSerialization
              && UseWithEntityFramework == other.UseWithEntityFramework
              && UseForModelBinding == other.UseForModelBinding
-             && HasCorrespondingConstructor == other.HasCorrespondingConstructor;
+             && HasCorrespondingConstructor == other.HasCorrespondingConstructor
+             && IsRefLike == other.IsRefLike;
    }
 
    public bool Equals([NotNullWhen(true)] ITypeFullyQualified? other)
@@ -61,6 +72,7 @@ public sealed class ObjectFactoryState : ITypeFullyQualified, IEquatable<ObjectF
          hashCode = (hashCode * 397) ^ UseWithEntityFramework.GetHashCode();
          hashCode = (hashCode * 397) ^ UseForModelBinding.GetHashCode();
          hashCode = (hashCode * 397) ^ HasCorrespondingConstructor.GetHashCode();
+         hashCode = (hashCode * 397) ^ IsRefLike.GetHashCode();
 
          return hashCode;
       }

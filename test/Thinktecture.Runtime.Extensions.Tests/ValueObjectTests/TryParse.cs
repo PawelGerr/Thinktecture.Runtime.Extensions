@@ -302,6 +302,75 @@ public class TryParse
       result.Should().BeNull();
    }
 
+   // Validate of a string-keyed reference value object with EmptyStringInFactoryMethodsYieldsNull = true returns
+   // success with a null instance for empty or whitespace-only input. TryParse promises a non-null result when it
+   // returns true, so such input must return false.
+   [Theory]
+   [InlineData("")]
+   [InlineData(" ")]
+   [InlineData("   ")]
+   [InlineData("\t")]
+   public void Should_return_false_when_input_is_empty_or_whitespace_and_EmptyStringInFactoryMethodsYieldsNull(string input)
+   {
+      var success = StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryParse(input, null, out var result);
+
+      success.Should().BeFalse();
+      result.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_return_false_when_input_is_null_and_EmptyStringInFactoryMethodsYieldsNull()
+   {
+      var success = StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryParse(null, null, out var result);
+
+      success.Should().BeFalse();
+      result.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_try_parse_non_empty_value_when_EmptyStringInFactoryMethodsYieldsNull()
+   {
+      var success = StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryParse("value", null, out var result);
+
+      success.Should().BeTrue();
+      result.Should().Be(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Create("value"));
+   }
+
+   [Fact]
+   public void Should_return_false_for_empty_input_when_EmptyStringInFactoryMethodsYieldsNull_is_not_set()
+   {
+      // Without the setting the behavior is unchanged: the empty string reaches ValidateFactoryArguments, whose
+      // validation error makes TryParse return false.
+      var success = StringBasedReferenceValueObjectWithNullInFactoryMethodsYieldsNull.TryParse(String.Empty, null, out var result);
+
+      success.Should().BeFalse();
+      result.Should().BeNull();
+   }
+
+#if NET9_0_OR_GREATER
+   [Theory]
+   [InlineData("")]
+   [InlineData(" ")]
+   [InlineData("   ")]
+   [InlineData("\t")]
+   public void Should_return_false_when_span_is_empty_or_whitespace_and_EmptyStringInFactoryMethodsYieldsNull(string input)
+   {
+      var success = StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryParse(input.AsSpan(), null, out var result);
+
+      success.Should().BeFalse();
+      result.Should().BeNull();
+   }
+
+   [Fact]
+   public void Should_try_parse_non_empty_span_when_EmptyStringInFactoryMethodsYieldsNull()
+   {
+      var success = StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.TryParse("value".AsSpan(), null, out var result);
+
+      success.Should().BeTrue();
+      result.Should().Be(StringBasedReferenceValueObjectWithEmptyStringInFactoryMethodsYieldsNull.Create("value"));
+   }
+#endif
+
    [Fact]
    public void Should_try_parse_valid_timespan_string()
    {

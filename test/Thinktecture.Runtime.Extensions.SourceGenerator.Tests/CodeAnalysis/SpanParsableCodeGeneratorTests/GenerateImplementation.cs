@@ -49,6 +49,53 @@ public class GenerateImplementation
    }
 
    [Fact]
+   public async Task ForValueObject_WithEmptyStringYieldsNull_GuardsAgainstEmptyAndWhitespaceInput()
+   {
+      // Arrange - a string-keyed reference value object whose Validate returns success with a null instance for
+      // empty or whitespace-only input. MemoryExtensions.IsWhiteSpace also returns true for an empty span, so a
+      // single call covers both cases.
+      var state = new SpanParsableStateBuilder()
+                  .WithType("global::Thinktecture.Tests.TestType")
+                  .WithStringKeyMember()
+                  .WithEmptyStringYieldsNull()
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      // Act
+      SpanParsableCodeGenerator.ForValueObject.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().Contain("if(global::System.MemoryExtensions.IsWhiteSpace(s))");
+      result.Should().Contain("global::System.FormatException");
+      result.Should().Contain("Empty or whitespace input is not allowed because it would yield null.");
+      await Verifier.Verify(result);
+   }
+
+   [Fact]
+   public void ForValueObject_WithoutEmptyStringYieldsNull_GeneratesNoEmptyInputGuard()
+   {
+      // Arrange - the very same state with the flag turned off. The guard is emitted only for the flagged
+      // configuration, so every other type keeps its previous output byte for byte.
+      var state = new SpanParsableStateBuilder()
+                  .WithType("global::Thinktecture.Tests.TestType")
+                  .WithStringKeyMember()
+                  .WithEmptyStringYieldsNull(false)
+                  .Build();
+
+      var sb = new StringBuilder();
+
+      // Act
+      SpanParsableCodeGenerator.ForValueObject.GenerateImplementation(sb, state);
+
+      // Assert
+      var result = sb.ToString();
+      result.Should().NotContain("IsWhiteSpace");
+      result.Should().NotContain("Empty or whitespace input is not allowed because it would yield null.");
+   }
+
+   [Fact]
    public async Task ForValueObject_WithGuidKey_GeneratesParseAndTryParseUsingStaticAbstractInvoker()
    {
       // Arrange

@@ -104,6 +104,15 @@ partial ").AppendTypeKind(_state).Append(" ").Append(_state.Name).AppendGenericT
 
 file static class StringBuilderExtensions
 {
+   // All single-bit members of the enum. Enum.GetValues returns them sorted by their binary value,
+   // so the composed output keeps the ascending flag order. Aliases like Json and All are filtered
+   // out, so a composed value renders as its individual flags. A future enum member is picked up
+   // automatically.
+   private static readonly SerializationFrameworks[] _singleBitFrameworks
+      = ((SerializationFrameworks[])Enum.GetValues(typeof(SerializationFrameworks)))
+        .Where(v => v != 0 && (v & (v - 1)) == 0)
+        .ToArray();
+
    public static StringBuilder AppendConvertFromKeyExpressionViaConstructor(
       this StringBuilder sb,
       ObjectFactorySourceGeneratorState state,
@@ -133,28 +142,22 @@ file static class StringBuilderExtensions
 
       var first = true;
 
-      if ((frameworks & SerializationFrameworks.SystemTextJson) != 0)
+      foreach (var framework in _singleBitFrameworks)
       {
-         sb.Append(prefix).Append(nameof(SerializationFrameworks.SystemTextJson));
-         first = false;
-      }
+         if ((frameworks & framework) == 0)
+            continue;
 
-      if ((frameworks & SerializationFrameworks.NewtonsoftJson) != 0)
-      {
          if (!first)
             sb.Append(" | ");
 
-         sb.Append(prefix).Append(nameof(SerializationFrameworks.NewtonsoftJson));
+         sb.Append(prefix).Append(framework.ToString());
          first = false;
       }
 
-      if ((frameworks & SerializationFrameworks.MessagePack) != 0)
-      {
-         if (!first)
-            sb.Append(" | ");
-
-         sb.Append(prefix).Append(nameof(SerializationFrameworks.MessagePack));
-      }
+      // Bits that match no defined member are dropped. Without this guard nothing would be appended
+      // at all, which would render as "UseForSerialization = ," and not compile.
+      if (first)
+         sb.Append(prefix).Append(nameof(SerializationFrameworks.None));
 
       return sb;
    }

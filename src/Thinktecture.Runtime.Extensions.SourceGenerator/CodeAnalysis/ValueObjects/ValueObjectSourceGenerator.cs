@@ -238,6 +238,7 @@ public sealed class ValueObjectSourceGenerator()
                                  state.State.ValidationError,
                                  state.Settings.SkipIParsable,
                                  hasStringBasedValidateMethod: false,
+                                 emptyStringYieldsNull: EmptyStringYieldsNull(state),
                                  state.State.GenericParameters));
 
       InitializeParsableCodeGenerator(context, parsables, options);
@@ -257,6 +258,7 @@ public sealed class ValueObjectSourceGenerator()
                                  isEnum: false,
                                  hasStringBasedValidateMethod: false,
                                  hasReadOnlySpanOfCharBasedValidateMethod: false,
+                                 emptyStringYieldsNull: EmptyStringYieldsNull(state),
                                  state.State.GenericParameters));
 
       InitializeSpanParsableCodeGenerator(context, parsables, options);
@@ -535,6 +537,17 @@ public sealed class ValueObjectSourceGenerator()
       type = (INamedTypeSymbol)context.TargetSymbol;
 
       return type.TypeKind != TypeKind.Error;
+   }
+
+   /// <summary>
+   /// Whether the generated <c>Validate</c> returns success with a <c>null</c> instance for empty or
+   /// whitespace-only input. Mirrors the condition of <c>KeyedValueObjectCodeGenerator</c>.
+   /// </summary>
+   private static bool EmptyStringYieldsNull(KeyedValidSourceGenState state)
+   {
+      return state.Settings.EmptyStringInFactoryMethodsYieldsNull
+             && state.State.IsReferenceType
+             && state.State.KeyMember.IsString();
    }
 
    private readonly record struct KeyedValidSourceGenState(

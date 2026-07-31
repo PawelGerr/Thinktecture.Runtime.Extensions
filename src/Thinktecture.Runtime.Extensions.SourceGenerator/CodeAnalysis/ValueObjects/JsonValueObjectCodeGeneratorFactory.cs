@@ -21,7 +21,9 @@ public sealed class JsonValueObjectCodeGeneratorFactory
    {
       return !state.AttributeInfo.HasJsonConverterAttribute
              && state.SerializationFrameworks.HasSerializationFramework(SerializationFrameworks.SystemTextJson)
-             && !state.AttributeInfo.ObjectFactories.Any(static f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
+             // A ref-struct factory other than ReadOnlySpan<char> cannot be used by the generated converter,
+             // so it does not suppress the generation of the type's own converter.
+             && !state.AttributeInfo.ObjectFactories.Any(static f => (!f.IsRefLike || f.IsReadOnlySpanOfChar) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson));
    }
 
    public CodeGeneratorBase Create(ComplexSerializerGeneratorState<ComplexValueObjectSourceGeneratorState> state, StringBuilder stringBuilder)
