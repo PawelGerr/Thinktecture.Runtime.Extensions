@@ -178,7 +178,11 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
    {
       return MetadataLookup.FindMetadataForConversion(
          typeToConvert,
-         f => f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson),
+         // Object factories with a ref struct value type are excluded because a ref struct cannot be used as the
+         // generic key argument of ThinktectureJsonConverter. ReadOnlySpan<char> is the exception: the span-based
+         // converter handles it on NET9+, and on net8.0 CreateConverter falls back to the string-based converter.
+         // Every other ref-struct factory falls back to the key-based metadata.
+         f => (!f.ValueType.IsByRefLike || f.ValueType == typeof(ReadOnlySpan<char>)) && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson),
          _ => true);
    }
 
@@ -246,11 +250,17 @@ public class ThinktectureJsonConverterFactory : JsonConverterFactory
    private static bool CanUseRegularConverter(ConversionMetadata conversionMetadata)
    {
       // For a resolved KeyType of ReadOnlySpan<char>, CreateConverter selects ThinktectureJsonConverter<T, TValidationError>,
-      // which requires the type to implement IConvertible<string>. A type whose only System.Text.Json mechanism is a
-      // ReadOnlySpan<char> object factory (for example a complex Value Object with only [ObjectFactory<ReadOnlySpan<char>>])
-      // does not implement IConvertible<string>, so it cannot be handled by the regular converter.
+      // which requires the type to implement IObjectFactory<T, string, TValidationError> and IConvertible<string>.
+      // A type whose only System.Text.Json mechanism is a ReadOnlySpan<char> object factory (for example a complex
+      // Value Object with only [ObjectFactory<ReadOnlySpan<char>>]) implements neither, so it cannot be handled by the
+      // regular converter. The source generator always emits both interfaces together, so checking the second one is
+      // defensive.
       if (conversionMetadata.KeyType == typeof(ReadOnlySpan<char>))
-         return typeof(IConvertible<string>).IsAssignableFrom(conversionMetadata.Type);
+      {
+         return typeof(IConvertible<string>).IsAssignableFrom(conversionMetadata.Type)
+                && typeof(IObjectFactory<,,>).MakeGenericType(conversionMetadata.Type, typeof(string), conversionMetadata.ValidationErrorType)
+                                             .IsAssignableFrom(conversionMetadata.Type);
+      }
 
       return true;
    }

@@ -112,7 +112,7 @@ public class ThinktectureJsonConverter<T, TValidationError> : JsonConverter<T>
       // tokens and throws "InvalidOperationException" otherwise. Reject every other token with the
       // idiomatic "JsonException" instead, so a malformed payload surfaces consistently.
       if (reader.TokenType is not (JsonTokenType.String or JsonTokenType.PropertyName or JsonTokenType.Null))
-         throw new JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"{typeof(T).Name}\". Expected token: \"{JsonTokenType.String}\".");
+         throw new JsonException($"Unexpected token \"{reader.TokenType}\" when trying to deserialize \"{typeof(T).Name}\". Expected token: \"{JsonTokenType.String}\", \"{JsonTokenType.PropertyName}\" or \"{JsonTokenType.Null}\".");
 
       var key = reader.GetString();
 

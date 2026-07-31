@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using MessagePack;
 using MessagePack.Resolvers;
+using Thinktecture.Internal;
 using Thinktecture.Runtime.Tests.Formatters.ThinktectureMessagePackFormatterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
@@ -122,20 +123,71 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
-   public void Should_return_null_formatter_for_runtime_type_of_derived_smart_enum_item()
+   public void Should_resolve_wrapper_formatter_for_runtime_type_of_derived_smart_enum_item()
    {
       // Regression: FindMetadataForConversion returns the BASE type's metadata for the runtime type of an item of a
       // derived (nested) Smart Enum. The resolver created the formatter for the base type but cast it to
       // IMessagePackFormatter<derived>. Because IMessagePackFormatter<T> is invariant, the cast threw an
       // InvalidCastException inside the static Cache<T> constructor, which the runtime then cached permanently as a
-      // TypeInitializationException. The resolver must detect the type mismatch and return null instead, so that
-      // MessagePack can continue with the next resolver, as it did before the metadata change.
+      // TypeInitializationException. The resolver now returns a casting wrapper formatter instead. The wrapper is
+      // returned even though the derived type inherits the [MessagePackFormatter] attribute of the base type: the
+      // attribute path cannot be honored by MessagePack (its own cast fails), so the skip must be bypassed. Because
+      // the default "Instance" has the skip enabled, a non-null result also proves that bypass.
       var runtimeType = SmartEnum_DerivedTypes.ItemOfDerivedType.GetType();
       runtimeType.Should().NotBe(typeof(SmartEnum_DerivedTypes));
 
       var getFormatter = typeof(ThinktectureMessageFormatterResolver)
                          .GetMethod(nameof(IFormatterResolver.GetFormatter))!
                          .MakeGenericMethod(runtimeType);
+
+      var formatter = getFormatter.Invoke(ThinktectureMessageFormatterResolver.Instance, null);
+
+      formatter.Should().NotBeNull();
+   }
+
+   [Fact]
+   public void Should_roundtrip_serialize_item_of_derived_smart_enum_type_by_runtime_type()
+   {
+      // Regression: this is the original crash repro. The non-generic overload makes MessagePack resolve the formatter
+      // for the runtime (derived) type. Before the fix our resolver returned null, so MessagePack continued with its
+      // AttributeFormatterResolver, which honors the [MessagePackFormatter] attribute the derived type inherits from
+      // the base type. That resolver instantiates the BASE type's formatter and casts it to
+      // IMessagePackFormatter<derived>. Because IMessagePackFormatter<T> is invariant, the cast threw an
+      // InvalidCastException, which the runtime cached permanently as a TypeInitializationException.
+      var item = SmartEnum_DerivedTypes.ItemOfDerivedType;
+      var runtimeType = item.GetType();
+      runtimeType.Should().NotBe(typeof(SmartEnum_DerivedTypes));
+
+      var bytes = MessagePackSerializer.Serialize(runtimeType, item, _options, TestContext.Current.CancellationToken);
+
+      // The derived item is serialized as the key of the base type, exactly like an item of the base type itself.
+      MessagePackSerializer.Deserialize<int>(bytes, _options, TestContext.Current.CancellationToken).Should().Be(2);
+
+      var deserializedAsBaseType = MessagePackSerializer.Deserialize<SmartEnum_DerivedTypes>(bytes, _options, TestContext.Current.CancellationToken);
+      deserializedAsBaseType.Should().BeSameAs(item);
+
+      // Deserializing via the runtime type exercises the downcast of the wrapper formatter.
+      var deserializedAsRuntimeType = MessagePackSerializer.Deserialize(runtimeType, bytes, _options, TestContext.Current.CancellationToken);
+      deserializedAsRuntimeType.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_return_null_formatter_for_type_whose_only_object_factory_has_a_ref_struct_value_type()
+   {
+      // Regression: the object-factory filter of the resolver excluded only ReadOnlySpan<char>, so a factory with any
+      // other ref struct value type passed it. The static Cache<T> constructor then called MakeGenericType with
+      // ReadOnlySpan<byte>, which throws an ArgumentException because a ref struct cannot be a generic type argument;
+      // the runtime cached that failure as a permanent TypeInitializationException. Every ref-struct factory must be
+      // ignored instead, and because this type has no key-based metadata, no formatter remains for it.
+      var type = typeof(ClassWithByteSpanObjectFactoryMetadata);
+
+      // Guard: the hand-written explicit interface member must really be discoverable, otherwise the assertion below
+      // would hold even without the ref-struct exclusion (see the comment on ClassWithByteSpanObjectFactoryMetadata).
+      MetadataLookup.FindMetadataForConversion(type, _ => true, _ => true).Should().NotBeNull();
+
+      var getFormatter = typeof(ThinktectureMessageFormatterResolver)
+                         .GetMethod(nameof(IFormatterResolver.GetFormatter))!
+                         .MakeGenericMethod(type);
 
       var formatter = getFormatter.Invoke(ThinktectureMessageFormatterResolver.Instance, null);
 

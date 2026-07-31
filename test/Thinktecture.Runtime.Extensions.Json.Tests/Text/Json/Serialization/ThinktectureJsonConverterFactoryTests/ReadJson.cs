@@ -189,7 +189,7 @@ public class ReadJson : JsonTestsBase
       // "reader.GetString()" throws "InvalidOperationException" on a non-string token. The converter must
       // surface the idiomatic "JsonException" instead, matching the complex value object converter.
       FluentActions.Invoking(() => Deserialize<StringBasedReferenceValueObject>("123"))
-                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject\". Expected token: \"String\".");
+                   .Should().Throw<JsonException>().WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject\". Expected token: \"String\", \"PropertyName\" or \"Null\".");
    }
 
    [Fact]

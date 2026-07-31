@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Thinktecture.Internal;
 using Thinktecture.Runtime.Tests.TestEnums;
 using Thinktecture.Runtime.Tests.TestRegularUnions;
 using Thinktecture.Runtime.Tests.TestValueObjects;
@@ -303,6 +304,25 @@ public class RoundTrip : JsonTestsBase
 
       var json = JsonSerializer.Serialize(item, options);
       json.Should().Be("\"value\"");
+   }
+
+   [Fact]
+   public void Should_not_convert_type_whose_only_object_factory_has_a_ref_struct_value_type()
+   {
+      // Regression: the object-factory filter of the factory did not exclude ref structs at all. For a value type other
+      // than ReadOnlySpan<char> the span-based converter does not apply either, so CreateConverter called MakeGenericType
+      // with ReadOnlySpan<byte>, which throws an ArgumentException because a ref struct cannot be a generic type
+      // argument. Every ref-struct factory except ReadOnlySpan<char> must be ignored, and because this type has no
+      // key-based metadata either, the factory must refuse it entirely.
+      var type = typeof(ClassWithByteSpanObjectFactoryMetadata);
+
+      // Guard: the hand-written explicit interface member must really be discoverable, otherwise the assertion below
+      // would hold even without the ref-struct exclusion (see the comment on ClassWithByteSpanObjectFactoryMetadata).
+      MetadataLookup.FindMetadataForConversion(type, _ => true, _ => true).Should().NotBeNull();
+
+      var factory = new ThinktectureJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+
+      factory.CanConvert(type).Should().BeFalse();
    }
 
    private struct TestStruct<T>

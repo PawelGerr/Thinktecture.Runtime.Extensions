@@ -381,7 +381,7 @@ public class SpanParsableJsonConverterTests : JsonTestsBase
       var act = () => Deserialize<StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory>("123");
 
       act.Should().Throw<JsonException>()
-         .WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory\". Expected token: \"String\".");
+         .WithMessage("Unexpected token \"Number\" when trying to deserialize \"StringBasedReferenceValueObject_With_StringAndReadOnlyBasedObjectFactory\". Expected token: \"String\" or \"PropertyName\".");
    }
 
    [Fact]

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Thinktecture.Internal;
 using Thinktecture.Json;
 using Thinktecture.Runtime.Tests.Json.ThinktectureNewtonsoftJsonConverterTests.TestClasses;
 using Thinktecture.Runtime.Tests.TestEnums;
@@ -178,42 +179,22 @@ public class RoundTrip : JsonTestsBase
       deserialized.Should().BeEquivalentTo(original);
    }
 
-   // A naming strategy that inserts a separator between words (e.g. "StructProperty" => "struct_property").
-   // Unlike CamelCaseNamingStrategy, it changes more than the first letter, so an ordinal-ignore-case read
-   // that compares against the raw argument name no longer matches. This exercises the read path's use of
-   // the contract resolver.
-   private sealed class SnakeCaseTestNamingStrategy : NamingStrategy
-   {
-      protected override string ResolvePropertyName(string name)
-      {
-         var sb = new StringBuilder();
-
-         for (var i = 0; i < name.Length; i++)
-         {
-            var c = name[i];
-
-            if (i > 0 && char.IsUpper(c))
-               sb.Append('_');
-
-            sb.Append(char.ToLowerInvariant(c));
-         }
-
-         return sb.ToString();
-      }
-   }
-
    [Fact]
    public void Should_roundtrip_complex_value_object_with_non_default_naming_strategy()
    {
+      // Snake case inserts a separator between words (e.g. "StructProperty" => "struct_property"). Unlike
+      // CamelCaseNamingStrategy, it changes more than the first letter, so an ordinal-ignore-case read that compares
+      // against the raw argument name no longer matches. This exercises the read path's use of the contract resolver.
       var original = ValueObjectWithMultipleProperties.Create(1.5m, 3, "foo");
       var settings = new JsonSerializerSettings
                      {
-                        ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseTestNamingStrategy() }
+                        ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
                      };
 
       var json = JsonConvert.SerializeObject(original, settings);
 
-      json.Should().Contain("struct_property");
+      // The leading quote is required: without it the assertion would already be satisfied by "nullable_struct_property".
+      json.Should().Contain("\"struct_property\"");
       json.Should().NotContain("structProperty");
 
       var deserialized = JsonConvert.DeserializeObject<ValueObjectWithMultipleProperties>(json, settings);
@@ -442,6 +423,25 @@ public class RoundTrip : JsonTestsBase
       var deserialized = factory.ReadJson(reader, typeof(SmartEnum_DerivedTypes), null, JsonSerializer.CreateDefault());
 
       deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_not_convert_type_whose_only_object_factory_has_a_ref_struct_value_type()
+   {
+      // Regression: the object-factory filter of the factory excluded only ReadOnlySpan<char>, so a factory with any
+      // other ref struct value type passed it. CreateConverter then called MakeGenericType with ReadOnlySpan<byte>,
+      // which throws an ArgumentException because a ref struct cannot be a generic type argument. Every ref-struct
+      // factory must be ignored instead, and because this type has no key-based metadata either, the factory must
+      // refuse it entirely.
+      var type = typeof(ClassWithByteSpanObjectFactoryMetadata);
+
+      // Guard: the hand-written explicit interface member must really be discoverable, otherwise the assertion below
+      // would hold even without the ref-struct exclusion (see the comment on ClassWithByteSpanObjectFactoryMetadata).
+      MetadataLookup.FindMetadataForConversion(type, _ => true, _ => true).Should().NotBeNull();
+
+      var factory = new ThinktectureNewtonsoftJsonConverterFactory(skipObjectsWithJsonConverterAttribute: false);
+
+      factory.CanConvert(type).Should().BeFalse();
    }
 
 #if NET9_0_OR_GREATER
