@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -212,7 +213,7 @@ public partial class ThinktectureSchemaFilterTests
 
          var openApi = await GetOpenApiJsonAsync();
 
-         using var doc = System.Text.Json.JsonDocument.Parse(openApi);
+         using var doc = JsonDocument.Parse(openApi);
          var parameterSchema = doc.RootElement
                                   .GetProperty("paths")
                                   .GetProperty("/test")
@@ -228,8 +229,8 @@ public partial class ThinktectureSchemaFilterTests
       // Resolves the JSON "type" of an OpenAPI schema element, following a single-item "allOf" wrapper (added by
       // UseAllOfToExtendReferenceSchemas) and "$ref" references into "#/components/schemas".
       private static string? ResolveSchemaType(
-         System.Text.Json.JsonElement schema,
-         System.Text.Json.JsonElement root)
+         JsonElement schema,
+         JsonElement root)
       {
          if (schema.TryGetProperty("type", out var type))
             return type.GetString();

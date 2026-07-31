@@ -64,6 +64,7 @@
           "complexStructWithRequiredAttribute",
           "keyedStruct",
           "keyedStructWithRequiredAttribute",
+          "nonNullableInterface",
           "nonNullableReferenceType",
           "nonNullableReferenceTypeWithRequiredAttribute",
           "nullableReferenceTypeWithRequiredAttribute",
@@ -111,6 +112,25 @@
               "integer"
             ],
             "format": "int32",
+            "readOnly": true
+          },
+          "nonNullableInterface": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "readOnly": true
+          },
+          "nullableInterface": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
             "readOnly": true
           },
           "keyedStructWithRequiredAttribute": {

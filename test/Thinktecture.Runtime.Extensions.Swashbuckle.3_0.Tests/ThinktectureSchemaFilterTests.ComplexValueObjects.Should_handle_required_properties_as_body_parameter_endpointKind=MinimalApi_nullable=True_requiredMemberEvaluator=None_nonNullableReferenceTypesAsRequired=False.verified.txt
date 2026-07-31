@@ -102,6 +102,23 @@
             "nullable": true,
             "readOnly": true
           },
+          "nonNullableInterface": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "readOnly": true
+          },
+          "nullableInterface": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
           "keyedStructWithRequiredAttribute": {
             "allOf": [
               {

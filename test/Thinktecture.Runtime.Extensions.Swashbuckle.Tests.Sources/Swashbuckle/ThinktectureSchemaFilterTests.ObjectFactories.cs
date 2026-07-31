@@ -77,6 +77,73 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Fact]
+      public async Task Should_use_Newtonsoft_only_object_factory_when_Newtonsoft_support_is_registered()
+      {
+         // The inverse of the test above: with Swashbuckle.AspNetCore.Newtonsoft registered, the documented pipeline
+         // serializes with Newtonsoft.Json, so the factory flagged only for Newtonsoft.Json defines the wire format.
+         _addSwaggerGenNewtonsoftSupport = true;
+
+         App.MapPost("/test", ([FromBody] ComplexValueObjectWithNewtonsoftJsonOnlyObjectFactory value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var document = JsonDocument.Parse(openApi);
+
+         var schema = document.RootElement
+                              .GetProperty("components")
+                              .GetProperty("schemas")
+                              .GetProperty(nameof(ComplexValueObjectWithNewtonsoftJsonOnlyObjectFactory));
+
+         schema.GetProperty("type").GetString().Should().Be("string");
+         schema.TryGetProperty("properties", out _).Should().BeFalse();
+      }
+
+      [Fact]
+      public async Task Should_ignore_MessagePack_only_object_factory_when_Newtonsoft_support_is_registered()
+      {
+         // Newtonsoft support is registered on purpose, so both lookups in GetSerializationType are active. A factory
+         // flagged for neither System.Text.Json nor Newtonsoft.Json must be rejected by both of them.
+         _addSwaggerGenNewtonsoftSupport = true;
+
+         App.MapPost("/test", ([FromBody] ComplexValueObjectWithMessagePackOnlyObjectFactory value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var document = JsonDocument.Parse(openApi);
+
+         var schema = document.RootElement
+                              .GetProperty("components")
+                              .GetProperty("schemas")
+                              .GetProperty(nameof(ComplexValueObjectWithMessagePackOnlyObjectFactory));
+
+         schema.GetProperty("type").GetString().Should().Be("object");
+         schema.GetProperty("properties").TryGetProperty("property1", out _).Should().BeTrue();
+      }
+
+      [Fact]
+      public async Task Should_ignore_ref_struct_object_factory_when_documenting_schema()
+      {
+         // Regression: the object factory of this type has the ref struct ReadOnlySpan<byte> as its value type and is
+         // flagged for all serialization frameworks. Only ReadOnlySpan<char> has a span-based converter, so every other
+         // ref-struct factory must be ignored by both lookups. Newtonsoft support is registered so both of them run.
+         // Before the fix, the schema generator was handed ReadOnlySpan<byte> and schema generation broke.
+         _addSwaggerGenNewtonsoftSupport = true;
+
+         App.MapPost("/test", ([FromBody] TestValueObjects.ClassWithByteSpanObjectFactoryMetadata value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var document = JsonDocument.Parse(openApi);
+
+         var schema = document.RootElement
+                              .GetProperty("components")
+                              .GetProperty("schemas")
+                              .GetProperty(nameof(TestValueObjects.ClassWithByteSpanObjectFactoryMetadata));
+
+         schema.GetProperty("type").GetString().Should().Be("object");
+      }
+
+      [Fact]
       public async Task Should_treat_complex_value_object_with_ReadOnlySpan_based_object_factory_as_string()
       {
          // Regression: a ReadOnlySpan<char>-based object factory serializes as a JSON string, so the schema must be

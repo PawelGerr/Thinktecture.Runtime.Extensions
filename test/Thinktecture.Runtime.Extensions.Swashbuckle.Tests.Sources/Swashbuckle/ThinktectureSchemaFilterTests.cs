@@ -30,6 +30,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
    private bool _useOneOfForPolymorphism;
    private bool _useStringEnumConverter;
    private bool _keepOrphanedKeyTypeSchemas;
+   private bool _addSwaggerGenNewtonsoftSupport;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -67,6 +68,13 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
                    if (_keepOrphanedKeyTypeSchemas)
                       filterOptions.RemoveOrphanedKeyTypeSchemas = false;
                 });
+
+      if (_addSwaggerGenNewtonsoftSupport)
+      {
+         // Replaces Swashbuckle's ISerializerDataContractResolver with the Newtonsoft.Json-based one for the whole
+         // host, which is what ThinktectureSchemaFilter.IsNewtonsoftDataContractResolverRegistered detects.
+         appBuilder.Services.AddSwaggerGenNewtonsoftSupport();
+      }
 
       if (_useStringEnumConverter)
       {

@@ -101,19 +101,25 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       // Swashbuckle documents the System.Text.Json wire format by default. Prefer an object factory flagged for
       // System.Text.Json so the documented schema matches the actual payload. A Newtonsoft.Json factory is only
       // consulted when Swashbuckle.AspNetCore.Newtonsoft is registered (see IsNewtonsoftDataContractResolverRegistered),
-      // because only then does the documented pipeline actually serialize with Newtonsoft.Json. The Newtonsoft.Json
-      // lookup excludes ReadOnlySpan<char>-based factories, mirroring ThinktectureNewtonsoftJsonConverterFactory,
-      // which cannot use a ref struct as the generic key argument and serializes via the key instead.
+      // because only then does the documented pipeline actually serialize with Newtonsoft.Json.
+      // Both lookups exclude ref-struct-based factories, mirroring ThinktectureJsonConverterFactory and
+      // ThinktectureNewtonsoftJsonConverterFactory, which cannot use a ref struct as the generic key argument and
+      // serialize via the key instead. The System.Text.Json lookup keeps ReadOnlySpan<char> because a span-based
+      // System.Text.Json converter does exist for it; its wire format is documented as "string" below.
+      // For a type with neither metadata nor object factories both lookups run a reflection scan (MetadataLookup
+      // deliberately does not cache the not-found case); this is bounded by Swagger document generation and therefore
+      // accepted.
       var metadata = MetadataLookup.FindMetadataForConversion(
          type,
-         f => (f.UseForSerialization & SerializationFrameworks.SystemTextJson) != 0,
+         f => (!f.ValueType.IsByRefLike || f.ValueType == typeof(ReadOnlySpan<char>))
+              && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.SystemTextJson),
          _ => false);
 
       if (metadata is null && documentNewtonsoftJsonSerialization)
       {
          metadata = MetadataLookup.FindMetadataForConversion(
             type,
-            f => f.ValueType != typeof(ReadOnlySpan<char>) && (f.UseForSerialization & SerializationFrameworks.NewtonsoftJson) != 0,
+            f => !f.ValueType.IsByRefLike && f.UseForSerialization.HasSerializationFramework(SerializationFrameworks.NewtonsoftJson),
             _ => false);
       }
 
