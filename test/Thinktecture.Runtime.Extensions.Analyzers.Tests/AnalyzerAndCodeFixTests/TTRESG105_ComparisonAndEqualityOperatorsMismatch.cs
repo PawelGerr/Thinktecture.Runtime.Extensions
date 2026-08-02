@@ -44,6 +44,35 @@ public class TTRESG105_ComparisonAndEqualityOperatorsMismatch
       }
 
       [Fact]
+      public async Task CodeFix_should_qualify_OperatorsGeneration_when_Thinktecture_namespace_is_not_imported()
+      {
+         var code = """
+            namespace TestNamespace
+            {
+               [{|#0:Thinktecture.SmartEnum<int>(ComparisonOperators = Thinktecture.OperatorsGeneration.DefaultWithKeyTypeOverloads, EqualityComparisonOperators = Thinktecture.OperatorsGeneration.Default)|}]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
+
+         var expectedCode = """
+            namespace TestNamespace
+            {
+               [Thinktecture.SmartEnum<int>(ComparisonOperators = Thinktecture.OperatorsGeneration.DefaultWithKeyTypeOverloads, EqualityComparisonOperators = Thinktecture.OperatorsGeneration.DefaultWithKeyTypeOverloads)]
+               public partial class TestEnum
+               {
+                  public static readonly TestEnum Item1 = default;
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestEnum", "DefaultWithKeyTypeOverloads", "Default");
+         await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(SmartEnumAttribute<>).Assembly], expected);
+      }
+
+      [Fact]
       public async Task CodeFix_should_align_comparison_to_none_when_equality_none()
       {
          var code = """

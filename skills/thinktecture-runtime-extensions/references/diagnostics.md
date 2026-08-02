@@ -43,6 +43,7 @@ code; check the full table for anything not here.
 | TTRESG102 / TTRESG103 | Comparer without equality comparer / equality comparer without comparer. |
 | TTRESG104 | A member should be `required` to ensure initialization. |
 | TTRESG105 | `ComparisonOperators` and `EqualityComparisonOperators` settings mismatch. |
+| TTRESG109 | `EmptyStringInFactoryMethodsYieldsNull` has no effect on a struct (the implied `NullInFactoryMethodsYieldsNull` is ignored too) — remove it or use a class. |
 
 ## Discriminated Union
 
@@ -59,7 +60,8 @@ code; check the full table for anything not here.
 | TTRESG075 | `SingleBackingFieldType` conflicts with `UseSingleBackingField = false`. |
 | TTRESG076 | An extra `ValidateFactoryArguments` parameter must be by-value with no default (no `ref`/`out`/default). |
 | TTRESG077 | An ad-hoc union member type must not be less accessible than the union (the generated operators would not compile). |
-| TTRESG078 | `ObjectFactoryAttribute<ReadOnlySpan<char>>` must not enable `UseWithEntityFramework` or `UseForModelBinding` (ref struct cannot be an EF/model-binding generic argument). Span factories may still set `UseForSerialization = SystemTextJson`. |
+| TTRESG078 | An object factory with a ref-struct value type must not enable `UseWithEntityFramework` or `UseForModelBinding` (a ref struct cannot be an EF/model-binding generic argument). A `ReadOnlySpan<char>` factory may still set `UseForSerialization = SystemTextJson`. |
+| TTRESG079 | Every ad-hoc union member type needs a built-in implicit conversion to `SingleBackingFieldType` (user-defined conversions are rejected). Use a common base class or interface, or remove `SingleBackingFieldType`. Stateless reference-type members are exempt when the union has at least one non-stateless member. |
 | TTRESG106 / TTRESG107 | Inner type should derive from the union / generic ad-hoc union references no type parameter via `TypeParamRef`. |
 
 ## Object Factory
@@ -70,6 +72,7 @@ code; check the full table for anything not here.
 | TTRESG059 / TTRESG060 | `HasCorrespondingConstructor = true` needs a matching single-arg ctor / not allowed on Smart Enums. |
 | TTRESG061 / TTRESG062 | Missing/mis-signed static `Validate` / missing `ToValue()` when writing is enabled. |
 | TTRESG068 / TTRESG069 / TTRESG070 | Multiple factories conflict on EF / model binding / overlapping serialization frameworks. |
+| TTRESG108 | A ref-struct factory is ignored by MessagePack and Newtonsoft.Json, and by System.Text.Json unless the value type is `ReadOnlySpan<char>` — serialization falls back to the key-based conversion. |
 
 ## Internal-API & info
 

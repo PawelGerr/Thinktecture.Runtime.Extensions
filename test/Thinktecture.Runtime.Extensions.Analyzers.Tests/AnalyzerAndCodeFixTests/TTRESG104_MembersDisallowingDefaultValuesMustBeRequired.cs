@@ -508,6 +508,80 @@ public class TTRESG104_MembersDisallowingDefaultValuesMustBeRequired
          var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "b", "IntBasedStructValueObjectDoesNotAllowDefaultStructs");
          await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
       }
+
+      [Fact]
+      public async Task Should_trigger_on_each_variable_of_multi_declarator_field_without_initializers()
+      {
+         // The owner is a plain class, so there is no constructor branch that could initialize the
+         // variables. Every variable is reported separately, anchored to its own identifier.
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public partial class TestClass
+               {
+                  public IntBasedStructValueObjectDoesNotAllowDefaultStructs {|#0:a|}, {|#1:b|};
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly],
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "a", "IntBasedStructValueObjectDoesNotAllowDefaultStructs"),
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(1).WithArguments("field", "b", "IntBasedStructValueObjectDoesNotAllowDefaultStructs"));
+      }
+
+      [Fact]
+      public async Task Should_not_offer_a_code_fix_for_a_partially_initialized_multi_declarator_field()
+      {
+         // Adding 'required' would apply to the whole field declaration and therefore also to the
+         // initialized sibling 'a'. The fix is suppressed, so the code stays unchanged.
+
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public partial class TestClass
+               {
+                  public IntBasedStructValueObjectDoesNotAllowDefaultStructs a = IntBasedStructValueObjectDoesNotAllowDefaultStructs.Create(1), {|#0:b|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "b", "IntBasedStructValueObjectDoesNotAllowDefaultStructs");
+         await Verifier.VerifyCodeFixAsync(code, code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_offer_a_code_fix_for_a_multi_declarator_field_without_initializers()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public partial class TestClass
+               {
+                  public IntBasedStructValueObjectDoesNotAllowDefaultStructs {|#0:a|}, {|#1:b|};
+               }
+            }
+            """;
+
+         await Verifier.VerifyCodeFixAsync(code, code, [typeof(ValueObjectAttribute<>).Assembly, typeof(IntBasedStructValueObjectDoesNotAllowDefaultStructs).Assembly],
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("field", "a", "IntBasedStructValueObjectDoesNotAllowDefaultStructs"),
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(1).WithArguments("field", "b", "IntBasedStructValueObjectDoesNotAllowDefaultStructs"));
+      }
    }
 
    public class MultipleViolations

@@ -109,6 +109,55 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
       }
 
       [Fact]
+      public async Task Should_trigger_on_each_variable_of_multi_declarator_field_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private TestUnion_struct_string_int _a = {|#0:default|}, _b = {|#1:default|};
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly],
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int"),
+            Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(1).WithArguments("TestUnion_struct_string_int"));
+      }
+
+      [Theory]
+      [InlineData("private TestUnion_struct_string_int _field = {|#0:default(TestUnion_struct_string_int)|};")]
+      [InlineData("public TestUnion_struct_string_int Property { get; set; } = {|#0:default|};")]
+      [InlineData("private static TestUnion_struct_string_int _field = {|#0:default|};")]
+      [InlineData("private readonly TestUnion_struct_string_int _field = {|#0:default|};")]
+      public async Task Should_trigger_on_initializer_variants_with_default(string member)
+      {
+         var code = $$"""
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   {{member}}
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestUnion_struct_string_int");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(TestUnion_struct_string_int).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
       public async Task Should_trigger_on_property_assignment_with_default()
       {
          var code = """
@@ -362,6 +411,50 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                    {
                       _field = {|#0:default|};
                    }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_field_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private StructValueObject _field = {|#0:default|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StructValueObject");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_property_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public StructValueObject Property { get; } = {|#0:default|};
                }
             }
             """;
@@ -648,6 +741,50 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
                    {
                       _field = {|#0:default|};
                    }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_field_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   private BoundaryStruct _field = {|#0:default|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("BoundaryStruct");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(BoundaryStruct).Assembly, typeof(UnionAttribute<,>).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_property_initializer_with_default()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestValueObjects;
+
+            namespace TestNamespace
+            {
+               public class TestClass
+               {
+                   public BoundaryStruct Property { get; } = {|#0:default|};
                }
             }
             """;

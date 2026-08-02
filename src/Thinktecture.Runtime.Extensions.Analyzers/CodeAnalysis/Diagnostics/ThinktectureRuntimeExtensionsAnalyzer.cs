@@ -57,7 +57,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseWithEntityFramework,
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithUseForModelBinding,
       DiagnosticsDescriptors.MultipleObjectFactoryAttributesWithOverlappingSerializationFrameworks,
-      DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+      DiagnosticsDescriptors.RefStructObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+      DiagnosticsDescriptors.RefStructObjectFactoryIgnoredBySerializationFrameworks,
+      DiagnosticsDescriptors.EmptyStringInFactoryMethodsYieldsNullHasNoEffectOnStructs,
+      DiagnosticsDescriptors.AdHocUnionMemberTypeNotConvertibleToSingleBackingFieldType,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneSmartEnumAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneValueObjectAttribute,
       DiagnosticsDescriptors.TypeMustNotHaveMoveThanOneDiscriminatedUnionAttribute,
@@ -594,10 +597,10 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       TypeMustBePartial(context, type);
 
       // TTRESG075: explicit 'UseSingleBackingField = false' conflicts with 'SingleBackingFieldType'.
-      var hasSingleBackingFieldType = adHocUnionAttribute.FindSingleBackingFieldType() is not null;
+      var singleBackingFieldType = adHocUnionAttribute.FindSingleBackingFieldType();
       var useSingleBackingField = adHocUnionAttribute.FindUseSingleBackingField();
 
-      if (hasSingleBackingFieldType && useSingleBackingField == false)
+      if (singleBackingFieldType is not null && useSingleBackingField == false)
       {
          var location = adHocUnionAttribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation()
                         ?? type.GetTypeIdentifierLocation(context.CancellationToken);
@@ -608,8 +611,72 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
             location,
             BuildTypeName(type));
       }
+      else if (singleBackingFieldType is not null)
+      {
+         CheckAdHocUnionMemberTypesAreConvertibleToBackingFieldType(context, type, adHocUnionAttribute, singleBackingFieldType);
+      }
 
       CheckAdHocUnionMemberTypeAccessibility(context, type, adHocUnionAttribute);
+   }
+
+   /// <summary>
+   /// TTRESG079: the generator assigns every member value directly into the backing field typed as
+   /// 'SingleBackingFieldType'. Without a built-in implicit conversion the generated code does not compile (CS0029).
+   /// A user-defined implicit conversion would store a different instance and is rejected as well.
+   /// A stateless reference-type member is exempt as long as the union has at least one non-stateless member,
+   /// because then the generator never converts that member's value into the backing field.
+   /// </summary>
+   private static void CheckAdHocUnionMemberTypesAreConvertibleToBackingFieldType(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      AttributeData adHocUnionAttribute,
+      ITypeSymbol singleBackingFieldType)
+   {
+      // Deliberate limitation: types containing TypeParamRef markers are not resolved here, so they are skipped.
+      if (singleBackingFieldType.GetMaxTypeParamRefIndex() > 0 || context.Compilation is not CSharpCompilation csharpCompilation)
+         return;
+
+      var memberTypes = GetAdHocUnionMemberTypes(adHocUnionAttribute);
+      var hasNonStatelessMember = HasNonStatelessAdHocUnionMember(adHocUnionAttribute, memberTypes.Length);
+
+      for (var i = 0; i < memberTypes.Length; i++)
+      {
+         var memberType = memberTypes[i];
+
+         if (memberType.TypeKind == TypeKind.Error || memberType.GetMaxTypeParamRefIndex() > 0)
+            continue;
+
+         // The value of a stateless reference-type member never reaches the backing field: the constructor
+         // emits no assignment, 'AsTx' returns 'default(T)' and the raw value getter reads the shared field,
+         // which stays null for that member. Only when every member is stateless does the getter convert
+         // 'default(T)' to the backing field type, so the check stays active for that case.
+         if (memberType.IsReferenceType && hasNonStatelessMember && adHocUnionAttribute.FindTxIsStateless(i + 1))
+            continue;
+
+         var conversion = csharpCompilation.ClassifyConversion(memberType, singleBackingFieldType);
+
+         if (conversion.IsImplicit && !conversion.IsUserDefined)
+            continue;
+
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.AdHocUnionMemberTypeNotConvertibleToSingleBackingFieldType,
+            GetNamedArgumentLocationOrFallback(adHocUnionAttribute, Constants.Attributes.Properties.SINGLE_BACKING_FIELD_TYPE, type.GetTypeIdentifierLocation(context.CancellationToken), context.CancellationToken),
+            BuildTypeName(memberType),
+            BuildTypeName(type),
+            BuildTypeName(singleBackingFieldType));
+      }
+   }
+
+   private static bool HasNonStatelessAdHocUnionMember(AttributeData adHocUnionAttribute, int memberCount)
+   {
+      for (var i = 0; i < memberCount; i++)
+      {
+         if (!adHocUnionAttribute.FindTxIsStateless(i + 1))
+            return true;
+      }
+
+      return false;
    }
 
    private static void CheckAdHocUnionMemberTypeAccessibility(
@@ -713,21 +780,32 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
-      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, type, tdsLocation))
+      // The resolution of TypeParamRef markers to the actual type parameter is required before running the
+      // follow-up checks, mirroring the source generator (ValueObjectSourceGenerator). Otherwise the unresolved
+      // marker class (a reference type) causes false positives such as TTRESG057 and TTRESG045 for generic keyed types.
+      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, type, tdsLocation, out var resolvedKeyType))
          return;
 
-      // Resolve TypeParamRef markers to the actual type parameter before running the follow-up checks,
-      // mirroring the source generator (ValueObjectSourceGenerator). Otherwise the unresolved marker class
-      // (a reference type) causes false positives such as TTRESG057 and TTRESG045 for generic keyed types.
-      keyType = ResolveTypeParamRefKeyType(keyType, type, context.Compilation);
+      keyType = resolvedKeyType;
 
-      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(
             context,
             DiagnosticsDescriptors.KeyMemberShouldNotBeNullable,
             keyedValueObjectAttribute.ApplicationSyntaxReference?.GetSyntax().GetLocation() ?? tdsLocation);
          return;
+      }
+
+      // TTRESG109: the setting is ignored for structs by the source generator (KeyedValueObjectCodeGenerator),
+      // together with the implied 'NullInFactoryMethodsYieldsNull'.
+      if (type.IsValueType && keyedValueObjectAttribute.FindEmptyStringInFactoryMethodsYieldsNull() == true)
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.EmptyStringInFactoryMethodsYieldsNullHasNoEffectOnStructs,
+            GetNamedArgumentLocationOrFallback(keyedValueObjectAttribute, Constants.Attributes.Properties.EMPTY_STRING_IN_FACTORY_METHODS_YIELDS_NULL, tdsLocation, context.CancellationToken),
+            BuildTypeName(type));
       }
 
       if (keyedValueObjectAttribute.FindSkipKeyMember() == true)
@@ -1049,17 +1127,20 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       var valueType = attribute.AttributeClass.TypeArguments[0];
 
-      // TTRESG078: ReadOnlySpan<char> is a ref struct and cannot be used as the generic value type argument
-      // required by the Entity Framework Core value converters or the ASP.NET Core model binders. Both flags
-      // would cause a runtime failure, so forbid them on a ReadOnlySpan<char>-based object factory.
-      if (valueType.IsReadOnlySpanOfChar())
+      // A ref struct cannot be used as the generic value type argument required by the Entity Framework Core
+      // value converters, the ASP.NET Core model binders, MessagePack and Newtonsoft.Json. Only
+      // ReadOnlySpan<char> with System.Text.Json is supported (zero-allocation deserialization).
+      if (valueType.IsRefLikeType)
       {
+         var fallbackLocation = objectType.GetTypeIdentifierLocation(context.CancellationToken);
+
+         // TTRESG078: both flags would cause a runtime failure, so forbid them on a ref-struct object factory.
          if (attribute.FindUseWithEntityFramework())
          {
             ReportDiagnostic(
                context,
-               DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
-               attribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? objectType.GetTypeIdentifierLocation(context.CancellationToken),
+               DiagnosticsDescriptors.RefStructObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+               GetNamedArgumentLocationOrFallback(attribute, Constants.Attributes.Properties.USE_WITH_ENTITY_FRAMEWORK, fallbackLocation, context.CancellationToken),
                objectType,
                Constants.Attributes.Properties.USE_WITH_ENTITY_FRAMEWORK);
          }
@@ -1068,10 +1149,28 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
          {
             ReportDiagnostic(
                context,
-               DiagnosticsDescriptors.ReadOnlySpanOfCharObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
-               attribute.ApplicationSyntaxReference?.GetSyntax(context.CancellationToken).GetLocation() ?? objectType.GetTypeIdentifierLocation(context.CancellationToken),
+               DiagnosticsDescriptors.RefStructObjectFactoryMustNotBeUsedWithEntityFrameworkOrModelBinding,
+               GetNamedArgumentLocationOrFallback(attribute, Constants.Attributes.Properties.USE_FOR_MODEL_BINDING, fallbackLocation, context.CancellationToken),
                objectType,
                Constants.Attributes.Properties.USE_FOR_MODEL_BINDING);
+         }
+
+         // TTRESG108: serialization frameworks that silently ignore the factory at runtime.
+         var useForSerialization = attribute.FindUseForSerialization();
+         var ignoredFrameworks = useForSerialization & (SerializationFrameworks.MessagePack | SerializationFrameworks.NewtonsoftJson);
+
+         if (!valueType.IsReadOnlySpanOfChar())
+            ignoredFrameworks |= useForSerialization & SerializationFrameworks.SystemTextJson;
+
+         if (ignoredFrameworks != SerializationFrameworks.None)
+         {
+            ReportDiagnostic(
+               context,
+               DiagnosticsDescriptors.RefStructObjectFactoryIgnoredBySerializationFrameworks,
+               GetNamedArgumentLocationOrFallback(attribute, Constants.Attributes.Properties.USE_FOR_SERIALIZATION, fallbackLocation, context.CancellationToken),
+               BuildTypeName(objectType),
+               BuildTypeName(valueType),
+               ignoredFrameworks.ToString());
          }
       }
 
@@ -1120,6 +1219,23 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
    }
 
+   /// <summary>
+   /// Returns the location of the named argument <paramref name="propertyName"/> of the provided attribute,
+   /// so the diagnostic points at the offending setting instead of the whole attribute.
+   /// </summary>
+   private static Location GetNamedArgumentLocationOrFallback(
+      AttributeData attribute,
+      string propertyName,
+      Location fallback,
+      CancellationToken cancellationToken)
+   {
+      var attributeSyntax = attribute.ApplicationSyntaxReference?.GetSyntax(cancellationToken) as AttributeSyntax;
+
+      return attributeSyntax?.ArgumentList?.Arguments.FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == propertyName)?.GetLocation()
+             ?? attributeSyntax?.GetLocation()
+             ?? fallback;
+   }
+
    private static void CheckObjectFactoryUseWithEntityFrameworkConflicts(
       SymbolAnalysisContext context,
       INamedTypeSymbol type,
@@ -1129,6 +1245,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       for (var i = 0; i < objectFactoryAttributes.Length; i++)
       {
+         // Ref-struct factories cannot carry this flag at all (TTRESG078); counting them here would
+         // double-report every conflict they are involved in.
+         if (objectFactoryAttributes[i].AttributeClass?.TypeArguments[0] is not { IsRefLikeType: false })
+            continue;
+
          if (!objectFactoryAttributes[i].FindUseWithEntityFramework())
             continue;
 
@@ -1156,6 +1277,11 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
 
       for (var i = 0; i < objectFactoryAttributes.Length; i++)
       {
+         // Ref-struct factories cannot carry this flag at all (TTRESG078); counting them here would
+         // double-report every conflict they are involved in.
+         if (objectFactoryAttributes[i].AttributeClass?.TypeArguments[0] is not { IsRefLikeType: false })
+            continue;
+
          if (!objectFactoryAttributes[i].FindUseForModelBinding())
             continue;
 
@@ -1274,15 +1400,15 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       if (keyType.TypeKind == TypeKind.Error)
          return;
 
-      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, enumType, tdsLocation))
+      // The resolution of TypeParamRef markers to the actual type parameter is required before running the
+      // follow-up checks, mirroring the source generator (SmartEnumSourceGenerator). Otherwise the unresolved
+      // marker class is used as the key type in the comparer checks below.
+      if (ReportIfTypeParamRefMissingNotnullConstraint(context, keyType, enumType, tdsLocation, out var resolvedKeyType))
          return;
 
-      // Resolve TypeParamRef markers to the actual type parameter before running the follow-up checks,
-      // mirroring the source generator (SmartEnumSourceGenerator). Otherwise the unresolved marker class
-      // is used as the key type in the comparer checks below.
-      keyType = ResolveTypeParamRefKeyType(keyType, enumType, context.Compilation);
+      keyType = resolvedKeyType;
 
-      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.SpecialType == SpecialType.System_Nullable_T)
+      if (keyType.NullableAnnotation == NullableAnnotation.Annotated || keyType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
       {
          ReportDiagnostic(context, DiagnosticsDescriptors.SmartEnumKeyShouldNotBeNullable, tdsLocation);
          return;
@@ -1577,18 +1703,28 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       context.ReportDiagnostic(Diagnostic.Create(descriptor, location));
    }
 
+   /// <summary>
+   /// Resolves TypeParamRef markers in <paramref name="keyType"/> to the type parameters of <paramref name="type"/>
+   /// and reports TTRESG074 if the resolved type parameter may be null. The resolved key type is provided via
+   /// <paramref name="resolvedKeyType"/>, so callers do not have to resolve a second time.
+   /// </summary>
    private static bool ReportIfTypeParamRefMissingNotnullConstraint(
       in SymbolAnalysisContext context,
       ITypeSymbol keyType,
       INamedTypeSymbol type,
-      Location tdsLocation)
+      Location tdsLocation,
+      out ITypeSymbol resolvedKeyType)
    {
       var maxTypeParamRefIndex = keyType.GetMaxTypeParamRefIndex();
 
       if (maxTypeParamRefIndex <= 0 || type.Arity == 0 || maxTypeParamRefIndex > type.Arity)
+      {
+         resolvedKeyType = keyType;
          return false;
+      }
 
       var (resolved, _) = keyType.ResolveTypeParamRefs(type.TypeParameters, context.Compilation);
+      resolvedKeyType = resolved;
 
       if (resolved is ITypeParameterSymbol { HasNotNullConstraint: false, HasReferenceTypeConstraint: false, HasValueTypeConstraint: false } resolvedTypeParam
           && !HasNonNullableTypeConstraint(resolvedTypeParam))
@@ -1599,17 +1735,6 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       return false;
-   }
-
-   private static ITypeSymbol ResolveTypeParamRefKeyType(ITypeSymbol keyType, INamedTypeSymbol type, Compilation compilation)
-   {
-      var maxTypeParamRefIndex = keyType.GetMaxTypeParamRefIndex();
-
-      if (maxTypeParamRefIndex <= 0 || type.Arity == 0 || maxTypeParamRefIndex > type.Arity)
-         return keyType;
-
-      var (resolved, _) = keyType.ResolveTypeParamRefs(type.TypeParameters, compilation);
-      return resolved;
    }
 
    private static bool HasNonNullableTypeConstraint(ITypeParameterSymbol typeParam)

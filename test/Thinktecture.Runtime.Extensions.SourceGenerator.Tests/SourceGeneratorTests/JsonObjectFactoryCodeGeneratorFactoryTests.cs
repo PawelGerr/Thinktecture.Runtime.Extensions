@@ -866,7 +866,7 @@ public class JsonObjectFactoryCodeGeneratorFactoryTests : SourceGeneratorTestsBa
          {
             [ValueObject<int>]
             [ObjectFactory<string>(UseForSerialization = SerializationFrameworks.SystemTextJson)]
-            [ObjectFactory<ReadOnlySpan<char>>(UseForModelBinding = true)]
+            [ObjectFactory<ReadOnlySpan<char>>]
          	public partial class TestValueObject
             {
                public static ValidationError? Validate(string? value, IFormatProvider? provider, out TestValueObject? item)

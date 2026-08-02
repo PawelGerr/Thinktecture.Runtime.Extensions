@@ -728,4 +728,42 @@ public class TTRESG061_ObjectFactoryMustImplementValidateMethod
       var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestClass", "TestClass?", "int", "int", "ValidationError");
       await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ObjectFactoryAttribute<>).Assembly], expected);
    }
+
+   [Fact]
+   public async Task Should_qualify_ValidationError_when_Thinktecture_namespace_is_not_imported()
+   {
+      var code = """
+         #nullable enable
+         using System;
+
+         namespace TestNamespace
+         {
+            [Thinktecture.ObjectFactory<string>]
+            public partial class {|#0:TestClass|}
+            {
+            }
+         }
+         """;
+
+      var expectedCode = """
+         #nullable enable
+         using System;
+
+         namespace TestNamespace
+         {
+            [Thinktecture.ObjectFactory<string>]
+            public partial class {|#0:TestClass|}
+            {
+
+                 public static Thinktecture.ValidationError? Validate(string? value, IFormatProvider? provider, out TestClass? item)
+                 {
+                     throw new NotImplementedException();
+                 }
+             }
+         }
+         """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("TestClass", "TestClass?", "string", "string?", "ValidationError");
+      await Verifier.VerifyCodeFixAsync(code, expectedCode, [typeof(ObjectFactoryAttribute<>).Assembly], expected);
+   }
 }

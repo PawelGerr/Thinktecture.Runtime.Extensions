@@ -133,6 +133,12 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.MembersDisallowingDefaultValuesMustBeRequired.Id)
          {
+            // Adding 'required' modifies the whole field declaration; with multiple declarators it would
+            // also make initialized siblings required (silent semantic change). Deliberate limitation:
+            // no fix for multi-declarator fields -- the user splits the field manually.
+            if (GetCodeFixesContext().MemberDeclaration is FieldDeclarationSyntax { Declaration.Variables.Count: > 1 })
+               continue;
+
             context.RegisterCodeFix(CodeAction.Create(_MAKE_MEMBER_REQUIRED, _ => AddTypeModifierAsync(context.Document, root, GetCodeFixesContext().MemberDeclaration, SyntaxKind.RequiredKeyword), _MAKE_MEMBER_REQUIRED), diagnostic);
          }
          else if (diagnostic.Id == DiagnosticsDescriptors.ObjectFactoryMustImplementStaticValidateMethod.Id)
@@ -388,21 +394,16 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
       if (keyType is null)
          return document;
 
-      var keyTypeName = SyntaxFactory.ParseTypeName(keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
+      var keyTypeName = keyType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start);
 
-      var accessorType = keyType.SpecialType == SpecialType.System_String
-                            ? SyntaxFactory.ParseTypeName("ComparerAccessors.StringOrdinalIgnoreCase")
-                            : SyntaxFactory.ParseTypeName($"ComparerAccessors.Default<{keyTypeName}>");
+      var accessorTypeName = keyType.SpecialType == SpecialType.System_String
+                                ? $"global::{Constants.Attributes.NAMESPACE}.ComparerAccessors.StringOrdinalIgnoreCase"
+                                : $"global::{Constants.Attributes.NAMESPACE}.ComparerAccessors.Default<{keyTypeName}>";
 
-      var genericParameters = new SyntaxNodeOrToken[]
-                              {
-                                 accessorType,
-                                 SyntaxFactory.Token(SyntaxKind.CommaToken),
-                                 keyTypeName
-                              };
-
-      var comparerAttributeType = SyntaxFactory.GenericName(comparerAttributeName)
-                                               .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList<TypeSyntax>(genericParameters)));
+      // The names are fully qualified so the fix compiles in documents without 'using Thinktecture;'.
+      // The simplifier reduces them back to the short form when the namespace is imported.
+      var comparerAttributeType = SyntaxFactory.ParseName($"global::{Constants.Attributes.NAMESPACE}.{comparerAttributeName}<{accessorTypeName}, {keyTypeName}>")
+                                               .WithAdditionalAnnotations(Simplifier.Annotation);
       var comparerAttribute = SyntaxFactory.Attribute(comparerAttributeType);
 
       var newDeclaration = declaration.AddAttributeLists(SyntaxFactory.AttributeList([comparerAttribute]));
@@ -492,7 +493,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
          var objectTypeName = SyntaxFactory.ParseTypeName(objectType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
          var valueTypeName = SyntaxFactory.ParseTypeName(valueType.WithNullableAnnotation(NullableAnnotation.Annotated).ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
          var validationErrorTypeName = validationErrorType is null
-                                          ? SyntaxFactory.ParseTypeName("ValidationError")
+                                          ? SyntaxFactory.ParseTypeName($"global::{Constants.ValidationError.FULL_NAME}").WithAdditionalAnnotations(Simplifier.Annotation)
                                           : SyntaxFactory.ParseTypeName(validationErrorType.ToMinimalDisplayString(model, declaration.GetLocation().SourceSpan.Start));
 
          var valueParameter = SyntaxFactory.Parameter(SyntaxFactory.Identifier("value"))
@@ -671,7 +672,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       if (comparisonValue != newOperatorsGeneration)
       {
-         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"OperatorsGeneration.{newOperatorsGeneration.ToString()}"))
+         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"global::{Constants.Attributes.NAMESPACE}.OperatorsGeneration.{newOperatorsGeneration.ToString()}").WithAdditionalAnnotations(Simplifier.Annotation))
                                    .WithNameEquals(SyntaxFactory.NameEquals(SyntaxFactory.IdentifierName(Constants.Attributes.Properties.COMPARISON_OPERATORS)));
 
          newArgumentList = comparisonArg is null
@@ -681,7 +682,7 @@ public sealed class ThinktectureRuntimeExtensionsCodeFixProvider : CodeFixProvid
 
       if (equalityValue != newOperatorsGeneration)
       {
-         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"OperatorsGeneration.{newOperatorsGeneration.ToString()}"))
+         var newArg = SyntaxFactory.AttributeArgument(SyntaxFactory.ParseExpression($"global::{Constants.Attributes.NAMESPACE}.OperatorsGeneration.{newOperatorsGeneration.ToString()}").WithAdditionalAnnotations(Simplifier.Annotation))
                                    .WithNameEquals(SyntaxFactory.NameEquals(SyntaxFactory.IdentifierName(Constants.Attributes.Properties.EQUALITY_COMPARISON_OPERATORS)));
 
          newArgumentList = equalityArg is null

@@ -83,6 +83,53 @@ public class TTRESG045_CustomKeyMemberImplementationTypeMismatch
       }
 
       [Fact]
+      public async Task Should_not_trigger_if_key_member_has_the_type_of_the_resolved_TypeParamRef_marker()
+      {
+         // Without the resolution of the marker the key type would be the reference type 'TypeParamRef1',
+         // which does not match 'T' and would produce a false positive.
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ValueObject<TypeParamRef1>(SkipKeyMember = true)]
+               public partial class ValueObject<T>
+                  where T : notnull
+            	{
+                  private readonly T _value;
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_report_the_resolved_type_parameter_when_key_type_is_a_TypeParamRef_marker()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [ValueObject<TypeParamRef1>(SkipKeyMember = true)]
+               public partial class ValueObject<T>
+                  where T : notnull
+            	{
+                  private readonly string {|#0:_value|};
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("_value", "string", "T");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(ISmartEnum<>).Assembly], expected);
+      }
+
+      [Fact]
       public async Task Should_not_trigger_if_key_member_type_is_correct()
       {
          var code = """

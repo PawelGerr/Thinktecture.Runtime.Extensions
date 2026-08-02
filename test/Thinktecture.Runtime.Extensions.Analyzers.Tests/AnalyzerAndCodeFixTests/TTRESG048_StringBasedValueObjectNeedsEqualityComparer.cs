@@ -53,6 +53,47 @@ public class TTRESG048_StringBasedValueObjectNeedsEqualityComparer
    }
 
    [Fact]
+   public async Task Should_qualify_inserted_comparers_when_Thinktecture_namespace_is_not_imported()
+   {
+      var code = """
+
+         using System;
+
+         namespace TestNamespace
+         {
+            [Thinktecture.ValueObject<string>]
+         	public partial class {|#0:TestValueObject|}
+         	{
+            }
+         }
+         """;
+
+      var expectedCode = """
+
+         using System;
+
+         namespace TestNamespace
+         {
+            [Thinktecture.ValueObject<string>]
+             [Thinktecture.KeyMemberEqualityComparer<Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase, string>]
+             [Thinktecture.KeyMemberComparer<Thinktecture.ComparerAccessors.StringOrdinalIgnoreCase, string>]
+             public partial class TestValueObject
+         	{
+            }
+         }
+         """;
+
+      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0);
+
+      await Verifier.VerifyCodeFixAsync(
+         code,
+         expectedCode,
+         [typeof(ValueObjectAttribute<>).Assembly],
+         numberOfFixes: 2,
+         expected);
+   }
+
+   [Fact]
    public async Task Should_not_trigger_on_string_based_value_object_with_equality_comparer()
    {
       var code = """

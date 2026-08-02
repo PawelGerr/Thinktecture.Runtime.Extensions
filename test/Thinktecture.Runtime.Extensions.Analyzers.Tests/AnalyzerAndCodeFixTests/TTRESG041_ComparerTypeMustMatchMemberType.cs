@@ -64,6 +64,37 @@ public class TTRESG041_ComparerTypeMustMatchMemberType
 
          await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly]);
       }
+
+      [Fact]
+      public async Task Should_report_the_resolved_type_parameter_when_key_type_is_a_TypeParamRef_marker()
+      {
+         // The key type must be resolved to the type parameter before the comparer is checked. Without the
+         // resolution the reported member type would be the marker type 'TypeParamRef1' instead of 'T'.
+         // The comparer attribute cannot use 'T' itself, because attributes must not reference the type
+         // parameters of the annotated type (CS8968), so a concrete comparer type is used here.
+         var code = """
+
+            #nullable enable
+
+            using System;
+            using System.Collections.Generic;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               [SmartEnum<TypeParamRef1>]
+               [{|#0:KeyMemberEqualityComparer<ComparerAccessors.StringOrdinalIgnoreCase, string>|}]
+            	public partial class TestEnum<T>
+                  where T : notnull
+            	{
+                  public static readonly TestEnum<T> Item1 = default!;
+               }
+            }
+            """;
+
+         var expected = CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("StringOrdinalIgnoreCase", "T");
+         await CodeFixVerifier<ThinktectureRuntimeExtensionsAnalyzer, ThinktectureRuntimeExtensionsCodeFixProvider>.VerifyAnalyzerAsync(code, [typeof(ComplexValueObjectAttribute).Assembly], expected);
+      }
    }
 
    public class KeyedValueObject_ComparerTypeMustMatchMemberType
