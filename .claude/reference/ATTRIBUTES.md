@@ -302,6 +302,8 @@ ObjectFactoryAttribute()
 | `UseForModelBinding`          | `bool` (init-only)        | `false`     | Enable ASP.NET Core model binding                                   |
 | `HasCorrespondingConstructor` | `bool` (init-only)        | `false`     | Indicates presence of a single-parameter constructor of type `Type`. Used **only by EF Core** to bypass validation when loading from DB. **Not allowed on Smart Enums** (TTRESG060) |
 
+**Ref struct value types**: When `T` is a ref struct (any ref struct, for example `ReadOnlySpan<char>` or `ReadOnlySpan<byte>`), `UseWithEntityFramework` and `UseForModelBinding` must not be set -- a ref struct cannot be the generic value type argument of an EF Core value converter or of ASP.NET Core model binding. This is TTRESG078 (Error). A `ReadOnlySpan<char>` factory may still set `UseForSerialization = SerializationFrameworks.SystemTextJson`. Setting `UseForSerialization` to MessagePack or Newtonsoft.Json on a ref-struct factory, or to System.Text.Json on a ref struct other than `ReadOnlySpan<char>`, is ignored at runtime and reported as TTRESG108 (Warning).
+
 ## Additional Attributes
 
 ### KeyMemberEqualityComparerAttribute&lt;TAccessor, TKey&gt;

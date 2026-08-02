@@ -213,7 +213,12 @@ public readonly partial struct Amount;
   instead of erroring on a `null` input; `EmptyStringInFactoryMethodsYieldsNull = true` treats
   empty/whitespace as `null` (and forces the former — see the cascade table). Note
   `EmptyStringInFactoryMethodsYieldsNull` applies only to **string-keyed** VOs (silently ignored
-  otherwise). Use these to model "absent" string VOs cleanly rather than throwing.
+  otherwise; TTRESG109 warns on structs). Use these to model "absent" string VOs cleanly rather than
+  throwing. Both settings make `TryCreate` return `true` with a `null` out value, so the generated
+  out parameter carries **no** `[NotNullWhen(true)]` — null-check after a successful call. The
+  parsing methods keep their contract instead: with `EmptyStringInFactoryMethodsYieldsNull`, `Parse`
+  throws `FormatException` for empty/whitespace input and `TryParse` returns `false` (this also makes
+  minimal-API model binding via `IParsable<T>` reject empty input).
 - **Custom validation errors**: to return a richer error than the default `ValidationError`, implement
   `IValidationError<T>` on your error type — referencing itself, i.e.
   `class MyError : IValidationError<MyError>` (the interface is `IValidationError<out T> where T : class`).
