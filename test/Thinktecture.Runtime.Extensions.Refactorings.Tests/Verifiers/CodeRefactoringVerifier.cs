@@ -59,8 +59,6 @@ public static class CodeRefactoringVerifier<TRefactoring>
          ReferenceAssemblies = new ReferenceAssemblies("net10.0", new PackageIdentity("Microsoft.NETCore.App.Ref", "10.0.0"), Path.Combine("ref", "10.0.0"));
 #endif
 
-         CompilerDiagnostics = CompilerDiagnostics.None;
-
          foreach (var additionalReference in additionalReferences)
          {
             TestState.AdditionalReferences.Add(additionalReference);

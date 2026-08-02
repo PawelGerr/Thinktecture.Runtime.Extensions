@@ -87,7 +87,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
 
-                     var result = testEnum.[||]MapPartially<string>();
+                     var result = testEnum.[||]{|CS7036:MapPartially<string>|}();
                   }
                }
             }
@@ -274,7 +274,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     testEnum.[||]Switch();
+                     testEnum.[||]{|CS1501:Switch|}();
                   }
                }
             }
@@ -325,7 +325,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     var result = testEnum.[||]Switch<string>();
+                     var result = testEnum.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -376,7 +376,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     var result = testEnum.[||]Map<string>();
+                     var result = testEnum.[||]{|CS7036:Map<string>|}();
                   }
                }
             }
@@ -427,7 +427,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     testUnion.[||]Switch();
+                     testUnion.[||]{|CS1501:Switch|}();
                   }
                }
             }
@@ -478,7 +478,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     var result = testUnion.[||]Switch<int>();
+                     var result = testUnion.[||]{|CS1501:Switch<int>|}();
                   }
                }
             }
@@ -529,7 +529,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     testUnion.[||]Switch();
+                     testUnion.[||]{|CS1501:Switch|}();
                   }
                }
             }
@@ -580,7 +580,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     var result = testUnion.[||]Switch<string>();
+                     var result = testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -631,7 +631,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     var result = testUnion.[||]Map<string>();
+                     var result = testUnion.[||]{|CS7036:Map<string>|}();
                   }
                }
             }
@@ -682,7 +682,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     var result = testUnion.[||]Map<string>();
+                     var result = testUnion.[||]{|CS7036:Map<string>|}();
                   }
                }
             }
@@ -735,7 +735,7 @@ public class SwitchMapCompletionRefactoringTests
                   public void Do()
                   {
                      var foo = new Foo();
-                     foo.[||]Switch();
+                     foo.[||]{|CS7036:Switch|}();
                   }
                }
             }
@@ -765,7 +765,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testEnum = SmartEnum_StringBased.Item1;
                      string state = "";
 
-                     testEnum.[||]Switch<string>();
+                     testEnum.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -788,8 +788,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      testEnum.Switch<string>(
                         state: state,
-                        item1: static x => { },
-                        item2: static x => { });
+                        item1: static state1 => { },
+                        item2: static state1 => { });
                   }
                }
             }
@@ -819,7 +819,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testEnum = SmartEnum_StringBased.Item1;
                      string state = "";
 
-                     var result = testEnum.[||]Switch<string, string>();
+                     var result = testEnum.[||]{|CS7036:Switch<string, string>|}();
                   }
                }
             }
@@ -842,8 +842,8 @@ public class SwitchMapCompletionRefactoringTests
 
                      var result = testEnum.Switch<string, string>(
                         state: state,
-                        item1: static x => throw new System.NotImplementedException(),
-                        item2: static x => throw new System.NotImplementedException());
+                        item1: static state1 => throw new System.NotImplementedException(),
+                        item2: static state1 => throw new System.NotImplementedException());
                   }
                }
             }
@@ -873,7 +873,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnion_class_string_int)"hello";
                      string state = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -927,7 +927,7 @@ public class SwitchMapCompletionRefactoringTests
                      TestUnion testUnion = new TestUnion.Child1("test");
                      string state = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -980,7 +980,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     testEnum.[||]Switch(item1: static () => { });
+                     testEnum.[||]{|CS1501:Switch|}(item1: static () => { });
                   }
                }
             }
@@ -1031,7 +1031,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     testEnum.[||]Switch(() => { });
+                     testEnum.[||]{|CS1501:Switch|}(() => { });
                   }
                }
             }
@@ -1083,7 +1083,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testEnum = SmartEnum_StringBased.Item1;
                      string state = "";
 
-                     var result = testEnum.[||]Switch<string, string>(state, x => throw new System.NotImplementedException());
+                     var result = testEnum.[||]{|CS7036:Switch<string, string>|}(state, x => throw new System.NotImplementedException());
                   }
                }
             }
@@ -1107,7 +1107,7 @@ public class SwitchMapCompletionRefactoringTests
                      var result = testEnum.Switch<string, string>(
                         state,
                         x => throw new System.NotImplementedException(),
-                        item2: static x => throw new System.NotImplementedException());
+                        item2: static state1 => throw new System.NotImplementedException());
                   }
                }
             }
@@ -1136,7 +1136,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     testUnion.[||]Switch(@string: static x => { });
+                     testUnion.[||]{|CS1501:Switch|}(@string: static x => { });
                   }
                }
             }
@@ -1187,7 +1187,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     testUnion.[||]Switch(x => { });
+                     testUnion.[||]{|CS1501:Switch|}(x => { });
                   }
                }
             }
@@ -1238,7 +1238,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     testUnion.[||]Switch(child1: static x => { });
+                     testUnion.[||]{|CS1501:Switch|}(child1: static x => { });
                   }
                }
             }
@@ -1289,7 +1289,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     testUnion.[||]Switch(x => { });
+                     testUnion.[||]{|CS1501:Switch|}(x => { });
                   }
                }
             }
@@ -1340,7 +1340,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testEnum = SmartEnum_StringBased.Item1;
 
-                     var result = testEnum.[||]Map<string>(item1: "hello");
+                     var result = testEnum.[||]{|CS7036:Map<string>|}(item1: "hello");
                   }
                }
             }
@@ -1391,7 +1391,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      var testUnion = (TestUnion_class_string_int)"hello";
 
-                     var result = testUnion.[||]Map<string>(@string: "hello");
+                     var result = testUnion.[||]{|CS7036:Map<string>|}(@string: "hello");
                   }
                }
             }
@@ -1442,7 +1442,7 @@ public class SwitchMapCompletionRefactoringTests
                   {
                      TestUnion testUnion = new TestUnion.Child1("test");
 
-                     var result = testUnion.[||]Map<string>(child1: "hello");
+                     var result = testUnion.[||]{|CS7036:Map<string>|}(child1: "hello");
                   }
                }
             }
@@ -1494,7 +1494,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testEnum = SmartEnum_StringBased.Item1;
                      string state = "";
 
-                     testEnum.[||]Switch<string>(state: state, item1: static x => { });
+                     testEnum.[||]{|CS7036:Switch<string>|}(state: state, item1: static x => { });
                   }
                }
             }
@@ -1518,7 +1518,7 @@ public class SwitchMapCompletionRefactoringTests
                      testEnum.Switch<string>(
                         state: state,
                         item1: static x => { },
-                        item2: static x => { });
+                        item2: static state1 => { });
                   }
                }
             }
@@ -1553,7 +1553,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
                      string context = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -1607,7 +1607,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithKeywordSwitchMapStateParameterName)"hello";
                      string @default = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -1661,7 +1661,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithXSwitchMapStateParameterName)"hello";
                      string x = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -1718,7 +1718,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnion_class_string_int)"hello";
                      int x = 5;
 
-                     testUnion.[||]Switch();
+                     testUnion.[||]{|CS1501:Switch|}();
                   }
                }
             }
@@ -1771,7 +1771,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
                      string context = "";
 
-                     var result = testUnion.[||]Switch<string, string>();
+                     var result = testUnion.[||]{|CS7036:Switch<string, string>|}();
                   }
                }
             }
@@ -1825,7 +1825,7 @@ public class SwitchMapCompletionRefactoringTests
                      TestUnionWithCustomSwitchMapStateParameterName testUnion = new TestUnionWithCustomSwitchMapStateParameterName.Child1("test");
                      string context = "";
 
-                     testUnion.[||]Switch<string>();
+                     testUnion.[||]{|CS1501:Switch<string>|}();
                   }
                }
             }
@@ -1879,7 +1879,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
                      string context = "";
 
-                     testUnion.[||]SwitchPartially<string>();
+                     testUnion.[||]{|CS1501:SwitchPartially<string>|}();
                   }
                }
             }
@@ -1934,7 +1934,7 @@ public class SwitchMapCompletionRefactoringTests
                      var testUnion = (TestUnionWithCustomSwitchMapStateParameterName)"hello";
                      string context = "";
 
-                     var result = testUnion.[||]SwitchPartially<string, string>();
+                     var result = testUnion.[||]{|CS7036:SwitchPartially<string, string>|}();
                   }
                }
             }
@@ -2129,6 +2129,530 @@ public class SwitchMapCompletionRefactoringTests
                      testEnum.SwitchPartially(
                         // must run first
                         @default: static x => { },
+                        item1: static () => { },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_PreservesCommentBehindSeparatorComma
+   {
+      [Fact]
+      public async Task Should_preserve_comment_that_follows_the_comma_of_an_existing_argument()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(
+                        @default: static x => { }, // must run first
+                        item1: static () => { });
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { }, // must run first
+                        item1: static () => { },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_PreservesCommentOnClosingParen
+   {
+      [Fact]
+      public async Task Should_preserve_comment_attached_to_closing_paren()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(
+                        @default: static x => { }
+                        // keep this note
+                        );
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { },
+                        item1: static () => { },
+                        item2: static () => { }
+                        // keep this note
+                        );
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_PreservesPreprocessorDirectives
+   {
+      [Fact]
+      public async Task Should_preserve_preprocessor_directives_in_argument_and_closing_paren_trivia()
+      {
+         // The raw strings below are not indented, because the formatter places preprocessor directives
+         // in column 0, and a raw string literal cannot contain a line with less indentation than its
+         // closing delimiter.
+         var code = """
+
+using System;
+using Thinktecture;
+using Thinktecture.Runtime.Tests.TestEnums;
+
+namespace TestNamespace
+{
+   public class Test
+   {
+      public void Do()
+      {
+         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+         testEnum.[||]SwitchPartially(
+#if true
+            @default: static x => { }
+#endif
+            );
+      }
+   }
+}
+""";
+
+         var fixedCode = """
+
+using System;
+using Thinktecture;
+using Thinktecture.Runtime.Tests.TestEnums;
+
+namespace TestNamespace
+{
+   public class Test
+   {
+      public void Do()
+      {
+         var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+         testEnum.SwitchPartially(
+#if true
+            @default: static x => { },
+            item1: static () => { },
+            item2: static () => { }
+#endif
+            );
+      }
+   }
+}
+""";
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_WithState
+   {
+      [Fact]
+      public async Task Should_use_state_parameter_name_for_single_parameter_lambdas()
+      {
+         // In a state overload every delegate receives the state first. The items of this Smart Enum
+         // carry no value, so their delegates have exactly one parameter, and that parameter is the
+         // state. It therefore has to use the same (collision-renamed) name as the first parameter of
+         // the two-parameter "@default" delegate.
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+                     string state = "";
+
+                     testEnum.[||]{|CS1501:SwitchPartially<string>|}();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+                     string state = "";
+
+                     testEnum.SwitchPartially<string>(
+                        state: state,
+                        @default: static (state1, x) => { },
+                        item1: static state1 => { },
+                        item2: static state1 => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_Switch_WithState_RepeatedStateNameCollision
+   {
+      [Fact]
+      public async Task Should_append_next_free_number_when_state_name_and_first_numbered_name_are_taken()
+      {
+         // The configured state parameter name "context" and the first numbered fallback "context1"
+         // are both taken by an enclosing local, so the generated lambda parameter must skip to
+         // "context2" to avoid shadowing (CS0136).
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                     string context = "";
+                     string context1 = "";
+
+                     testEnum.[||]{|CS1501:Switch<string>|}();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_CustomSwitchMapStateParameterName.Item1;
+                     string context = "";
+                     string context1 = "";
+
+                     testEnum.Switch<string>(
+                        context: context,
+                        item1: static context2 => { },
+                        item2: static context2 => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _smartEnumCustomStateReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_ValueParameterFallback
+   {
+      [Fact]
+      public async Task Should_fall_back_to_numbered_value_name_when_all_candidates_are_taken()
+      {
+         // Every candidate name ("x", "value", "v", "arg", "item") and the first numbered fallback
+         // ("value1") are taken by an enclosing local, so the generated lambda parameter is "value2".
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+                     int x = 0;
+                     int value = 0;
+                     int v = 0;
+                     int arg = 0;
+                     int item = 0;
+                     int value1 = 0;
+
+                     testUnion.[||]{|CS1501:Switch|}();
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+                     int x = 0;
+                     int value = 0;
+                     int v = 0;
+                     int arg = 0;
+                     int item = 0;
+                     int value1 = 0;
+
+                     testUnion.Switch(
+                        @string: static value2 => { },
+                        int32: static value2 => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class AdHocUnion_Switch_ReservedLocalDeclaredAfterInvocation
+   {
+      [Fact]
+      public async Task Should_treat_local_declared_after_invocation_as_reserved()
+      {
+         // The local "x" is declared after the invocation, but its scope is the whole block. A lambda
+         // parameter named "x" would therefore still be a forbidden shadowing (CS0136), so the
+         // refactoring has to fall back to the next free candidate name "value".
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+
+                     testUnion.[||]{|CS1501:Switch|}();
+
+                     int x = 5;
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestAdHocUnions;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testUnion = (TestUnion_class_string_int)"hello";
+
+                     testUnion.Switch(
+                        @string: static value => { },
+                        int32: static value => { });
+
+                     int x = 5;
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _unionReferences, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_PreservesCommentOnNonFirstArgument
+   {
+      [Fact]
+      public async Task Should_preserve_comment_on_non_first_argument()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(
+                        @default: static x => { },
+                        // handled explicitly
+                        item1: static () => { });
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { },
+                        // handled explicitly
+                        item1: static () => { },
+                        item2: static () => { });
+                  }
+               }
+            }
+            """;
+
+         await Verifier.VerifyRefactoringAsync(code, fixedCode, _references, codeActionIndex: 0);
+      }
+   }
+
+   public class SmartEnum_SwitchPartially_TrailingCommentBeforeGeneratedComma
+   {
+      [Fact]
+      public async Task Should_keep_comma_on_argument_line_when_existing_argument_has_trailing_comment()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.[||]SwitchPartially(
+                        @default: static x => { } // must run first
+                        );
+                  }
+               }
+            }
+            """;
+
+         var fixedCode = """
+
+            using System;
+            using Thinktecture;
+            using Thinktecture.Runtime.Tests.TestEnums;
+
+            namespace TestNamespace
+            {
+               public class Test
+               {
+                  public void Do()
+                  {
+                     var testEnum = SmartEnum_StringBased_SwitchMapPartially.Item1;
+
+                     testEnum.SwitchPartially(
+                        @default: static x => { }, // must run first
                         item1: static () => { },
                         item2: static () => { });
                   }
