@@ -11,7 +11,15 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
 
    public int Count => 1;
 
-   public TValue this[TKey key] => _equalityComparer.Equals(_key, key) ? _value : throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
+   public TValue this[TKey key]
+   {
+      get
+      {
+         ArgumentNullException.ThrowIfNull(key);
+
+         return _equalityComparer.Equals(_key, key) ? _value : throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
+      }
+   }
 
    private IReadOnlyList<TKey>? _keys;
    public IEnumerable<TKey> Keys => _keys ??= [_key];
@@ -21,6 +29,8 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
 
    public SingleItemReadOnlyDictionary(TKey key, TValue value, IEqualityComparer<TKey>? equalityComparer = null)
    {
+      ArgumentNullException.ThrowIfNull(key);
+
       _key = key;
       _value = value;
       _equalityComparer = equalityComparer ?? EqualityComparer<TKey>.Default;
@@ -28,6 +38,8 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
 
    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
    {
+      ArgumentNullException.ThrowIfNull(key);
+
       if (_equalityComparer.Equals(_key, key))
       {
          value = _value;
@@ -40,6 +52,8 @@ internal sealed class SingleItemReadOnlyDictionary<TKey, TValue> : IReadOnlyDict
 
    public bool ContainsKey(TKey key)
    {
+      ArgumentNullException.ThrowIfNull(key);
+
       return _equalityComparer.Equals(_key, key);
    }
 

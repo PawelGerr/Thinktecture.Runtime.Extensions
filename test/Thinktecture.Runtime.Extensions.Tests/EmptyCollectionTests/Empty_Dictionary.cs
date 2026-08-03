@@ -35,4 +35,13 @@ public class Empty_Dictionary
       Action action = () => _ = SUT[new object()];
       action.Should().Throw<KeyNotFoundException>();
    }
+
+   [Fact]
+   public void Should_throw_ArgumentNullException_when_key_is_null_like_Dictionary()
+   {
+      // ReSharper disable once AssignmentIsFullyDiscarded
+      FluentActions.Invoking(() => _ = SUT[null!]).Should().Throw<ArgumentNullException>().WithParameterName("key");
+      FluentActions.Invoking(() => SUT.ContainsKey(null!)).Should().Throw<ArgumentNullException>().WithParameterName("key");
+      FluentActions.Invoking(() => SUT.TryGetValue(null!, out _)).Should().Throw<ArgumentNullException>().WithParameterName("key");
+   }
 }

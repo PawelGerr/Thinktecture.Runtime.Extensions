@@ -54,8 +54,8 @@ public class ValidationErrorTests
    [Fact]
    public void Should_return_true_when_comparing_nulls_via_equality_operator()
    {
-      ((ValidationError?)null == null).Should().BeTrue();
-      ((ValidationError?)null != null).Should().BeFalse();
+      ((ValidationError)null == null).Should().BeTrue();
+      ((ValidationError)null != null).Should().BeFalse();
    }
 
    [Fact]

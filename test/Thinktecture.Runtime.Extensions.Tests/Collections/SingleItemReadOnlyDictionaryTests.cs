@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.Runtime.Tests.Collections;
@@ -40,6 +41,18 @@ public class SingleItemReadOnlyDictionaryTests
 
       _sut.TryGetValue(43, out value).Should().BeFalse();
       value.Should().Be(0);
+   }
+
+   [Fact]
+   public void Should_throw_ArgumentNullException_when_key_is_null_like_Dictionary()
+   {
+      var sut = SingleItem.Dictionary("42", 43);
+
+      // ReSharper disable once AssignmentIsFullyDiscarded
+      FluentActions.Invoking(() => _ = sut[null!]).Should().Throw<ArgumentNullException>().WithParameterName("key");
+      FluentActions.Invoking(() => sut.ContainsKey(null!)).Should().Throw<ArgumentNullException>().WithParameterName("key");
+      FluentActions.Invoking(() => sut.TryGetValue(null!, out _)).Should().Throw<ArgumentNullException>().WithParameterName("key");
+      FluentActions.Invoking(() => SingleItem.Dictionary<string, int>(null!, 43)).Should().Throw<ArgumentNullException>().WithParameterName("key");
    }
 
    [Fact]

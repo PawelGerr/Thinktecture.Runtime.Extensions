@@ -16,6 +16,7 @@ public static class SingleItem
    /// <typeparam name="TKey">Type of the key</typeparam>
    /// <typeparam name="TValue">Type of the value.</typeparam>
    /// <returns>A read-only dictionary with 1 item.</returns>
+   /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
    public static IReadOnlyDictionary<TKey, TValue> Dictionary<TKey, TValue>(
       TKey key,
       TValue value,
