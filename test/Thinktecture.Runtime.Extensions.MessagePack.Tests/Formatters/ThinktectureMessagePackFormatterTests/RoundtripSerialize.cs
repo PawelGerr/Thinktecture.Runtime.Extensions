@@ -172,6 +172,56 @@ public partial class RoundTripSerialize
    }
 
    [Fact]
+   public void Should_use_directly_applied_formatter_when_derived_smart_enum_item_declares_own_formatter()
+   {
+      // Regression guard: the casting wrapper formatter for derived runtime types must not shadow a
+      // [MessagePackFormatter] attribute the user applied DIRECTLY to the derived type. MessagePack's
+      // AttributeFormatterResolver can honor such an attribute, so the resolver defers to it.
+      var item = IntBasedEnumWithFormatterOnDerivedType.ItemOfDerivedType;
+      var runtimeType = item.GetType();
+      runtimeType.Should().NotBe(typeof(IntBasedEnumWithFormatterOnDerivedType));
+
+      var bytes = MessagePackSerializer.Serialize(runtimeType, item, _options, TestContext.Current.CancellationToken);
+
+      // The offset in the payload proves that the formatter declared on the derived type ran, not the wrapper.
+      MessagePackSerializer.Deserialize<int>(bytes, _options, TestContext.Current.CancellationToken)
+                           .Should().Be(2 + IntBasedEnumWithFormatterOnDerivedType.DerivedItemKeyOffset);
+
+      var deserialized = MessagePackSerializer.Deserialize(runtimeType, bytes, _options, TestContext.Current.CancellationToken);
+      deserialized.Should().BeSameAs(item);
+   }
+
+   [Fact]
+   public void Should_resolve_no_formatter_for_derived_item_with_own_formatter_when_skip_is_enabled()
+   {
+      var runtimeType = IntBasedEnumWithFormatterOnDerivedType.ItemOfDerivedType.GetType();
+      runtimeType.Should().NotBe(typeof(IntBasedEnumWithFormatterOnDerivedType));
+
+      var getFormatter = typeof(ThinktectureMessageFormatterResolver)
+                         .GetMethod(nameof(IFormatterResolver.GetFormatter))!
+                         .MakeGenericMethod(runtimeType);
+
+      // The default instance has the skip enabled, so the resolver defers to MessagePack's attribute resolution.
+      getFormatter.Invoke(ThinktectureMessageFormatterResolver.Instance, null).Should().BeNull();
+
+      // With the skip disabled the wrapper formatter is still built and served, just like for base types with an
+      // attribute.
+      getFormatter.Invoke(new ThinktectureMessageFormatterResolver(false), null).Should().NotBeNull();
+   }
+
+   [Fact]
+   public void Should_serialize_item_of_derived_type_with_own_formatter_as_key_when_requested_as_base_type()
+   {
+      // Resolution by the STATIC type is unaffected: the base type's key-based formatter writes the plain key.
+      var bytes = MessagePackSerializer.Serialize(IntBasedEnumWithFormatterOnDerivedType.ItemOfDerivedType, _options, TestContext.Current.CancellationToken);
+
+      MessagePackSerializer.Deserialize<int>(bytes, _options, TestContext.Current.CancellationToken).Should().Be(2);
+
+      var deserialized = MessagePackSerializer.Deserialize<IntBasedEnumWithFormatterOnDerivedType>(bytes, _options, TestContext.Current.CancellationToken);
+      deserialized.Should().BeSameAs(IntBasedEnumWithFormatterOnDerivedType.ItemOfDerivedType);
+   }
+
+   [Fact]
    public void Should_return_null_formatter_for_type_whose_only_object_factory_has_a_ref_struct_value_type()
    {
       // Regression: the object-factory filter of the resolver excluded only ReadOnlySpan<char>, so a factory with any

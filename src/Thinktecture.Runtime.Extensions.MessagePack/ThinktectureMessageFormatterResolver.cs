@@ -125,10 +125,7 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
          if (isDerivedType)
          {
             // The formatter belongs to the base type and IMessagePackFormatter<T> is invariant, so it is wrapped in a
-            // casting formatter. "HasMessagePackFormatterAttribute" stays false on purpose: the derived type inherits
-            // the [MessagePackFormatter] attribute of the base type, but MessagePack's AttributeFormatterResolver
-            // cannot honor it (its cast to IMessagePackFormatter<derived> throws). GetFormatter must therefore not
-            // defer to the attribute path for a derived type.
+            // casting formatter.
             var wrapperType = typeof(DerivedTypeFormatter<,>).MakeGenericType(typeof(T), metadata.Value.Type);
             var wrapper = Activator.CreateInstance(wrapperType, formatter);
 
@@ -139,6 +136,14 @@ public class ThinktectureMessageFormatterResolver : IFormatterResolver
             }
 
             Formatter = (IMessagePackFormatter<T>)wrapper;
+
+            // The attribute skip applies only if the derived type declares its OWN [MessagePackFormatter] attribute,
+            // because MessagePack's AttributeFormatterResolver can honor a directly applied attribute. GetFormatter
+            // then returns null and defers to it.
+            // The attribute INHERITED from the base type must not trigger the skip, because AttributeFormatterResolver
+            // cannot honor it (its cast of the base type's formatter to IMessagePackFormatter<derived> throws). As a
+            // consequence, a user-written attribute on the base type is not reflected for derived runtime types.
+            HasMessagePackFormatterAttribute = typeof(T).GetCustomAttribute<MessagePackFormatterAttribute>(inherit: false) is not null;
             return;
          }
 
