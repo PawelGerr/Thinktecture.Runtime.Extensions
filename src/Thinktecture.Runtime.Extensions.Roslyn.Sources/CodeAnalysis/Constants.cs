@@ -59,6 +59,11 @@ public static class Constants
       public const string VALIDATE_FACTORY_ARGUMENTS = "ValidateFactoryArguments";
    }
 
+   public static class Members
+   {
+      public const string VALUE = "Value";
+   }
+
    public static class Parameters
    {
       public const string STATE = "state";
@@ -169,6 +174,7 @@ public static class Constants
          public const string USE_SINGLE_BACKING_FIELD = "UseSingleBackingField";
          public const string USE_WITH_ENTITY_FRAMEWORK = "UseWithEntityFramework";
          public const string VALUE_MEMBER_ACCESS_MODIFIER = "ValueMemberAccessModifier";
+         public const string VALUE_MEMBER_NAME = "ValueMemberName";
          public const string SINGLE_BACKING_FIELD_TYPE = "SingleBackingFieldType";
       }
 

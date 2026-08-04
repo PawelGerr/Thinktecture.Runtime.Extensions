@@ -2512,4 +2512,63 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   // Renamed member, metadata delegates and the SwitchPartially default callback all land in the
+   // same generated file, so one snapshot covers the property declaration, the ConvertToValue /
+   // ConvertToValueExpression / GetValue metadata bodies, and the this.RawValue callback.
+   [Fact]
+   public async Task Should_rename_Value_property_and_its_references_when_ValueMemberName_is_set()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberName = "RawValue",
+         	                    SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+         	                    MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_rename_Value_property_for_struct_union_when_ValueMemberName_is_set()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberName = "RawValue",
+         	                    SwitchMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads,
+         	                    MapMethods = SwitchMapMethodsGeneration.DefaultWithPartialOverloads)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_compose_ValueMemberName_with_ValueMemberAccessModifier()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberName = "RawValue",
+         	                    ValueMemberAccessModifier = AccessModifier.Private)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

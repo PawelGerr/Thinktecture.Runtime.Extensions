@@ -15,6 +15,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public bool SkipEqualityComparison { get; }
    public FactoryMethodGeneration FactoryMethodGeneration { get; }
    public AccessModifier ValueMemberAccessModifier { get; }
+   public string ValueMemberName { get; }
 
    /// <summary>
    /// Resolved/normalized info for the user-supplied <c>SingleBackingFieldType</c>.
@@ -40,6 +41,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       SkipEqualityComparison = attribute.FindSkipEqualityComparison() ?? false;
       FactoryMethodGeneration = attribute.FindFactoryMethodGeneration();
       ValueMemberAccessModifier = attribute.FindValueMemberAccessModifier() ?? AccessModifier.Public;
+      ValueMemberName = attribute.FindValueMemberName() ?? Constants.Members.VALUE;
 
       SingleBackingFieldType = singleBackingFieldType;
 
@@ -85,6 +87,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && SkipEqualityComparison == other.SkipEqualityComparison
              && FactoryMethodGeneration == other.FactoryMethodGeneration
              && ValueMemberAccessModifier == other.ValueMemberAccessModifier
+             && ValueMemberName == other.ValueMemberName
              && SingleBackingFieldType == other.SingleBackingFieldType
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
@@ -105,6 +108,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ SkipEqualityComparison.GetHashCode();
          hashCode = (hashCode * 397) ^ (int)FactoryMethodGeneration;
          hashCode = (hashCode * 397) ^ (int)ValueMemberAccessModifier;
+         hashCode = (hashCode * 397) ^ ValueMemberName.GetHashCode();
          hashCode = (hashCode * 397) ^ (SingleBackingFieldType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 

@@ -107,6 +107,22 @@ public abstract class UnionAttributeBase : Attribute
    public AccessModifier ValueMemberAccessModifier { get; set; }
 
    /// <summary>
+   /// The name of the generated raw-value property.
+   /// Default: <c>Value</c>.
+   /// </summary>
+   /// <remarks>
+   /// This setting applies to ad-hoc unions only. Rename the generated property to free the
+   /// <c>Value</c> identifier, for example to hand-write a <c>Value</c> property of a different type
+   /// in the partial part. The name is emitted as-is; an invalid or colliding identifier produces a
+   /// C# compiler error in the generated code, matching how <c>KeyMemberName</c> behaves.
+   /// </remarks>
+   public string ValueMemberName
+   {
+      get => field ?? "Value";
+      set;
+   }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()

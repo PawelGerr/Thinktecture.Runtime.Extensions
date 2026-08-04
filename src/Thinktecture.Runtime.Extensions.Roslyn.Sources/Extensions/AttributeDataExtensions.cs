@@ -40,6 +40,11 @@ public static class AttributeDataExtensions
       return GetEnumParameterValue<AccessModifier>(attributeData, Constants.Attributes.Properties.VALUE_MEMBER_ACCESS_MODIFIER);
    }
 
+   public static string? FindValueMemberName(this AttributeData attributeData)
+   {
+      return GetStringParameterValue(attributeData, Constants.Attributes.Properties.VALUE_MEMBER_NAME);
+   }
+
    public static MemberKind? FindKeyMemberKind(this AttributeData attributeData)
    {
       return GetEnumParameterValue<MemberKind>(attributeData, Constants.Attributes.Properties.KEY_MEMBER_KIND);

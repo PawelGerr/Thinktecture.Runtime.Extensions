@@ -159,6 +159,17 @@ public class ThinktectureDestructuringPolicyTests
    }
 
    [Fact]
+   public void Should_unwrap_union_with_renamed_Value_member_to_scalar_value()
+   {
+      var (logger, sink) = CreateLogger();
+      TestTypes.RenamedValueUnion value = 42;
+
+      // Destructuring reads the raw value through the GetValue metadata delegate, which the generator
+      // rebinds to the renamed member, so the renamed union still unwraps to its scalar value.
+      Capture(logger, sink, value).Should().BeOfType<ScalarValue>().Which.Value.Should().Be(42);
+   }
+
+   [Fact]
    public void Should_decline_regular_union()
    {
       var (logger, sink) = CreateLogger();

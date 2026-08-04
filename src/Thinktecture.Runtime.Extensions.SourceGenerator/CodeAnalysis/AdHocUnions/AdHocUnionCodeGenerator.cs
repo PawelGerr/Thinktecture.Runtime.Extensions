@@ -134,9 +134,9 @@ namespace ").Append(_state.Namespace).Append(@"
       else
       {
          _sb.Append(@"
-         ConvertToValue = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.Value,
-         ConvertToValueExpression = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.Value,
-         GetValue = static object? (object item) => ((").AppendTypeFullyQualified(_state).Append(@")item).Value");
+         ConvertToValue = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.").Append(_state.Settings.ValueMemberName).Append(@",
+         ConvertToValueExpression = static ").Append(valueType).Append(" (").AppendTypeFullyQualified(_state).Append(@" item) => item.").Append(_state.Settings.ValueMemberName).Append(@",
+         GetValue = static object? (object item) => ((").AppendTypeFullyQualified(_state).Append(@")item).").Append(_state.Settings.ValueMemberName);
       }
 
       _sb.Append(@"
@@ -772,7 +772,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-         _sb.Append("this.Value);");
+         _sb.Append("this.").Append(_state.Settings.ValueMemberName).Append(");");
       }
    }
 
@@ -944,7 +944,7 @@ namespace ").Append(_state.Namespace).Append(@"
          if (withState)
             _sb.AppendEscaped(_switchMapStateArgumentName).Append(", ");
 
-         _sb.Append("this.Value);");
+         _sb.Append("this.").Append(_state.Settings.ValueMemberName).Append(");");
       }
    }
 
@@ -1354,7 +1354,7 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append("object").Append(hasNullableTypes ? "?" : null);
       }
 
-      _sb.Append(" Value => ");
+      _sb.Append(" ").Append(_state.Settings.ValueMemberName).Append(" => ");
 
       // The short-circuit is only valid when the shared field exists and every member really reads
       // it. A union whose members are all stateless has no shared field at all, and a stateless

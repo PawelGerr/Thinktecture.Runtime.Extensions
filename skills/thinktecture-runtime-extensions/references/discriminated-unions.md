@@ -112,6 +112,25 @@ The generated code still reads `Value` internally (runtime metadata used by seri
 `SwitchPartially`/`MapPartially` default callback), so serialization keeps working when `Value` is not
 public. Ad-hoc unions only; regular unions have no `Value` property.
 
+### Value property name
+
+`ValueMemberName` (type `string`, default `"Value"`) renames the generated raw-value property. Rename it
+to free the `Value` identifier, for example to hand-write your own `Value` property of a different type in
+the partial part:
+
+```csharp
+[Union<string, int>(ValueMemberName = "RawValue")]
+public partial class TextOrNumber
+{
+    public string Value => RawValue?.ToString() ?? string.Empty;  // your own Value, different type
+}
+```
+
+All generated internal references follow the rename (runtime metadata used by serializers, and the
+`SwitchPartially`/`MapPartially` default callback read `RawValue`), so serialization keeps working. An
+invalid or colliding name surfaces as a normal C# compiler error, same behavior as `KeyMemberName`.
+Ad-hoc unions only.
+
 ### Serialization
 
 Ad-hoc unions carry **no discriminator**, so they aren't polymorphic-serializable out of the box.
