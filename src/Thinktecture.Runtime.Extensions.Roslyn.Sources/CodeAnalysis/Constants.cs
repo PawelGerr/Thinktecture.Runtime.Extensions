@@ -175,6 +175,7 @@ public static class Constants
          public const string USE_WITH_ENTITY_FRAMEWORK = "UseWithEntityFramework";
          public const string VALUE_MEMBER_ACCESS_MODIFIER = "ValueMemberAccessModifier";
          public const string VALUE_MEMBER_NAME = "ValueMemberName";
+         public const string DEFAULT_VALUE_HANDLING = "DefaultValueHandling";
          public const string SINGLE_BACKING_FIELD_TYPE = "SingleBackingFieldType";
       }
 

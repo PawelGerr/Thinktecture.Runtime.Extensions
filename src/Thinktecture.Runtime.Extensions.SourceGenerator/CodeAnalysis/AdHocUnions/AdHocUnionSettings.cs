@@ -16,6 +16,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
    public FactoryMethodGeneration FactoryMethodGeneration { get; }
    public AccessModifier ValueMemberAccessModifier { get; }
    public string ValueMemberName { get; }
+   public UnionDefaultValueHandling DefaultValueHandling { get; }
 
    /// <summary>
    /// Resolved/normalized info for the user-supplied <c>SingleBackingFieldType</c>.
@@ -42,6 +43,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
       FactoryMethodGeneration = attribute.FindFactoryMethodGeneration();
       ValueMemberAccessModifier = attribute.FindValueMemberAccessModifier() ?? AccessModifier.Public;
       ValueMemberName = attribute.FindValueMemberName() ?? Constants.Members.VALUE;
+      DefaultValueHandling = attribute.FindDefaultValueHandling();
 
       SingleBackingFieldType = singleBackingFieldType;
 
@@ -88,6 +90,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
              && FactoryMethodGeneration == other.FactoryMethodGeneration
              && ValueMemberAccessModifier == other.ValueMemberAccessModifier
              && ValueMemberName == other.ValueMemberName
+             && DefaultValueHandling == other.DefaultValueHandling
              && SingleBackingFieldType == other.SingleBackingFieldType
              && MemberTypeSettings.SequenceEqual(other.MemberTypeSettings);
    }
@@ -109,6 +112,7 @@ public sealed class AdHocUnionSettings : IEquatable<AdHocUnionSettings>
          hashCode = (hashCode * 397) ^ (int)FactoryMethodGeneration;
          hashCode = (hashCode * 397) ^ (int)ValueMemberAccessModifier;
          hashCode = (hashCode * 397) ^ ValueMemberName.GetHashCode();
+         hashCode = (hashCode * 397) ^ (int)DefaultValueHandling;
          hashCode = (hashCode * 397) ^ (SingleBackingFieldType?.GetHashCode() ?? 0);
          hashCode = (hashCode * 397) ^ MemberTypeSettings.ComputeHashCode();
 

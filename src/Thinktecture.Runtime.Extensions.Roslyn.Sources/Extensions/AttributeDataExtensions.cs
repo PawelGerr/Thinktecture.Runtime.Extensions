@@ -282,6 +282,12 @@ public static class AttributeDataExtensions
              ?? FactoryMethodGeneration.Default;
    }
 
+   public static UnionDefaultValueHandling FindDefaultValueHandling(this AttributeData attributeData)
+   {
+      return GetEnumParameterValue<UnionDefaultValueHandling>(attributeData, Constants.Attributes.Properties.DEFAULT_VALUE_HANDLING)
+             ?? UnionDefaultValueHandling.Disallow;
+   }
+
    public static bool? FindUseSingleBackingField(this AttributeData attributeData)
    {
       return GetBooleanParameterValue(attributeData, Constants.Attributes.Properties.USE_SINGLE_BACKING_FIELD);

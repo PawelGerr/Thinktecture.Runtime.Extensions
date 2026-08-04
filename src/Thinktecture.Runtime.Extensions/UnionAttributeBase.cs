@@ -123,6 +123,17 @@ public abstract class UnionAttributeBase : Attribute
    }
 
    /// <summary>
+   /// Controls how the default value of an ad-hoc union struct is treated.
+   /// Default is <see cref="UnionDefaultValueHandling.Disallow"/>.
+   /// </summary>
+   /// <remarks>
+   /// This setting applies to ad-hoc unions only and requires a struct union whose first member (T1)
+   /// is stateless (<c>T1IsStateless = true</c>). With <see cref="UnionDefaultValueHandling.MapToFirstMember"/>
+   /// the value <c>default(TUnion)</c> represents the first member instead of an invalid state.
+   /// </remarks>
+   public UnionDefaultValueHandling DefaultValueHandling { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()

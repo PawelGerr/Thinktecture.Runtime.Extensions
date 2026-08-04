@@ -73,6 +73,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.AdHocUnionMemberTypeIsLessAccessibleThanUnion,
       DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfTypeImplementsIDisallowDefaultValue,
       DiagnosticsDescriptors.IDisallowDefaultValueHasNoEffectOnReferenceTypes,
+      DiagnosticsDescriptors.DefaultValueHandlingMapToFirstMemberRequiresStructUnion,
+      DiagnosticsDescriptors.DefaultValueHandlingMapToFirstMemberRequiresStatelessFirstMember,
    ];
 
    /// <inheritdoc />
@@ -710,6 +712,47 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       }
 
       CheckAdHocUnionMemberTypeAccessibility(context, type, adHocUnionAttribute);
+      CheckAdHocUnionDefaultValueHandling(context, type, adHocUnionAttribute);
+   }
+
+   /// <summary>
+   /// TTRESG081/TTRESG082: 'DefaultValueHandling = MapToFirstMember' maps 'default(TUnion)' to the first member.
+   /// This requires a struct union (a reference type default is 'null') and a stateless first member (the default
+   /// value carries no state).
+   /// </summary>
+   private static void CheckAdHocUnionDefaultValueHandling(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      AttributeData adHocUnionAttribute)
+   {
+      if (adHocUnionAttribute.FindDefaultValueHandling() != UnionDefaultValueHandling.MapToFirstMember)
+         return;
+
+      var location = GetNamedArgumentLocationOrFallback(
+         adHocUnionAttribute,
+         Constants.Attributes.Properties.DEFAULT_VALUE_HANDLING,
+         type.GetTypeIdentifierLocation(context.CancellationToken),
+         context.CancellationToken);
+
+      if (type.IsReferenceType)
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.DefaultValueHandlingMapToFirstMemberRequiresStructUnion,
+            location,
+            BuildTypeName(type));
+
+         return;
+      }
+
+      if (!adHocUnionAttribute.FindTxIsStateless(1))
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.DefaultValueHandlingMapToFirstMemberRequiresStatelessFirstMember,
+            location,
+            BuildTypeName(type));
+      }
    }
 
    /// <summary>

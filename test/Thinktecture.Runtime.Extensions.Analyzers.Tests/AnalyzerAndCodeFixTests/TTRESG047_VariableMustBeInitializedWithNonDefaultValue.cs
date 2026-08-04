@@ -1623,4 +1623,68 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
          await Verifier.VerifyAnalyzerAsync(code, [typeof(IDisallowDefaultValue).Assembly]);
       }
    }
+
+   public class UnionWithDefaultValueHandling
+   {
+      [Fact]
+      public async Task Should_not_trigger_on_default_of_MapToFirstMember_union()
+      {
+         // 'MapToFirstMember' makes 'default(TUnion)' a valid value, so the generator drops IDisallowDefaultValue
+         // and TTRESG047 must stay silent.
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public struct EmptyState;
+
+               [Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+               public partial struct MaybeInt;
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      MaybeInt value = default;
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly]);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_default_of_MapToFirstMember_union_that_manually_implements_the_interface()
+      {
+         // Authors who want the default value banned again despite 'MapToFirstMember' can implement
+         // IDisallowDefaultValue manually, which restores TTRESG047.
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public struct EmptyState;
+
+               [Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+               public partial struct MaybeInt : IDisallowDefaultValue;
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      MaybeInt value = {|#0:default|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MaybeInt");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(UnionAttribute<,>).Assembly], expected);
+      }
+   }
 }

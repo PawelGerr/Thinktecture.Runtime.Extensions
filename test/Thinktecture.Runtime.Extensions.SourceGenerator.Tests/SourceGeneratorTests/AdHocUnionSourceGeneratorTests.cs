@@ -2571,4 +2571,141 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_struct_with_DefaultValueHandling_MapToFirstMember()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_DefaultValueHandling_MapToFirstMember_and_UseSingleBackingField()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember, UseSingleBackingField = true)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_DefaultValueHandling_MapToFirstMember_and_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo;
+         	public struct EmptyFoo : IFoo;
+         	public class Foo : IFoo;
+
+         	[Union<EmptyFoo, Foo>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember, SingleBackingFieldType = typeof(IFoo))]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_generic_struct_with_DefaultValueHandling_MapToFirstMember()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, TypeParamRef1>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+         	public partial struct TestUnion<T>;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_DefaultValueHandling_MapToFirstMember_and_duplicate_first_member()
+   {
+      // Duplicate member types drive the indexed-constructor path. Both duplicates must be stateless so the
+      // shared backing storage is consistent; this exercises the 'MemberIndex' offset for the duplicate path.
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState, int>(T1IsStateless = true, T2IsStateless = true, T1Name = "First", T2Name = "Second", DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_with_DefaultValueHandling_MapToFirstMember_and_SkipEqualityComparison()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember, SkipEqualityComparison = true)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_ref_struct_with_DefaultValueHandling_MapToFirstMember()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, int>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+         	public ref partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

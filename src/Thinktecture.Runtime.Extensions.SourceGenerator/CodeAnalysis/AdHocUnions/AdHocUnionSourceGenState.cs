@@ -20,7 +20,7 @@ public sealed class AdHocUnionSourceGenState
    public NullableAnnotation NullableAnnotation => NullableAnnotation.NotAnnotated;
    public bool IsRecord => false;
    public bool IsTypeParameter => false;
-   public bool DisallowsDefaultValue => true;
+   public bool DisallowsDefaultValue => Settings.DefaultValueHandling != UnionDefaultValueHandling.MapToFirstMember;
    public int NumberOfGenerics => GenericParameters.Length;
 
    public ImmutableArray<GenericTypeParameterState> GenericParameters { get; }

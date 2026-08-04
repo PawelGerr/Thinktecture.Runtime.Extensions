@@ -12,6 +12,10 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
    private readonly bool _useSharedObjectForRefTypes;
    private readonly bool _needsFactoryMethods;
 
+   // When true, the discriminator '_valueIndex' is 0-based (T1 == 0) so that 'default(TUnion)' represents the
+   // first member. Otherwise it is 1-based with 0 acting as the "uninitialized" sentinel that the members throw on.
+   private readonly bool _firstMemberIsDefault;
+
    // The fixed Switch/Map parameters ('default' for partial overloads and the state parameter for with-state
    // overloads) must not collide with a per-member parameter whose name renders to the same identifier (e.g. a
    // member named "Default" or "State"), which would otherwise produce CS0100 in the generated signature.
@@ -24,6 +28,7 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
    {
       _state = state;
       _sb = sb;
+      _firstMemberIsDefault = state.Settings.DefaultValueHandling == UnionDefaultValueHandling.MapToFirstMember;
       _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
                                     || _state.MemberTypes.Where(t => t.IsReferenceType && !t.IsTypeParameter && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
       _needsFactoryMethods = state.Settings.FactoryMethodGeneration switch
@@ -309,7 +314,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       if (memberType.TypeDuplicateCounter != 0)
       {
-         _sb.Append(", ").Append(memberIndex + 1);
+         _sb.Append(", ").Append(MemberIndex(memberIndex));
       }
 
       _sb.Append(@");
@@ -399,7 +404,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return this._valueIndex switch
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
@@ -410,7 +415,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => ");
+            ").Append(MemberIndex(i)).Append(" => ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -450,7 +455,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return this._valueIndex switch
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
@@ -461,7 +466,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => ");
+            ").Append(MemberIndex(i)).Append(" => ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -550,7 +555,7 @@ namespace ").Append(_state.Namespace).Append(@"
          return this._valueIndex switch
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
@@ -562,7 +567,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var useSharedObjectBackingField = _state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType);
 
          _sb.Append(@"
-            ").Append(i + 1).Append(" => ");
+            ").Append(MemberIndex(i)).Append(" => ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -635,7 +640,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The action to execute if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append(@"
       /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
@@ -717,7 +722,7 @@ namespace ").Append(_state.Namespace).Append(@"
          switch (this._valueIndex)
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             case 0:
@@ -729,7 +734,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            case ").Append(i + 1).Append(":");
+            case ").Append(MemberIndex(i)).Append(":");
 
          if (isPartially)
          {
@@ -805,7 +810,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The function to execute if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append(@"
       /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
@@ -890,7 +895,7 @@ namespace ").Append(_state.Namespace).Append(@"
          switch (this._valueIndex)
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             case 0:
@@ -902,7 +907,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            case ").Append(i + 1).Append(":");
+            case ").Append(MemberIndex(i)).Append(":");
 
          if (isPartially)
          {
@@ -970,7 +975,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// <param name=""").AppendArgumentName(memberType.ArgumentName).Append(@""">The instance to return if the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(".</param>");
       }
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append(@"
       /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
@@ -1027,7 +1032,7 @@ namespace ").Append(_state.Namespace).Append(@"
          switch (this._valueIndex)
          {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
             case 0:
@@ -1039,7 +1044,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            case ").Append(i + 1).Append(":");
+            case ").Append(MemberIndex(i)).Append(":");
 
          if (isPartially)
          {
@@ -1150,7 +1155,7 @@ namespace ").Append(_state.Namespace).Append(@"
          }
          else
          {
-            _sb.Append(i + 1);
+            _sb.Append(MemberIndex(i));
          }
 
          _sb.Append(@";
@@ -1224,7 +1229,7 @@ namespace ").Append(_state.Namespace).Append(@"
       /// Indication whether the current value is of type ").AppendMemberTypeForXmlComment(memberType).Append(@".
       /// </summary>
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(i + 1).Append(";");
+      public bool Is").Append(memberType.Name).Append(" => this._valueIndex == ").Append(MemberIndex(i)).Append(";");
       }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
@@ -1281,15 +1286,20 @@ namespace ").Append(_state.Namespace).Append(@"
       private string GetMemberTypeName()
       {
          return this._valueIndex switch
-         {
+         {");
+
+      if (!_firstMemberIsDefault)
+      {
+         _sb.Append(@"
             0 => ""<uninitialized>"",");
+      }
 
       for (var i = 0; i < _state.MemberTypes.Length; i++)
       {
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-            ").Append(i + 1).Append(@" => """).AppendTypeMinimallyQualified(memberType).Append(@""",");
+            ").Append(MemberIndex(i)).Append(@" => """).AppendTypeMinimallyQualified(memberType).Append(@""",");
       }
 
       _sb.Append(@"
@@ -1333,7 +1343,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"
       /// </summary>");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append(@"
       /// <exception cref=""System.InvalidOperationException"">If the union (struct) is not initialized or initialized with default value.</exception>");
@@ -1371,9 +1381,25 @@ namespace ").Append(_state.Namespace).Append(@"
       var emitSuppression = singleBackingFieldType is null
                             && (_state.Settings.UseSingleBackingField || !hasNullableTypes);
 
-      // Class unions: a class instance cannot be uninitialized via `default(...)`, so no
-      // discriminator throw is needed.
-      if (collapseToSharedField && _state.IsReferenceType)
+      // MapToFirstMember struct union whose T1 is a stateless struct stored as a cached boxed default:
+      // `default(TUnion)` runs no constructor, so `_obj` is null there while a constructed T1 carries the
+      // boxed default. Reading `_obj` directly would break the single-representation invariant. `_obj ??
+      // _cachedBoxedT1` is not safe in general, because another member (a stateless reference type, or a
+      // nullable member) may legitimately store null. Emit the discriminator switch instead, with arm 0
+      // returning the cached boxed default (no allocation).
+      if (collapseToSharedField && _firstMemberIsDefault && _state.MemberTypes[0].HasCachedBoxedDefault(_state))
+      {
+         _sb.Append(@"this._valueIndex switch
+      {
+         0 => _cachedBoxed").Append(_state.MemberTypes[0].Name).Append(@",
+         _ => this._obj").Append(emitSuppression ? "!" : null).Append(@"
+      };");
+         return;
+      }
+
+      // Class unions, and struct unions that map `default` to the first member, cannot be in an
+      // uninitialized state that must throw, so the getter reads the shared field directly.
+      if (collapseToSharedField && (_state.IsReferenceType || _firstMemberIsDefault))
       {
          _sb.Append("this._obj").Append(emitSuppression ? "!" : null).Append(";");
          return;
@@ -1393,7 +1419,7 @@ namespace ").Append(_state.Namespace).Append(@"
       _sb.Append(@"this._valueIndex switch
       {");
 
-      if (!_state.IsReferenceType)
+      if (!_state.IsReferenceType && !_firstMemberIsDefault)
       {
          _sb.Append($@"
          0 => throw new global::System.InvalidOperationException($""This struct of type '{_state.Name}' is not initialized. Make sure all fields, properties and variables are initialized with non-default values.""),");
@@ -1404,7 +1430,7 @@ namespace ").Append(_state.Namespace).Append(@"
          var memberType = _state.MemberTypes[i];
 
          _sb.Append(@"
-         ").Append(i + 1).Append(" => ");
+         ").Append(MemberIndex(i)).Append(" => ");
 
          if (memberType.Setting.IsStateless)
          {
@@ -1439,6 +1465,10 @@ namespace ").Append(_state.Namespace).Append(@"
          _ => throw new global::System.IndexOutOfRangeException($""Unexpected value index '{this._valueIndex}'."")
       };");
    }
+
+   // Maps the zero-based member position to the discriminator value. With 'MapToFirstMember' the discriminator
+   // is 0-based (T1 == 0), otherwise it is 1-based with 0 reserved for the uninitialized state.
+   private int MemberIndex(int i) => _firstMemberIsDefault ? i : i + 1;
 }
 
 file static class Extensions
