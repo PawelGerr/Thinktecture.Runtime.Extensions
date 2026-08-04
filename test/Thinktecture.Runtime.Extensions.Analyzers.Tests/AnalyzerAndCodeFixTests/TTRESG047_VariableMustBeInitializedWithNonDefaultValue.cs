@@ -1538,4 +1538,89 @@ public class TTRESG047_VariableMustBeInitializedWithNonDefaultValue
          await Verifier.VerifyAnalyzerAsync(code, [typeof(StructValueObject).Assembly, typeof(UnionAttribute<,>).Assembly]);
       }
    }
+
+   public class ManualIDisallowDefaultValue
+   {
+      [Fact]
+      public async Task Should_trigger_on_default_of_hand_written_struct_that_implements_the_interface()
+      {
+         // 'IDisallowDefaultValue' is now public, so a hand-written struct can opt into the default-value ban.
+         // Using 'default' of such a struct must report TTRESG047 end to end.
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public readonly struct MaybeOfInt : IDisallowDefaultValue;
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      MaybeOfInt value = {|#0:default|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MaybeOfInt");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IDisallowDefaultValue).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_trigger_on_new_of_hand_written_struct_that_implements_the_interface()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public readonly struct MaybeOfInt : IDisallowDefaultValue;
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      MaybeOfInt value = {|#0:new()|};
+                   }
+               }
+            }
+            """;
+
+         var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("MaybeOfInt");
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IDisallowDefaultValue).Assembly], expected);
+      }
+
+      [Fact]
+      public async Task Should_not_trigger_on_non_default_construction_of_hand_written_struct()
+      {
+         var code = """
+
+            using System;
+            using Thinktecture;
+
+            namespace TestNamespace
+            {
+               public readonly struct MaybeOfInt : IDisallowDefaultValue
+               {
+                  public MaybeOfInt(int value) { }
+               }
+
+               public class TestClass
+               {
+                   public void TestMethod()
+                   {
+                      MaybeOfInt value = new MaybeOfInt(1);
+                   }
+               }
+            }
+            """;
+
+         await Verifier.VerifyAnalyzerAsync(code, [typeof(IDisallowDefaultValue).Assembly]);
+      }
+   }
 }

@@ -71,6 +71,8 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
       DiagnosticsDescriptors.SingleBackingFieldTypeConflictsWithUseSingleBackingField,
       DiagnosticsDescriptors.ValidateFactoryArgumentsAdditionalParameterMustNotHaveDefaultOrBeByRef,
       DiagnosticsDescriptors.AdHocUnionMemberTypeIsLessAccessibleThanUnion,
+      DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfTypeImplementsIDisallowDefaultValue,
+      DiagnosticsDescriptors.IDisallowDefaultValueHasNoEffectOnReferenceTypes,
    ];
 
    /// <inheritdoc />
@@ -106,8 +108,13 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                 out var adHocUnionAttribute,
                 out var objectFactoryAttributes))
          {
+            // The type carries no Thinktecture attribute, but it may still implement 'IDisallowDefaultValue'
+            // manually. A reference type gains no effect from the interface (TTRESG110).
+            CheckManualIDisallowDefaultValue(context, type, keyedValueObjectAttribute: null, complexValueObjectAttribute: null);
             return;
          }
+
+         CheckManualIDisallowDefaultValue(context, type, keyedValueObjectAttribute, complexValueObjectAttribute);
 
          var needsObjectFactoryHandling = true;
 
@@ -194,6 +201,92 @@ public sealed class ThinktectureRuntimeExtensionsAnalyzer : DiagnosticAnalyzer
                                                     Location.None,
                                                     type.ToFullyQualifiedDisplayString(), ex.ToString()));
       }
+   }
+
+   /// <summary>
+   /// Reports on a manual (user-declared) implementation of 'IDisallowDefaultValue'.
+   /// <list type="bullet">
+   /// <item>TTRESG110 (Warning): the type is a reference type, where the interface has no effect.</item>
+   /// <item>TTRESG080 (Error): the type is a value object with 'AllowDefaultStructs = true', which conflicts
+   /// with the interface because the interface disallows the default value.</item>
+   /// </list>
+   /// Only a base/interface list written by the user counts. The interface that the source generator emits on the
+   /// generated partial declaration is ignored, so re-emitting it never triggers these diagnostics.
+   /// </summary>
+   private static void CheckManualIDisallowDefaultValue(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type,
+      AttributeData? keyedValueObjectAttribute,
+      AttributeData? complexValueObjectAttribute)
+   {
+      var location = GetUserDeclaredIDisallowDefaultValueLocation(context, type);
+
+      if (location is null)
+         return;
+
+      if (type.IsReferenceType)
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.IDisallowDefaultValueHasNoEffectOnReferenceTypes,
+            location,
+            BuildTypeName(type));
+
+         return;
+      }
+
+      var allowsDefaultStructs = (keyedValueObjectAttribute?.FindAllowDefaultStructs() ?? false)
+                                 || (complexValueObjectAttribute?.FindAllowDefaultStructs() ?? false);
+
+      if (allowsDefaultStructs)
+      {
+         ReportDiagnostic(
+            context,
+            DiagnosticsDescriptors.AllowDefaultStructsCannotBeTrueIfTypeImplementsIDisallowDefaultValue,
+            location,
+            BuildTypeName(type));
+      }
+   }
+
+   /// <summary>
+   /// Returns the location of the 'IDisallowDefaultValue' entry in a base/interface list that the user wrote,
+   /// or <c>null</c> if the user did not implement the interface manually. The generated partial declaration is
+   /// skipped, so the interface the source generator emits is not treated as a manual implementation.
+   /// </summary>
+   private static Location? GetUserDeclaredIDisallowDefaultValueLocation(
+      SymbolAnalysisContext context,
+      INamedTypeSymbol type)
+   {
+      var references = type.DeclaringSyntaxReferences;
+
+      for (var i = 0; i < references.Length; i++)
+      {
+         if (references[i].GetSyntax(context.CancellationToken) is not TypeDeclarationSyntax tds
+             || tds.BaseList is null
+             || tds.SyntaxTree.IsGeneratedTree(context.CancellationToken))
+         {
+            continue;
+         }
+
+         // The base/interface list is written by the user, so resolving its entries needs a semantic model.
+         // The symbol action does not provide one, and the resolution runs only for a non-generated declaration
+         // that has a base list, which keeps the cost low.
+#pragma warning disable RS1030
+         var semanticModel = context.Compilation.GetSemanticModel(tds.SyntaxTree);
+#pragma warning restore RS1030
+         var baseTypes = tds.BaseList.Types;
+
+         for (var j = 0; j < baseTypes.Count; j++)
+         {
+            var baseTypeSyntax = baseTypes[j];
+            var typeSymbol = semanticModel.GetTypeInfo(baseTypeSyntax.Type, context.CancellationToken).Type;
+
+            if (typeSymbol.IsIDisallowDefaultValue())
+               return baseTypeSyntax.GetLocation();
+         }
+      }
+
+      return null;
    }
 
    private static bool TryGetThinktectureAttibutes(

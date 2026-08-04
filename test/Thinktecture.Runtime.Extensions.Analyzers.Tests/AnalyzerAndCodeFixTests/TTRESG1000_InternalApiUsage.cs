@@ -11,8 +11,10 @@ public class TTRESG1000_InternalApiUsage
    private const string _DIAGNOSTIC_ID = "TTRESG1000";
 
    [Fact]
-   public async Task Should_trigger_on_interface_implementation()
+   public async Task Should_not_trigger_on_IDisallowDefaultValue_implementation()
    {
+      // 'IDisallowDefaultValue' is a public marker interface, no longer an internal API. Implementing it
+      // manually must not report the internal-usage diagnostic TTRESG1000.
       var code = """
 
          using System;
@@ -20,11 +22,10 @@ public class TTRESG1000_InternalApiUsage
 
          namespace TestNamespace;
 
-         public class {|#0:TestClass|} : IDisallowDefaultValue;
+         public struct TestStruct : IDisallowDefaultValue;
          """;
 
-      var expected = Verifier.Diagnostic(_DIAGNOSTIC_ID).WithLocation(0).WithArguments("Thinktecture.IDisallowDefaultValue");
-      await Verifier.VerifyAnalyzerAsync(code, [typeof(MetadataLookup).Assembly], expected);
+      await Verifier.VerifyAnalyzerAsync(code, [typeof(MetadataLookup).Assembly]);
    }
 
    [Fact]
