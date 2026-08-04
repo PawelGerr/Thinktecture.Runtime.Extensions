@@ -2440,4 +2440,76 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion`1.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_render_Value_property_as_private_when_ValueMemberAccessModifier_is_Private()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberAccessModifier = AccessModifier.Private)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_render_Value_property_as_internal_when_ValueMemberAccessModifier_is_Internal()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberAccessModifier = AccessModifier.Internal)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_render_Value_property_as_private_for_struct_union()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	[Union<string, int>(ValueMemberAccessModifier = AccessModifier.Private)]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_render_Value_property_as_private_with_SingleBackingFieldType()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public interface IFoo { }
+         	public class Foo1 : IFoo { }
+         	public class Foo2 : IFoo { }
+
+         	[Union<Foo1, Foo2>(SingleBackingFieldType = typeof(IFoo), ValueMemberAccessModifier = AccessModifier.Private)]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

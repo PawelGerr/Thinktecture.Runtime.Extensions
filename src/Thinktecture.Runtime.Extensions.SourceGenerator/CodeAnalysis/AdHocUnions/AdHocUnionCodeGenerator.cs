@@ -1341,7 +1341,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
       ").Append(GENERATED_CODE_ATTRIBUTE).Append(@"
-      public ");
+      ").RenderAccessModifier(_state.Settings.ValueMemberAccessModifier).Append(" ");
 
       if (singleBackingFieldType is not null)
       {

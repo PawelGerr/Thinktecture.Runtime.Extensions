@@ -97,6 +97,21 @@ field, `Value` returns `_obj` directly instead of selecting by discriminator; th
 generated code only, not the behaviour. See *Setting interactions* below for the forcing rules and
 `TTRESG075`.
 
+### Value property accessibility
+
+The generated `Value` property is `public` by default. Set `ValueMemberAccessModifier` (type
+`AccessModifier`: `Private`/`Protected`/`Internal`/`Public`/`PrivateProtected`/`ProtectedInternal`) to
+hide the raw value, exposing members only through `IsX`/`AsX`/`Switch`/`Map`:
+
+```csharp
+[Union<string, int>(ValueMemberAccessModifier = AccessModifier.Private)]
+public partial class TextOrNumber;
+```
+
+The generated code still reads `Value` internally (runtime metadata used by serializers, and the
+`SwitchPartially`/`MapPartially` default callback), so serialization keeps working when `Value` is not
+public. Ad-hoc unions only; regular unions have no `Value` property.
+
 ### Serialization
 
 Ad-hoc unions carry **no discriminator**, so they aren't polymorphic-serializable out of the box.

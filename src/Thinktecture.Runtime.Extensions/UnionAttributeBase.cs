@@ -9,7 +9,7 @@ public abstract class UnionAttributeBase : Attribute
    /// Defines the <see cref="StringComparison"/>.
    /// Default <see cref="StringComparison"/> is <see cref="StringComparison.OrdinalIgnoreCase"/>.
    /// </summary>
-   public StringComparison DefaultStringComparison { get; set; } = StringComparison.OrdinalIgnoreCase;
+   public StringComparison DefaultStringComparison { get; set; }
 
    /// <summary>
    /// Indication whether the generator should skip the implementation of the method <see cref="object.ToString"/> or not.
@@ -28,7 +28,7 @@ public abstract class UnionAttributeBase : Attribute
    /// <b>and</b> additionally disable the inbound conversions via
    /// <see cref="ConversionFromValue"/> = <see cref="ConversionOperatorsGeneration.None"/>.
    /// </remarks>
-   public UnionConstructorAccessModifier ConstructorAccessModifier { get; set; } = UnionConstructorAccessModifier.Public;
+   public UnionConstructorAccessModifier ConstructorAccessModifier { get; set; }
 
    /// <summary>
    /// Indication whether and how the generator should generate the conversion operators from value to union type.
@@ -96,11 +96,25 @@ public abstract class UnionAttributeBase : Attribute
    public FactoryMethodGeneration FactoryMethodGeneration { get; set; }
 
    /// <summary>
+   /// Defines the access modifier of the generated <c>Value</c> property.
+   /// Default is <see cref="AccessModifier.Public"/>.
+   /// </summary>
+   /// <remarks>
+   /// This setting applies to ad-hoc unions only. Regular unions have no generated <c>Value</c> property.
+   /// The generated code still reads the property internally (for metadata and partial switch callbacks),
+   /// so a non-public value only hides it from the type's consumers.
+   /// </remarks>
+   public AccessModifier ValueMemberAccessModifier { get; set; }
+
+   /// <summary>
    /// Initializes a new instance of <see cref="UnionAttributeBase"/>.
    /// </summary>
    private protected UnionAttributeBase()
    {
+      DefaultStringComparison = StringComparison.OrdinalIgnoreCase;
+      ConstructorAccessModifier = UnionConstructorAccessModifier.Public;
       ConversionFromValue = ConversionOperatorsGeneration.Implicit;
       ConversionToValue = ConversionOperatorsGeneration.Explicit;
+      ValueMemberAccessModifier = AccessModifier.Public;
    }
 }
