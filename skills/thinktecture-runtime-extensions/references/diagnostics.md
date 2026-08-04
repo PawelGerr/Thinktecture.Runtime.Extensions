@@ -19,6 +19,7 @@ code; check the full table for anything not here.
 | TTRESG043 | Primary constructors are not allowed — use a regular `private` constructor. |
 | TTRESG046 | `Switch`/`Map` arguments must be **named** (see `references/switch-map.md`). |
 | TTRESG047 | A value-object/enum variable must be created via a factory, not `default`. |
+| TTRESG110 | `IDisallowDefaultValue` has no effect on reference types (default is `null`) — remove it or use a `struct`. Warning. |
 | TTRESG063 | Only one category attribute (`SmartEnum`/`ValueObject`/`Union`) per type. |
 | TTRESG064 / TTRESG065 / TTRESG066 | More than one `SmartEnum` / `ValueObject` / `Union` attribute on a type (the per-family duplicates of TTRESG063). |
 
@@ -39,6 +40,7 @@ code; check the full table for anything not here.
 | TTRESG044 / TTRESG045 | Custom key member not found / key member type mismatch (with `SkipKeyMember`). |
 | TTRESG048 / TTRESG049 | String VO needs an equality comparer / complex VO with string members needs a comparison (see `references/equality-and-comparers.md`). |
 | TTRESG057 / TTRESG058 | `AllowDefaultStructs` must be `false` when the key is a reference type / a member disallows defaults. |
+| TTRESG080 | `AllowDefaultStructs` must be `false` when the type implements `IDisallowDefaultValue` manually (it disallows the default value). |
 | TTRESG041 | Comparer's generic argument doesn't match the member type. |
 | TTRESG102 / TTRESG103 | Comparer without equality comparer / equality comparer without comparer. |
 | TTRESG104 | A member should be `required` to ensure initialization. |
@@ -61,6 +63,7 @@ code; check the full table for anything not here.
 | TTRESG076 | An extra `ValidateFactoryArguments` parameter must be by-value with no default (no `ref`/`out`/default). |
 | TTRESG077 | An ad-hoc union member type must not be less accessible than the union (the generated operators would not compile). |
 | TTRESG079 | Every ad-hoc union member type needs a built-in implicit conversion to `SingleBackingFieldType` (user-defined conversions are rejected). Use a common base class or interface, or remove `SingleBackingFieldType`. Stateless reference-type members are exempt when the union has at least one non-stateless member. |
+| TTRESG081 / TTRESG082 | `DefaultValueHandling = MapToFirstMember` requires a struct union / a stateless first member (`T1IsStateless = true`). |
 | TTRESG106 / TTRESG107 | Inner type should derive from the union / generic ad-hoc union references no type parameter via `TypeParamRef`. |
 
 ## Object Factory

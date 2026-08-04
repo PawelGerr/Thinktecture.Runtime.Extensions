@@ -30,8 +30,10 @@ string txt = (string)u;         // explicit cast
 // equality, ==/!=, ToString, GetHashCode all delegate to the contained value
 ```
 
-- **No conversion operator** is generated for `object`, interface, or type-parameter members
-  (C# forbids it) — use the constructor or a factory method for those.
+- **No conversion operator** is generated for `object`, interface, or type-parameter members — use the
+  constructor or a factory method for those. For `object`/interfaces C# forbids the declaration; for
+  type parameters the declaration is legal but instantiation-dependent (ambiguity/inapplicability), so
+  the generator skips it — a user can hand-write the operator (see `references/generic-types.md`).
 - **Member types must not be less accessible than the union** (TTRESG077) — a `public` union with an
   `internal` member type cannot compile, because the operators, `AsX`, `Switch`/`Map`, the constructor
   and `CreateX` all expose that type and operators must be `public`.
@@ -131,6 +133,37 @@ All generated internal references follow the rename (runtime metadata used by se
 invalid or colliding name surfaces as a normal C# compiler error, same behavior as `KeyMemberName`.
 Ad-hoc unions only.
 
+### Default value maps to the first member (`MaybeOf<T>`)
+
+By default a struct union treats `default(TUnion)`/`new()` as **invalid** (`TTRESG047`; `Value`/`Switch`/
+`Map`/`ToString` throw). `DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember` makes
+`default` represent the **first member (T1)** — the classic `MaybeOf<T>`/`Option<T>` "Null" state:
+
+```csharp
+public readonly record struct Null;  // stateless "no value" marker
+
+[Union<Null, int>(
+    T1IsStateless = true,
+    DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember)]
+public partial struct MaybeInt;
+
+MaybeInt none = default;              // IsNull == true; Value == new Null() (does not throw)
+MaybeInt some = 42;                   // IsInt32 == true
+Console.WriteLine(none == new Null()); // True — default equals a constructed T1, hash codes match
+```
+
+Works for generics via `TypeParamRef1` (`[Union<Null, TypeParamRef1>(...)] public partial struct MaybeOf<T>;`).
+
+- **Constraints:** struct union only (a class default is `null` → `TTRESG081`); T1 must be stateless
+  (`T1IsStateless = true` → else `TTRESG082`). Only T1 can be the default state — reorder type
+  parameters if another member should represent "no value".
+- **No named accessor is generated** (no static `MaybeInt.Null`). Hand-write one in the partial part:
+  `public static MaybeInt None => default;`.
+- With `MapToFirstMember` the generator drops `IDisallowDefaultValue`, so `TTRESG047` no longer fires
+  on `default`. To keep **banning the `default` keyword** while the default value stays valid at
+  runtime, implement `IDisallowDefaultValue` **manually** — it drives only the analyzer's
+  `default`/`new()` check, not the runtime value.
+
 ### Serialization
 
 Ad-hoc unions carry **no discriminator**, so they aren't polymorphic-serializable out of the box.
@@ -202,6 +235,10 @@ Several settings silently force others:
   explicit `false` is `TTRESG075`).
 - `FactoryMethodGeneration` → `None` suppresses all factories (even type-param/duplicate members);
   `Always` generates for all; `Default` generates for all when any trigger is present.
+- `DefaultValueHandling = MapToFirstMember` (**ad-hoc struct unions only**) → `default(TUnion)` becomes
+  the first member (T1). Requires a struct (`TTRESG081`) and a stateless T1 (`TTRESG082`); drops the
+  generated `IDisallowDefaultValue` and the uninitialized-throw branches, so `TTRESG047` no longer fires
+  on `default`.
 
 ## Common pitfalls
 
@@ -210,7 +247,8 @@ Several settings silently force others:
 - Serializing an ad-hoc union without an `[ObjectFactory<T>]`.
 - Using native `switch` with `_ =>` and losing exhaustiveness.
 - `allows ref struct` on an ad-hoc type parameter (TTRESG073).
-- Reading `Value`/`Switch`/`Map` on a `default` struct union — it throws `InvalidOperationException`.
+- Reading `Value`/`Switch`/`Map` on a `default` struct union — it throws `InvalidOperationException`,
+  unless `DefaultValueHandling = MapToFirstMember` maps `default` to the (stateless) first member.
 
 ## Worked examples in this repo
 

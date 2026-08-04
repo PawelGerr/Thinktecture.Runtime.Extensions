@@ -78,13 +78,21 @@ public partial struct Result<T>;                       // T-or-string
 public partial struct SingleOrMany<T>;                 // nested usage
 ```
 
-**Type-parameter members get factory methods, not conversion operators** — C# forbids a user-defined
-conversion involving an open type parameter. Concrete members keep their implicit conversion:
+**Type-parameter members get factory methods, not conversion operators.** Declaring the operator is
+legal C#, but its behavior depends on the instantiation: `T` = another member's type → CS0457 at every
+use site (type stays valid, factories keep working); `T` = interface → the conversion from an
+interface-typed expression is never applied (CS0029); `T` = `object` → `(object)union` bypasses the
+operator and overload resolution routes a more specific value into the concrete member. Undecidable at
+generation time, so the generator skips it. Concrete members keep their implicit conversion:
 
 ```csharp
 Result<int> ok  = Result<int>.CreateT(42);   // type-param member → factory / ctor only
 Result<int> err = "boom";                     // concrete member  → implicit conversion still works
 ```
+
+Users who control the instantiations can hand-write the operator in the partial type and delegate to
+the generated factory (keeps null checks/normalization):
+`public static implicit operator Result<T>(T value) => CreateT(value);`
 
 Because a type-parameter member is a factory trigger, `Create{Member}` methods are generated for **all**
 members (see *Factory methods & their triggers* in `references/discriminated-unions.md`).
