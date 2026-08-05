@@ -2708,4 +2708,118 @@ public class AdHocUnionSourceGeneratorTests : SourceGeneratorTestsBase
 
       await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
    }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_first_stateless_duplicate_of_struct_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T1IsStateless = true, T1Name = "First", T2Name = "Second")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_class_union_with_first_stateless_duplicate_of_class_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public class EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T1IsStateless = true, T1Name = "First", T2Name = "Second")]
+         	public partial class TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_second_stateless_duplicate_of_struct_type()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T2IsStateless = true, T1Name = "First", T2Name = "Second")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_first_stateless_duplicate_and_UseSingleBackingField()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T1IsStateless = true, UseSingleBackingField = true, T1Name = "First", T2Name = "Second")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_second_stateless_duplicate_and_UseSingleBackingField()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T2IsStateless = true, UseSingleBackingField = true, T1Name = "First", T2Name = "Second")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
+
+   [Fact]
+   public async Task Should_generate_struct_union_with_first_stateless_duplicate_and_MapToFirstMember()
+   {
+      var source = """
+         using System;
+
+         namespace Thinktecture.Tests
+         {
+         	public struct EmptyState;
+
+         	[Union<EmptyState, EmptyState>(T1IsStateless = true, DefaultValueHandling = UnionDefaultValueHandling.MapToFirstMember, T1Name = "First", T2Name = "Second")]
+         	public partial struct TestUnion;
+         }
+         """;
+      var outputs = GetGeneratedOutputs<AdHocUnionSourceGenerator>(source, typeof(UnionAttribute<,>).Assembly);
+
+      await VerifyAsync(outputs, "Thinktecture.Tests.TestUnion.AdHocUnion.g.cs");
+   }
 }

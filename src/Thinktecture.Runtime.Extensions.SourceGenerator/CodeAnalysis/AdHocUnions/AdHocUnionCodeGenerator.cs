@@ -30,7 +30,7 @@ public sealed class AdHocUnionCodeGenerator : CodeGeneratorBase
       _sb = sb;
       _firstMemberIsDefault = state.Settings.DefaultValueHandling == UnionDefaultValueHandling.MapToFirstMember;
       _useSharedObjectForRefTypes = state.Settings.UseSingleBackingField
-                                    || _state.MemberTypes.Where(t => t.IsReferenceType && !t.IsTypeParameter && t is { TypeDuplicateCounter: <= 1, Setting.IsStateless: false }).Select(t => t.TypeFullyQualified).Count() >= 2;
+                                    || _state.MemberTypes.Where(t => t.IsReferenceType && !t.IsTypeParameter && t.DeclaresTypedStorage(_state)).Select(t => t.TypeFullyQualified).Count() >= 2;
       _needsFactoryMethods = state.Settings.FactoryMethodGeneration switch
       {
          FactoryMethodGeneration.Always => true,
@@ -1133,18 +1133,7 @@ namespace ").Append(_state.Namespace).Append(@"
          ").Append(Constants.Methods.NORMALIZE).Append(memberType.Name).Append("(ref ").AppendEscaped(memberType.ArgumentName).Append(");");
          }
 
-         if (!memberType.Setting.IsStateless)
-         {
-            _sb.Append(@"
-         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(";");
-         }
-         else if (memberType.HasCachedBoxedDefault(_state))
-         {
-            // Stateless struct member stored in the shared single backing field: assign the cached boxed
-            // default so the collapsed Value getter returns default(T) boxed instead of null.
-            _sb.Append(@"
-         this._obj = _cachedBoxed").Append(memberType.Name).Append(";");
-         }
+         GenerateConstructorBackingFieldAssignment(memberType, needsIndexedConstructor, argName);
 
          _sb.Append(@"
          this._valueIndex = ");
@@ -1161,6 +1150,114 @@ namespace ").Append(_state.Namespace).Append(@"
          _sb.Append(@";
       }");
       }
+   }
+
+   // Emits the backing field assignment inside a constructor. For a non-indexed (unique) member the
+   // assignment is unconditional and identical to the historic output. For the shared indexed constructor
+   // of a duplicated type the behavior depends on the members of that type group:
+   //  - all-stateful group: assign the incoming value unconditionally (historic output),
+   //  - all-stateless group: assign the cached boxed default when present, otherwise nothing (historic),
+   //  - mixed group: branch on @valueIndex, because the single constructor serves both stateful and
+   //    stateless indexes of the same type. Stateful indexes assign the incoming value, stateless indexes
+   //    keep the all-stateless behavior for that index.
+   private void GenerateConstructorBackingFieldAssignment(
+      AdHocUnionMemberTypeState memberType,
+      bool needsIndexedConstructor,
+      ArgumentName argName)
+   {
+      if (!needsIndexedConstructor)
+      {
+         if (!memberType.Setting.IsStateless)
+         {
+            _sb.Append(@"
+         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, memberType, false).Append(" = ").AppendEscaped(argName).Append(";");
+         }
+         else if (memberType.HasCachedBoxedDefault(_state))
+         {
+            // Stateless struct member stored in the shared single backing field: assign the cached boxed
+            // default so the collapsed Value getter returns default(T) boxed instead of null.
+            _sb.Append(@"
+         this._obj = _cachedBoxed").Append(memberType.Name).Append(";");
+         }
+
+         return;
+      }
+
+      // Indexed constructor: collect all members of this type group with their discriminator indexes, in
+      // declaration order. Members are grouped by the shared backing field name, the same grouping the
+      // duplicate counter uses (see DeclaresTypedStorage), so that nullable and non-nullable annotations
+      // of one underlying type stay in the same group.
+      var group = new List<(int Index, AdHocUnionMemberTypeState Member)>();
+
+      for (var i = 0; i < _state.MemberTypes.Length; i++)
+      {
+         var candidate = _state.MemberTypes[i];
+
+         if (candidate.BackingFieldName.Name == memberType.BackingFieldName.Name)
+            group.Add((MemberIndex(i), candidate));
+      }
+
+      var hasStateful = group.Any(g => !g.Member.Setting.IsStateless);
+      var hasStateless = group.Any(g => g.Member.Setting.IsStateless);
+
+      // All duplicates of a type share the same backing field name and field access, so the stateful
+      // representative and the counter==1 member produce identical field access. Pick a stateful member
+      // for clarity; for an all-stateless group the field access is unused.
+      var statefulRepresentative = group.FirstOrDefault(g => !g.Member.Setting.IsStateless).Member ?? memberType;
+
+      // The cached boxed default field is declared once for the whole type group by the member that
+      // satisfies DeclaresCachedBoxedDefaultField. Any stateless index of the group reads that one field,
+      // so its name has to come from the declaring member, not from the possibly-later stateless member.
+      var cachedBoxedFieldOwner = group.FirstOrDefault(g => g.Member.DeclaresCachedBoxedDefaultField(_state)).Member;
+
+      if (!hasStateless)
+      {
+         // All-stateful group: unconditional assignment, identical to the historic output.
+         _sb.Append(@"
+         ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, statefulRepresentative, false).Append(" = @value;");
+         return;
+      }
+
+      if (!hasStateful)
+      {
+         // All-stateless group: assign the cached boxed default when present, otherwise nothing.
+         if (cachedBoxedFieldOwner is not null)
+         {
+            _sb.Append(@"
+         this._obj = _cachedBoxed").Append(cachedBoxedFieldOwner.Name).Append(";");
+         }
+
+         return;
+      }
+
+      // Mixed group: the single indexed constructor serves both stateful and stateless indexes, so the
+      // assignment has to depend on @valueIndex.
+      _sb.Append(@"
+         switch (@valueIndex)
+         {");
+
+      foreach (var (index, member) in group)
+      {
+         _sb.Append(@"
+            case ").Append(index).Append(":");
+
+         if (!member.Setting.IsStateless)
+         {
+            _sb.Append(@"
+               ").AppendBackingFieldAccess(_state, _useSharedObjectForRefTypes, statefulRepresentative, false).Append(" = @value;");
+         }
+         else if (cachedBoxedFieldOwner is not null)
+         {
+            _sb.Append(@"
+               this._obj = _cachedBoxed").Append(cachedBoxedFieldOwner.Name).Append(";");
+         }
+
+         _sb.Append(@"
+               break;");
+      }
+
+      _sb.Append(@"
+         }");
    }
 
    private void GenerateMemberTypeFieldsAndProps()
@@ -1207,10 +1304,10 @@ namespace ").Append(_state.Namespace).Append(@"
       {
          var memberType = _state.MemberTypes[i];
 
-         if (memberType.Setting.IsStateless)
-            continue;
-
-         if (memberType.TypeDuplicateCounter > 1)
+         // Exactly one member per type group declares the shared backing field. When the first
+         // duplicate is stateless but a later one is stateful, the stateful member is the one that
+         // declares it; all duplicates share the same field name, so the position does not matter.
+         if (!memberType.DeclaresTypedStorage(_state))
             continue;
 
          if (_state.UseSharedObjectBackingField(_useSharedObjectForRefTypes, memberType))
@@ -1511,8 +1608,7 @@ file static class Extensions
       if (state.MemberTypes.Any(m => m.HasCachedBoxedDefault(state)))
          return true;
 
-      return state.MemberTypes.Any(m => !m.Setting.IsStateless
-                                        && m.TypeDuplicateCounter <= 1
+      return state.MemberTypes.Any(m => m.DeclaresTypedStorage(state)
                                         && state.UseSharedObjectBackingField(useSharedObjectForRefTypes, m));
    }
 
@@ -1535,7 +1631,7 @@ file static class Extensions
    ///  - it is a reference type, because the field stays null and <c>default(T)</c> is null as well, or
    ///  - it is a struct and a single backing field is used, because then the constructor assigns
    ///    the cached boxed default. This also holds for a duplicated struct member, because the shared
-   ///    indexed constructor assigns the cached boxed default for every index of that type.
+   ///    indexed constructor assigns the cached boxed default for every stateless index of that type.
    /// A stateless type parameter gets no assignment at all, not even the cached boxed default, so it
    /// qualifies only when the type parameter is known to be a reference type. For a struct or an
    /// unconstrained type parameter the field stays null while <c>default(T)</c> is a boxed zero value.
@@ -1560,7 +1656,7 @@ file static class Extensions
    /// is not known at generation time.
    /// This is the semantic predicate: a duplicated member is stored the same way as the first member of
    /// its type, because they share the single indexed constructor, which assigns the cached boxed default
-   /// for every index. Use <see cref="DeclaresCachedBoxedDefaultField"/> for the declaration site.
+   /// for every stateless index. Use <see cref="DeclaresCachedBoxedDefaultField"/> for the declaration site.
    /// </summary>
    public static bool HasCachedBoxedDefault(this AdHocUnionMemberTypeState memberType, AdHocUnionSourceGenState state)
    {
@@ -1572,13 +1668,62 @@ file static class Extensions
 
    /// <summary>
    /// Whether a <c>private static readonly</c> cached boxed default field is emitted for the member.
-   /// Only the first member of a duplicated type declares the field; the shared indexed constructor
-   /// assigns that one field for every index of the duplicated type.
+   /// The declaring member is the first member of its type group (grouped by the shared backing field
+   /// name, like <see cref="DeclaresTypedStorage"/>) whose <see cref="HasCachedBoxedDefault"/> holds.
+   /// The shared indexed constructor assigns that one field for every stateless index of the group.
+   /// A stateful-first mixed group therefore declares the field at the later stateless member, not at
+   /// the earlier stateful one, so the <c>TypeDuplicateCounter &lt;= 1</c> condition no longer applies.
    /// </summary>
    public static bool DeclaresCachedBoxedDefaultField(this AdHocUnionMemberTypeState memberType, AdHocUnionSourceGenState state)
    {
-      return memberType.HasCachedBoxedDefault(state)
-             && memberType.TypeDuplicateCounter <= 1;
+      if (!memberType.HasCachedBoxedDefault(state))
+         return false;
+
+      for (var i = 0; i < state.MemberTypes.Length; i++)
+      {
+         var other = state.MemberTypes[i];
+
+         if (ReferenceEquals(other, memberType))
+            return true;
+
+         if (other.BackingFieldName.Name == memberType.BackingFieldName.Name && other.HasCachedBoxedDefault(state))
+            return false;
+      }
+
+      return true;
+   }
+
+   /// <summary>
+   /// Whether the member is the representative that declares and owns the typed backing field for its
+   /// type group. Duplicate members of the same type share one backing field name, so exactly one member
+   /// per type group must declare that field. The representative is the first non-stateless member of the
+   /// group. The field is not declared by a stateless member, because a stateless member stores nothing.
+   /// The earlier <c>TypeDuplicateCounter &lt;= 1</c> filter assumed the first duplicate declares storage,
+   /// which breaks when the first duplicate is stateless while a later one is stateful. For a unique member
+   /// (counter 0) this predicate reduces to <c>!IsStateless</c>. At most one member per type group
+   /// satisfies it, or none when the whole group is stateless.
+   /// Members are grouped by the emitted backing field name (<see cref="BackingFieldName"/>.Name), which is
+   /// the same grouping the duplicate counter uses. Grouping by the fully qualified type name would split a
+   /// group that mixes nullable and non-nullable annotations of the same underlying type (for example
+   /// <c>string</c> and <c>string?</c>), which the duplicate counter treats as one group.
+   /// </summary>
+   public static bool DeclaresTypedStorage(this AdHocUnionMemberTypeState memberType, AdHocUnionSourceGenState state)
+   {
+      if (memberType.Setting.IsStateless)
+         return false;
+
+      for (var i = 0; i < state.MemberTypes.Length; i++)
+      {
+         var other = state.MemberTypes[i];
+
+         if (ReferenceEquals(other, memberType))
+            return true;
+
+         if (other.BackingFieldName.Name == memberType.BackingFieldName.Name && !other.Setting.IsStateless)
+            return false;
+      }
+
+      return true;
    }
 
    /// <summary>
