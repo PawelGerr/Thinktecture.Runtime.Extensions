@@ -332,7 +332,7 @@ namespace Thinktecture.Tests
             case 1:
                return @item2;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 
@@ -365,7 +365,7 @@ namespace Thinktecture.Tests
 
                return @item2.Value;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          return @default;

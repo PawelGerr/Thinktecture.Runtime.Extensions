@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Thinktecture.Runtime.Tests.TestEnums;
 
@@ -40,6 +42,18 @@ public class Switch
                                         });
 
          calledActionOn.Should().Be(SmartEnum_Keyless.Item1);
+      }
+
+      [Fact]
+      public void Should_throw_InvalidOperationException_when_instance_is_not_a_registered_item()
+      {
+         var ctor = typeof(SmartEnum_Keyless).GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, [typeof(int)]);
+         ctor.Should().NotBeNull();
+         var unregistered = (SmartEnum_Keyless)ctor.Invoke([3]);
+
+         unregistered.Invoking(e => e.Switch(item1: () => { }, item2: () => { }))
+                     .Should().Throw<InvalidOperationException>()
+                     .WithMessage("The instance is not a known item of 'SmartEnum_Keyless'.");
       }
 
       [Fact]

@@ -362,7 +362,7 @@ namespace Thinktecture.Tests
                @item_derived_2();
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -436,7 +436,7 @@ namespace Thinktecture.Tests
                @item_derived_2();
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          @default?.Invoke(this);
@@ -494,7 +494,7 @@ namespace Thinktecture.Tests
                @item_derived_2(@state);
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -573,7 +573,7 @@ namespace Thinktecture.Tests
                @item_derived_2(@state);
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          @default?.Invoke(@state, this);
@@ -622,7 +622,7 @@ namespace Thinktecture.Tests
             case 6:
                return @item_derived_2();
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -692,7 +692,7 @@ namespace Thinktecture.Tests
 
                return @item_derived_2();
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          return @default(this);
@@ -744,7 +744,7 @@ namespace Thinktecture.Tests
             case 6:
                return @item_derived_2(@state);
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -817,7 +817,7 @@ namespace Thinktecture.Tests
 
                return @item_derived_2(@state);
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          return @default(@state, this);
@@ -865,7 +865,7 @@ namespace Thinktecture.Tests
             case 6:
                return @item_derived_2;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 
@@ -933,7 +933,7 @@ namespace Thinktecture.Tests
 
                return @item_derived_2.Value;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
 
          return @default;

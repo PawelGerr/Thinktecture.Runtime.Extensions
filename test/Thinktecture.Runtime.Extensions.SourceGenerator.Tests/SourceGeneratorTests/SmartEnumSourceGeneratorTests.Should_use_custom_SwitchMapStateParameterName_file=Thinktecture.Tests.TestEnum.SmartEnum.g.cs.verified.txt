@@ -240,7 +240,7 @@ namespace Thinktecture.Tests
                @item1();
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -266,7 +266,7 @@ namespace Thinktecture.Tests
                @item1(@context);
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -289,7 +289,7 @@ namespace Thinktecture.Tests
             case 0:
                return @item1();
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -315,7 +315,7 @@ namespace Thinktecture.Tests
             case 0:
                return @item1(@context);
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -337,7 +337,7 @@ namespace Thinktecture.Tests
             case 0:
                return @item1;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 

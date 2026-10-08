@@ -338,7 +338,7 @@ partial class Level3
                @item2();
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -369,7 +369,7 @@ partial class Level3
                @item2(@state);
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -396,7 +396,7 @@ partial class Level3
             case 1:
                return @item2();
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -426,7 +426,7 @@ partial class Level3
             case 1:
                return @item2(@state);
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -452,7 +452,7 @@ partial class Level3
             case 1:
                return @item2;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 

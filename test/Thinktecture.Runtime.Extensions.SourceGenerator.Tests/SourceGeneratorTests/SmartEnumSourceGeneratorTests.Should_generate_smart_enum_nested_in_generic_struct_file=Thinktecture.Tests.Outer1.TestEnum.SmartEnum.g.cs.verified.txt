@@ -241,7 +241,7 @@ partial struct Outer<T>
                @item1();
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -267,7 +267,7 @@ partial struct Outer<T>
                @item1(@state);
                return;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -290,7 +290,7 @@ partial struct Outer<T>
             case 0:
                return @item1();
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -316,7 +316,7 @@ partial struct Outer<T>
             case 0:
                return @item1(@state);
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 #pragma warning restore CS0436 // InstantHandleAttribute may come from a different assembly
@@ -338,7 +338,7 @@ partial struct Outer<T>
             case 0:
                return @item1;
             default:
-               throw new global::System.InvalidOperationException($"Unknown item '{this}'.");
+               throw new global::System.InvalidOperationException("The instance is not a known item of 'TestEnum'.");
          }
       }
 

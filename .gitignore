@@ -8,7 +8,9 @@
 
 *\.sln\.DotSettings\.user
 *\.csproj\.user
+
 .claude/settings.local.json
+.claude/worktrees/
 
 # Verify
 test/**/*.received.*

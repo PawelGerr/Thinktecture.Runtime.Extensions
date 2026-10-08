@@ -598,7 +598,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException(""The instance is not a known item of '").AppendTypeMinimallyQualified(_state).Append(@"'."");
          }");
 
       if (isPartially)
@@ -746,7 +746,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException(""The instance is not a known item of '").AppendTypeMinimallyQualified(_state).Append(@"'."");
          }");
 
       if (isPartially)
@@ -859,7 +859,7 @@ namespace ").Append(_state.Namespace).Append(@"
 
       _sb.Append(@"
             default:
-               throw new global::System.InvalidOperationException($""Unknown item '{this}'."");
+               throw new global::System.InvalidOperationException(""The instance is not a known item of '").AppendTypeMinimallyQualified(_state).Append(@"'."");
          }");
 
       if (isPartially)
