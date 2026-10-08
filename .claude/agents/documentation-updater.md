@@ -137,7 +137,7 @@ Group related changes under a shared heading. Order entries by impact: most comm
 - `docs/version-7/`, `docs/version-8/` -- Historical version documentation
 - `docs/articles/` -- Published blog posts
 
-**Skill mirror rule:** Every change under `docs/` must be mirrored to `skills/thinktecture-runtime-extensions/` (matching `references/*.md` file, plus `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift.
+**Skill mirror rule:** Every change under `docs/` must be mirrored to `agent-skills/skills/thinktecture-runtime-extensions/` (matching `references/*.md` file, plus `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift. The skill lives in the git submodule `agent-skills/`; commit there first, then commit the submodule pointer in this repository. `skills/thinktecture-runtime-extensions/SKILL.md` in this repository is a redirect stub and is not the skill.
 
 ## Workflow
 

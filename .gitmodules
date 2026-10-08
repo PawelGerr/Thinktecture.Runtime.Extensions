@@ -1,3 +1,6 @@
 [submodule "docs"]
 	path = docs
 	url = https://github.com/PawelGerr/Thinktecture.Runtime.Extensions.wiki.git
+[submodule "agent-skills"]
+	path = agent-skills
+	url = https://github.com/PawelGerr/agent-skills.git

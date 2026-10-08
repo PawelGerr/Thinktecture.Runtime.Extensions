@@ -188,6 +188,8 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 - **Framework Integration** -- `.Json`, `.MessagePack`, `.Newtonsoft`, `.EntityFrameworkCore8/9/10`, `.AspNetCore`, `.Swashbuckle`
 - **`test/Thinktecture.Runtime.Extensions.Tests.Shared`** -- Shared test types (Smart Enums, Value Objects, Unions) and string utilities, referenced by all test projects
 - **`test/Thinktecture.Runtime.Extensions.RoslynTests.Shared`** -- Shared Roslyn test infrastructure (nullable warning handling), referenced by SourceGenerator.Tests, Analyzers.Tests, and Refactorings.Tests
+- **`agent-skills/`** -- Git submodule of https://github.com/PawelGerr/agent-skills. The AI agent skill of this library lives in `agent-skills/skills/thinktecture-runtime-extensions/` (`SKILL.md` plus `references/*.md`). Other folders under `agent-skills/skills/` belong to other libraries and must never be edited from this repository.
+- **`skills/`** -- Holds only the redirect stub `skills/thinktecture-runtime-extensions/SKILL.md` for users who installed the skill from this repository. Do not edit it as the skill. The stub is removed after one or two releases.
 
 ### Key Files
 
@@ -208,7 +210,7 @@ The following documentation files in `docs/` are read by both humans and AI agen
 - `Object-Factories.md` -- Object factory documentation
 - `Serilog.md` -- Serilog destructuring policy for structured logging
 - `Source-Generator-Configuration.md` -- Source generator configuration options
-- `AI-Coding-Assistants.md` -- The bundled agent skill (`npx skills` CLI) and Context7 (MCP) support for AI coding assistants
+- `AI-Coding-Assistants.md` -- The agent skill (`npx skills` CLI and Claude Code plugin from the `agent-skills` submodule) and Context7 (MCP) support for AI coding assistants
 - `Migrations.md`, `Migration-from-v6-to-v7.md`, `Migration-from-v7-to-v8.md`, `Migration-from-v8-to-v9.md`, `Migration-from-v9-to-v10.md` -- Migration guides
 - `Home.md`, `_Sidebar.md` -- Wiki navigation
 - `Empty-....md`, `SingleItem.md`, `ToReadOnlyCollection.md`, `TrimOrNullify.md` -- Utility/helper documentation
@@ -219,7 +221,7 @@ The following documentation files in `docs/` are read by both humans and AI agen
 - Use `Console.WriteLine` in doc examples, not logger injection -- unless the example specifically demonstrates closure/capture patterns
 - Keep example items consistent across documentation pages -- reuse the same enum items (e.g., Electronics, Clothing, Food) rather than switching between different items within or across pages
 
-**The bundled AI skill mirrors the docs.** Whenever you change anything under `docs/`, you MUST apply the corresponding update to `skills/thinktecture-runtime-extensions/` (the matching `references/*.md` page, and `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift.
+**The AI skill mirrors the docs.** Whenever you change anything under `docs/`, you MUST apply the corresponding update to `agent-skills/skills/thinktecture-runtime-extensions/` (the matching `references/*.md` page, and `SKILL.md` if the package list or routing table is affected). Docs and skill must never drift. The skill lives in the git submodule `agent-skills/`: change the files in the submodule, commit in `agent-skills`, then commit the updated submodule pointer in this repository. Push `agent-skills` before this repository; the local git config `push.recurseSubmodules on-demand` does this automatically. Never edit folders of other libraries under `agent-skills/skills/`.
 
 **Legacy documentation is frozen.** The `docs/version-7/`, `docs/version-8/` directories and `docs/Version-7.x.x.md`, `docs/Version-8.x.x.md` files are archived and must NEVER be read, updated, or modified. Ignore them completely -- they do not exist for the purposes of any task.
 
