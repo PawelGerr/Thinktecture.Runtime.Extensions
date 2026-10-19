@@ -211,7 +211,12 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       targetSchema.Pattern = sourceSchema.Pattern;
       targetSchema.MultipleOf = sourceSchema.MultipleOf;
       targetSchema.Default = sourceSchema.Default;
-      targetSchema.Const = sourceSchema.Const;
+
+      // Since Microsoft.OpenApi 2.11, even an assignment of null marks "Const" as set.
+      // Such a schema is serialized with "const": null (OpenAPI 3.1) or "enum": [null] (OpenAPI 3.0).
+      if (sourceSchema.Const is not null)
+         targetSchema.Const = sourceSchema.Const;
+
       targetSchema.ReadOnly = sourceSchema.ReadOnly;
       targetSchema.WriteOnly = sourceSchema.WriteOnly;
       targetSchema.AllOf = sourceSchema.AllOf != null ? new List<IOpenApiSchema>(sourceSchema.AllOf) : null;
