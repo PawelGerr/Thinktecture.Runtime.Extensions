@@ -51,6 +51,10 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       _adHocUnionSchemaFilter = adHocUnionSchemaFilter;
       _regularUnionSchemaFilter = regularUnionSchemaFilter;
       _swaggerGenOptions = swaggerGenOptions;
+
+      // Must not be evaluated in the constructor. The filter is created while SwaggerGenOptions are being configured,
+      // and since Swashbuckle 10.3 resolving ISerializerDataContractResolver reads SchemaGeneratorOptions, which are
+      // configured from SwaggerGenOptions. An eager lookup re-enters that configuration endlessly.
       _documentNewtonsoftJsonSerialization = new Lazy<bool>(() => IsNewtonsoftDataContractResolverRegistered(serviceProvider));
    }
 

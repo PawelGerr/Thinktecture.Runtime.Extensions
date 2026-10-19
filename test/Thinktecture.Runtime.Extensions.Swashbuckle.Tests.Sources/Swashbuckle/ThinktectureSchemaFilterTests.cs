@@ -82,13 +82,34 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
 
       if (_buildDataContractResolverFromSchemaGeneratorOptions)
       {
-         // Mirrors the registration of Swashbuckle 10.3+, whose ISerializerDataContractResolver depends on
-         // SchemaGeneratorOptions, which in turn are configured from SwaggerGenOptions.
-         appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISerializerDataContractResolver>(serviceProvider =>
+         // Mirrors the registrations of Swashbuckle 10.3+: both the default (singleton) and the Newtonsoft.Json-based
+         // (transient) ISerializerDataContractResolver depend on SchemaGeneratorOptions, which in turn are configured
+         // from SwaggerGenOptions.
+         // A re-entrant resolution throws, because the real recursion never terminates: the StackGuard of
+         // Microsoft.Extensions.DependencyInjection moves deep resolutions to new threads, so the test would hang.
+         var isResolving = false;
+         var useNewtonsoft = _addSwaggerGenNewtonsoftSupport;
+
+         appBuilder.Services.Replace(ServiceDescriptor.Describe(typeof(ISerializerDataContractResolver), serviceProvider =>
          {
-            _ = serviceProvider.GetRequiredService<IOptions<SchemaGeneratorOptions>>().Value;
-            return new JsonSerializerDataContractResolver(new System.Text.Json.JsonSerializerOptions());
-         }));
+            if (isResolving)
+               throw new InvalidOperationException("ISerializerDataContractResolver is resolved recursively.");
+
+            isResolving = true;
+
+            try
+            {
+               _ = serviceProvider.GetRequiredService<IOptions<SchemaGeneratorOptions>>().Value;
+            }
+            finally
+            {
+               isResolving = false;
+            }
+
+            return useNewtonsoft
+                      ? new global::Swashbuckle.AspNetCore.Newtonsoft.NewtonsoftDataContractResolver(new Newtonsoft.Json.JsonSerializerSettings())
+                      : new JsonSerializerDataContractResolver(new System.Text.Json.JsonSerializerOptions());
+         }, useNewtonsoft ? ServiceLifetime.Transient : ServiceLifetime.Singleton));
       }
 
       if (_useStringEnumConverter)

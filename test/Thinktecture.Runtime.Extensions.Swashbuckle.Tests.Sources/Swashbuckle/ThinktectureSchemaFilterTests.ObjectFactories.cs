@@ -119,6 +119,29 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Fact]
+      public async Task Should_use_Newtonsoft_only_object_factory_when_Newtonsoft_data_contract_resolver_depends_on_SchemaGeneratorOptions()
+      {
+         // Same regression as above for the Newtonsoft.Json-based resolver of Swashbuckle 10.3+. The detection must
+         // still recognize the resolver after it has been deferred to the first Apply call.
+         _addSwaggerGenNewtonsoftSupport = true;
+         _buildDataContractResolverFromSchemaGeneratorOptions = true;
+
+         App.MapPost("/test", ([FromBody] ComplexValueObjectWithNewtonsoftJsonOnlyObjectFactory value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var document = JsonDocument.Parse(openApi);
+
+         var schema = document.RootElement
+                              .GetProperty("components")
+                              .GetProperty("schemas")
+                              .GetProperty(nameof(ComplexValueObjectWithNewtonsoftJsonOnlyObjectFactory));
+
+         schema.GetProperty("type").GetString().Should().Be("string");
+         schema.TryGetProperty("properties", out _).Should().BeFalse();
+      }
+
+      [Fact]
       public async Task Should_ignore_MessagePack_only_object_factory_when_Newtonsoft_support_is_registered()
       {
          // Newtonsoft support is registered on purpose, so both lookups in GetSerializationType are active. A factory

@@ -27,6 +27,8 @@ public class ThinktectureParameterFilter : IParameterFilter
       IOptions<ThinktectureSchemaFilterOptions> options)
    {
       _createExtraSchemasForParameters = options.Value.CreateExtraSchemasForParameters;
+
+      // Must not be evaluated in the constructor, see ThinktectureSchemaFilter.
       _documentNewtonsoftJsonSerialization = new Lazy<bool>(() => ThinktectureSchemaFilter.IsNewtonsoftDataContractResolverRegistered(serviceProvider));
    }
 
