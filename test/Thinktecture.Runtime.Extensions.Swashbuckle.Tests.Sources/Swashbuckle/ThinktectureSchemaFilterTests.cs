@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using NSubstitute;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Thinktecture.Runtime.Tests.Swashbuckle.Helpers;
 using Thinktecture.Swashbuckle;
 
@@ -31,6 +34,7 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
    private bool _useStringEnumConverter;
    private bool _keepOrphanedKeyTypeSchemas;
    private bool _addSwaggerGenNewtonsoftSupport;
+   private bool _buildDataContractResolverFromSchemaGeneratorOptions;
    private Type? _controllerType;
 
    protected ThinktectureSchemaFilterTests(ITestOutputHelper testOutputHelper)
@@ -74,6 +78,17 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
          // Replaces Swashbuckle's ISerializerDataContractResolver with the Newtonsoft.Json-based one for the whole
          // host, which is what ThinktectureSchemaFilter.IsNewtonsoftDataContractResolverRegistered detects.
          appBuilder.Services.AddSwaggerGenNewtonsoftSupport();
+      }
+
+      if (_buildDataContractResolverFromSchemaGeneratorOptions)
+      {
+         // Mirrors the registration of Swashbuckle 10.3+, whose ISerializerDataContractResolver depends on
+         // SchemaGeneratorOptions, which in turn are configured from SwaggerGenOptions.
+         appBuilder.Services.Replace(ServiceDescriptor.Singleton<ISerializerDataContractResolver>(serviceProvider =>
+         {
+            _ = serviceProvider.GetRequiredService<IOptions<SchemaGeneratorOptions>>().Value;
+            return new JsonSerializerDataContractResolver(new System.Text.Json.JsonSerializerOptions());
+         }));
       }
 
       if (_useStringEnumConverter)
