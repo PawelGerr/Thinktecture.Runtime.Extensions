@@ -2,11 +2,13 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
   claude-review:
-    
+    # Pull requests from forks get neither secrets nor an OIDC token, so the review action always fails there.
+    # A skipped job counts as successful for required status checks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
