@@ -15,6 +15,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <!-- The document generation of ApiDescription.Server loads Microsoft.OpenApi 2.12.2. The app must reference at least this version, otherwise the generation fails. -->
+    <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.Console" />
   </ItemGroup>

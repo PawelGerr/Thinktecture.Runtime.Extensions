@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    <PackageReference Update="Microsoft.AspNetCore.TestHost" VersionOverride="9.0.17" />
+    <PackageReference Update="Microsoft.AspNetCore.TestHost" VersionOverride="9.0.21" />
   </ItemGroup>
 
   <ItemGroup>

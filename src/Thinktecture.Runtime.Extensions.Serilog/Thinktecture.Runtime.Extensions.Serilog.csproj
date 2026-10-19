@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" VersionOverride="4.0.0" />
+    <PackageReference Include="Serilog" VersionOverride="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
