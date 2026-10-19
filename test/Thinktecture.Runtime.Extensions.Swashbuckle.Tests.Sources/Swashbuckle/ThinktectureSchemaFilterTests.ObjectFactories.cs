@@ -99,6 +99,26 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Fact]
+      public async Task Should_generate_document_when_data_contract_resolver_depends_on_SchemaGeneratorOptions()
+      {
+         // Regression: the filters looked up ISerializerDataContractResolver while SwaggerGenOptions were being
+         // configured. With Swashbuckle 10.3+ resolving it re-enters that configuration and recurses endlessly.
+         _buildDataContractResolverFromSchemaGeneratorOptions = true;
+
+         App.MapPost("/test", ([FromBody] ComplexValueObjectWithSystemTextJsonOnlyObjectFactory value) => value);
+
+         var openApi = await GetOpenApiJsonAsync();
+
+         using var document = JsonDocument.Parse(openApi);
+
+         document.RootElement
+                 .GetProperty("components")
+                 .GetProperty("schemas")
+                 .TryGetProperty(nameof(ComplexValueObjectWithSystemTextJsonOnlyObjectFactory), out _)
+                 .Should().BeTrue();
+      }
+
+      [Fact]
       public async Task Should_ignore_MessagePack_only_object_factory_when_Newtonsoft_support_is_registered()
       {
          // Newtonsoft support is registered on purpose, so both lookups in GetSerializationType are active. A factory
