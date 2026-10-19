@@ -172,5 +172,18 @@ public static partial class TestController
             }
          }
       }
+
+      public static class EnumBased
+      {
+         [Route("/")]
+         public class Body : ControllerBase
+         {
+            [HttpPost("/test")]
+            public SmartEnum_EnumBased Get([FromBody] SmartEnum_EnumBased value)
+            {
+               return value;
+            }
+         }
+      }
    }
 }

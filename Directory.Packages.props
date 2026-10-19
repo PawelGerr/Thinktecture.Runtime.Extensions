@@ -36,8 +36,8 @@
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.1.7" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Newtonsoft" Version="10.3.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.3.1" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.13" />
     <PackageVersion Include="Verify.XunitV3" Version="32.0.1" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />

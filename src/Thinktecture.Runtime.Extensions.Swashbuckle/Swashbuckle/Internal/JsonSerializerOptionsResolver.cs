@@ -41,9 +41,14 @@ public class JsonSerializerOptionsResolver
    /// </summary>
    protected virtual JsonSerializerOptions ResolveOptions()
    {
-      return _serviceProvider.GetService<JsonSerializerOptions>()
-             ?? _serviceProvider.GetService<IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>>()?.Value.JsonSerializerOptions
+      // Mirrors the options resolution of Swashbuckle 10.3+: the MVC options are used only if MVC is registered.
+      return (IsMvcRegistered() ? _serviceProvider.GetService<IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>>()?.Value.JsonSerializerOptions : null)
              ?? _serviceProvider.GetService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>()?.Value.SerializerOptions
              ?? JsonSerializerOptions.Default;
+   }
+
+   private bool IsMvcRegistered()
+   {
+      return _serviceProvider.GetService<Microsoft.AspNetCore.Mvc.Controllers.IControllerFactory>() is not null;
    }
 }

@@ -314,6 +314,15 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Fact]
+      public async Task Should_handle_EnumBased_SmartEnum_with_string_enum_converter_as_body_parameter_of_controller()
+      {
+         _useStringEnumConverter = true;
+         _controllerType = typeof(TestController.SmartEnumClass.EnumBased.Body);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
       public async Task Should_keep_orphaned_key_type_component_when_orphan_removal_is_disabled()
       {
          // Opt-out of the document filter: the key enum that Swashbuckle registers while generating the Smart Enum

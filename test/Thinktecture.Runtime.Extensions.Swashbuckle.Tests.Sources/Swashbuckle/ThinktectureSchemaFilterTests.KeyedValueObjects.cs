@@ -225,6 +225,15 @@ public partial class ThinktectureSchemaFilterTests
       }
 
       [Fact]
+      public async Task Should_handle_EnumBased_ValueObject_with_string_enum_converter_as_body_parameter_of_controller()
+      {
+         _useStringEnumConverter = true;
+         _controllerType = typeof(TestController.KeyedValueObjectClass.EnumBased.Body);
+
+         await Verify(GetOpenApiJsonAsync());
+      }
+
+      [Fact]
       public async Task Should_handle_FlagsEnumBased_ValueObject_as_body_parameter()
       {
          App.MapPost("/test", ([FromBody] FlagsEnumBasedValueObject value) => value);

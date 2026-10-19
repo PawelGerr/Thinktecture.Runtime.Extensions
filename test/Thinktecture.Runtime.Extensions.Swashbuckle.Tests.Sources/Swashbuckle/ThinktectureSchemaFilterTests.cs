@@ -114,10 +114,18 @@ public abstract partial class ThinktectureSchemaFilterTests : IAsyncLifetime
 
       if (_useStringEnumConverter)
       {
-         // Swashbuckle's schema generator and Thinktecture's value factory both read the MVC JSON options,
-         // so registering the converter here makes enum-keyed types serialize (and be schematized) as strings.
-         appBuilder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(
-            jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+         // Swashbuckle 10.3+ reads the MVC JSON options only if MVC is registered, and the Minimal API (Http.Json) options otherwise.
+         // Thinktecture's JsonSerializerOptionsResolver uses the same order, so the converter is registered in the options that the app under test reads.
+         if (_controllerType is null)
+         {
+            appBuilder.Services.ConfigureHttpJsonOptions(
+               jsonOptions => jsonOptions.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+         }
+         else
+         {
+            appBuilder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(
+               jsonOptions => jsonOptions.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
+         }
       }
 
       if (_controllerType is not null)

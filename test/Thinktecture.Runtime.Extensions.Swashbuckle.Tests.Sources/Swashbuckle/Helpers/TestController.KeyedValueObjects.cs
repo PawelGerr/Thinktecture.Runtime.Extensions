@@ -173,6 +173,19 @@ public static partial class TestController
             }
          }
       }
+
+      public static class EnumBased
+      {
+         [Route("/")]
+         public class Body : ControllerBase
+         {
+            [HttpPost("/test")]
+            public EnumBasedValueObject Get([FromBody] EnumBasedValueObject value)
+            {
+               return value;
+            }
+         }
+      }
    }
 
    public static class KeyedValueObjectStruct
