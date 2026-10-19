@@ -26,7 +26,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
    private readonly IAdHocUnionSchemaFilter _adHocUnionSchemaFilter;
    private readonly IRegularUnionSchemaFilter _regularUnionSchemaFilter;
    private readonly SwaggerGenOptions _swaggerGenOptions;
-   private readonly bool _documentNewtonsoftJsonSerialization;
+   private readonly Lazy<bool> _documentNewtonsoftJsonSerialization;
 
    /// <summary>
    /// This is an internal API that supports the Thinktecture.Runtime.Extensions infrastructure and not subject to
@@ -51,7 +51,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       _adHocUnionSchemaFilter = adHocUnionSchemaFilter;
       _regularUnionSchemaFilter = regularUnionSchemaFilter;
       _swaggerGenOptions = swaggerGenOptions;
-      _documentNewtonsoftJsonSerialization = IsNewtonsoftDataContractResolverRegistered(serviceProvider);
+      _documentNewtonsoftJsonSerialization = new Lazy<bool>(() => IsNewtonsoftDataContractResolverRegistered(serviceProvider));
    }
 
    internal static bool IsNewtonsoftDataContractResolverRegistered(IServiceProvider serviceProvider)
@@ -139,7 +139,7 @@ public class ThinktectureSchemaFilter : ISchemaFilter
       OpenApiSchema schema,
       SchemaFilterContext context)
    {
-      var serializationType = GetSerializationType(context.Type, _documentNewtonsoftJsonSerialization);
+      var serializationType = GetSerializationType(context.Type, _documentNewtonsoftJsonSerialization.Value);
 
       // Return to prevent infinite recursion
       if (context.Type == serializationType)
