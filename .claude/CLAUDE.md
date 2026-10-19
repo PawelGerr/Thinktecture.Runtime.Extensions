@@ -195,6 +195,7 @@ Generated types implement `IMetadataOwner`. At runtime, `MetadataLookup` (in `Th
 
 - `Thinktecture.Runtime.Extensions.slnx` -- Main solution file (.slnx format)
 - `Directory.Build.props` -- Global MSBuild properties (version, framework targets)
+  - **Version bump** (`VersionPrefix`): the source generator writes its assembly version into every generated file (`[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Thinktecture.Runtime.Extensions.SourceGenerator", "X.Y.Z.0")]`). In the same commit, replace the old `"X.Y.Z.0"` with the new one in all `*.verified.txt` files under `test/` (about 2,000 files); otherwise all snapshot tests fail.
 - `Directory.Packages.props` -- Centralized NuGet package version management (all versions here)
 - `global.json` -- .NET SDK version specification
 - `.editorconfig` -- Code style configuration (especially `src/.editorconfig`)
